@@ -8,7 +8,13 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
 
 2. **Content Tools** - AI writing utilities including paraphrasing, AI humanization (bypassing AI detectors), plagiarism detection, grammar checking, translation, and summarization.
 
-3. **AI Writing Studio** - Unified text editor with integrated AI tools (Paraphrase, Humanize, Grammar Fix) that can be applied to selected text or entire documents inline.
+3. **Academic Writing Studio** - PaperDebugger-inspired academic writing tool with:
+   - Rich text editor with TipTap and floating BubbleMenu for inline AI actions
+   - Inline text processing (Paraphrase, Humanize, Grammar Fix) via sidebar or context menu
+   - Diff preview with visual before/after comparison and Accept/Reject buttons
+   - AI Detector integration with probability scoring in the Review tab
+   - Tabbed sidebar UI (AI Actions / Review) with academic-focused design
+   - Selection-persistent processing using selectionRef for reliable inline editing
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
