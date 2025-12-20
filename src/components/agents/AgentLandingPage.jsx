@@ -446,56 +446,51 @@ export default function AgentLandingPage() {
 
   return (
     <div className="bg-background text-foreground relative flex min-h-[calc(100vh-100px)] flex-col">
-      {/* Onboarding Dialog */}
-      <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-        <DialogContent
-          showCloseButton={false}
-          className="max-h-[80vh] max-w-2xl overflow-auto"
-        >
-          <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-primary text-2xl font-semibold">
-                Welcome to Shothik AI
-              </DialogTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleCloseOnboarding}
-                className="h-6 w-6"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+      {/* Onboarding Banner - Less intrusive welcome message */}
+      {showOnboarding && (
+        <div className="bg-primary/10 border-primary/20 fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-2xl rounded-xl border p-4 shadow-lg backdrop-blur-sm sm:left-auto sm:right-4">
+          <div className="flex items-start gap-3">
+            <div className="bg-primary text-primary-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+              <Rocket className="h-5 w-5" />
             </div>
-            <DialogDescription className="mt-2 text-base">
-              Experience the world&apos;s most advanced AI presentation
-              generation system powered by 7 specialized agents working
-              together.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="my-6 space-y-6">
-            {ONBOARDING_STEPS.map((step, index) => (
-              <div key={index} className="flex gap-4">
-                <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-semibold">
-                  {index + 1}
-                </div>
-                <div className="flex-1">
-                  <h3 className="mb-1 text-lg font-semibold">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    {step.description}
-                  </p>
-                </div>
+            <div className="flex-1">
+              <h3 className="text-primary mb-1 font-semibold">
+                Welcome to Shothik AI!
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                Create AI-powered presentations, spreadsheets, and research in seconds. Try typing a prompt above to get started!
+              </p>
+              <div className="mt-2 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => {
+                    setInputValue("Create a presentation about Digital Marketing Trends 2025");
+                    handleCloseOnboarding();
+                  }}
+                >
+                  Try Example
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleCloseOnboarding}
+                >
+                  Dismiss
+                </Button>
               </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Button size="lg" onClick={handleCloseOnboarding} className="px-8">
-              Get Started
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCloseOnboarding}
+              className="h-6 w-6 shrink-0"
+            >
+              <X className="h-4 w-4" />
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
 
       <div className="container mx-auto max-w-6xl px-4 py-8">
         <div className="mb-8 text-center pt-12 sm:pt-0">
@@ -760,6 +755,78 @@ export default function AgentLandingPage() {
             </div>
           </div>
         )}
+
+        {/* Social Proof Section */}
+        <div className="mt-16 border-t pt-12">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="mb-8 text-xl font-semibold">
+              Trusted by Thousands Worldwide
+            </h2>
+            <div className="mb-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
+              <div className="text-center">
+                <div className="text-primary text-3xl font-bold">10K+</div>
+                <div className="text-muted-foreground text-sm">Presentations Created</div>
+              </div>
+              <div className="text-center">
+                <div className="text-primary text-3xl font-bold">150+</div>
+                <div className="text-muted-foreground text-sm">Countries Served</div>
+              </div>
+              <div className="text-center">
+                <div className="text-primary text-3xl font-bold">95%</div>
+                <div className="text-muted-foreground text-sm">Satisfaction Rate</div>
+              </div>
+              <div className="text-center">
+                <div className="text-primary text-3xl font-bold">5M+</div>
+                <div className="text-muted-foreground text-sm">Words Processed</div>
+              </div>
+            </div>
+            
+            <div className="grid gap-6 sm:grid-cols-3">
+              <Card className="border p-4 text-left">
+                <p className="text-muted-foreground mb-3 text-sm italic">
+                  "Shothik AI transformed how I create presentations. What used to take hours now takes minutes!"
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
+                    S
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Sarah M.</div>
+                    <div className="text-muted-foreground text-xs">Marketing Manager</div>
+                  </div>
+                </div>
+              </Card>
+              <Card className="border p-4 text-left">
+                <p className="text-muted-foreground mb-3 text-sm italic">
+                  "The AI research feature is incredibly powerful. It saves me hours of manual research work."
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
+                    J
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">James L.</div>
+                    <div className="text-muted-foreground text-xs">Content Strategist</div>
+                  </div>
+                </div>
+              </Card>
+              <Card className="border p-4 text-left">
+                <p className="text-muted-foreground mb-3 text-sm italic">
+                  "Best investment for my business. The quality of AI-generated content is outstanding."
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
+                    A
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Anika R.</div>
+                    <div className="text-muted-foreground text-xs">Entrepreneur</div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
 
       <LoginDialog

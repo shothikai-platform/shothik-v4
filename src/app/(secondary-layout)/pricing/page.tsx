@@ -1,6 +1,7 @@
 "use client";
 
 import { PricingCard } from "@/components/(pricing-page)/PricingCard";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserLocation } from "@/hooks/utils/useUserLocation";
@@ -11,6 +12,8 @@ import {
 import type { TPackage } from "@/types/package.type";
 import type { TPlan } from "@/types/plan.type";
 import { useQuery } from "@tanstack/react-query";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -32,10 +35,12 @@ const PricingPage = () => {
     }
   }, [searchParams]);
 
-  // Fetch plans
-  const { data: plansResponse, isLoading: plansLoading } = useQuery({
+  // Fetch plans with retry and timeout
+  const { data: plansResponse, isLoading: plansLoading, isError: isPlansError, refetch: refetchPlans } = useQuery({
     queryKey: ["public-plans"],
     queryFn: () => fetchPublicPlans({ is_active: true, sort: "sequence" }),
+    retry: 2,
+    staleTime: 5 * 60 * 1000,
   });
 
   const plans = plansResponse?.data || [];
@@ -45,6 +50,7 @@ const PricingPage = () => {
     data: packagesResponse,
     isLoading: isPackagesLoading,
     isError: isPackagesError,
+    refetch: refetchPackages,
   } = useQuery({
     queryKey: ["public-packages", selectedPlanId],
     queryFn: () => {
@@ -57,6 +63,8 @@ const PricingPage = () => {
       }
       return fetchPublicPackages(query);
     },
+    retry: 2,
+    staleTime: 5 * 60 * 1000,
   });
 
   const packages = packagesResponse?.data || [];
@@ -70,20 +78,37 @@ const PricingPage = () => {
     }
   };
 
+  const handleRetry = () => {
+    refetchPlans();
+    refetchPackages();
+  };
+
   if (plansLoading) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center py-6 lg:py-12">
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center py-6 lg:py-12">
         <Spinner className="text-primary h-8 w-8" />
+        <p className="text-muted-foreground mt-4">Loading pricing plans...</p>
       </div>
     );
   }
 
-  if (isPackagesError) {
+  if (isPlansError || isPackagesError) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] py-6 text-center lg:py-12">
-        <p className="text-destructive">
-          Failed to load packages. Please try again later.
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center py-6 lg:py-12">
+        <AlertCircle className="text-destructive mb-4 h-12 w-12" />
+        <h2 className="mb-2 text-xl font-semibold">Unable to load pricing</h2>
+        <p className="text-muted-foreground mb-6 max-w-md text-center">
+          We're having trouble connecting to our servers. Please try again or contact us for assistance.
         </p>
+        <div className="flex gap-4">
+          <Button onClick={handleRetry} variant="default">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Try Again
+          </Button>
+          <Link href="/contact-us">
+            <Button variant="outline">Contact Us</Button>
+          </Link>
+        </div>
       </div>
     );
   }
