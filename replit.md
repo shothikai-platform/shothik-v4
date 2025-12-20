@@ -1,0 +1,94 @@
+# Shothik AI v3
+
+## Overview
+
+Shothik AI is a comprehensive AI-powered platform for digital marketing automation and content creation. The platform provides two main feature sets:
+
+1. **Marketing Automation** - End-to-end Meta (Facebook/Instagram) advertising campaign management with AI-powered URL analysis, campaign canvas, media generation, and direct publishing to Meta platforms.
+
+2. **Content Tools** - AI writing utilities including paraphrasing, AI humanization (bypassing AI detectors), plagiarism detection, grammar checking, translation, and summarization.
+
+3. **AI Writing Studio** - Unified text editor with integrated AI tools (Paraphrase, Humanize, Grammar Fix) that can be applied to selected text or entire documents inline.
+
+4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
+
+The application is a Next.js 16 frontend that communicates with a separate backend API at `api-qa.shothik.ai`.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Framework
+- **Next.js 16** with App Router for routing and server components
+- **TypeScript** with relaxed strict mode (noImplicitAny disabled)
+- **Tailwind CSS v4** for styling with CSS variables for theming
+
+### State Management
+- **Redux Toolkit** for global application state (auth, analytics, upload queues, slide editing, research chats)
+- **React Query (TanStack Query)** for server state and API data caching
+- **RTK Query** for some API endpoints (presentation, research chat APIs)
+
+### UI Component Strategy
+- **Radix UI primitives** wrapped with **shadcn/ui** components (new-york style)
+- **Framer Motion** for animations
+- **Tiptap** for rich text editing in paraphrase and content tools
+- **Monaco Editor** for code editing features
+
+### Key Architectural Patterns
+
+1. **Service Layer Pattern** - Business logic lives in `/src/services/` (e.g., `marketing-automation.service.ts`, `plagiarism.service.ts`, `uploadService.js`)
+
+2. **Custom Hooks for Features** - Complex features use custom hooks (e.g., `/src/hooks/presentation/` for slide editing, `/src/hooks/useAutoFreeze.js` for paraphrase)
+
+3. **Redux Slices per Feature** - Each major feature has its own slice (`uploadQueueSlice`, `slideEditSlice`, `researchChatSlice`, `analyticsSlice`)
+
+4. **Iframe Communication** - Slide editing uses postMessage for parent-iframe communication to isolate slide styles
+
+5. **Streaming Data Handling** - Deep research and AI features use real-time streaming with Socket.io-client
+
+### File Organization
+```
+src/
+├── app/           # Next.js App Router pages and layouts
+├── components/    # React components (ui/, tools/, presentation/)
+├── hooks/         # Custom React hooks
+├── redux/         # Redux store, slices, and RTK Query APIs
+├── services/      # API communication and business logic
+├── lib/           # Utility libraries (presentation/editing/)
+├── types/         # TypeScript type definitions
+├── adapters/      # Data transformation adapters
+└── config/        # Configuration constants and routes
+```
+
+### Authentication
+- JWT token-based authentication stored in cookies
+- Google OAuth integration via `@react-oauth/google`
+- Middleware protects `/dashboard/*` routes, redirects unauthenticated users to `/auth/login`
+
+### Error Handling Strategy
+- Error boundaries for component isolation (especially in slide editing)
+- Custom error classes with user-friendly messages (e.g., `UploadError`)
+- Toast notifications via centralized toast service
+
+## External Dependencies
+
+### Backend API
+- Primary API: `process.env.NEXT_PUBLIC_API_URL` (currently `api-qa.shothik.ai`)
+- Endpoints for plagiarism detection, paraphrasing, AI detection, marketing automation, research
+
+### Third-Party Services
+- **Meta/Facebook Business API** - OAuth integration for ad publishing, page management, pixel tracking
+- **Stripe** - Payment processing via `@stripe/stripe-js`
+- **Cloudinary** - Image hosting (configured in next.config.ts)
+- **ImageKit** - CDN for media assets (authentication via `getImageKitAuth`)
+- **Google Vertex AI Search** - Used by backend for deep research grounding
+
+### Real-time Communication
+- **Socket.io-client** - Real-time updates for research streaming, wallet updates
+
+### Analytics
+- Google Analytics (gtag)
+- Facebook Pixel
+- Custom analytics slice with consent management
