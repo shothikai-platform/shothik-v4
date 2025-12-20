@@ -1,6 +1,6 @@
 import SvgColor from "@/components/common/SvgColor";
 import { PATH_ACCOUNT, PATH_TOOLS } from "@/config/route";
-import { Presentation, Search, Table, Target } from "lucide-react";
+import { PenLine, Presentation, Search, Table, Target } from "lucide-react";
 import { ReactElement } from "react";
 
 const icon = (name: string): ReactElement => (
@@ -12,6 +12,7 @@ const icon = (name: string): ReactElement => (
 );
 
 export const NAV_ICONS = {
+  writing_studio: <PenLine className="size-3.5 text-emerald-500 sm:size-4" />,
   paraphrase: icon("paraphrase"),
   humanize: icon("humanize"),
   plagiarism_checker: icon("plagiarism_checker"),
@@ -29,6 +30,14 @@ export const NAV_ICONS = {
 };
 
 export const NAV_TOOLS = [
+  {
+    icon: NAV_ICONS.writing_studio,
+    title: "Writing Studio",
+    description: "AI-powered text editor",
+    label: "New",
+    link: "/writing-studio",
+    iconColor: "#10B981",
+  },
   {
     icon: NAV_ICONS.paraphrase,
     title: "Paraphrase",
@@ -107,6 +116,13 @@ export const NAV_ITEMS = [
   {
     subheader: "Services",
     items: [
+      {
+        title: "Writing Studio",
+        path: PATH_TOOLS.writing_studio,
+        icon: NAV_ICONS.writing_studio,
+        iconColor: "#10B981",
+        label: "New",
+      },
       {
         title: "Paraphrase",
         path: PATH_TOOLS.paraphrase,

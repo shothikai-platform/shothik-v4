@@ -52,6 +52,7 @@ export const PATH_ACCOUNT = {
 
 export const PATH_TOOLS = {
   discord: "https://discord.gg/pq2wTqXEpj",
+  writing_studio: "/writing-studio",
   paraphrase: "/paraphrase",
   humanize: "/humanize-gpt",
   ai_detector: "/ai-detector",
