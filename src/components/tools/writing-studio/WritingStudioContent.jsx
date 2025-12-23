@@ -318,6 +318,209 @@ function WritingAnalysisPanel({ analysis }) {
           </div>
         </div>
       </div>
+
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertCircle className="h-4 w-4" />
+          <span className="text-sm font-medium">Word Choice</span>
+        </div>
+        <div className="space-y-3 text-sm">
+          {analysis.weakWords?.count > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                      Weak Words
+                      <Info className="h-3 w-3" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs max-w-xs">Vague words like "very", "really", "thing". Replace with specific, precise language.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <span className="font-medium text-yellow-600">
+                  {analysis.weakWords.count} found
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {analysis.weakWords.instances.slice(0, 5).map((w, i) => (
+                  <Badge key={i} variant="secondary" className="text-xs bg-yellow-500/10 text-yellow-700">
+                    {w.word} ({w.count})
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {analysis.informalLanguage?.count > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                      Informal Language
+                      <Info className="h-3 w-3" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs max-w-xs">Contractions and casual words. Avoid in academic writing.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <span className="font-medium text-orange-600">
+                  {analysis.informalLanguage.count} found
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {analysis.informalLanguage.instances.slice(0, 5).map((w, i) => (
+                  <Badge key={i} variant="secondary" className="text-xs bg-orange-500/10 text-orange-700">
+                    {w.word} ({w.count})
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {analysis.repetition?.count > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                      Repeated Words
+                      <Info className="h-3 w-3" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs max-w-xs">Words used 3+ times. Consider using synonyms for variety.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <span className="font-medium">
+                  {analysis.repetition.count} words
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {analysis.repetition.instances.slice(0, 5).map((w, i) => (
+                  <Badge key={i} variant="outline" className="text-xs">
+                    {w.word} ({w.count}x)
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(!analysis.weakWords?.count && !analysis.informalLanguage?.count && !analysis.repetition?.count) && (
+            <p className="text-xs text-muted-foreground text-center py-2">
+              No word choice issues detected
+            </p>
+          )}
+        </div>
+      </div>
+
+      {analysis.sentenceVariety && analysis.sentenceCount > 2 && (
+        <div className="p-4 border rounded-lg bg-muted/20">
+          <div className="flex items-center gap-2 mb-3">
+            <BarChart3 className="h-4 w-4" />
+            <span className="text-sm font-medium">Sentence Variety</span>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Variety Score</span>
+              <span className={cn(
+                "font-medium",
+                analysis.sentenceVariety.varietyScore >= 50 ? "text-green-600" : 
+                analysis.sentenceVariety.varietyScore >= 30 ? "text-yellow-600" : "text-orange-600"
+              )}>
+                {analysis.sentenceVariety.varietyScore}%
+              </span>
+            </div>
+            <Progress value={analysis.sentenceVariety.varietyScore} className="h-1.5" />
+            <div className="grid grid-cols-3 gap-2 mt-2 text-xs text-center">
+              <div className="p-1 bg-background rounded">
+                <div className="font-medium">{analysis.sentenceVariety.shortCount}</div>
+                <div className="text-muted-foreground">Short</div>
+              </div>
+              <div className="p-1 bg-background rounded">
+                <div className="font-medium">{analysis.sentenceVariety.mediumCount}</div>
+                <div className="text-muted-foreground">Medium</div>
+              </div>
+              <div className="p-1 bg-background rounded">
+                <div className="font-medium">{analysis.sentenceVariety.longCount}</div>
+                <div className="text-muted-foreground">Long</div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Mix sentence lengths for better flow
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CitationFormatHelper() {
+  const [selectedFormat, setSelectedFormat] = useState("apa");
+  
+  const formats = {
+    apa: {
+      name: "APA 7th",
+      book: "Author, A. A. (Year). Title of work: Capital letter also for subtitle. Publisher.",
+      journal: "Author, A. A., & Author, B. B. (Year). Title of article. Title of Periodical, volume(issue), page–page. https://doi.org/xxxxx",
+      website: "Author, A. A. (Year, Month Day). Title of page. Site Name. URL",
+    },
+    mla: {
+      name: "MLA 9th",
+      book: "Author Last, First. Title of Book. Publisher, Year.",
+      journal: "Author Last, First. \"Title of Article.\" Journal Name, vol. #, no. #, Year, pp. #-#.",
+      website: "Author Last, First. \"Title of Page.\" Website Name, Publisher, Day Month Year, URL.",
+    },
+    chicago: {
+      name: "Chicago 17th",
+      book: "Last, First. Title of Book. Place: Publisher, Year.",
+      journal: "Last, First. \"Article Title.\" Journal Name Volume, no. Issue (Year): pages.",
+      website: "Last, First. \"Page Title.\" Website Name. Last modified Month Day, Year. URL.",
+    },
+  };
+
+  const current = formats[selectedFormat];
+
+  return (
+    <div className="p-4 border rounded-lg bg-muted/20">
+      <div className="flex items-center gap-2 mb-3">
+        <BookOpen className="h-4 w-4" />
+        <span className="text-sm font-medium">Citation Formats</span>
+      </div>
+      <div className="flex gap-1 mb-3">
+        {Object.entries(formats).map(([key, format]) => (
+          <button
+            key={key}
+            onClick={() => setSelectedFormat(key)}
+            className={cn(
+              "px-2 py-1 text-xs rounded transition-colors",
+              selectedFormat === key
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted hover:bg-muted/80"
+            )}
+          >
+            {format.name}
+          </button>
+        ))}
+      </div>
+      <div className="space-y-2 text-xs">
+        <div className="p-2 bg-background rounded">
+          <div className="font-medium text-muted-foreground mb-1">Book</div>
+          <div className="font-mono text-[10px] break-all">{current.book}</div>
+        </div>
+        <div className="p-2 bg-background rounded">
+          <div className="font-medium text-muted-foreground mb-1">Journal</div>
+          <div className="font-mono text-[10px] break-all">{current.journal}</div>
+        </div>
+        <div className="p-2 bg-background rounded">
+          <div className="font-medium text-muted-foreground mb-1">Website</div>
+          <div className="font-mono text-[10px] break-all">{current.website}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -989,6 +1192,10 @@ export default function WritingStudioContent() {
                         Write at least 50 words to enable AI detection
                       </p>
                     )}
+
+                    <Separator />
+
+                    <CitationFormatHelper />
                   </div>
                 </ScrollArea>
               </TabsContent>
