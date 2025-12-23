@@ -33,6 +33,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      setIsLoading(false);
+      return;
+    }
     const token = localStorage.getItem("jwt_token");
     if (token) {
       AuthService.validateToken(token)

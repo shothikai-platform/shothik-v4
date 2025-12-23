@@ -1,6 +1,11 @@
 export const initFacebookPixel = (pixelId) => {
   try {
-    if (!pixelId) return;
+    if (!pixelId || typeof pixelId !== "string" || pixelId.trim() === "") {
+      return;
+    }
+    if (typeof window === "undefined") {
+      return;
+    }
 
     window.fbq =
       window.fbq ||

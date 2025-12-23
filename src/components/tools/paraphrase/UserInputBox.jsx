@@ -351,7 +351,7 @@ function UserInputBox({
     {
       extensions: [
         StarterKit.configure({
-          // hardBreak: false, // This cause userInput disappearing
+          link: false,
         }),
         PlainTextPaste,
         Placeholder.configure({ placeholder: "Enter your text here..." }),
@@ -359,7 +359,6 @@ function UserInputBox({
           limit: wordLimit,
           frozenWords: frozenWords.set,
           frozenPhrases: frozenPhrases.set,
-          // useYellowHighlight: useYellowHighlight,
         }),
         InputSentenceHighlighter.configure({
           highlightSentence: highlightSentence,
@@ -367,7 +366,6 @@ function UserInputBox({
           hasOutput: hasOutput || false,
           useYellowHighlight: useYellowHighlight,
         }),
-        // HardBreak,
         Link.configure({
           openOnClick: true,
           linkOnPaste: true,

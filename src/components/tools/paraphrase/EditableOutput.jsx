@@ -769,6 +769,7 @@ export default function EditableOutput({
           italic: true,
           strike: true,
           code: true,
+          hardBreak: false,
           heading: {
             levels: [1, 2, 3, 4, 5, 6],
             HTMLAttributes: { class: "heading-node" },

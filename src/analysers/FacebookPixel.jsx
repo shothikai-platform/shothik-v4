@@ -1,21 +1,32 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { initFacebookPixel } from "./fbconfig";
 
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
 
 export default function FacebookPixel() {
   const router = usePathname();
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!FB_PIXEL_ID) return;
+    if (!FB_PIXEL_ID || typeof FB_PIXEL_ID !== "string" || FB_PIXEL_ID.trim() === "") {
+      return;
+    }
 
-    initFacebookPixel(FB_PIXEL_ID);
-    window.fbq("track", "PageView");
+    try {
+      initFacebookPixel(FB_PIXEL_ID);
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "PageView");
+      }
+      setIsInitialized(true);
+    } catch (error) {
+      console.error("Failed to initialize Facebook Pixel:", error);
+    }
   }, [router]);
 
-  if (!FB_PIXEL_ID) return null;
+  if (!FB_PIXEL_ID || !isInitialized) return null;
+  
   return (
     <>
       <script
@@ -28,6 +39,7 @@ export default function FacebookPixel() {
           width="1"
           style={{ display: "none" }}
           src={`https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1`}
+          alt=""
         />
       </noscript>
     </>
