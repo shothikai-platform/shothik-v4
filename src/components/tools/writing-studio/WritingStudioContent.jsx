@@ -128,6 +128,9 @@ const PARAPHRASE_MODES = [
   { id: "Standard", name: "Standard", description: "Balanced rewrite" },
   { id: "Formal", name: "Academic", description: "Academic tone" },
   { id: "Simple", name: "Simplify", description: "Clearer language" },
+  { id: "Creative", name: "Creative", description: "More varied wording" },
+  { id: "Shorten", name: "Shorten", description: "Reduce word count" },
+  { id: "Expand", name: "Expand", description: "Add more detail" },
 ];
 
 const WRITING_TEMPLATES = [
@@ -1926,21 +1929,29 @@ export default function WritingStudioContent() {
 
                     {selectedTool === "paraphrase" && (
                       <div className="pt-2 border-t">
-                        <p className="text-xs font-medium mb-2">Mode</p>
-                        <div className="grid grid-cols-2 gap-1">
+                        <p className="text-xs font-medium mb-2">Paraphrase Mode</p>
+                        <div className="grid grid-cols-2 gap-1.5">
                           {PARAPHRASE_MODES.map((mode) => (
-                            <button
-                              key={mode.id}
-                              onClick={() => setSelectedMode(mode.id)}
-                              className={cn(
-                                "p-2 rounded border text-xs transition-all",
-                                selectedMode === mode.id
-                                  ? "border-primary bg-primary/10 text-primary"
-                                  : "hover:border-primary/50"
-                              )}
-                            >
-                              {mode.name}
-                            </button>
+                            <TooltipProvider key={mode.id}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                    onClick={() => setSelectedMode(mode.id)}
+                                    className={cn(
+                                      "p-2 rounded border text-xs transition-all text-center",
+                                      selectedMode === mode.id
+                                        ? "border-primary bg-primary/10 text-primary font-medium"
+                                        : "hover:border-primary/50 hover:bg-muted/50"
+                                    )}
+                                  >
+                                    {mode.name}
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="text-xs">
+                                  {mode.description}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           ))}
                         </div>
                       </div>
