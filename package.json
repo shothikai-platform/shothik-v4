@@ -90,7 +90,7 @@
     "marked-react": "^3.0.2",
     "mind-elixir": "^5.3.5",
     "motion": "^12.23.24",
-    "next": "16.0.7",
+    "next": "16.1.1",
     "pdfmake": "^0.2.20",
     "pptxgenjs": "^4.0.1",
     "prosemirror-model": "^1.25.4",
