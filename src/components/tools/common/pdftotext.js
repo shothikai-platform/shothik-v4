@@ -1,13 +1,12 @@
-import { pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-
 /**
  * Extracts text content from a PDF file.
  * @param {File} file - The PDF file to extract text from.
  * @returns {Promise<string>} A promise that resolves with the extracted text content.
  */
 const pdfToText = async (file) => {
+  const { pdfjs } = await import("react-pdf");
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
   // Create a blob URL for the PDF file
   const blobUrl = URL.createObjectURL(file);
 

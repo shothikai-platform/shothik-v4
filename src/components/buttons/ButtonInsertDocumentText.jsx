@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils";
 import { Upload } from "lucide-react";
 import mammoth from "mammoth";
 import { useRef, useState } from "react";
-import { pdfjs } from "react-pdf";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs?.version}/build/pdf.worker.min.mjs`;
 
 const pdfToText = async (file) => {
+  const { pdfjs } = await import("react-pdf");
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs?.version}/build/pdf.worker.min.mjs`;
+  
   const blobUrl = URL.createObjectURL(file);
   const loadingTask = pdfjs.getDocument(blobUrl);
   let extractedText = "";
