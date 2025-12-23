@@ -57,6 +57,20 @@ import {
 } from "@/redux/api/tools/toolsApi";
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { cn } from "@/lib/utils";
+import { getFullAnalysis } from "@/lib/text-analysis";
+import {
+  BookOpen,
+  TrendingUp,
+  BarChart3,
+  AlertCircle,
+  Info,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const AI_TOOLS = [
   {
@@ -125,6 +139,189 @@ function DiffPreview({ original, modified, onAccept, onReject }) {
   );
 }
 
+function WritingAnalysisPanel({ analysis }) {
+  if (!analysis || analysis.wordCount === 0) {
+    return (
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="text-center text-muted-foreground py-4">
+          <BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <p className="text-sm">Start writing to see analysis</p>
+        </div>
+      </div>
+    );
+  }
+
+  const getScoreColor = (score) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    if (score >= 40) return "text-orange-600";
+    return "text-red-600";
+  };
+
+  const getPassiveStatus = (percentage) => {
+    if (percentage < 10) return { color: "text-yellow-600", label: "Low (consider adding some)" };
+    if (percentage <= 25) return { color: "text-green-600", label: "Good for academic writing" };
+    if (percentage <= 40) return { color: "text-yellow-600", label: "Slightly high" };
+    return { color: "text-red-600", label: "Too much passive voice" };
+  };
+
+  const passiveStatus = getPassiveStatus(analysis.passiveVoice.percentage);
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm font-medium flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            Academic Tone Score
+          </span>
+          <span className={cn("text-2xl font-bold", getScoreColor(analysis.academicToneScore))}>
+            {analysis.academicToneScore}
+          </span>
+        </div>
+        <Progress value={analysis.academicToneScore} className="h-2 mb-2" />
+        <p className="text-xs text-muted-foreground">
+          Based on vocabulary complexity, passive voice usage, and readability
+        </p>
+      </div>
+
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center gap-2 mb-3">
+          <BookOpen className="h-4 w-4" />
+          <span className="text-sm font-medium">Readability</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="text-center p-2 bg-background rounded">
+            <div className={cn("text-lg font-semibold", analysis.readabilityInfo.color)}>
+              {analysis.readingEase}
+            </div>
+            <div className="text-xs text-muted-foreground">Flesch Score</div>
+          </div>
+          <div className="text-center p-2 bg-background rounded">
+            <div className="text-lg font-semibold">{analysis.gradeLevel}</div>
+            <div className="text-xs text-muted-foreground">Grade Level</div>
+          </div>
+        </div>
+        <div className="mt-2 flex items-center justify-between text-xs">
+          <span className={analysis.readabilityInfo.color}>{analysis.readabilityInfo.label}</span>
+          <span className="text-muted-foreground">{analysis.gradeLevelLabel}</span>
+        </div>
+      </div>
+
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center gap-2 mb-3">
+          <BarChart3 className="h-4 w-4" />
+          <span className="text-sm font-medium">Statistics</span>
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Words</span>
+            <span className="font-medium">{analysis.wordCount}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Sentences</span>
+            <span className="font-medium">{analysis.sentenceCount}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Paragraphs</span>
+            <span className="font-medium">{analysis.paragraphCount}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Avg. Sentence</span>
+            <span className="font-medium">{analysis.avgSentenceLength} words</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertCircle className="h-4 w-4" />
+          <span className="text-sm font-medium">Writing Style</span>
+        </div>
+        <div className="space-y-3 text-sm">
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                    Passive Voice
+                    <Info className="h-3 w-3" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs max-w-xs">Academic writing often uses 10-25% passive voice. Too little feels informal, too much feels evasive.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <span className={passiveStatus.color}>
+                {Math.round(analysis.passiveVoice.percentage)}%
+              </span>
+            </div>
+            <Progress value={analysis.passiveVoice.percentage} className="h-1.5" />
+            <p className="text-xs text-muted-foreground mt-1">{passiveStatus.label}</p>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                    Complex Words
+                    <Info className="h-3 w-3" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs max-w-xs">Words with 3+ syllables. Academic writing typically has 15-25%.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <span className="font-medium">
+                {Math.round(analysis.complexWords.percentage)}%
+              </span>
+            </div>
+            <Progress value={analysis.complexWords.percentage} className="h-1.5" />
+            {analysis.complexWords.words.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {analysis.complexWords.words.slice(0, 5).map((word, i) => (
+                  <Badge key={i} variant="secondary" className="text-xs">
+                    {word}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-1 text-muted-foreground">
+                    Hedging Language
+                    <Info className="h-3 w-3" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs max-w-xs">Words like "might", "perhaps", "possibly". Some hedging is appropriate in academic writing.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <span className="font-medium">
+                {analysis.hedgingLanguage.count} uses
+              </span>
+            </div>
+            {analysis.hedgingLanguage.instances.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {analysis.hedgingLanguage.instances.slice(0, 4).map((h, i) => (
+                  <Badge key={i} variant="outline" className="text-xs">
+                    {h.word} ({h.count})
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AIScorePanel({ aiScore, isScanning }) {
   const getScoreColor = (score) => {
     if (score === null) return "bg-muted";
@@ -186,7 +383,9 @@ export default function WritingStudioContent() {
   const [isScanning, setIsScanning] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [showLinkInput, setShowLinkInput] = useState(false);
+  const [textAnalysis, setTextAnalysis] = useState(null);
   const selectionRef = useRef({ from: 0, to: 0 });
+  const analysisTimeoutRef = useRef(null);
 
   const [paraphrase] = useParaphrasedMutation();
   const [humanize] = useHumanizeContendMutation();
@@ -225,6 +424,14 @@ export default function WritingStudioContent() {
       const text = editor.getText();
       const words = text.trim() ? text.trim().split(/\s+/).length : 0;
       setWordCount(words);
+      
+      if (analysisTimeoutRef.current) {
+        clearTimeout(analysisTimeoutRef.current);
+      }
+      analysisTimeoutRef.current = setTimeout(() => {
+        const analysis = getFullAnalysis(text);
+        setTextAnalysis(analysis);
+      }, 500);
     },
     onSelectionUpdate: ({ editor }) => {
       const { from, to } = editor.state.selection;
@@ -752,6 +959,10 @@ export default function WritingStudioContent() {
               <TabsContent value="review" className="m-0">
                 <ScrollArea className="h-[550px]">
                   <div className="p-4 space-y-4">
+                    <WritingAnalysisPanel analysis={textAnalysis} />
+
+                    <Separator />
+
                     <AIScorePanel aiScore={aiScore} isScanning={isScanning} />
 
                     <Button
@@ -778,26 +989,6 @@ export default function WritingStudioContent() {
                         Write at least 50 words to enable AI detection
                       </p>
                     )}
-
-                    <Separator />
-
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-medium flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" />
-                        Writing Tips
-                      </h3>
-                      <div className="space-y-2 text-xs text-muted-foreground">
-                        <div className="p-2 bg-muted/50 rounded">
-                          <span className="font-medium text-foreground">Academic Tone:</span> Use formal language and avoid contractions
-                        </div>
-                        <div className="p-2 bg-muted/50 rounded">
-                          <span className="font-medium text-foreground">Citations:</span> Support claims with proper references
-                        </div>
-                        <div className="p-2 bg-muted/50 rounded">
-                          <span className="font-medium text-foreground">Clarity:</span> One main idea per paragraph
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </ScrollArea>
               </TabsContent>
