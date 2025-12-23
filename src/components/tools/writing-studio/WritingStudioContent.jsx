@@ -67,6 +67,9 @@ import {
   Info,
   Search,
   ExternalLink,
+  Plus,
+  Trash2,
+  ListOrdered as ListIcon,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -529,12 +532,12 @@ function CitationFormatHelper() {
   );
 }
 
-function CitationLookup() {
+function CitationLookup({ onSave, citationFormat, onFormatChange }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedFormat, setSelectedFormat] = useState("apa");
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [savedIndex, setSavedIndex] = useState(null);
 
   const handleSearch = async () => {
     if (!query.trim() || query.length < 3) return;
@@ -551,7 +554,7 @@ function CitationLookup() {
   };
 
   const handleCopy = async (item, index) => {
-    const formatted = formatCitation(item, selectedFormat);
+    const formatted = formatCitation(item, citationFormat);
     try {
       await navigator.clipboard.writeText(formatted);
       setCopiedIndex(index);
@@ -559,6 +562,16 @@ function CitationLookup() {
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch {
       toast.error("Failed to copy");
+    }
+  };
+
+  const handleSave = (item, index) => {
+    if (onSave) {
+      const wasAdded = onSave(item);
+      if (wasAdded) {
+        setSavedIndex(index);
+        setTimeout(() => setSavedIndex(null), 2000);
+      }
     }
   };
 
@@ -603,10 +616,10 @@ function CitationLookup() {
         {["apa", "mla", "chicago"].map((format) => (
           <button
             key={format}
-            onClick={() => setSelectedFormat(format)}
+            onClick={() => onFormatChange?.(format)}
             className={cn(
               "px-2 py-0.5 text-[10px] rounded transition-colors uppercase",
-              selectedFormat === format
+              citationFormat === format
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted hover:bg-muted/80"
             )}
@@ -635,18 +648,34 @@ function CitationLookup() {
                     {item.journal && ` • ${item.journal}`}
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleCopy(item, index)}
-                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  {copiedIndex === index ? (
-                    <Check className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleSave(item, index)}
+                    className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Add to references"
+                  >
+                    {savedIndex === index ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <Plus className="h-3 w-3" />
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleCopy(item, index)}
+                    className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Copy citation"
+                  >
+                    {copiedIndex === index ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </Button>
+                </div>
               </div>
               {item.doi && (
                 <a
@@ -669,6 +698,93 @@ function CitationLookup() {
           No results found. Try a different search term.
         </p>
       )}
+    </div>
+  );
+}
+
+function ReferenceListPanel({ references, onRemove, citationFormat, onCopyAll }) {
+  const handleCopy = async (item) => {
+    const formatted = formatCitation(item, citationFormat);
+    try {
+      await navigator.clipboard.writeText(formatted);
+      toast.success("Citation copied!");
+    } catch {
+      toast.error("Failed to copy");
+    }
+  };
+
+  if (references.length === 0) {
+    return (
+      <div className="p-4 border rounded-lg bg-muted/20">
+        <div className="flex items-center gap-2 mb-2">
+          <ListIcon className="h-4 w-4" />
+          <span className="text-sm font-medium">Reference List</span>
+        </div>
+        <p className="text-xs text-muted-foreground text-center py-3">
+          No references saved yet. Use Citation Lookup to find and save sources.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 border rounded-lg bg-muted/20">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <ListIcon className="h-4 w-4" />
+          <span className="text-sm font-medium">Reference List</span>
+          <Badge variant="secondary" className="text-[10px]">
+            {references.length}
+          </Badge>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={onCopyAll}
+          className="h-6 text-[10px] px-2"
+        >
+          <Copy className="h-3 w-3 mr-1" />
+          Copy All
+        </Button>
+      </div>
+      <div className="space-y-2 max-h-48 overflow-y-auto">
+        {references.map((item, index) => (
+          <div
+            key={index}
+            className="p-2 bg-background rounded border text-xs group hover:border-primary/50 transition-colors"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <div className="font-medium truncate">{item.title}</div>
+                <div className="text-muted-foreground truncate">
+                  {item.authors?.map((a) => `${a.family}`).join(", ")} 
+                  {item.year ? ` (${item.year})` : ""}
+                </div>
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleCopy(item)}
+                  className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Copy citation"
+                >
+                  <Copy className="h-2.5 w-2.5" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onRemove(index)}
+                  className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive"
+                  title="Remove"
+                >
+                  <Trash2 className="h-2.5 w-2.5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -735,6 +851,8 @@ export default function WritingStudioContent() {
   const [linkUrl, setLinkUrl] = useState("");
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [textAnalysis, setTextAnalysis] = useState(null);
+  const [savedReferences, setSavedReferences] = useState([]);
+  const [citationFormat, setCitationFormat] = useState("apa");
   const selectionRef = useRef({ from: 0, to: 0 });
   const analysisTimeoutRef = useRef(null);
 
@@ -1343,7 +1461,46 @@ export default function WritingStudioContent() {
 
                     <Separator />
 
-                    <CitationLookup />
+                    <ReferenceListPanel 
+                      references={savedReferences}
+                      onRemove={(index) => {
+                        setSavedReferences(prev => prev.filter((_, i) => i !== index));
+                        toast.success("Reference removed");
+                      }}
+                      citationFormat={citationFormat}
+                      onCopyAll={async () => {
+                        if (savedReferences.length === 0) return;
+                        const formatted = savedReferences
+                          .map(ref => formatCitation(ref, citationFormat))
+                          .join("\n\n");
+                        try {
+                          await navigator.clipboard.writeText(formatted);
+                          toast.success("All citations copied!");
+                        } catch {
+                          toast.error("Failed to copy");
+                        }
+                      }}
+                    />
+
+                    <Separator />
+
+                    <CitationLookup 
+                      onSave={(item) => {
+                        const exists = savedReferences.some(
+                          ref => ref.title === item.title && ref.year === item.year
+                        );
+                        if (!exists) {
+                          setSavedReferences(prev => [...prev, item]);
+                          toast.success("Added to references!");
+                          return true;
+                        } else {
+                          toast.info("This reference is already saved");
+                          return false;
+                        }
+                      }}
+                      citationFormat={citationFormat}
+                      onFormatChange={setCitationFormat}
+                    />
 
                     <Separator />
 
