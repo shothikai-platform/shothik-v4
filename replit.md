@@ -40,6 +40,7 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Export all references with "Copy All" button
      - Duplicate detection prevents adding same source twice
      - Writing Templates: Pre-built structures for Research Paper, Essay, Thesis Chapter, Literature Review, Lab Report
+     - Export with References: Export to DOCX/HTML/TXT with formatted bibliography included
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
