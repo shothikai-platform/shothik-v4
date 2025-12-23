@@ -362,11 +362,6 @@ const ParaphraseContend = () => {
 
 
     if (count > 1) {
-        "Opening confirmation dialog for word:",
-        word,
-        "count:",
-        count,
-      );
       // Show confirmation dialog
       setConfirmationDialog({
         open: true,
@@ -401,11 +396,6 @@ const ParaphraseContend = () => {
 
 
     if (count > 1) {
-        "Opening confirmation dialog for phrase:",
-        phrase,
-        "count:",
-        count,
-      );
       setConfirmationDialog({
         open: true,
         word: phrase,
@@ -711,8 +701,6 @@ const ParaphraseContend = () => {
 
         // Prevent duplicate processing
         if (processedIndices.tagging.has(backendIndex)) {
-            `⏭️  Skipping duplicate tagging for index ${backendIndex}`,
-          );
           return;
         }
         processedIndices.tagging.add(backendIndex);
@@ -750,9 +738,6 @@ const ParaphraseContend = () => {
           word: item.word.replace(/[{}]/g, ""),
         }));
 
-          `✅ Tagging updated at result[${targetIdx}] for backend[${backendIndex}]`,
-        );
-
         return updated;
       });
     });
@@ -787,8 +772,6 @@ const ParaphraseContend = () => {
 
         // Prevent duplicate processing
         if (processedIndices.synonyms.has(backendIndex)) {
-            `⏭️  Skipping duplicate synonyms for index ${backendIndex}`,
-          );
           return;
         }
         processedIndices.synonyms.add(backendIndex);
@@ -825,10 +808,6 @@ const ParaphraseContend = () => {
           ...item,
           word: item.word.replace(/[{}]/g, ""),
         }));
-
-          `✅ Synonyms updated at result[${targetIdx}] for backend[${backendIndex}]`,
-          `(${analysis.length} words)`,
-        );
 
         return updated;
       });
@@ -1499,16 +1478,8 @@ const ParaphraseContend = () => {
 
                 updated[targetIdx] = parsed?.map((item) => ({
                   ...item,
-                  // word: item.word, // preserves markdown tokens
                   word: item.word.replace(/[{}]/g, ""),
                 }));
-                  "updated[targetIdx]: ",
-                  updated[targetIdx],
-                  "targetIdx: ",
-                  targetIdx,
-                  "backendIndex: ",
-                  backendIndex,
-                );
                 return updated;
               });
             });
@@ -1533,16 +1504,8 @@ const ParaphraseContend = () => {
 
                 updated[targetIdx] = parsed?.map((item) => ({
                   ...item,
-                  // word: item.word, // preserves markdown tokens
                   word: item.word.replace(/[{}]/g, ""),
                 }));
-                  "updated[targetIdx]: ",
-                  updated[targetIdx],
-                  "targetIdx: ",
-                  targetIdx,
-                  "backendIndex: ",
-                  backendIndex,
-                );
                 return updated;
               });
             });

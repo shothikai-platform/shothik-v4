@@ -4,10 +4,10 @@ import type {
   RawPlagiarismResponse,
 } from "../types/plagiarism";
 
-// Use environment variable for API base URL, fallback to default
-const DEFAULT_API_BASE = process.env.NEXT_PUBLIC_API_URL
+// Use environment variable for API base URL
+const DEFAULT_API_BASE = process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_PLAGIARISM_REDIRECT_PREFIX
   ? `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_PLAGIARISM_REDIRECT_PREFIX}`
-  : "http://163.172.172.38:5001/api";
+  : process.env.NEXT_PUBLIC_API_URL || "";
 const ANALYZE_ENDPOINT = "/plagiarism/analyze";
 const ANALYZE_FILE_ENDPOINT = "/plagiarism/analyze-file";
 

@@ -5,7 +5,55 @@ import { useGetUsesLimitQuery } from "@/redux/api/tools/toolsApi";
 import { useGetUserLimitQuery } from "@/redux/api/auth/authApi";
 import { useCallback, useMemo } from "react";
 
-const WRITING_STUDIO_SERVICES = {
+interface RootState {
+  auth: {
+    user: User | null;
+  };
+}
+
+interface User {
+  email?: string;
+  package?: string;
+  [key: string]: unknown;
+}
+
+interface LimitData {
+  remainingWord: number;
+  totalWordLimit: number;
+  [key: string]: unknown;
+}
+
+interface FeatureAccessResult {
+  allowed: boolean;
+  reason: string | null;
+  remaining?: number;
+  total?: number;
+}
+
+interface LimitInfo extends FeatureAccessResult {
+  isPro: boolean;
+  isAuthenticated: boolean;
+  userPackage: string;
+}
+
+type FeatureType =
+  | "paraphrase"
+  | "grammar"
+  | "summarize"
+  | "humanize"
+  | "ai_detector"
+  | "ai_scan"
+  | "plagiarism"
+  | "export_docx"
+  | "export_html"
+  | "export_txt"
+  | "citations";
+
+type EnforcementLevel = "backend" | "subscription" | "none" | "auth_only";
+
+type ReasonType = "login_required" | "word_limit_reached" | "pro_required" | null;
+
+const WRITING_STUDIO_SERVICES: Record<string, string> = {
   paraphrase: "paraphrase",
   humanize: "bypass",
   grammar: "grammar",
@@ -13,7 +61,7 @@ const WRITING_STUDIO_SERVICES = {
   plagiarism: "plagiarism",
 };
 
-const FEATURE_ENFORCEMENT = {
+const FEATURE_ENFORCEMENT: Record<string, EnforcementLevel> = {
   paraphrase: "backend",
   grammar: "backend",
   summarize: "backend",
@@ -27,10 +75,10 @@ const FEATURE_ENFORCEMENT = {
 };
 
 export function useWritingStudioLimits() {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   
   const isPro = useMemo(() => {
-    return user?.package && user.package !== "free";
+    return !!(user?.package && user.package !== "free");
   }, [user?.package]);
 
   const isAuthenticated = useMemo(() => {
@@ -40,12 +88,12 @@ export function useWritingStudioLimits() {
   const { data: paraphraseLimits, refetch: refetchParaphrase } = useGetUsesLimitQuery(
     { service: WRITING_STUDIO_SERVICES.paraphrase },
     { skip: !isAuthenticated }
-  );
+  ) as { data: LimitData | undefined; refetch: () => void };
 
   const { data: humanizeLimits, refetch: refetchHumanize } = useGetUsesLimitQuery(
     { service: WRITING_STUDIO_SERVICES.humanize },
     { skip: !isAuthenticated }
-  );
+  ) as { data: LimitData | undefined; refetch: () => void };
 
   const { refetch: refetchUserLimit } = useGetUserLimitQuery(undefined, {
     skip: !isAuthenticated,
@@ -59,7 +107,7 @@ export function useWritingStudioLimits() {
     }
   }, [isAuthenticated, refetchParaphrase, refetchHumanize, refetchUserLimit]);
 
-  const checkFeatureAccess = useCallback((feature) => {
+  const checkFeatureAccess = useCallback((feature: FeatureType): FeatureAccessResult => {
     if (!isAuthenticated) {
       return { allowed: false, reason: "login_required" };
     }
@@ -122,7 +170,7 @@ export function useWritingStudioLimits() {
     }
   }, [isAuthenticated, isPro, paraphraseLimits, humanizeLimits]);
 
-  const getLimitInfo = useCallback((feature) => {
+  const getLimitInfo = useCallback((feature: FeatureType): LimitInfo => {
     const access = checkFeatureAccess(feature);
     return {
       ...access,
@@ -144,7 +192,7 @@ export function useWritingStudioLimits() {
   };
 }
 
-export function getUpgradeMessage(reason) {
+export function getUpgradeMessage(reason: ReasonType): string {
   switch (reason) {
     case "login_required":
       return "Please sign in to use this feature";
@@ -157,6 +205,6 @@ export function getUpgradeMessage(reason) {
   }
 }
 
-export function getFeatureEnforcement(feature) {
+export function getFeatureEnforcement(feature: string): EnforcementLevel {
   return FEATURE_ENFORCEMENT[feature] || "none";
 }

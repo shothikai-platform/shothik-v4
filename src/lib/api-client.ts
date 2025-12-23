@@ -1,8 +1,19 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 
+const getToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem('jwt_token');
+};
+
+const removeTokenAndRedirect = (): void => {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem('jwt_token');
+  window.location.href = '/auth/login';
+};
+
 // Create an axios instance
-the const apiClient: AxiosInstance = axios.create({
+const apiClient: AxiosInstance = axios.create({
   baseURL: ENV.api_url || 'https://prod-api.shothik.ai',
   timeout: 10000, // 10 seconds timeout
 });
@@ -10,7 +21,7 @@ the const apiClient: AxiosInstance = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt_token');
+    const token = getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,8 +35,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('jwt_token');
-      window.location.href = '/auth/login';
+      removeTokenAndRedirect();
     } else {
       if (!error.response) {
         if (error.message.includes('timeout')) {
