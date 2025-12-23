@@ -121,6 +121,14 @@ const AI_TOOLS = [
     color: "text-green-500",
     bgColor: "bg-green-500/10",
   },
+  {
+    id: "summarize",
+    name: "Summarize",
+    icon: FileText,
+    description: "Condense text to key points",
+    color: "text-orange-500",
+    bgColor: "bg-orange-500/10",
+  },
 ];
 
 const PARAPHRASE_MODES = [
@@ -1315,6 +1323,15 @@ export default function WritingStudioContent() {
             language: "en-US",
           }).unwrap();
           processedText = result?.data?.corrected_text || result?.corrected_text || result?.text || "";
+          break;
+
+        case "summarize":
+          result = await paraphrase({
+            text,
+            mode: "Shorten",
+            synonymLevel: 20,
+          }).unwrap();
+          processedText = result?.data?.paraphrased_text || result?.paraphrased_text || "";
           break;
 
         default:
