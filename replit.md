@@ -66,6 +66,15 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
        - DiffPreview.jsx - Before/after text comparison
        - WritingTemplates.jsx - Academic template selector
        - ReviewPanels.jsx - WritingAnalysisPanel, CitationFormatHelper, CitationLookup, ReferenceListPanel, PlagiarismCheckPanel, AIScorePanel
+   - **TypeScript & SSR Hardening (Dec 23, 2024):**
+     - SSR fixes in API clients (api.ts, api-payment.ts, api-client.ts) - localStorage wrapped with typeof window checks
+     - Removed hardcoded IP fallback from plagiarismService.ts (security fix)
+     - Converted services to TypeScript with custom error classes:
+       - ai-detector.service.ts (AIDetectorServiceError)
+       - grammar-checker.service.ts (GrammarServiceError)
+       - paraphrase.service.ts (ParaphraseServiceError + AbortSignal support)
+     - Converted useWritingStudioLimits.js to TypeScript with explicit interfaces
+     - Fixed syntax errors in ParaphraseContend.jsx (broken console.log statements)
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
