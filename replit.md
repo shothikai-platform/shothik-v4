@@ -46,6 +46,11 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Sample thesis introduction document loaded during tour
      - First-time user detection via localStorage to auto-trigger tour
      - "Take a Tour" button in header to replay onboarding anytime
+   - **Day 7 Paywall Features:**
+     - Usage limits for free tier (3 AI actions/day, TXT export only)
+     - Upgrade modal comparing Free vs Academic Pro ($9/month)
+     - Usage banner showing remaining AI actions
+     - Pro badges on premium features (DOCX/HTML export, AI detection)
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 

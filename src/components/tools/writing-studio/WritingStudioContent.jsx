@@ -87,6 +87,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, FileDown, HelpCircle } from "lucide-react";
 import WritingStudioOnboarding from "./WritingStudioOnboarding";
+import { 
+  WritingStudioUpgradeModal, 
+  UsageLimitBanner, 
+  USAGE_LIMITS, 
+  getUsageFromStorage, 
+  updateUsageInStorage 
+} from "./WritingStudioUpgrade";
 
 const AI_TOOLS = [
   {
@@ -727,7 +734,7 @@ function CitationFormatHelper() {
   );
 }
 
-function CitationLookup({ onSave, citationFormat, onFormatChange }) {
+function CitationLookup({ onSave, citationFormat, onFormatChange, checkLimit, trackUsage, onLimitReached }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -737,10 +744,16 @@ function CitationLookup({ onSave, citationFormat, onFormatChange }) {
   const handleSearch = async () => {
     if (!query.trim() || query.length < 3) return;
     
+    if (checkLimit && !checkLimit("citations")) {
+      onLimitReached?.("citations");
+      return;
+    }
+    
     setIsSearching(true);
     try {
       const searchResults = await searchAll(query);
       setResults(searchResults);
+      trackUsage?.("citations");
     } catch (error) {
       toast.error("Failed to search citations");
     } finally {
@@ -1049,6 +1062,10 @@ export default function WritingStudioContent() {
   const [savedReferences, setSavedReferences] = useState([]);
   const [citationFormat, setCitationFormat] = useState("apa");
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeLimitType, setUpgradeLimitType] = useState("ai_actions");
+  const [usage, setUsage] = useState({ ai_actions: 0, citations: 0, ai_scans: 0 });
+  const isPro = user?.package && user.package !== "free";
   const selectionRef = useRef({ from: 0, to: 0 });
   const analysisTimeoutRef = useRef(null);
 
@@ -1057,7 +1074,20 @@ export default function WritingStudioContent() {
     if (!hasSeenTour) {
       setTimeout(() => setShowOnboarding(true), 1000);
     }
+    setUsage(getUsageFromStorage());
   }, []);
+
+  const checkLimit = (type) => {
+    if (isPro) return true;
+    const limits = USAGE_LIMITS.free;
+    const currentUsage = getUsageFromStorage();
+    return currentUsage[type] < limits[type];
+  };
+
+  const trackUsage = (type) => {
+    const updated = updateUsageInStorage(type);
+    setUsage(updated);
+  };
 
   const [paraphrase] = useParaphrasedMutation();
   const [humanize] = useHumanizeContendMutation();
@@ -1154,6 +1184,12 @@ export default function WritingStudioContent() {
       return;
     }
 
+    if (!checkLimit("ai_actions")) {
+      setUpgradeLimitType("ai_actions");
+      setShowUpgradeModal(true);
+      return;
+    }
+
     if (toolOverride) {
       setSelectedTool(toolOverride);
     }
@@ -1202,6 +1238,7 @@ export default function WritingStudioContent() {
       if (processedText) {
         setProcessedResult(processedText);
         setShowDiff(true);
+        trackUsage("ai_actions");
         toast.success("Text enhanced! Review the changes below.");
       } else {
         toast.error("No result received. Please try again.");
@@ -1256,6 +1293,12 @@ export default function WritingStudioContent() {
       return;
     }
 
+    if (!isPro) {
+      setUpgradeLimitType("ai_scan");
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setIsScanning(true);
     try {
       const result = await scanAi({ text }).unwrap();
@@ -1282,6 +1325,12 @@ export default function WritingStudioContent() {
   };
 
   const handleExport = async (format, includeRefs = true) => {
+    if (!isPro && (format === "docx" || format === "html")) {
+      setUpgradeLimitType("export");
+      setShowUpgradeModal(true);
+      return;
+    }
+
     const content = editor?.getHTML() || "";
     const text = editor?.getText() || "";
     
@@ -1469,6 +1518,22 @@ export default function WritingStudioContent() {
         />
       )}
 
+      <WritingStudioUpgradeModal 
+        open={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)}
+        limitType={upgradeLimitType}
+      />
+
+      {!isPro && (
+        <div className="mb-4">
+          <UsageLimitBanner 
+            used={usage.ai_actions} 
+            limit={USAGE_LIMITS.free.ai_actions} 
+            type="AI actions"
+          />
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <Card className="overflow-hidden">
@@ -1600,10 +1665,12 @@ export default function WritingStudioContent() {
                     <DropdownMenuItem onClick={() => handleExport("docx")}>
                       <FileText className="h-4 w-4 mr-2" />
                       Word Document (.docx)
+                      {!isPro && <Badge variant="outline" className="ml-auto text-xs">Pro</Badge>}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport("html")}>
                       <FileText className="h-4 w-4 mr-2" />
                       HTML File (.html)
+                      {!isPro && <Badge variant="outline" className="ml-auto text-xs">Pro</Badge>}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport("txt")}>
                       <FileText className="h-4 w-4 mr-2" />
@@ -1888,6 +1955,12 @@ export default function WritingStudioContent() {
                       }}
                       citationFormat={citationFormat}
                       onFormatChange={setCitationFormat}
+                      checkLimit={checkLimit}
+                      trackUsage={trackUsage}
+                      onLimitReached={(type) => {
+                        setUpgradeLimitType(type);
+                        setShowUpgradeModal(true);
+                      }}
                     />
                     </div>
 
