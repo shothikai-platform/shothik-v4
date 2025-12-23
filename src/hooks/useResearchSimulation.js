@@ -123,7 +123,9 @@ export const useResearchSimulation = () => {
       if (abortControllerRef.current) {
         try {
           abortControllerRef.current.abort();
-        } catch (e) {}
+        } catch (e) {
+          // Abort may fail if already aborted - safe to ignore
+        }
         abortControllerRef.current = null;
       }
     };

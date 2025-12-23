@@ -37,7 +37,9 @@ export const authApi = authApiSlice.injectEndpoints({
           if (result?.data) {
             dispatch(setUserLimit(result?.data));
           }
-        } catch (err) {}
+        } catch (err) {
+          // Query failed - user limit will use defaults
+        }
       },
       providesTags: ["user-limit"],
     }),

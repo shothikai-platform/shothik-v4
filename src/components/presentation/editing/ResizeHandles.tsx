@@ -118,7 +118,9 @@ export const ResizeHandles = memo(function ResizeHandles({
             const height = rect.height * iframeScale;
             setOverlayRect({ left, top, width, height });
           }
-        } catch {}
+        } catch {
+          // Element may not exist during transitions - safe to ignore
+        }
       }
       rafId = requestAnimationFrame(tick);
     };

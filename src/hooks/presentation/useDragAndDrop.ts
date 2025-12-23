@@ -190,7 +190,9 @@ export function useDragAndDrop(
       setIsDragging(true);
       try {
         (element as any).setPointerCapture?.((e as any).pointerId);
-      } catch {}
+      } catch {
+        // Pointer capture may fail in some browsers - safe to ignore
+      }
       doc.addEventListener("pointermove", onPointerMove, { passive: true });
       doc.addEventListener("pointerup", onPointerUp, {
         passive: true,
