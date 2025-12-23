@@ -746,12 +746,13 @@ function CitationFormatHelper() {
   );
 }
 
-function CitationLookup({ onSave, citationFormat, onFormatChange, checkLimit, trackUsage, onLimitReached }) {
+function CitationLookup({ onSave, onInsert, citationFormat, onFormatChange, checkLimit, trackUsage, onLimitReached }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [savedIndex, setSavedIndex] = useState(null);
+  const [insertedIndex, setInsertedIndex] = useState(null);
 
   const handleSearch = async () => {
     if (!query.trim() || query.length < 3) return;
@@ -792,6 +793,15 @@ function CitationLookup({ onSave, citationFormat, onFormatChange, checkLimit, tr
         setSavedIndex(index);
         setTimeout(() => setSavedIndex(null), 2000);
       }
+    }
+  };
+
+  const handleInsert = (item, index) => {
+    if (onInsert) {
+      const formatted = formatCitation(item, citationFormat);
+      onInsert(formatted);
+      setInsertedIndex(index);
+      setTimeout(() => setInsertedIndex(null), 2000);
     }
   };
 
@@ -872,6 +882,19 @@ function CitationLookup({ onSave, citationFormat, onFormatChange, checkLimit, tr
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={() => handleInsert(item, index)}
+                    className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Insert into document"
+                  >
+                    {insertedIndex === index ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <FileText className="h-3 w-3" />
+                    )}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => handleSave(item, index)}
                     className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     title="Add to references"
@@ -922,7 +945,9 @@ function CitationLookup({ onSave, citationFormat, onFormatChange, checkLimit, tr
   );
 }
 
-function ReferenceListPanel({ references, onRemove, citationFormat, onCopyAll }) {
+function ReferenceListPanel({ references, onRemove, onInsert, citationFormat, onCopyAll }) {
+  const [insertedIndex, setInsertedIndex] = useState(null);
+  
   const handleCopy = async (item) => {
     const formatted = formatCitation(item, citationFormat);
     try {
@@ -930,6 +955,15 @@ function ReferenceListPanel({ references, onRemove, citationFormat, onCopyAll })
       toast.success("Citation copied!");
     } catch {
       toast.error("Failed to copy");
+    }
+  };
+
+  const handleInsert = (item, index) => {
+    if (onInsert) {
+      const formatted = formatCitation(item, citationFormat);
+      onInsert(formatted);
+      setInsertedIndex(index);
+      setTimeout(() => setInsertedIndex(null), 2000);
     }
   };
 
@@ -982,6 +1016,19 @@ function ReferenceListPanel({ references, onRemove, citationFormat, onCopyAll })
                 </div>
               </div>
               <div className="flex gap-1">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleInsert(item, index)}
+                  className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Insert into document"
+                >
+                  {insertedIndex === index ? (
+                    <Check className="h-2.5 w-2.5 text-green-500" />
+                  ) : (
+                    <FileText className="h-2.5 w-2.5" />
+                  )}
+                </Button>
                 <Button
                   size="sm"
                   variant="ghost"
@@ -2102,6 +2149,15 @@ export default function WritingStudioContent() {
                         setSavedReferences(prev => prev.filter((_, i) => i !== index));
                         toast.success("Reference removed");
                       }}
+                      onInsert={(formattedCitation) => {
+                        if (editor) {
+                          editor.chain().focus().insertContent({
+                            type: "paragraph",
+                            content: [{ type: "text", text: formattedCitation }]
+                          }).run();
+                          toast.success("Citation inserted!");
+                        }
+                      }}
                       citationFormat={citationFormat}
                       onCopyAll={async () => {
                         if (savedReferences.length === 0) return;
@@ -2132,6 +2188,15 @@ export default function WritingStudioContent() {
                         } else {
                           toast.info("This reference is already saved");
                           return false;
+                        }
+                      }}
+                      onInsert={(formattedCitation) => {
+                        if (editor) {
+                          editor.chain().focus().insertContent({
+                            type: "paragraph",
+                            content: [{ type: "text", text: formattedCitation }]
+                          }).run();
+                          toast.success("Citation inserted!");
                         }
                       }}
                       citationFormat={citationFormat}
