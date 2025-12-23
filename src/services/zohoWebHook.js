@@ -52,8 +52,13 @@ export async function POST(request) {
     await axios.get("https://httpbin.org/status/200", { timeout: 5000 });
     console.log("Network connectivity confirmed");
 
+    const zohoWebhookUrl = process.env.ZOHO_WEBHOOK_URL;
+    if (!zohoWebhookUrl) {
+      throw new Error("ZOHO_WEBHOOK_URL environment variable is not configured");
+    }
+    
     const zohoResponse = await axios.post(
-      "https://flow.zoho.com/895989103/flow/webhook/incoming?zapikey=1001.563e7024e0c383d73d4f6bdb92d1a880.958f8a0149546765487064afba19284b&isdebug=false",
+      zohoWebhookUrl,
       zohoPayload,
       {
         headers: {
