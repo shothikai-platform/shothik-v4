@@ -30,6 +30,12 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Sentence variety analysis with short/medium/long breakdown and variety score
      - Citation format helper with APA 7th, MLA 9th, Chicago 17th templates
      - Templates provided for book, journal, and website citations
+   - **Week 4 Citation & Research Features:**
+     - Citation Lookup: Search CrossRef (academic papers) and Open Library (books)
+     - Auto-detect DOI and ISBN patterns for direct lookup
+     - Format citations in APA, MLA, or Chicago style with one click
+     - Copy formatted citations to clipboard
+     - DOI links for journal articles
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
