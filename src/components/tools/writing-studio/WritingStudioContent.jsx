@@ -78,6 +78,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown, FileDown } from "lucide-react";
 
 const AI_TOOLS = [
   {
@@ -1264,12 +1272,22 @@ export default function WritingStudioContent() {
     setLinkUrl("");
   };
 
-  const handleExport = (format) => {
+  const handleExport = async (format, includeRefs = true) => {
     const content = editor?.getHTML() || "";
     const text = editor?.getText() || "";
+    
+    let referencesText = "";
+    let referencesHtml = "";
+    
+    if (includeRefs && savedReferences.length > 0) {
+      referencesText = "\n\n---\n\nReferences\n\n" + 
+        savedReferences.map(ref => formatCitation(ref, citationFormat)).join("\n\n");
+      referencesHtml = `<hr><h2>References</h2>` + 
+        savedReferences.map(ref => `<p>${formatCitation(ref, citationFormat)}</p>`).join("");
+    }
 
     if (format === "txt") {
-      const blob = new Blob([text], { type: "text/plain" });
+      const blob = new Blob([text + referencesText], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -1277,15 +1295,132 @@ export default function WritingStudioContent() {
       a.click();
       URL.revokeObjectURL(url);
     } else if (format === "html") {
-      const blob = new Blob([content], { type: "text/html" });
+      const fullHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Document</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6}h1,h2,h3{margin-top:1.5em}p{margin:1em 0}</style></head><body>${content}${referencesHtml}</body></html>`;
+      const blob = new Blob([fullHtml], { type: "text/html" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = "document.html";
       a.click();
       URL.revokeObjectURL(url);
+    } else if (format === "docx") {
+      try {
+        const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import("docx");
+        
+        const extractTextRuns = (node, TextRun, inheritBold = false, inheritItalic = false) => {
+          const runs = [];
+          
+          const processChild = (child, bold = inheritBold, italic = inheritItalic) => {
+            if (child.nodeType === Node.TEXT_NODE) {
+              const text = child.textContent;
+              if (text) {
+                runs.push(new TextRun({ text, bold, italics: italic }));
+              }
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+              const tag = child.tagName.toLowerCase();
+              const isBold = bold || tag === "strong" || tag === "b";
+              const isItalic = italic || tag === "em" || tag === "i";
+              
+              if (tag === "a") {
+                runs.push(new TextRun({ text: child.textContent, bold, italics: italic }));
+              } else {
+                child.childNodes.forEach(c => processChild(c, isBold, isItalic));
+              }
+            }
+          };
+          
+          node.childNodes.forEach(child => processChild(child));
+          return runs.length > 0 ? runs : [new TextRun(node.textContent || "")];
+        };
+        
+        const htmlToDocxElements = (html) => {
+          const elements = [];
+          const div = document.createElement("div");
+          div.innerHTML = html;
+          
+          const processNode = (node) => {
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            
+            const tag = node.tagName.toLowerCase();
+            
+            if (tag === "h1") {
+              elements.push(new Paragraph({ 
+                children: extractTextRuns(node, TextRun),
+                heading: HeadingLevel.HEADING_1 
+              }));
+            } else if (tag === "h2") {
+              elements.push(new Paragraph({ 
+                children: extractTextRuns(node, TextRun),
+                heading: HeadingLevel.HEADING_2 
+              }));
+            } else if (tag === "h3") {
+              elements.push(new Paragraph({ 
+                children: extractTextRuns(node, TextRun),
+                heading: HeadingLevel.HEADING_3 
+              }));
+            } else if (tag === "p") {
+              elements.push(new Paragraph({ children: extractTextRuns(node, TextRun) }));
+            } else if (tag === "ul") {
+              let idx = 0;
+              node.querySelectorAll(":scope > li").forEach(li => {
+                idx++;
+                elements.push(new Paragraph({ 
+                  children: [new TextRun("• "), ...extractTextRuns(li, TextRun)]
+                }));
+              });
+            } else if (tag === "ol") {
+              let idx = 0;
+              node.querySelectorAll(":scope > li").forEach(li => {
+                idx++;
+                elements.push(new Paragraph({ 
+                  children: [new TextRun(`${idx}. `), ...extractTextRuns(li, TextRun)]
+                }));
+              });
+            } else if (tag === "blockquote") {
+              elements.push(new Paragraph({ 
+                children: extractTextRuns(node, TextRun, false, true),
+                indent: { left: 720 }
+              }));
+            } else if (tag === "hr") {
+              elements.push(new Paragraph({ text: "—".repeat(40) }));
+            } else if (tag === "br") {
+              elements.push(new Paragraph({ text: "" }));
+            } else {
+              node.childNodes.forEach(child => {
+                if (child.nodeType === Node.ELEMENT_NODE) {
+                  processNode(child);
+                }
+              });
+            }
+          };
+          
+          div.childNodes.forEach(child => processNode(child));
+          return elements;
+        };
+        
+        const docElements = htmlToDocxElements(content + referencesHtml);
+        
+        const doc = new Document({
+          sections: [{
+            properties: {},
+            children: docElements.length > 0 ? docElements : [new Paragraph({ text: text })]
+          }]
+        });
+        
+        const blob = await Packer.toBlob(doc);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "document.docx";
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("DOCX export error:", err);
+        toast.error("Failed to export DOCX");
+        return;
+      }
     }
-    toast.success(`Exported as ${format.toUpperCase()}`);
+    toast.success(`Exported as ${format.toUpperCase()}${includeRefs && savedReferences.length > 0 ? " with references" : ""}`);
   };
 
   return (
@@ -1419,15 +1554,37 @@ export default function WritingStudioContent() {
                   <Type className="h-3 w-3" />
                   {wordCount} words
                 </Badge>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport("txt")}
-                  className="gap-1"
-                >
-                  <Download className="h-4 w-4" />
-                  Export
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-1">
+                      <FileDown className="h-4 w-4" />
+                      Export
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => handleExport("docx")}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Word Document (.docx)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport("html")}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      HTML File (.html)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport("txt")}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Plain Text (.txt)
+                    </DropdownMenuItem>
+                    {savedReferences.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-xs text-muted-foreground" disabled>
+                          {savedReferences.length} reference{savedReferences.length > 1 ? "s" : ""} will be included
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
