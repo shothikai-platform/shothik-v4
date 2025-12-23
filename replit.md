@@ -36,6 +36,9 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Format citations in APA, MLA, or Chicago style with one click
      - Copy formatted citations to clipboard
      - DOI links for journal articles
+     - Reference List Generator: Save citations and build bibliography
+     - Export all references with "Copy All" button
+     - Duplicate detection prevents adding same source twice
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
