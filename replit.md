@@ -59,6 +59,13 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
        - `auth_only`: Login required (citations - uses external APIs)
        - `none`: Always allowed (TXT export)
      - Removed localStorage-based paywall (security vulnerability)
+   - **Code Refactoring (Dec 2024):**
+     - Extracted WritingStudioContent.jsx from ~2258 to 1164 lines
+     - Constants (AI_TOOLS, PARAPHRASE_MODES, WRITING_TEMPLATES) moved to `./constants/index.js`
+     - UI components extracted to `./components/`:
+       - DiffPreview.jsx - Before/after text comparison
+       - WritingTemplates.jsx - Academic template selector
+       - ReviewPanels.jsx - WritingAnalysisPanel, CitationFormatHelper, CitationLookup, ReferenceListPanel, PlagiarismCheckPanel, AIScorePanel
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
