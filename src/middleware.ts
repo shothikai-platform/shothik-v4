@@ -6,12 +6,12 @@ export function middleware(req: NextRequest) {
 
     // Redirect to /auth/login if the user is not authenticated and trying to access protected routes
     if (pathname.startsWith("/dashboard") && !token) {
-        return NextResponse.redirect("/auth/login");
+        return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
     // Redirect to /dashboard if the user is authenticated and trying to access authentication routes
     if (pathname.startsWith("/auth") && token) {
-        return NextResponse.redirect("/dashboard");
+        return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     // Allow public routes
