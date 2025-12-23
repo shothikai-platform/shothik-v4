@@ -14,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "react-toastify";
 import {
   Bold,
@@ -44,10 +43,11 @@ import {
   Check,
   AlertTriangle,
   Eye,
-  MessageSquare,
-  GraduationCap,
   FlaskConical,
   FileSearch,
+  ChevronDown,
+  FileDown,
+  HelpCircle,
 } from "lucide-react";
 import {
   useParaphrasedMutation,
@@ -58,27 +58,9 @@ import {
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { cn } from "@/lib/utils";
 import { getFullAnalysis } from "@/lib/text-analysis";
-import { searchAll, formatCitation } from "@/lib/citation-lookup";
+import { formatCitation } from "@/lib/citation-lookup";
 import { analyzePlagiarism } from "@/services/plagiarismService";
-import {
-  BookOpen,
-  TrendingUp,
-  BarChart3,
-  AlertCircle,
-  Info,
-  Search,
-  ExternalLink,
-  Plus,
-  Trash2,
-  ListOrdered as ListIcon,
-} from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -86,7 +68,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, FileDown, HelpCircle } from "lucide-react";
 import WritingStudioOnboarding from "./WritingStudioOnboarding";
 import { 
   WritingStudioUpgradeModal, 
@@ -94,76 +75,17 @@ import {
   USAGE_LIMITS,
 } from "./WritingStudioUpgrade";
 import { useWritingStudioLimits, getUpgradeMessage } from "@/hooks/useWritingStudioLimits";
-
-const AI_TOOLS = [
-  {
-    id: "paraphrase",
-    name: "Paraphrase",
-    icon: RefreshCw,
-    description: "Rewrite text while preserving meaning",
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-  },
-  {
-    id: "humanize",
-    name: "Humanize",
-    icon: Bot,
-    description: "Make AI text sound more natural",
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-  },
-  {
-    id: "grammar",
-    name: "Grammar & Clarity",
-    icon: CheckCircle2,
-    description: "Fix errors and improve clarity",
-    color: "text-green-500",
-    bgColor: "bg-green-500/10",
-  },
-  {
-    id: "summarize",
-    name: "Summarize",
-    icon: FileText,
-    description: "Condense text to key points",
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
-  },
-];
-
-const PARAPHRASE_MODES = [
-  { id: "Fluency", name: "Fluency", description: "Improve readability" },
-  { id: "Standard", name: "Standard", description: "Balanced rewrite" },
-  { id: "Formal", name: "Academic", description: "Academic tone" },
-  { id: "Simple", name: "Simplify", description: "Clearer language" },
-  { id: "Creative", name: "Creative", description: "More varied wording" },
-  { id: "Shorten", name: "Shorten", description: "Reduce word count" },
-  { id: "Expand", name: "Expand", description: "Add more detail" },
-];
-
-const WRITING_TEMPLATES = [
-  {
-    id: "research-paper",
-    name: "Research Paper",
-    icon: FlaskConical,
-    description: "Standard academic research structure",
-    content: `<h1>Research Paper Title</h1>
-<h2>Abstract</h2>
-<p>[Provide a brief summary of your research, including the problem, methods, key findings, and conclusions. Keep it under 300 words.]</p>
-<h2>1. Introduction</h2>
-<p>[Introduce your research topic and its significance. State the research problem or question. Outline the objectives and scope of your study.]</p>
-<h2>2. Literature Review</h2>
-<p>[Summarize relevant existing research. Identify gaps in current knowledge. Explain how your research addresses these gaps.]</p>
-<h2>3. Methodology</h2>
-<p>[Describe your research design and approach. Explain data collection methods. Detail your analysis procedures.]</p>
-<h2>4. Results</h2>
-<p>[Present your findings objectively. Use tables and figures where appropriate. Report statistical analyses if applicable.]</p>
-<h2>5. Discussion</h2>
-<p>[Interpret your results. Compare findings with existing literature. Discuss implications and limitations.]</p>
-<h2>6. Conclusion</h2>
-<p>[Summarize key findings. State contributions to the field. Suggest directions for future research.]</p>
-<h2>References</h2>
-<p>[List all cited sources in your chosen citation format.]</p>`,
-  },
+import { AI_TOOLS, PARAPHRASE_MODES, WRITING_TEMPLATES } from "./constants";
+import {
+  DiffPreview,
+  WritingTemplates,
+  WritingAnalysisPanel,
+  CitationFormatHelper,
+  CitationLookup,
+  ReferenceListPanel,
+  PlagiarismCheckPanel,
+  AIScorePanel,
+} from "./components";
   {
     id: "argumentative-essay",
     name: "Argumentative Essay",
