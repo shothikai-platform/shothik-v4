@@ -85,7 +85,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, FileDown } from "lucide-react";
+import { ChevronDown, FileDown, HelpCircle } from "lucide-react";
+import WritingStudioOnboarding from "./WritingStudioOnboarding";
 
 const AI_TOOLS = [
   {
@@ -1047,8 +1048,16 @@ export default function WritingStudioContent() {
   const [textAnalysis, setTextAnalysis] = useState(null);
   const [savedReferences, setSavedReferences] = useState([]);
   const [citationFormat, setCitationFormat] = useState("apa");
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const selectionRef = useRef({ from: 0, to: 0 });
   const analysisTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem("writing-studio-onboarding");
+    if (!hasSeenTour) {
+      setTimeout(() => setShowOnboarding(true), 1000);
+    }
+  }, []);
 
   const [paraphrase] = useParaphrasedMutation();
   const [humanize] = useHumanizeContendMutation();
@@ -1426,14 +1435,39 @@ export default function WritingStudioContent() {
   return (
     <div className="container mx-auto max-w-7xl px-4 py-6">
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <GraduationCap className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold text-primary">Academic Writing Studio</h1>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold text-primary">Academic Writing Studio</h1>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowOnboarding(true)}
+            className="gap-2"
+          >
+            <HelpCircle className="h-4 w-4" />
+            Take a Tour
+          </Button>
         </div>
         <p className="text-muted-foreground">
           Write, critique, and enhance your papers, theses, and research with AI-powered tools
         </p>
       </div>
+
+      {showOnboarding && (
+        <WritingStudioOnboarding
+          onComplete={() => setShowOnboarding(false)}
+          onLoadSample={(content) => {
+            if (editor) {
+              const currentContent = editor.getText().trim();
+              if (!currentContent || currentContent.length < 10) {
+                editor.commands.setContent(content);
+              }
+            }
+          }}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
@@ -1556,7 +1590,7 @@ export default function WritingStudioContent() {
                 </Badge>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-1">
+                    <Button variant="outline" size="sm" className="gap-1" id="writing-studio-export">
                       <FileDown className="h-4 w-4" />
                       Export
                       <ChevronDown className="h-3 w-3" />
@@ -1642,7 +1676,7 @@ export default function WritingStudioContent() {
               </BubbleMenu>
             )}
 
-            <EditorContent editor={editor} className="min-h-[500px]" />
+            <EditorContent editor={editor} className="min-h-[500px]" id="writing-studio-editor" />
 
             {selectedText && !showDiff && (
               <div className="border-t bg-primary/5 px-4 py-2 flex items-center justify-between">
@@ -1662,11 +1696,11 @@ export default function WritingStudioContent() {
           <Card className="sticky top-4">
             <Tabs defaultValue="actions" className="w-full">
               <TabsList className="w-full grid grid-cols-2">
-                <TabsTrigger value="actions" className="gap-1">
+                <TabsTrigger value="actions" className="gap-1" id="writing-studio-ai-tools">
                   <Wand2 className="h-4 w-4" />
                   AI Actions
                 </TabsTrigger>
-                <TabsTrigger value="review" className="gap-1">
+                <TabsTrigger value="review" className="gap-1" id="writing-studio-review-tab">
                   <FileSearch className="h-4 w-4" />
                   Review
                 </TabsTrigger>
@@ -1837,6 +1871,7 @@ export default function WritingStudioContent() {
 
                     <Separator />
 
+                    <div id="writing-studio-citations-tab">
                     <CitationLookup 
                       onSave={(item) => {
                         const exists = savedReferences.some(
@@ -1854,6 +1889,7 @@ export default function WritingStudioContent() {
                       citationFormat={citationFormat}
                       onFormatChange={setCitationFormat}
                     />
+                    </div>
 
                     <Separator />
 

@@ -41,6 +41,11 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Duplicate detection prevents adding same source twice
      - Writing Templates: Pre-built structures for Research Paper, Essay, Thesis Chapter, Literature Review, Lab Report
      - Export with References: Export to DOCX/HTML/TXT with formatted bibliography included
+   - **Day 5-6 Onboarding Features:**
+     - 5-step guided tour using Driver.js (Editor → AI Tools → Review → Citations → Export)
+     - Sample thesis introduction document loaded during tour
+     - First-time user detection via localStorage to auto-trigger tour
+     - "Take a Tour" button in header to replay onboarding anytime
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
