@@ -51,6 +51,14 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Upgrade modal comparing Free vs Academic Pro ($9/month)
      - Usage banner showing remaining AI actions
      - Pro badges on premium features (DOCX/HTML export, AI detection)
+   - **Production Security (Dec 2024):**
+     - Backend-validated usage tracking via `useWritingStudioLimits` hook
+     - Feature enforcement levels documented in hook:
+       - `backend`: Word limits via /uses-limit API (paraphrase, grammar, summarize, humanize)
+       - `subscription`: Pro required via user.package (AI detector, plagiarism, DOCX/HTML export)
+       - `auth_only`: Login required (citations - uses external APIs)
+       - `none`: Always allowed (TXT export)
+     - Removed localStorage-based paywall (security vulnerability)
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
