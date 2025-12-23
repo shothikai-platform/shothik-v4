@@ -23,6 +23,13 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
      - Complex word detection (3+ syllables) with examples
      - Hedging language detection with usage counts
      - All analysis updates in real-time with 500ms debounce
+   - **Week 3 Advanced Review Features:**
+     - Word choice analyzer detecting weak words (very, really, thing) with yellow badges
+     - Informal language detection (contractions, casual words) with orange badges
+     - Word repetition detection for words used 3+ times
+     - Sentence variety analysis with short/medium/long breakdown and variety score
+     - Citation format helper with APA 7th, MLA 9th, Chicago 17th templates
+     - Templates provided for book, journal, and website citations
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
