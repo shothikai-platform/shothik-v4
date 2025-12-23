@@ -15,6 +15,14 @@ Shothik AI is a comprehensive AI-powered platform for digital marketing automati
    - AI Detector integration with probability scoring in the Review tab
    - Tabbed sidebar UI (AI Actions / Review) with academic-focused design
    - Selection-persistent processing using selectionRef for reliable inline editing
+   - **Week 2 Critique & Scoring Features:**
+     - Real-time Flesch-Kincaid readability scoring (Flesch Reading Ease + Grade Level)
+     - Writing statistics (word count, sentences, paragraphs, avg sentence length)
+     - Academic tone score (composite of vocabulary, passive voice, readability)
+     - Passive voice detection with percentage indicator
+     - Complex word detection (3+ syllables) with examples
+     - Hedging language detection with usage counts
+     - All analysis updates in real-time with 500ms debounce
 
 4. **AI Agents** - Slide generation, data analysis/sheet generation, and deep research capabilities with real-time streaming.
 
