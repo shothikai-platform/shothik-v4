@@ -259,13 +259,6 @@ const presentationSlice = createSlice({
       // Update derived state
       state.currentPhase = deriveCurrentPhase(state.logs, state.slides);
       state.completedPhases = deriveCompletedPhases(state.logs, state.slides);
-
-        state.slides.map((s) => ({
-          num: s.slideNumber,
-          thinking: !!s.thinking,
-          html: !!s.htmlContent,
-          complete: s.isComplete,
-        })),
     },
 
     /**
@@ -278,10 +271,6 @@ const presentationSlice = createSlice({
      */
     insertSlide(state, action) {
       const { insertIndex, slideEntry } = action.payload;
-
-        currentSlidesCount: state.slides.length,
-        slideNumbers: state.slides.map((s) => s.slideNumber),
-      });
 
       // Check if slide already exists at this number
       const existingIndex = state.slides.findIndex(
@@ -321,11 +310,6 @@ const presentationSlice = createSlice({
 
         // Update state
         state.slides = reorderedSlides;
-
-          insertIndex,
-          totalSlides: state.slides.length,
-          slideNumbers: state.slides.map((s) => s.slideNumber),
-        });
       } else {
         // No conflict - just insert at correct position
         // Find insertion point (maintain sorted order)
@@ -338,9 +322,6 @@ const presentationSlice = createSlice({
         }
 
         state.slides.splice(insertPosition, 0, slideEntry);
-          insertIndex,
-          totalSlides: state.slides.length,
-        });
       }
 
       // Update derived state
@@ -388,13 +369,6 @@ const presentationSlice = createSlice({
         _replaceArrays,
       } = action.payload;
 
-        logsCount: logs?.length,
-        slidesCount: slides?.length,
-        _replaceArrays,
-        status,
-        title,
-      });
-
       // Handle array replacement (for history loading)
       if (_replaceArrays) {
         // REPLACE mode: Overwrite existing data
@@ -410,7 +384,6 @@ const presentationSlice = createSlice({
           const existingLogIds = new Set(state.logs.map((log) => log.id));
           const newLogs = logs.filter((log) => !existingLogIds.has(log.id));
           state.logs = [...state.logs, ...newLogs];
-            "total:",
         }
 
         if (slides && slides.length > 0) {
@@ -425,7 +398,6 @@ const presentationSlice = createSlice({
           state.slides = allSlides.sort(
             (a, b) => a.slideNumber - b.slideNumber,
           );
-            "total:",
         }
       }
 

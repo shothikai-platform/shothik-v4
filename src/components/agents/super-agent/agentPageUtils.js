@@ -310,12 +310,6 @@ async function handleFollowUpQuery(
   showToast,
 ) {
   try {
-      "[handleFollowUpQuery] Sending follow-up query:",
-      inputValue,
-      "for p_id:",
-      currentPId,
-    );
-
     // Validate required parameters
     if (!inputValue || !inputValue.trim()) {
       showToast("Please enter a message", "error");
@@ -379,8 +373,6 @@ async function handleFollowUpQuery(
     const returnedPId = response?.presentationId;
     const responseStatus = response?.status; // "queued" status from API
 
-      "status:",
-
     // Update Redux with the returned p_id and status
     if (returnedPId) {
       dispatch(setCurrentSlideId({ presentationId: returnedPId }));
@@ -388,9 +380,6 @@ async function handleFollowUpQuery(
 
     // Handle the queued status - resume orchestrator process
     if (responseStatus === "queued") {
-        "[handleFollowUpQuery] Status is queued, resuming orchestrator process",
-      );
-
       // Update status to queued in Redux
       dispatch(
         setStatus({
