@@ -181,27 +181,3 @@ export const USAGE_LIMITS = {
     export_formats: ["txt", "html", "docx"],
   },
 };
-
-export function getUsageFromStorage() {
-  if (typeof window === "undefined") return { ai_actions: 0, citations: 0, ai_scans: 0, date: null };
-  
-  const stored = localStorage.getItem("writing-studio-usage");
-  if (!stored) return { ai_actions: 0, citations: 0, ai_scans: 0, date: new Date().toDateString() };
-  
-  const data = JSON.parse(stored);
-  const today = new Date().toDateString();
-  
-  if (data.date !== today) {
-    return { ai_actions: 0, citations: 0, ai_scans: 0, date: today };
-  }
-  
-  return data;
-}
-
-export function updateUsageInStorage(type, increment = 1) {
-  const usage = getUsageFromStorage();
-  usage[type] = (usage[type] || 0) + increment;
-  usage.date = new Date().toDateString();
-  localStorage.setItem("writing-studio-usage", JSON.stringify(usage));
-  return usage;
-}

@@ -91,10 +91,9 @@ import WritingStudioOnboarding from "./WritingStudioOnboarding";
 import { 
   WritingStudioUpgradeModal, 
   UsageLimitBanner, 
-  USAGE_LIMITS, 
-  getUsageFromStorage, 
-  updateUsageInStorage 
+  USAGE_LIMITS,
 } from "./WritingStudioUpgrade";
+import { useWritingStudioLimits, getUpgradeMessage } from "@/hooks/useWritingStudioLimits";
 
 const AI_TOOLS = [
   {
@@ -1203,33 +1202,43 @@ export default function WritingStudioContent() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLimitType, setUpgradeLimitType] = useState("ai_actions");
-  const [usage, setUsage] = useState({ ai_actions: 0, citations: 0, ai_scans: 0 });
   const [isCheckingPlagiarism, setIsCheckingPlagiarism] = useState(false);
   const [plagiarismResult, setPlagiarismResult] = useState(null);
   const [plagiarismError, setPlagiarismError] = useState(null);
-  const isPro = user?.package && user.package !== "free";
   const selectionRef = useRef({ from: 0, to: 0 });
   const analysisTimeoutRef = useRef(null);
+
+  const {
+    isPro,
+    isAuthenticated,
+    checkFeatureAccess,
+    refetchAll,
+    paraphraseLimits,
+    humanizeLimits,
+  } = useWritingStudioLimits();
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem("writing-studio-onboarding");
     if (!hasSeenTour) {
       setTimeout(() => setShowOnboarding(true), 1000);
     }
-    setUsage(getUsageFromStorage());
   }, []);
 
-  const checkLimit = (type) => {
-    if (isPro) return true;
-    const limits = USAGE_LIMITS.free;
-    const currentUsage = getUsageFromStorage();
-    return currentUsage[type] < limits[type];
-  };
+  const checkLimit = useCallback((type) => {
+    const featureMap = {
+      ai_actions: "paraphrase",
+      citations: "citations",
+      ai_scans: "ai_detector",
+      plagiarism: "plagiarism",
+    };
+    const feature = featureMap[type] || type;
+    const access = checkFeatureAccess(feature);
+    return access.allowed;
+  }, [checkFeatureAccess]);
 
-  const trackUsage = (type) => {
-    const updated = updateUsageInStorage(type);
-    setUsage(updated);
-  };
+  const trackUsage = useCallback((type) => {
+    refetchAll();
+  }, [refetchAll]);
 
   const [paraphrase] = useParaphrasedMutation();
   const [humanize] = useHumanizeContendMutation();
@@ -1326,9 +1335,28 @@ export default function WritingStudioContent() {
       return;
     }
 
-    if (!checkLimit("ai_actions")) {
-      setUpgradeLimitType("ai_actions");
-      setShowUpgradeModal(true);
+    const toolFeatureMap = {
+      paraphrase: "paraphrase",
+      grammar: "grammar",
+      summarize: "summarize",
+      humanize: "humanize",
+    };
+    const feature = toolFeatureMap[tool] || "paraphrase";
+    const access = checkFeatureAccess(feature);
+    
+    if (!access.allowed) {
+      const limitTypeMap = {
+        login_required: "ai_actions",
+        word_limit_reached: "ai_actions",
+        pro_required: "ai_actions",
+      };
+      setUpgradeLimitType(limitTypeMap[access.reason] || "ai_actions");
+      
+      if (access.reason === "login_required") {
+        dispatch(setShowLoginModal(true));
+      } else {
+        setShowUpgradeModal(true);
+      }
       return;
     }
 
@@ -1439,14 +1467,14 @@ export default function WritingStudioContent() {
       return;
     }
 
-    if (!user) {
-      dispatch(setShowLoginModal(true));
-      return;
-    }
-
-    if (!isPro) {
-      setUpgradeLimitType("ai_scan");
-      setShowUpgradeModal(true);
+    const access = checkFeatureAccess("ai_detector");
+    if (!access.allowed) {
+      if (access.reason === "login_required") {
+        dispatch(setShowLoginModal(true));
+      } else {
+        setUpgradeLimitType("ai_scan");
+        setShowUpgradeModal(true);
+      }
       return;
     }
 
@@ -1455,6 +1483,7 @@ export default function WritingStudioContent() {
       const result = await scanAi({ text }).unwrap();
       const score = result?.data?.ai_percentage || result?.ai_percentage || 0;
       setAiScore(Math.round(score));
+      trackUsage("ai_scans");
       toast.success("Scan complete!");
     } catch (error) {
       console.error("Scan error:", error);
@@ -1471,14 +1500,14 @@ export default function WritingStudioContent() {
       return;
     }
 
-    if (!user) {
-      dispatch(setShowLoginModal(true));
-      return;
-    }
-
-    if (!isPro) {
-      setUpgradeLimitType("plagiarism");
-      setShowUpgradeModal(true);
+    const access = checkFeatureAccess("plagiarism");
+    if (!access.allowed) {
+      if (access.reason === "login_required") {
+        dispatch(setShowLoginModal(true));
+      } else {
+        setUpgradeLimitType("plagiarism");
+        setShowUpgradeModal(true);
+      }
       return;
     }
 
@@ -1488,6 +1517,7 @@ export default function WritingStudioContent() {
     try {
       const result = await analyzePlagiarism({ text });
       setPlagiarismResult(result);
+      trackUsage("plagiarism");
       toast.success("Plagiarism check complete!");
     } catch (error) {
       console.error("Plagiarism check error:", error);
@@ -1511,7 +1541,10 @@ export default function WritingStudioContent() {
   };
 
   const handleExport = async (format, includeRefs = true) => {
-    if (!isPro && (format === "docx" || format === "html")) {
+    const exportFeature = format === "docx" ? "export_docx" : format === "html" ? "export_html" : "export_txt";
+    const access = checkFeatureAccess(exportFeature);
+    
+    if (!access.allowed) {
       setUpgradeLimitType("export");
       setShowUpgradeModal(true);
       return;
@@ -1710,12 +1743,12 @@ export default function WritingStudioContent() {
         limitType={upgradeLimitType}
       />
 
-      {!isPro && (
+      {!isPro && paraphraseLimits && paraphraseLimits.totalWordLimit !== 99999 && (
         <div className="mb-4">
           <UsageLimitBanner 
-            used={usage.ai_actions} 
-            limit={USAGE_LIMITS.free.ai_actions} 
-            type="AI actions"
+            used={paraphraseLimits.totalWordLimit - paraphraseLimits.remainingWord} 
+            limit={paraphraseLimits.totalWordLimit} 
+            type="words"
           />
         </div>
       )}
