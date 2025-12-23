@@ -58,13 +58,17 @@ import {
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { cn } from "@/lib/utils";
 import { getFullAnalysis } from "@/lib/text-analysis";
+import { searchAll, formatCitation } from "@/lib/citation-lookup";
 import {
   BookOpen,
   TrendingUp,
   BarChart3,
   AlertCircle,
   Info,
+  Search,
+  ExternalLink,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
@@ -521,6 +525,150 @@ function CitationFormatHelper() {
           <div className="font-mono text-[10px] break-all">{current.website}</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CitationLookup() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState("apa");
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const handleSearch = async () => {
+    if (!query.trim() || query.length < 3) return;
+    
+    setIsSearching(true);
+    try {
+      const searchResults = await searchAll(query);
+      setResults(searchResults);
+    } catch (error) {
+      toast.error("Failed to search citations");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleCopy = async (item, index) => {
+    const formatted = formatCitation(item, selectedFormat);
+    try {
+      await navigator.clipboard.writeText(formatted);
+      setCopiedIndex(index);
+      toast.success("Citation copied!");
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch {
+      toast.error("Failed to copy");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  return (
+    <div className="p-4 border rounded-lg bg-muted/20">
+      <div className="flex items-center gap-2 mb-3">
+        <Search className="h-4 w-4" />
+        <span className="text-sm font-medium">Citation Lookup</span>
+      </div>
+      <p className="text-xs text-muted-foreground mb-3">
+        Search by title, author, DOI, or ISBN
+      </p>
+      <div className="flex gap-2 mb-3">
+        <Input
+          placeholder="Enter DOI, ISBN, or search term..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="text-sm h-8"
+        />
+        <Button
+          size="sm"
+          onClick={handleSearch}
+          disabled={isSearching || query.length < 3}
+          className="h-8 px-3"
+        >
+          {isSearching ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            <Search className="h-3 w-3" />
+          )}
+        </Button>
+      </div>
+      
+      <div className="flex gap-1 mb-3">
+        {["apa", "mla", "chicago"].map((format) => (
+          <button
+            key={format}
+            onClick={() => setSelectedFormat(format)}
+            className={cn(
+              "px-2 py-0.5 text-[10px] rounded transition-colors uppercase",
+              selectedFormat === format
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted hover:bg-muted/80"
+            )}
+          >
+            {format}
+          </button>
+        ))}
+      </div>
+
+      {results.length > 0 && (
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {results.map((item, index) => (
+            <div
+              key={index}
+              className="p-2 bg-background rounded border text-xs group hover:border-primary/50 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium truncate">{item.title}</div>
+                  <div className="text-muted-foreground truncate">
+                    {item.authors?.map((a) => `${a.family}`).join(", ")} 
+                    {item.year ? ` (${item.year})` : ""}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground mt-1">
+                    {item.type === "book" ? "📚 Book" : "📄 Article"}
+                    {item.journal && ` • ${item.journal}`}
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => handleCopy(item, index)}
+                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  {copiedIndex === index ? (
+                    <Check className="h-3 w-3 text-green-500" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
+                </Button>
+              </div>
+              {item.doi && (
+                <a
+                  href={`https://doi.org/${item.doi}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[10px] text-primary hover:underline mt-1"
+                >
+                  <ExternalLink className="h-2.5 w-2.5" />
+                  DOI
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {results.length === 0 && query.length >= 3 && !isSearching && (
+        <p className="text-xs text-muted-foreground text-center py-2">
+          No results found. Try a different search term.
+        </p>
+      )}
     </div>
   );
 }
@@ -1192,6 +1340,10 @@ export default function WritingStudioContent() {
                         Write at least 50 words to enable AI detection
                       </p>
                     )}
+
+                    <Separator />
+
+                    <CitationLookup />
 
                     <Separator />
 
