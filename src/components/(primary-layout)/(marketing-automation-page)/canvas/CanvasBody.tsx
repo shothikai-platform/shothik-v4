@@ -130,7 +130,6 @@ export default function CanvasBody({
           setAdSets(response.data.adSets || []);
           setAds(response.data.ads || []);
           setPersonas(response.data.personas || []);
-          console.log("✅ Loaded campaign data from database", {
             campaigns: response.data.campaigns?.length,
             adSets: response.data.adSets?.length,
             ads: response.data.ads?.length,
@@ -164,7 +163,6 @@ export default function CanvasBody({
             );
             if (adAccount?.currency) {
               setAdAccountCurrency(adAccount.currency);
-              console.log("✅ Loaded ad account currency:", adAccount.currency);
               break;
             }
           }
@@ -184,7 +182,6 @@ export default function CanvasBody({
   // Listen for campaign data updates from AI modifications
   useEffect(() => {
     const handleCampaignDataUpdate = async () => {
-      console.log("🔄 Received campaign data update event, reloading...");
       if (!projectId) return;
 
       try {
@@ -194,7 +191,6 @@ export default function CanvasBody({
           setAdSets(response.data.adSets || []);
           setAds(response.data.ads || []);
           setPersonas(response.data.personas || []);
-          console.log("✅ Reloaded campaign data after AI modification");
         }
       } catch (error) {
         console.error("Failed to reload campaign data:", error);
@@ -223,7 +219,6 @@ export default function CanvasBody({
           ads,
           personas,
         });
-        console.log("✅ Auto-saved campaign data");
       } catch (error) {
         console.error("Failed to save campaign data:", error);
       } finally {

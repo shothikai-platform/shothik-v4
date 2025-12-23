@@ -66,12 +66,9 @@ export default function VideoCanvas({
       }
 
       // Upload to ImageKit
-      console.log("Starting ImageKit upload...");
       const mediaUrl = await uploadToImageKit(file, "ads");
-      console.log("ImageKit upload successful, URL:", mediaUrl);
 
       // Save to ad
-      console.log("Saving to database...", {
         projectId,
         adId,
         mediaUrl,
@@ -83,12 +80,9 @@ export default function VideoCanvas({
         mediaUrl,
         "video",
       );
-      console.log("Database save result:", saveResult);
 
       // Update the media display
-      console.log("Calling onMediaUploaded with:", [mediaUrl]);
       onMediaUploaded([mediaUrl]);
-      console.log("onMediaUploaded called successfully");
 
       // Reset file input
       if (fileInputRef.current) {

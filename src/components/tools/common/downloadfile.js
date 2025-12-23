@@ -119,7 +119,6 @@ const loadBengaliFontForPDFMake = async (pdfMakeInstance) => {
 
   for (const [fontFamily, fontUrl] of Object.entries(fontUrls)) {
     try {
-      console.log(`Attempting to load font '${fontFamily}' from ${fontUrl}`);
       const resp = await fetch(fontUrl);
       if (!resp.ok) {
         console.warn(`Font fetch returned ${resp.status} for ${fontUrl}`);
@@ -140,7 +139,6 @@ const loadBengaliFontForPDFMake = async (pdfMakeInstance) => {
         bolditalics: fileName,
       };
 
-      console.log(`Loaded and injected ${fileName} into pdfMake.vfs`);
       // Stop after first successful font to choose primary font quickly.
       // If you'd like to load all fonts, remove the break.
       break;
@@ -187,7 +185,6 @@ function ensureRoboto(pdfMakeInstance) {
 
   if (hasAllRoboto) {
     pdfMakeInstance.fonts.Roboto = { ...robotoFiles };
-    console.log("Reconstructed Roboto font family from vfs.");
     return true;
   }
 
@@ -225,11 +222,8 @@ function containsBengaliText(text) {
    --------------------------- */
 const downloadAsPdf = async (outputContent, filename) => {
   try {
-    console.log("Using PDFMake for PDF generation (Bengali/English aware)");
 
     // Debug: before injecting anything
-    console.log("pdfMake.fonts keys before:", Object.keys(pdfMake.fonts || {}));
-    console.log(
       "pdfMake.vfs keys sample:",
       Object.keys(pdfMake.vfs || {}).slice(0, 12),
     );
@@ -271,18 +265,14 @@ const downloadAsPdf = async (outputContent, filename) => {
     }
 
     // After merge check again
-    console.log("pdfMake.fonts keys after:", Object.keys(pdfMake.fonts || {}));
-    console.log("pdfMake.vfs size:", Object.keys(pdfMake.vfs || {}).length);
 
     // Now ensure we have at least one bengali font name to use if needed
     const bengaliFontName = Object.keys(bengaliFonts || {})[0] || null;
 
     if (!bengaliFontName) {
-      console.log(
         "No Bengali font loaded; PDF generation will still proceed for English content.",
       );
     } else {
-      console.log(`Primary Bengali font: ${bengaliFontName}`);
     }
 
     const plainText = markdownToPlainText(outputContent);
@@ -317,7 +307,6 @@ const downloadAsPdf = async (outputContent, filename) => {
     // Use getBlob/download depending on environment; .download is fine here
     pdfDocGenerator.download(filename);
 
-    console.log("PDFMake: PDF generated and download started.");
   } catch (error) {
     console.error("PDFMake generation failed:", error);
     throw error;
@@ -332,7 +321,7 @@ export const downloadFile = async (
   toolName,
   format = "docx",
 ) => {
-  // console.log(outputContent, "output contend");
+  // 
   const now = new Date();
   const formattedDate = `${
     now.getMonth() + 1

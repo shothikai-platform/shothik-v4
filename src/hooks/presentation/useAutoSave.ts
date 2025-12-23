@@ -53,7 +53,6 @@ export function useAutoSave(
     }
 
     if (isSavingRef.current) {
-      console.log("useAutoSave: Save already in progress, skipping");
       return false;
     }
 
@@ -69,7 +68,6 @@ export function useAutoSave(
         throw new Error("Failed to extract modified content from iframe");
       }
 
-      console.log("useAutoSave: Saving slide changes...");
 
       // Save to backend
       const result = await SlideEditService.saveSlide({
@@ -95,7 +93,6 @@ export function useAutoSave(
           }),
         );
         dispatch(setSaveStatus({ slideId, status: "saved" }));
-        console.log("useAutoSave: Slide saved successfully");
         options.onSaveSuccess?.();
         return true;
       } else if (result.conflict) {
@@ -142,7 +139,6 @@ export function useAutoSave(
     }
 
     if (hasUnsavedChanges) {
-      console.log(
         "useAutoSave: Unsaved changes detected, scheduling auto-save",
       );
       debouncedSave.current();

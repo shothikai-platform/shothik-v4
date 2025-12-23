@@ -62,7 +62,7 @@ const AiDetector = () => {
     sessionStorage.getItem("ai-detect-content"),
   );
 
-  // console.log(sessionContent, "output contend");
+  // 
 
   useEffect(() => {
     if (!shareContend) return;
@@ -144,7 +144,7 @@ const AiDetector = () => {
   // This use effect is a connection to other features that checks on session storage for "ai-detect-content", if we find it then we set it to user input and call the handleSubmit function to process it.
   // Once we call this and get the output result we remove it from the session storage
 
-  // console.log(sessionContent);
+  // 
   useEffect(() => {
     if (sessionContent) {
       setUserInput(sessionContent);

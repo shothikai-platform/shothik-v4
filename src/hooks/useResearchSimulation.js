@@ -18,7 +18,7 @@ export const useResearchSimulation = () => {
 
   const startSimulationResearch = useCallback(
     async (simulationId, setIsSimulationCompleted) => {
-      //   console.log("Starting research simulation with r_id:", simulationId);
+      //   
 
       // Start streaming state
       const newJobId = `simulation-research-${Date.now()}`;

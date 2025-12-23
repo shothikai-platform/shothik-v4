@@ -292,10 +292,8 @@ export default function FacebookAccountSelectionScreen() {
           // Check for warning message
           if (response.warning) {
             setPixelsWarning(response.warning);
-            console.log("⚠️ Pixels warning:", response.warning);
           }
 
-          console.log(
             `✅ Loaded ${
               response.data?.length || 0
             } pixels for business account`,

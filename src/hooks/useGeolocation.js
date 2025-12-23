@@ -43,7 +43,6 @@ const useGeolocation = () => {
         const { lat, lng } = geolocationData.location;
         const accuracy = geolocationData.accuracy;
 
-        console.log("Geolocation data:", { lat, lng, accuracy });
 
         // Now get detailed address information
         const geocodingResponse = await fetch(
@@ -56,7 +55,6 @@ const useGeolocation = () => {
 
         const geocodingData = await geocodingResponse.json();
 
-        console.log(geocodingData, "geo coding data");
 
         if (!geocodingData.results || geocodingData.results.length === 0) {
           throw new Error("No address found for location");
@@ -93,7 +91,7 @@ const useGeolocation = () => {
               ?.long_name || null,
         };
 
-        // console.log("Final location data:", locationData);
+        // 
         setLocation(locationData.country.toLowerCase());
       } catch (err) {
         console.error("Geolocation error:", err);

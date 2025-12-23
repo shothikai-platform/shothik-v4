@@ -21,7 +21,6 @@ export const useGetSlideDataByStream = (config) => {
   const orchestratorRef = useRef(null);
   const updateState = useCallback(
     (updates) => {
-      console.log("[Hook] updateState called with:", {
         hasLogs: !!updates.logs,
         logsCount: updates.logs?.length,
         hasSlides: !!updates.slides,
@@ -41,7 +40,6 @@ export const useGetSlideDataByStream = (config) => {
             slides: updates.slides || prev.slides,
           };
 
-          console.log("[Hook] REPLACE mode - new state:", {
             logs: newState.logs.length,
             slides: newState.slides.length,
           });
@@ -65,7 +63,6 @@ export const useGetSlideDataByStream = (config) => {
           slides: newSlides,
         };
 
-        console.log("[Hook] APPEND mode - new state:", {
           logs: newState.logs.length,
           slides: newState.slides.length,
         });
@@ -75,7 +72,6 @@ export const useGetSlideDataByStream = (config) => {
 
       // Dispatch to Redux store
       dispatch(setPresentationState(updates));
-      console.log("[Hook] Dispatched to Redux");
     },
     [dispatch],
   );
@@ -84,7 +80,6 @@ export const useGetSlideDataByStream = (config) => {
       console.warn("No slideCurrentId provided");
       return;
     }
-    console.log("Connecting to presentation:", slideCurrentId);
 
     // Create orchestrator if needed
     if (!orchestratorRef.current) {
@@ -104,12 +99,10 @@ export const useGetSlideDataByStream = (config) => {
     orchestratorRef.current.start(slideCurrentId, updateState);
   }, [slideCurrentId, config, updateState]);
   const disconnect = useCallback(() => {
-    console.log("Disconnecting presentation");
     orchestratorRef.current?.stop();
     setState((prev) => ({ ...prev, status: "idle" }));
   }, []);
   const retry = useCallback(() => {
-    console.log("Retrying connection");
     setState((prev) => ({ ...prev, error: null }));
     connect();
   }, [connect]);
@@ -118,7 +111,6 @@ export const useGetSlideDataByStream = (config) => {
       connect();
     }
     return () => {
-      console.log("Cleaning up presentation connection");
       orchestratorRef.current?.stop();
     };
   }, [slideCurrentId]);

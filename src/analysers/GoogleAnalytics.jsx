@@ -11,7 +11,6 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     if (!GA_TRACKING_ID) return;
     googlePageView(router, GA_TRACKING_ID);
-    console.log("Google Analytics: PageView");
   }, [router]);
 
   if (!GA_TRACKING_ID) return null;

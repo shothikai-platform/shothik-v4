@@ -25,7 +25,6 @@ const SearchDropdown = ({ setResearchModel, setTopLevel }) => {
   const router = useRouter();
 
   const { user } = useSelector((state) => state.auth);
-  console.log(user?.package, "user");
 
   // Check if user has premium access
   const userPackage = user?.package || "free";

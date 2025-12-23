@@ -57,7 +57,6 @@ export default function PresentationLogsUi({
 
   // Handle new chat - redirect to agents page with slides tab
   const handleNewChat = () => {
-    console.log(
       "[PresentationLogsUi] New Chat button clicked - redirecting to agents page",
     );
     router.push("/agents?tab=slides");

@@ -178,7 +178,6 @@ export default function SharedSheetPage({ params }) {
       if (userFromStorage) {
         try {
           const parsedUser = JSON.parse(userFromStorage);
-          console.log(`Found user in localStorage key '${key}':`, parsedUser);
           setLocalUser(parsedUser);
           break; // Use the first valid user found
         } catch (e) {
@@ -197,11 +196,9 @@ export default function SharedSheetPage({ params }) {
         // Try to decode JWT token to get user info
         const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
         if (tokenPayload && tokenPayload.userId) {
-          console.log("Found user ID from access token:", tokenPayload);
           setLocalUser({ id: tokenPayload.userId, ...tokenPayload });
         }
       } catch (e) {
-        console.log("Could not decode access token:", e);
       }
     }
   }, []);
@@ -216,14 +213,11 @@ export default function SharedSheetPage({ params }) {
     const fetchSharedData = async () => {
       try {
         setLoading(true);
-        console.log("Fetching shared data for shareId:", shareId);
         const result = await verifySharedAgent({ shareId }).unwrap();
 
-        console.log("Shared data response:", result);
 
         if (result.success && result.data) {
           setSharedData(result.data);
-          console.log("Shared data set:", result.data);
         } else {
           console.error("No data in response:", result);
           setError("Failed to load shared sheet data");
@@ -261,7 +255,6 @@ export default function SharedSheetPage({ params }) {
   };
 
   const handleSaveAndCopy = async () => {
-    console.log("🚀 handleSaveAndCopy function called!");
 
     // Check if user is authenticated
     const currentUser = user || localUser;
@@ -272,9 +265,6 @@ export default function SharedSheetPage({ params }) {
       !currentUser ||
       (Object.keys(currentUser).length === 0 && !accessToken)
     ) {
-      console.log("❌ User not authenticated, opening login modal");
-      console.log("   currentUser:", currentUser);
-      console.log("   accessToken:", accessToken ? "exists" : "missing");
 
       // Set pending flag so we can retry after login
       setPendingSaveAction(true);
@@ -287,7 +277,6 @@ export default function SharedSheetPage({ params }) {
       return;
     }
 
-    console.log("✅ User authenticated:", currentUser);
 
     try {
       // Extract chat ObjectId from shared data
@@ -296,7 +285,6 @@ export default function SharedSheetPage({ params }) {
         sharedData?.agent?.metadata?.chatId ||
         sharedData?.agent?.metadata?.originalChatId;
 
-      console.log("🔍 Extracted chat ID from agent.metadata:", chatId);
 
       // Validate that we have a valid MongoDB ObjectId
       const isValidObjectId = chatId && /^[0-9a-fA-F]{24}$/.test(chatId);
@@ -314,7 +302,6 @@ export default function SharedSheetPage({ params }) {
         return;
       }
 
-      console.log("✅ Using valid Chat ID:", chatId);
 
       // Get user ID
       let userId =
@@ -342,11 +329,9 @@ export default function SharedSheetPage({ params }) {
         return;
       }
 
-      console.log("Replicating chat:", { chatId, userId });
 
       // Get base URL from environment
       const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-      console.log("🌐 Environment base URL:", baseUrl);
 
       if (!baseUrl) {
         console.error(
@@ -365,8 +350,6 @@ export default function SharedSheetPage({ params }) {
         : baseUrl;
       const apiUrl = `${cleanBaseUrl}/${process.env.NEXT_PUBLIC_SHEET_REDIRECT_PREFIX}/chat/replicate_chat`;
 
-      console.log("🔗 Constructed API URL:", apiUrl);
-      console.log(
         "✅ Expected URL:",
         "https://api-qa.shothik.ai/sheet/chat/replicate_chat",
       );
@@ -383,53 +366,21 @@ export default function SharedSheetPage({ params }) {
         Authorization: `Bearer ${accessToken}`,
       };
 
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📡 COMPLETE API REQUEST DETAILS");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🔗 URL:", apiUrl);
-      console.log("📍 Method: POST");
-      console.log("");
-      console.log("📦 Headers:");
       Object.entries(headers).forEach(([key, value]) => {
         if (key === "Authorization") {
-          console.log(
             `   ${key}: Bearer ${value.split(" ")[1]?.substring(0, 30)}...`,
           );
         } else {
-          console.log(`   ${key}: ${value}`);
         }
       });
-      console.log("");
-      console.log("📝 Request Body:");
-      console.log("   Raw Object:", requestPayload);
-      console.log("   JSON String:", JSON.stringify(requestPayload));
-      console.log("   Formatted:");
-      console.log(JSON.stringify(requestPayload, null, 2));
-      console.log("");
-      console.log("🔍 Payload Validation:");
-      console.log("   chat ID:", chatId);
-      console.log("   chat ID type:", typeof chatId);
-      console.log("   chat ID length:", chatId?.length);
-      console.log(
         "   chat ID is valid ObjectId:",
         /^[0-9a-fA-F]{24}$/.test(chatId),
       );
-      console.log("   replicate_to ID:", userId);
-      console.log("   replicate_to ID type:", typeof userId);
-      console.log("   replicate_to ID length:", userId?.length);
-      console.log(
         "   replicate_to ID is valid ObjectId:",
         /^[0-9a-fA-F]{24}$/.test(userId),
       );
-      console.log("");
-      console.log("✅ POSTMAN EQUIVALENT (copy this to test):");
-      console.log(`curl -X POST '${apiUrl}' \\`);
-      console.log(`  -H 'Content-Type: application/json' \\`);
-      console.log(
         `  -H 'Authorization: Bearer ${accessToken?.substring(0, 30)}...' \\`,
       );
-      console.log(`  -d '${JSON.stringify(requestPayload)}'`);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -437,20 +388,8 @@ export default function SharedSheetPage({ params }) {
         body: JSON.stringify(requestPayload),
       });
 
-      console.log("");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📨 RESPONSE DETAILS");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📊 Status:", response.status, response.statusText);
-      console.log("🔗 URL:", response.url);
-      console.log("✓ OK:", response.ok);
-      console.log("📋 Type:", response.type);
-      console.log("");
-      console.log("📦 Response Headers:");
       response.headers.forEach((value, key) => {
-        console.log(`   ${key}: ${value}`);
       });
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       if (!response.ok) {
         let errorData;
@@ -470,15 +409,9 @@ export default function SharedSheetPage({ params }) {
       }
 
       const result = await response.json();
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("✅ REPLICA CREATED SUCCESSFULLY!");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📊 Response:", result);
-      console.log(
         "🆔 Replicated Chat ID:",
         result.data?.replicatedChatId || result.replicatedChatId || chatId,
       );
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       // Show success message
       showSnackbar(
@@ -494,7 +427,6 @@ export default function SharedSheetPage({ params }) {
         // Redirect to the agents sheets page with the replicated chat ID
         const redirectUrl = `/agents/sheets?id=${replicatedChatId}`;
 
-        console.log("🔗 Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       }, 1500);
     } catch (err) {
@@ -510,7 +442,6 @@ export default function SharedSheetPage({ params }) {
 
     // If user just logged in and there's a pending save action
     if (pendingSaveAction && (currentUser || accessToken)) {
-      console.log("✅ User logged in! Retrying save action...");
       setPendingSaveAction(false);
       // Retry the save action
       setTimeout(() => {
@@ -653,27 +584,13 @@ export default function SharedSheetPage({ params }) {
   }
 
   // Debug logging
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("📊 SHARED DATA DEBUG");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("🔑 sharedData keys:", Object.keys(sharedData || {}));
-  console.log("📁 Full sharedData:", sharedData);
-  console.log("🔍 sharedData.agent:", sharedData?.agent);
-  console.log("🔍 sharedData.agent?.response:", sharedData?.agent?.response);
-  console.log(
     "🔍 sharedData.agent?.response?.data:",
     sharedData?.agent?.response?.data,
   );
-  console.log("📍 Data source path:", dataSource);
-  console.log("📋 sheetData length:", sheetData.length);
-  console.log("📋 sheetData:", sheetData);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
   // If no data found, show message instead of mock data
   if (sheetData.length === 0) {
-    console.log("⚠️ No data found in any known path");
   } else {
-    console.log("✅ Using REAL DATA from:", dataSource);
   }
 
   const { columns, rows } = processSheetData(

@@ -6,9 +6,6 @@ export async function POST(request) {
     const requestBody = await request.json();
     const headers = Object.fromEntries(request.headers.entries());
 
-    console.log("=== WEBHOOK DEBUG INFO ===");
-    console.log("Request Headers:", headers);
-    console.log("Request Body:", JSON.stringify(requestBody, null, 2));
 
     // Handle different payload structures flexibly
     let eventData;
@@ -16,18 +13,14 @@ export async function POST(request) {
     if (requestBody.event) {
       // Original expected format: { event: {...} }
       eventData = requestBody.event;
-      console.log("Using nested event structure");
     } else if (requestBody.event_name) {
       // Your actual format: { event_name, parameters, sessionId, etc. }
       eventData = requestBody;
-      console.log("Using flat event structure");
     } else {
       // Fallback: use entire payload
       eventData = requestBody;
-      console.log("Using entire payload as event data");
     }
 
-    console.log("Processed Event Data:", JSON.stringify(eventData, null, 2));
 
     // Prepare the payload for Zoho - try different formats
     const zohoPayload = {
@@ -45,12 +38,9 @@ export async function POST(request) {
       webhook_timestamp: new Date().toISOString(),
     };
 
-    console.log("Sending to Zoho:", JSON.stringify(zohoPayload, null, 2));
 
     // Test network connectivity first
-    console.log("Testing basic connectivity...");
     await axios.get("https://httpbin.org/status/200", { timeout: 5000 });
-    console.log("Network connectivity confirmed");
 
     const zohoWebhookUrl = process.env.ZOHO_WEBHOOK_URL;
     if (!zohoWebhookUrl) {
@@ -75,8 +65,6 @@ export async function POST(request) {
       },
     );
 
-    console.log("Zoho Response Status:", zohoResponse.status);
-    console.log("Zoho Response Data:", zohoResponse.data);
 
     return new Response(
       JSON.stringify({

@@ -60,15 +60,11 @@ export default function Canvas() {
       (existingCampaignData.data.ads?.length ?? 0) > 0 ||
       (existingCampaignData.data.personas?.length ?? 0) > 0);
 
-  console.log("hasAnalysis--->", hasAnalysis);
-  console.log("hasCampaignData--->", hasCampaignData);
-  console.log("isLoadingCampaignData--->", isLoadingCampaignData);
 
   // Only generate initial suggestions if we have analysis but NO existing campaign data
   const shouldGenerateSuggestions =
     hasAnalysis && !hasCampaignData && !isLoadingCampaignData;
 
-  console.log("shouldGenerateSuggestions--->", shouldGenerateSuggestions);
 
   const {
     data: suggestionsResponse,
@@ -76,8 +72,6 @@ export default function Canvas() {
     error: suggestionsError,
   } = useInitialSuggestions(projectId || "", shouldGenerateSuggestions);
 
-  console.log("isLoadingSuggestions--->", isLoadingSuggestions);
-  console.log("suggestionsError--->", suggestionsError);
 
   const analysis = useMemo((): ProductAnalysis | null => {
     if (state?.analysis) {
@@ -105,8 +99,6 @@ export default function Canvas() {
   }, [state?.analysis, projectData]);
 
   const initialSuggestions = useMemo((): CampaignSuggestion | null => {
-    console.log("suggestionsResponse--->", suggestionsResponse);
-    console.log("suggestionsResponse?.data--->", suggestionsResponse?.data);
 
     // If we have suggestions from the API, use them
     if (suggestionsResponse?.data) {
@@ -116,7 +108,6 @@ export default function Canvas() {
     // If we have existing campaign data but no suggestions, reconstruct from campaign data
     if (hasCampaignData && existingCampaignData?.data) {
       const data = existingCampaignData.data;
-      console.log(
         "Reconstructing suggestions from existing campaign data:",
         data,
       );
@@ -168,7 +159,6 @@ export default function Canvas() {
 
   // Callback when campaign data is modified by AI
   const handleDataModified = useCallback(() => {
-    console.log("🔄 Reloading campaign data after modification...");
 
     // Force canvas body to reload by triggering a custom event
     // DON'T reset initialSuggestions - that would trigger the welcome message again

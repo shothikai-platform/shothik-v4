@@ -25,7 +25,6 @@ const ResearchContentWithReferences = ({
   const handleFeedback = async (feedbackType) => {
     try {
       // You can implement your feedback API call here
-      console.log(`Feedback received: ${feedbackType}`);
       // Example: await submitFeedback({ type: feedbackType, content, sources });
     } catch (error) {
       console.error("Failed to submit feedback:", error);
@@ -68,7 +67,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-    console.log("handleReferenceHover called:", {
       reference,
       sources: sources?.length,
     });
@@ -85,7 +83,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceLeave = () => {
-    console.log("handleReferenceLeave called");
     // Add a small delay to prevent flickering
     const timeout = setTimeout(() => {
       setModalOpen(false);
@@ -110,7 +107,6 @@ const ResearchContentWithReferences = ({
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-  console.log("Content processing:", {
     contentStr: contentStr.substring(0, 200),
     sources: sources?.length,
   });
@@ -128,7 +124,6 @@ const ResearchContentWithReferences = ({
     const target = event.target;
     if (target.classList.contains("reference-link")) {
       const reference = parseInt(target.getAttribute("data-reference"));
-      console.log("Hovering over reference:", reference, target);
 
       // Create a proper anchor element for this specific reference
       const rect = target.getBoundingClientRect();
@@ -151,7 +146,6 @@ const ResearchContentWithReferences = ({
   const handleContentMouseLeave = (event) => {
     const target = event.target;
     if (target.classList.contains("reference-link")) {
-      console.log("Leaving reference:", target);
       handleReferenceLeave();
     }
   };

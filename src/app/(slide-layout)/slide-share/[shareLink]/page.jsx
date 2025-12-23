@@ -48,7 +48,7 @@ export default function SharedSlidesPage() {
     },
   );
 
-  // console.log(sharedData, "Shared Data");
+  // 
 
   // Mutation to track view
   const [trackView] = useTrackViewMutation();

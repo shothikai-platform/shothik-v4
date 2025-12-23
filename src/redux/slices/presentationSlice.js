@@ -37,8 +37,6 @@ const presentationSlice = createSlice({
     setHistoryData(state, action) {
       const { logs, slides, status, title, totalSlides } = action.payload;
 
-      console.log("[Redux] Setting history data:", action.payload);
-
       if (Array.isArray(logs)) {
         state.logs = logs;
       }
@@ -67,8 +65,6 @@ const presentationSlice = createSlice({
     setSessionData(state, action) {
       const { sessionId, pId, userId, workerId, timestamp } = action.payload;
 
-      console.log("[Redux] Setting session data:", action.payload);
-
       if (sessionId) state.sessionId = sessionId;
       if (pId) state.pId = pId;
       if (userId) state.userId = userId;
@@ -86,16 +82,10 @@ const presentationSlice = createSlice({
     addLog(state, action) {
       const logEntry = action.payload;
 
-      console.log("[Redux] Adding log:", {
-        author: logEntry.author,
-        id: logEntry.id,
-      });
-
       // Enhanced duplicate checking
       const isDuplicate = state.logs.some((log) => {
         // Check by ID
         if (log.id === logEntry.id) {
-          console.log("[Redux] Duplicate detected by ID:", logEntry.id);
           return true;
         }
 
@@ -104,10 +94,6 @@ const presentationSlice = createSlice({
           log.author === logEntry.author &&
           log.timestamp === logEntry.timestamp
         ) {
-          console.log("[Redux] Duplicate detected by author+timestamp:", {
-            author: logEntry.author,
-            timestamp: logEntry.timestamp,
-          });
           return true;
         }
 
@@ -126,10 +112,6 @@ const presentationSlice = createSlice({
               new Date(logEntry.timestamp).getTime(),
           ) < 10000
         ) {
-          console.log(
-            "[Redux] Duplicate user message detected by content:",
-            logEntry.user_message?.substring(0, 50),
-          );
           return true;
         }
 
@@ -138,10 +120,6 @@ const presentationSlice = createSlice({
           log.author?.startsWith("browser_worker_") &&
           log.author === logEntry.author
         ) {
-          console.log(
-            "[Redux] Browser worker already exists, will update:",
-            log.author,
-          );
           // Don't treat as duplicate here - let updateLog handle it
           return false;
         }
@@ -151,13 +129,10 @@ const presentationSlice = createSlice({
 
       if (!isDuplicate) {
         state.logs.push(logEntry);
-        console.log("[Redux] ✅ Log added, total logs:", state.logs.length);
 
         // Update derived state
         state.currentPhase = deriveCurrentPhase(state.logs, state.slides);
         state.completedPhases = deriveCompletedPhases(state.logs, state.slides);
-      } else {
-        console.log("[Redux] ⏭️ Duplicate log ignored:", logEntry.id);
       }
     },
 
@@ -166,12 +141,6 @@ const presentationSlice = createSlice({
      */
     updateLog(state, action) {
       const { logIndex, logEntry } = action.payload;
-
-      console.log("[Redux] Updating log at index:", logIndex, {
-        author: logEntry.author,
-        hasLinks: !!logEntry.links,
-        hasSummary: !!logEntry.summary,
-      });
 
       if (logIndex >= 0 && logIndex < state.logs.length) {
         const existingLog = state.logs[logIndex];
@@ -196,16 +165,8 @@ const presentationSlice = createSlice({
           };
 
           state.logs[logIndex] = mergedLog;
-          console.log("[Redux] ✅ Browser worker log merged:", {
-            author: mergedLog.author,
-            linksCount: mergedLog.links?.length,
-            hasSummary: !!mergedLog.summary,
-          });
         } else {
           state.logs[logIndex] = logEntry;
-          console.log("[Redux] ✅ Log updated:", {
-            author: logEntry.author,
-          });
         }
 
         // Update derived state
@@ -222,8 +183,6 @@ const presentationSlice = createSlice({
     setMetadata(state, action) {
       const { title, totalSlides } = action.payload;
 
-      console.log("[Redux] Setting metadata:", { title, totalSlides });
-
       if (title !== undefined) state.title = title;
       if (totalSlides !== undefined) state.totalSlides = totalSlides;
     },
@@ -234,16 +193,6 @@ const presentationSlice = createSlice({
     updateSlide(state, action) {
       const { type, slideIndex, slideEntry } = action.payload;
 
-      console.log("[Redux] updateSlide called:", {
-        type,
-        slideNumber: slideEntry.slideNumber,
-        slideIndex,
-        hasThinking: !!slideEntry.thinking,
-        hasHtml: !!slideEntry.htmlContent,
-        isComplete: slideEntry.isComplete,
-        currentSlidesCount: state.slides.length,
-      });
-
       if (type === "update") {
         if (
           slideIndex !== undefined &&
@@ -251,12 +200,6 @@ const presentationSlice = createSlice({
           slideIndex < state.slides.length
         ) {
           const existingSlide = state.slides[slideIndex];
-
-          console.log("[Redux] Updating existing slide at index:", slideIndex);
-          console.log("[Redux] Before update:", {
-            thinking: !!existingSlide.thinking,
-            html: !!existingSlide.htmlContent,
-          });
 
           // Smart merge - don't overwrite existing data with null/undefined
           const mergedSlide = {
@@ -272,12 +215,6 @@ const presentationSlice = createSlice({
           };
 
           state.slides[slideIndex] = mergedSlide;
-
-          console.log("[Redux] After update:", {
-            thinking: !!mergedSlide.thinking,
-            html: !!mergedSlide.htmlContent,
-            complete: mergedSlide.isComplete,
-          });
         } else {
           console.error(
             "[Redux] ❌ Invalid slideIndex for update:",
@@ -285,8 +222,6 @@ const presentationSlice = createSlice({
           );
         }
       } else if (type === "create") {
-        console.log("[Redux] Creating new slide:", slideEntry.slideNumber);
-
         // Check if slide already exists
         const existingIndex = state.slides.findIndex(
           (s) => s.slideNumber === slideEntry.slideNumber,
@@ -312,15 +247,10 @@ const presentationSlice = createSlice({
             ),
           };
 
-          console.log("[Redux] ✅ Merged with existing slide from history");
         } else {
           // Truly new slide
           state.slides.push(slideEntry);
           state.slides.sort((a, b) => a.slideNumber - b.slideNumber);
-          console.log(
-            "[Redux] ✅ New slide added, total:",
-            state.slides.length,
-          );
         }
       } else {
         console.error("[Redux] ❌ Invalid update type:", type);
@@ -330,15 +260,12 @@ const presentationSlice = createSlice({
       state.currentPhase = deriveCurrentPhase(state.logs, state.slides);
       state.completedPhases = deriveCompletedPhases(state.logs, state.slides);
 
-      console.log(
-        "[Redux] Final slides state:",
         state.slides.map((s) => ({
           num: s.slideNumber,
           thinking: !!s.thinking,
           html: !!s.htmlContent,
           complete: s.isComplete,
         })),
-      );
     },
 
     /**
@@ -352,7 +279,6 @@ const presentationSlice = createSlice({
     insertSlide(state, action) {
       const { insertIndex, slideEntry } = action.payload;
 
-      console.log("[Redux] Inserting slide at index:", insertIndex, {
         currentSlidesCount: state.slides.length,
         slideNumbers: state.slides.map((s) => s.slideNumber),
       });
@@ -364,10 +290,6 @@ const presentationSlice = createSlice({
 
       if (existingIndex !== -1) {
         // Slide exists - this is an insertion, need to reorder
-        console.log(
-          "[Redux] Reordering slides after insertion at:",
-          insertIndex,
-        );
 
         // Renumber all slides at and after insertion point
         // O(n) operation - single pass through array
@@ -400,7 +322,6 @@ const presentationSlice = createSlice({
         // Update state
         state.slides = reorderedSlides;
 
-        console.log("[Redux] ✅ Slide inserted and reordered:", {
           insertIndex,
           totalSlides: state.slides.length,
           slideNumbers: state.slides.map((s) => s.slideNumber),
@@ -417,7 +338,6 @@ const presentationSlice = createSlice({
         }
 
         state.slides.splice(insertPosition, 0, slideEntry);
-        console.log("[Redux] ✅ Slide inserted without reordering:", {
           insertIndex,
           totalSlides: state.slides.length,
         });
@@ -438,8 +358,6 @@ const presentationSlice = createSlice({
      */
     setStatus(state, action) {
       const { status, presentationStatus, error } = action.payload;
-
-      console.log("[Redux] Setting status:", { status, presentationStatus });
 
       if (status !== undefined) state.status = status;
       if (presentationStatus !== undefined)
@@ -470,7 +388,6 @@ const presentationSlice = createSlice({
         _replaceArrays,
       } = action.payload;
 
-      console.log("[Redux] setPresentationState called with:", {
         logsCount: logs?.length,
         slidesCount: slides?.length,
         _replaceArrays,
@@ -483,14 +400,9 @@ const presentationSlice = createSlice({
         // REPLACE mode: Overwrite existing data
         if (logs !== undefined) {
           state.logs = logs;
-          console.log("[Redux] REPLACED logs, new count:", state.logs.length);
         }
         if (slides !== undefined) {
           state.slides = slides;
-          console.log(
-            "[Redux] REPLACED slides, new count:",
-            state.slides.length,
-          );
         }
       } else {
         // APPEND mode: Add new data without duplicates
@@ -498,12 +410,7 @@ const presentationSlice = createSlice({
           const existingLogIds = new Set(state.logs.map((log) => log.id));
           const newLogs = logs.filter((log) => !existingLogIds.has(log.id));
           state.logs = [...state.logs, ...newLogs];
-          console.log(
-            "[Redux] APPENDED logs, added:",
-            newLogs.length,
             "total:",
-            state.logs.length,
-          );
         }
 
         if (slides && slides.length > 0) {
@@ -518,12 +425,7 @@ const presentationSlice = createSlice({
           state.slides = allSlides.sort(
             (a, b) => a.slideNumber - b.slideNumber,
           );
-          console.log(
-            "[Redux] APPENDED slides, added:",
-            newSlides.length,
             "total:",
-            state.slides.length,
-          );
         }
       }
 
@@ -545,7 +447,6 @@ const presentationSlice = createSlice({
      * Reset presentation state to initial
      */
     resetPresentationState(state) {
-      console.log("[Redux] Resetting presentation state");
       Object.assign(state, initialState);
     },
 

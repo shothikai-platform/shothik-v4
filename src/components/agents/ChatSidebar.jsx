@@ -30,9 +30,6 @@ export default function ChatSidebar({
     setTabIndex(value);
   };
 
-  console.log("researchData in ChatSidebar:", researchData);
-  console.log("researchDataLoading in ChatSidebar:", researchDataLoading);
-  console.log("researchDataError in ChatSidebar:", researchDataError);
 
   return (
     <Sheet open={sidebarOpen} onOpenChange={(open) => toggleDrawer(open)()}>

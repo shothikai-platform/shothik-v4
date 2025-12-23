@@ -14,7 +14,6 @@ export const googlePageView = (url, GA_TRACKING_ID) => {
 export const googleEvent = (action, category, label, value) => {
   try {
     if (typeof window.gtag !== "undefined") {
-      console.log("googleEvent", action, category, label, value);
       window.gtag("event", action, {
         event_category: category,
         event_label: label,

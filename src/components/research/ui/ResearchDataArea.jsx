@@ -10,7 +10,6 @@ export default function ResearchDataArea({
   isLastData,
   onSwitchTab,
 }) {
-  console.log("research data on research data area", isLastData);
 
   const renderContent = () => {
     switch (selectedTab) {

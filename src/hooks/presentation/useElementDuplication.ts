@@ -79,7 +79,6 @@ export function useElementDuplication(
       return false;
     }
 
-    console.log(
       "useElementDuplication: Attempting to duplicate element with path:",
       elementPath,
     );
@@ -89,7 +88,6 @@ export function useElementDuplication(
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
-      console.log(
         "useElementDuplication: Element not found by path, trying by ID:",
         elementId,
       );
@@ -98,13 +96,11 @@ export function useElementDuplication(
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
-      console.log(
         "useElementDuplication: Element not found by ID, trying by selected class",
       );
       const selectedElements = doc.querySelectorAll(".element-selected");
       if (selectedElements.length === 1) {
         element = selectedElements[0] as HTMLElement;
-        console.log("useElementDuplication: Found element by selected class");
       }
     }
 
@@ -121,7 +117,6 @@ export function useElementDuplication(
     setIsDuplicating(true);
 
     try {
-      console.log("useElementDuplication: Element found, preparing to clone:", {
         tagName: element.tagName,
         id: element.id,
         className: element.className,
@@ -143,14 +138,12 @@ export function useElementDuplication(
         cloned.id = newId;
       }
 
-      console.log("useElementDuplication: Cloned element with new ID:", newId);
 
       // CRITICAL FIX: Ensure original element also has an ID if it doesn't have one
       // This prevents path ambiguity when using querySelector
       if (!element.id) {
         const originalId = generateId("element");
         element.id = originalId;
-        console.log(
           "useElementDuplication: Original element assigned ID:",
           originalId,
         );
@@ -213,12 +206,10 @@ export function useElementDuplication(
 
       // Insert the cloned element
       parent.insertBefore(cloned, nextSibling);
-      console.log("useElementDuplication: Cloned element inserted into DOM");
 
       // Clear selection from original element BEFORE selecting the clone
       // This prevents confusion where the original element still appears selected
       element.classList.remove("element-selected", "element-hovered");
-      console.log(
         "useElementDuplication: Cleared selection from original element",
       );
 
@@ -241,7 +232,6 @@ export function useElementDuplication(
         }),
       );
 
-      console.log("useElementDuplication: Change tracked in Redux");
 
       // Always select the cloned element after duplication
       // This ensures the user can immediately interact with it
@@ -249,7 +239,6 @@ export function useElementDuplication(
         // Use ID-based selector for reliable selection
         const clonedPath = cloned.id ? `#${cloned.id}` : getElementPath(cloned);
 
-        console.log(
           "useElementDuplication: Selecting cloned element with path:",
           clonedPath,
         );
@@ -267,7 +256,6 @@ export function useElementDuplication(
               },
               "*",
             );
-            console.log(
               "useElementDuplication: Selection message sent to iframe",
             );
           }

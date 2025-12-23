@@ -69,7 +69,7 @@ export const useWebSocket = (url, options = {}) => {
       wsRef.current = ws;
 
       ws.onopen = (event) => {
-        // console.log('WebSocket connected');
+        // 
         setReadyState(WebSocket.OPEN);
         reconnectAttemptsRef.current = 0;
         setReconnectCount(0);
@@ -88,7 +88,7 @@ export const useWebSocket = (url, options = {}) => {
       };
 
       ws.onclose = (event) => {
-        // console.log('WebSocket closed:', event.code, event.reason);
+        // 
         setReadyState(WebSocket.CLOSED);
         cleanup();
         onClose?.(event);

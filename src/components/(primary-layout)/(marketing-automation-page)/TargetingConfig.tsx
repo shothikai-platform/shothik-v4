@@ -104,7 +104,6 @@ const TargetingConfig: React.FC<TargetingConfigProps> = ({
         JSON.stringify(prevTargetingDataRef.current);
 
     if (hasChanged) {
-      console.log("🎯 TargetingConfig: Updating parent with:", targetingData);
       onTargetingChange(targetingData);
       prevTargetingDataRef.current = targetingData;
     }
@@ -126,12 +125,9 @@ const TargetingConfig: React.FC<TargetingConfigProps> = ({
       return;
     }
 
-    console.log("🔍 Searching cities for query:", query);
     setIsSearching(true);
     try {
       const response = await mediaAPI.searchCities(query, "BD");
-      console.log("🔍 City search response:", response);
-      console.log("🔍 Cities array:", response.cities);
       setSearchResults(response.cities || []);
     } catch (error) {
       console.error("Error searching cities:", error);
@@ -160,15 +156,10 @@ const TargetingConfig: React.FC<TargetingConfigProps> = ({
 
   // Add city to targeting
   const addCity = (city: City) => {
-    console.log("🏙️ Adding city:", city);
-    console.log("🏙️ Current cities before adding:", cities);
     if (!cities.find((c) => c.key === city.key)) {
       const newCities = [...cities, { key: city.key, name: city.name }];
-      console.log("🏙️ Updated cities array:", newCities);
       setCities(newCities);
-      console.log("🏙️ Cities state updated, triggering parent update");
     } else {
-      console.log("🏙️ City already exists, not adding");
     }
     setCitySearchQuery("");
     setSearchResults([]);

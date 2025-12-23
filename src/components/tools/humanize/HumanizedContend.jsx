@@ -115,7 +115,6 @@ const HumanizedContend = () => {
       return false;
     }
 
-    console.log(entry);
 
     const modelMatches = entry.model?.toLowerCase() === model.toLowerCase();
     const levelMatches = entry.level === currentLength;
@@ -141,7 +140,7 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        (console.log(entry.outputs.map((output) => output.aiPercentage)),
+        ( => output.aiPercentage)),
           "RESTORED SCORES");
         setShowIndex(0);
         setIsRestoredFromHistory(true);
@@ -212,7 +211,6 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
-      console.log("Humanize API Payload:", {
         model: payload.model,
         modelState: model,
         level: payload.level,
@@ -234,7 +232,6 @@ const HumanizedContend = () => {
         const inputParagraphs = text
           .split(/\n\s*\n/)
           .filter((p) => p.trim().length > 0).length;
-        console.log("✅ [Humanize Response] Received:", {
           variationsCount: data.output.length,
           inputParagraphs: inputParagraphs,
           expectedBehavior:
@@ -251,7 +248,6 @@ const HumanizedContend = () => {
             .split(/\n\s*\n/)
             .filter((p) => p.trim().length > 0).length;
           if (outputParagraphs >= inputParagraphs) {
-            console.log(
               "✅ [Multi-Paragraph Fix] Verified: First variation contains all input paragraphs",
             );
           } else {
@@ -270,7 +266,7 @@ const HumanizedContend = () => {
       const scores = data.output.map(
         (item) => item?.aiPercentage || item?.score,
       ); // ai score
-      // console.log(scores, "GENERATED SCORES");
+      // 
       setOutputContent(data.output);
       setScores(scores);
       setUpdate((prev) => !prev);
@@ -376,7 +372,6 @@ const HumanizedContend = () => {
 
     if (shouldAutoTrigger) {
       // Debug: Log the change
-      console.log("Settings changed - Auto-triggering humanize:", {
         previousModel: prevSettingsRef.current.model,
         newModel: model,
         previousLevel: prevSettingsRef.current.currentLength,
@@ -397,7 +392,6 @@ const HumanizedContend = () => {
       }, 100);
     } else if (modelChanged) {
       // Debug: Log when model changes
-      console.log("Model changed:", {
         model,
         userPackage: user?.package,
       });

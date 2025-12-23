@@ -39,7 +39,6 @@ class Logger {
           console.warn(formattedMessage, context || '');
           break;
         default:
-          console.log(formattedMessage, context || '');
       }
     } else {
       // In production, use structured JSON logging
@@ -54,7 +53,6 @@ class Logger {
           console.warn(logLine);
           break;
         default:
-          console.log(logLine);
       }
     }
   }

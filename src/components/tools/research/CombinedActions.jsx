@@ -40,7 +40,6 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
     try {
       const currentUrl = window.location.href;
       await navigator.clipboard.writeText(currentUrl);
-      console.log("Link copied to clipboard");
     } catch (err) {
       console.error("Failed to copy link:", err);
     }
@@ -48,7 +47,6 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
   };
 
   const handleShare = (shareResult) => {
-    console.log("Share created:", shareResult);
     setShareMenuOpen(false);
   };
 
@@ -66,7 +64,6 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0);
           const dataURL = canvas.toDataURL("image/png");
-          console.log("SHOTHIK AI logo loaded successfully from file");
           resolve(dataURL);
         } catch (error) {
           console.error("Failed to convert logo to base64:", error);
@@ -104,9 +101,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
       }
 
       // ===== LOAD LOGO FOR PDF =====
-      console.log("Loading logo for PDF...");
       const logoBase64 = await loadShothikLogo();
-      console.log("Logo ready:", logoBase64 ? "Yes" : "No");
 
       const doc = new jsPDF({
         orientation: "portrait",
@@ -142,12 +137,10 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
       // ===== ADD HEADER WITH LOGO TO FIRST PAGE =====
       if (logoBase64) {
         try {
-          console.log("Adding logo to PDF at position:", margin, yPosition);
           // Logo size to match AI Detection Report (width: 120, increased height for better proportion)
           doc.addImage(logoBase64, "PNG", margin, yPosition, 120, 40);
           yPosition += 50; // Increased spacing after logo for better margin bottom
           currentLineCount += 2;
-          console.log("Logo added successfully!");
         } catch (error) {
           console.error("Error adding logo image:", error);
           // Fallback: Add text logo if image fails
@@ -642,7 +635,6 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
   };
 
   const handleRewrite = () => {
-    console.log("Rewrite requested");
   };
 
   const handleFeedback = async (type) => {
@@ -655,7 +647,6 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
       if (onFeedback) {
         await onFeedback(type);
       }
-      console.log(`Feedback submitted: ${type}`);
       await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (error) {
       console.error("Failed to submit feedback:", error);

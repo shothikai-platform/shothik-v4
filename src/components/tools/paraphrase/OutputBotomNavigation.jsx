@@ -93,7 +93,6 @@ const OutputBotomNavigation = ({
           if (fontResponse.ok) {
             const arrayBuffer = await fontResponse.arrayBuffer();
             fontData = arrayBuffer;
-            console.log(
               "Font loaded successfully, size:",
               arrayBuffer.byteLength,
             );

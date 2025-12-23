@@ -65,7 +65,6 @@ export default function SmartAssetsSection({
   );
 
   // Debug: Log assets to check types
-  console.log(
     "Assets data:",
     assetsData?.data?.map((a: SmartAsset) => ({
       name: a.name,
@@ -227,7 +226,6 @@ export default function SmartAssetsSection({
     }
 
     try {
-      console.log("AI Generation started:", params);
 
       // Call AI generation API
       const result = await aiGeneration.mutateAsync({
@@ -243,7 +241,6 @@ export default function SmartAssetsSection({
         projectId,
       });
 
-      console.log("AI Generation result:", result);
 
       // Refresh assets list
       refetchAssets();

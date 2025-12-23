@@ -78,8 +78,6 @@ export default function VideoGenerationPage({
 
   // Debug: Log voices data
   useEffect(() => {
-    console.log("Grouped Voices Data:", groupedVoices);
-    console.log("Loading Voices:", loadingVoices);
   }, [groupedVoices, loadingVoices]);
 
   const [script, setScript] = useState("");
@@ -97,13 +95,6 @@ export default function VideoGenerationPage({
   useEffect(() => {
     if (selectedAd) {
       const ad = userAds.find((a: Ad) => a.id === selectedAd) as any;
-      console.log("==========================================");
-      console.log("Selected Ad:", ad);
-      console.log("Ad ID:", selectedAd);
-      console.log("Campaign ID:", ad?.campaignId);
-      console.log("CampaignData _id:", ad?.campaignDataId);
-      console.log("Project ID:", ad?.projectId);
-      console.log("==========================================");
     }
   }, [selectedAd, userAds]);
   const [showNotification, setShowNotification] = useState(false);
@@ -436,7 +427,6 @@ export default function VideoGenerationPage({
         },
       };
 
-      console.log("Video generation payload:", payload);
 
       await generateVideoMutation.mutateAsync(payload);
 

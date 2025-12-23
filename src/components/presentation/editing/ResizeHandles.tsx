@@ -44,7 +44,7 @@ interface ResizeHandlesProps {
  *   containerRef={containerRef}
  *   iframeScale={0.5}
  *   onResize={(width, height) => {
- *     console.log(`Resized to: ${width}x${height}`);
+ *     
  *   }}
  * />
  * ```

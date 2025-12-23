@@ -24,7 +24,7 @@ export const presentationApiSlice = createApi({
   reducerPath: "presentationApi",
   baseQuery: async (args, api, extraOptions) => {
     let result = await baseQuerySlide(args, api, extraOptions);
-    // console.log(result, "Base Query Result");
+    // 
     return result;
   },
   tagTypes: ["presentation", "logs", "slides"],
@@ -71,13 +71,7 @@ export const presentationApiSlice = createApi({
 
         // Ensure files is an array and append each file
         const fileArray = Array.isArray(files) ? files : [files];
-        fileArray.forEach((file, index) => {
-          console.log(
-            `Appending file ${index}:`,
-            file.name,
-            file.type,
-            file.size,
-          );
+        fileArray.forEach((file) => {
           formData.append("files", file);
         });
 
@@ -86,11 +80,6 @@ export const presentationApiSlice = createApi({
           formData.append("user_id", userId);
         }
 
-        // Log FormData contents for debugging
-        console.log("FormData entries:");
-        for (let [key, value] of formData.entries()) {
-          console.log(key, value);
-        }
 
         return {
           url: "/upload-file",

@@ -141,7 +141,6 @@ const RenderMarkdown = ({ content }) => {
       try {
         data = JSON.parse(children);
       } catch {
-        console.log("error: ");
       }
       if (!data) return null;
       if (data.type) {

@@ -48,7 +48,6 @@ const SharedAgentPage = () => {
     useCreateAgentReplicaMutation();
 
   useEffect(() => {
-    console.log("Component mounted, auth state:", {
       accessToken,
       isAuthenticated,
       user,
@@ -60,7 +59,6 @@ const SharedAgentPage = () => {
 
   // Debug auth state changes
   useEffect(() => {
-    console.log("Auth state changed:", { accessToken, isAuthenticated, user });
   }, [accessToken, isAuthenticated, user]);
 
   useEffect(() => {
@@ -104,7 +102,6 @@ const SharedAgentPage = () => {
   };
 
   const handleSaveAsCopy = async () => {
-    console.log("Save as Copy clicked:", {
       accessToken,
       isAuthenticated,
       user,
@@ -113,13 +110,11 @@ const SharedAgentPage = () => {
     });
 
     if (!isAuthenticated || !user) {
-      console.log("User not authenticated, opening login modal");
       // Open the login modal instead of redirecting
       dispatch(setShowLoginModal(true));
       return;
     }
 
-    console.log(
       "User authenticated, creating replica and redirecting to research page",
     );
 
@@ -136,7 +131,6 @@ const SharedAgentPage = () => {
         },
       }).unwrap();
 
-      console.log("Replica creation response:", response);
 
       if (response.success) {
         // Redirect to the research page with the new agent ID
@@ -286,7 +280,6 @@ const SharedAgentPage = () => {
                 <Button
                   variant="default"
                   onClick={() => {
-                    console.log("Button clicked - before handleSaveAsCopy");
                     handleSaveAsCopy();
                   }}
                   disabled={isCreatingReplica}

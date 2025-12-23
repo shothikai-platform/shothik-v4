@@ -101,7 +101,6 @@ export const FooterCta = ({ isMobile, showModal, setShowModal }) => {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       toast.success("Successfully registered for beta!", {

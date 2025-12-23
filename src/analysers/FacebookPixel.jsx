@@ -13,7 +13,6 @@ export default function FacebookPixel() {
 
     initFacebookPixel(FB_PIXEL_ID);
     window.fbq("track", "PageView");
-    console.log("Facebook Pixel: PageView");
   }, [router]);
 
   if (!FB_PIXEL_ID) return null;

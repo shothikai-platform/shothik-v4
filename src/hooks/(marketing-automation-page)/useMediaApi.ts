@@ -49,15 +49,12 @@ export const useVoices = () => {
   return useQuery<GroupedVoices>({
     queryKey: ["voices"],
     queryFn: async () => {
-      console.log("Fetching voices from API...");
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/voices`,
       );
-      console.log("API Response for voices:", data);
 
       // Get the actual data
       const voicesData = data.success && data.data ? data.data : data;
-      console.log("Voices data:", voicesData);
 
       // Transform the data structure
       // API returns: { male: [{ name, gender, accents: [{id, accent_name, preview_url}] }] }
@@ -80,7 +77,6 @@ export const useVoices = () => {
         });
       }
 
-      console.log("Transformed voices data:", transformedData);
       return transformedData;
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes

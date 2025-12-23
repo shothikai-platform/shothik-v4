@@ -69,7 +69,7 @@ export const useAutoFreeze = ({
   /**
    * Main detection function
    */
-  // console.log(shouldAutoFreeze, "shouldAutoFreeze");
+  // 
   const detectTerms = useCallback(
     async (text, useLLM = false) => {
       if (!text || text.length < 10 || !shouldAutoFreeze) {

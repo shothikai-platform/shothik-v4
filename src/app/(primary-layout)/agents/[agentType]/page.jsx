@@ -52,7 +52,7 @@ export default function SpecificAgentPage() {
   const researchId = searchParams.get("r_id"); // this ID is presents when we are on research simulation mode
   const isResarchSimulating = !!researchId;
 
-  // console.log(isResarchSimulating, "is research simulating");
+  // 
 
   const [loadingResearchHistory, setLoadingResearchHistory] = useState(true);
 

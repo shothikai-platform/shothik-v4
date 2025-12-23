@@ -120,7 +120,7 @@ export default function SlidePreview({
     index,
   );
 
-  // console.log(slide, "SLIDES DATA");
+  // 
 
   // Copy to clipboard function
   const handleCopy = async () => {
@@ -142,10 +142,8 @@ export default function SlidePreview({
   // EDIT LOGIC STARTS
   const handleEditSlide = () => {
     if (isEditMode) {
-      console.log("🛑 Edit mode disabled for slide:", slide?.slideNumber + 1);
       stopEditMode();
     } else {
-      console.log("🎯 Edit mode enabled for slide:", slide?.slideNumber + 1);
       startEditMode();
       setShowSelectionAlert(true);
     }
@@ -165,7 +163,6 @@ export default function SlidePreview({
 
     html2canvas(targetElement).then((canvas) => {
       const imageData = canvas.toDataURL("image/jpeg"); // or "image/png"
-      console.log("📸 Base64 Image Data:", imageData);
       // Optionally do something with the image, like saving, copying, previewing
     });
   }
@@ -424,7 +421,6 @@ export default function SlidePreview({
                     containerRef={containerRef}
                     iframeScale={dimensions.scale}
                     onResize={(width, height) => {
-                      console.log("Element resized:", { width, height });
                       // TODO: Track change in Redux for undo/redo
                     }}
                   />
@@ -486,7 +482,6 @@ export default function SlidePreview({
                     onGridToggle={setGridEnabled}
                     onAlignmentGuidesChange={setAlignmentGuides}
                     onSave={() => {
-                      console.log("Save changes clicked");
                       // TODO: Implement save functionality in Phase 5
                     }}
                   />
@@ -653,7 +648,7 @@ const parseSimpleMarkdown = (text) => {
 const EnhancedThinkingTab = ({ slide, dimensions }) => {
   const [processedContent, setProcessedContent] = useState("");
 
-  // console.log(slide, "THOUGHT SLIDE DATA");
+  // 
 
   useEffect(() => {
     if (slide?.thinking) {

@@ -86,7 +86,6 @@ export default function AIShortsPage() {
   useEffect(() => {
     if (selectedAd) {
       const ad = userAds.find((a: Ad) => a.id === selectedAd) as any;
-      console.log("Selected Ad for AI Short:", ad);
     }
   }, [selectedAd, userAds]);
 
@@ -150,7 +149,6 @@ export default function AIShortsPage() {
         },
       });
 
-      console.log("AI Short generation result:", result);
 
       toast.success(
         "✨ AI Short generation started! Check the Medias section for updates.",

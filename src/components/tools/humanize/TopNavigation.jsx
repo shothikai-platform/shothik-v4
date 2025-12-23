@@ -33,7 +33,6 @@ const TopNavigation = ({
 
   const handleTabClick = (tab) => {
     // Raven is now available to all users (lock removed)
-    console.log("Model tab clicked - Updating model:", {
       previousModel: model,
       newModel: tab,
       userPackage,

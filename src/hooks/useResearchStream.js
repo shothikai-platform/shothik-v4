@@ -67,7 +67,6 @@ export const useResearchStream = () => {
     async (jobStatus) => {
       // Prevent multiple completion handlers
       if (handlingCompletionRef.current) {
-        console.log("Completion already being handled, skipping");
         return;
       }
 
@@ -86,7 +85,6 @@ export const useResearchStream = () => {
         );
 
         if (existingResearch) {
-          console.log("Research already exists, skipping duplicate addition");
           clearConnectionMetadata();
           dispatch(setConnectionStatus("connected"));
           return;
@@ -133,7 +131,6 @@ export const useResearchStream = () => {
     async (targetJobId) => {
       // Prevent multiple polling sessions
       if (isPollingActiveRef.current) {
-        console.log("Polling already active for", targetJobId);
         return;
       }
 
@@ -159,7 +156,6 @@ export const useResearchStream = () => {
 
       const pollFunction = async () => {
         if (pollFunction.isRunning) {
-          console.log("Poll already running, skipping");
           return;
         }
 
@@ -168,12 +164,10 @@ export const useResearchStream = () => {
         try {
           // Check if we should continue polling
           if (!isPollingActiveRef.current) {
-            console.log("Polling stopped by external signal");
             return;
           }
 
           if (handlingCompletionRef.current) {
-            console.log("Completion being handled, skipping poll");
             return;
           }
 
@@ -181,7 +175,6 @@ export const useResearchStream = () => {
             const jobStatus =
               await QueueStatusService.getJobStatus(targetJobId);
 
-            console.log(jobStatus, "...Job status from polling...");
 
             // Reset reconnect attempts on successful response
             reconnectAttemptsRef.current = 0;
@@ -212,7 +205,6 @@ export const useResearchStream = () => {
             });
 
             if (QueueStatusService.isJobCompleted(jobStatus)) {
-              console.log("Job completed, stopping polling");
               isPollingActiveRef.current = false;
 
               if (pollingIntervalRef.current) {
@@ -225,7 +217,6 @@ export const useResearchStream = () => {
             }
 
             if (QueueStatusService.isJobFailed(jobStatus)) {
-              console.log("Job failed, stopping polling");
               isPollingActiveRef.current = false;
 
               if (pollingIntervalRef.current) {
@@ -272,7 +263,6 @@ export const useResearchStream = () => {
 
             // Timeout after maximum polls
             if (pollCount >= maxPolls) {
-              console.log("Polling timeout reached");
               isPollingActiveRef.current = false;
 
               if (pollingIntervalRef.current) {
@@ -290,7 +280,6 @@ export const useResearchStream = () => {
             reconnectAttemptsRef.current++;
 
             if (reconnectAttemptsRef.current >= 5) {
-              console.log("Too many polling errors, stopping");
               isPollingActiveRef.current = false;
 
               if (pollingIntervalRef.current) {
@@ -327,7 +316,6 @@ export const useResearchStream = () => {
   );
 
   const cancelResearch = useCallback(() => {
-    console.log("Canceling research");
 
     // Stop polling
     isPollingActiveRef.current = false;
@@ -394,12 +382,11 @@ export const useResearchStream = () => {
         return;
       }
 
-      // console.log(config, "config data");
+      // 
 
       // Check if there's already an active research
       const hasActive = await QueueStatusService.hasActiveResearch();
       if (hasActive) {
-        console.log("Active research detected, attempting recovery...");
         await checkAndRecoverConnection();
         return;
       }
@@ -546,7 +533,6 @@ export const useResearchStream = () => {
           dispatch(setConnectionStatus("failed"));
 
           // Don't clear metadata on error - might need for recovery
-          console.log(
             "Stream error, metadata preserved for potential recovery",
           );
         }
@@ -573,7 +559,6 @@ export const useResearchStream = () => {
   // Cleanup effect
   useEffect(() => {
     return () => {
-      console.log("useResearchStream cleanup");
 
       isPollingActiveRef.current = false;
       handlingCompletionRef.current = false;
@@ -600,7 +585,6 @@ export const useResearchStream = () => {
   useEffect(() => {
     const checkInterrupted = async () => {
       if (isConnectionInterrupted()) {
-        console.log("Interrupted connection detected, attempting recovery...");
         await checkAndRecoverConnection();
       }
     };

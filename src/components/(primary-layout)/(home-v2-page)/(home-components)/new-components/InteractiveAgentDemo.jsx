@@ -42,7 +42,6 @@ export const createSheetSimulationChatId = async (inputValue, router, sId) => {
       },
     );
     if (!response.ok) {
-      console.log("Failed to create sheet");
       return;
     }
 
@@ -58,7 +57,6 @@ export const createSheetSimulationChatId = async (inputValue, router, sId) => {
 
     router.push(`/agents/sheets/?id=${chatId}&s_id=${sId}`);
   } catch (error) {
-    console.log("Failed to create chat");
   }
 };
 
@@ -147,11 +145,8 @@ const mockApiRequest = async (method, endpoint, data) => {
 // Mock analytics functions
 const mockAnalytics = {
   trackAgentInteraction: (id, action, length) =>
-    console.log("Track:", id, action, length),
   trackFeatureClick: (feature, context) =>
-    console.log("Click:", feature, context),
   trackError: (type, message, context) =>
-    console.log("Error:", type, message, context),
 };
 
 export default function InteractiveAgentDemo() {
@@ -201,7 +196,7 @@ export default function InteractiveAgentDemo() {
     );
 
     const simulationId = selectedAgent.chatId[userChatId];
-    // console.log(selectedAgent.chatId[userChatId], "simulationId");
+    // 
     // return;
 
     // Tracking simulation for GA4, GTM, and other
@@ -302,7 +297,6 @@ export default function InteractiveAgentDemo() {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       setToast({

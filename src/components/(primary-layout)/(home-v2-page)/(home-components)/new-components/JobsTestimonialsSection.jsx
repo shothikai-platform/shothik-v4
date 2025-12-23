@@ -100,7 +100,6 @@ export default function JobsTestimonialsSection() {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       setToast({

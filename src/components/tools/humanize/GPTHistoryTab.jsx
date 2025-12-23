@@ -25,7 +25,6 @@ export default function GPTHistoryTab({
   refetchHistory,
   handleHistorySelect,
 }) {
-  console.log(
     "GPTHistoryTab received handleHistorySelect:",
     typeof handleHistorySelect,
   );
@@ -40,9 +39,8 @@ export default function GPTHistoryTab({
     useDeleteSingleHistoryMutation();
 
   // const { data, refetch } = useGetAllHistoryQuery();
-  // console.log(data, "data");
+  // 
   const groupedData = historyGroupsByPeriod(allHumanizeHistory);
-  console.log(groupedData, "grouped data");
 
   const toggleEntryExpansion = (period, index) => {
     setExpandedEntries((prev) => ({
@@ -59,7 +57,7 @@ export default function GPTHistoryTab({
   };
 
   const onHistoryClick = (entry) => {
-    // console.log(entry, "ENTRY DATA");
+    // 
     handleHistorySelect(entry);
     onClose();
   };

@@ -144,7 +144,6 @@ const createEnhancedIframeContent = (
                   if (!element.id) {
                     const newId = 'element-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
                     element.id = newId;
-                    console.log('Assigned ID to element (programmatic):', newId);
                   }
                   
                   clearAllHighlights();
@@ -249,7 +248,6 @@ const createEnhancedIframeContent = (
             if (!element.id) {
               const newId = 'element-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
               element.id = newId;
-              console.log('Assigned ID to element:', newId);
             }
             
             // Clear all previous selections

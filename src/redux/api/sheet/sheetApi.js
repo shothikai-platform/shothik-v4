@@ -137,7 +137,6 @@ export const sheetApiSlice = createApi({
       invalidatesTags: ["ChatHistory"],
       // Transform response to ensure proper data structure
       transformResponse: (response) => {
-        console.log("Sheet data saved successfully:", response);
         return response;
       },
       // Handle errors

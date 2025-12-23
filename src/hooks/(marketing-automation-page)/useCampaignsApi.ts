@@ -61,11 +61,9 @@ export const useInitialSuggestions = (
   return useQuery({
     queryKey: ["initialSuggestions", projectId],
     queryFn: async () => {
-      console.log("🔵 Fetching initial suggestions for projectId:", projectId);
       const { data } = await api.post(
         `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/initial-suggestions/${projectId}`,
       );
-      console.log("🟢 Initial suggestions API response:", data);
       return data;
     },
     enabled: !!projectId && enabled,

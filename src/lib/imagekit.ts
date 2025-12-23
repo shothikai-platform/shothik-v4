@@ -27,16 +27,13 @@ export const uploadToImageKit = async (
 ): Promise<string> => {
   try {
     // Get authentication parameters from backend
-    console.log("Getting ImageKit auth...");
     const authResponse = await getImageKitAuth();
-    console.log("Auth response:", authResponse);
 
     if (!authResponse.success) {
       throw new Error(authResponse.error || "Failed to get authentication");
     }
 
     const auth = authResponse.data;
-    console.log("Auth parameters:", auth);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -47,7 +44,6 @@ export const uploadToImageKit = async (
     formData.append("expire", auth.expire.toString());
     formData.append("publicKey", IMAGEKIT_PUBLIC_KEY);
 
-    console.log("Uploading to ImageKit...");
     const response = await fetch(
       `https://upload.imagekit.io${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}v1/files/upload`,
       {
@@ -56,7 +52,6 @@ export const uploadToImageKit = async (
       },
     );
 
-    console.log("Upload response status:", response.status);
 
     if (!response.ok) {
       let errorMessage = `Upload failed with status ${response.status}`;
@@ -73,7 +68,6 @@ export const uploadToImageKit = async (
     }
 
     const result = await response.json();
-    console.log("Upload successful:", result);
     return result.url;
   } catch (error) {
     console.error("Error uploading to ImageKit:", error);

@@ -126,7 +126,6 @@ export default function URLAnalysis() {
       }
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      console.log(apiUrl);
       const response = await fetch(
         `${apiUrl}${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}analysis/analyze`,
         {

@@ -26,7 +26,6 @@ export default function CTASection() {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       toast.success(

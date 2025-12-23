@@ -24,7 +24,7 @@ export default function PricingButton({
     trackEvent("click", "payment", subscription, 1);
   };
 
-  // console.log(subscription, "subscription");
+  // 
 
   return (
     <div className="w-full">

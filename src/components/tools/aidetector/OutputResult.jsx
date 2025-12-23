@@ -49,7 +49,6 @@ const widths = [130, 80, 60, 60, 80, 130];
 export const getColorByPerplexity = (highlight_sentence_for_ai, perplexity) => {
   const p = parseInt(perplexity);
 
-  console.log(highlight_sentence_for_ai, perplexity, "from output result");
 
   if (highlight_sentence_for_ai) {
     // AI text thresholds (higher perplexity = more AI-like)

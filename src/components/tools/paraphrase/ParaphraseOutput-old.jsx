@@ -137,7 +137,6 @@ const ParaphraseOutput = ({
       };
       await paraphraseForTagging(payload).unwrap();
     } catch (error) {
-      console.log(error);
       setProcessing({ success: false, loading: false });
     }
     setSynonymsOptions(synonymInit);
@@ -241,7 +240,6 @@ const ParaphraseOutput = ({
         }
       }
     } catch (error) {
-      console.log(error);
       toast.error(error?.message);
     }
   }

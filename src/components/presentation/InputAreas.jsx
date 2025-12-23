@@ -74,7 +74,6 @@ export default function InputArea({
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
-    console.log(
       "Selected files:",
       files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
     );
@@ -116,7 +115,6 @@ export default function InputArea({
       userId: user._id,
     };
 
-    console.log("Upload data:", {
       filesCount: files.length,
       userId: user._id,
       fileNames: files.map((f) => f.name),
@@ -128,7 +126,6 @@ export default function InputArea({
 
       const result = await uploadFiles(uploadData).unwrap();
 
-      console.log("Upload successful:", result);
       showToast(`${files.length} file(s) uploaded successfully`, "success");
 
       if (result?.success) {

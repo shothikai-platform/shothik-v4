@@ -18,7 +18,6 @@ const ToolCategorySection = ({
 
   const handleVideoClick = (videoId) => {
     // Optional: Analytics tracking here
-    console.log("Video clicked:", videoId);
   };
 
   return (

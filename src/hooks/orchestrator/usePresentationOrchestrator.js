@@ -110,7 +110,6 @@ export default function usePresentationOrchestrator(presentationId) {
       }
 
       try {
-        console.log(`[Orchestrator] Fetching status for presentation: ${pId}`);
 
         const response = await fetch(`${API_URL}/presentation-status/${pId}`, {
           method: "GET",
@@ -125,7 +124,6 @@ export default function usePresentationOrchestrator(presentationId) {
         }
 
         const data = await response.json();
-        console.log("[Orchestrator] Status received:", data);
 
         return data;
       } catch (error) {
@@ -153,7 +151,6 @@ export default function usePresentationOrchestrator(presentationId) {
       }
 
       try {
-        console.log(`[Orchestrator] Fetching history for presentation: ${pId}`);
 
         const response = await fetch(`${API_URL}/logs?p_id=${pId}`, {
           method: "GET",
@@ -168,7 +165,6 @@ export default function usePresentationOrchestrator(presentationId) {
         }
 
         const rawData = await response.json();
-        console.log("[Orchestrator] Raw history data received:", rawData);
 
         // Import and use the history parser
         const {
@@ -181,7 +177,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
         // Extract summary for logging
         const summary = extractPresentationSummary(rawData);
-        console.log("[Orchestrator] Presentation summary:", summary);
 
         // Parse the history data
         const parsedData = parseHistoryData(rawData);
@@ -190,7 +185,6 @@ export default function usePresentationOrchestrator(presentationId) {
           throw new Error("Failed to parse history data");
         }
 
-        console.log("[Orchestrator] History data parsed successfully:", {
           logsCount: parsedData.logs.length,
           slidesCount: parsedData.slides.length,
           status: parsedData.status,
@@ -225,14 +219,12 @@ export default function usePresentationOrchestrator(presentationId) {
 
       // Prevent duplicate calls unless explicitly skipped (for follow-up queries)
       if (!skipDuplicateCheck && startPresentationCalledRef.current) {
-        console.log(
           "[Orchestrator] startPresentation already called, skipping duplicate call",
         );
         return;
       }
 
       try {
-        console.log(`[Orchestrator] Starting presentation: ${pId}`);
         startPresentationCalledRef.current = true;
 
         const response = await fetch(`${API_URL}/start-presentation/${pId}`, {
@@ -244,7 +236,6 @@ export default function usePresentationOrchestrator(presentationId) {
         });
 
         const data = await response.json();
-        console.log("[Orchestrator] Start presentation response:", data);
       } catch (error) {
         console.error("[Orchestrator] Error starting presentation:", error);
         setError(error.message);
@@ -262,7 +253,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   const handleQueuedStatus = useCallback(
     async (pId) => {
-      console.log("[Orchestrator] 🟡 Handling QUEUED status");
 
       setHookStatus(HOOK_STATUS.STREAMING);
 
@@ -279,7 +269,6 @@ export default function usePresentationOrchestrator(presentationId) {
       await startPresentation(pId, false);
 
       // Socket will automatically connect via usePresentationSocket
-      console.log(
         "[Orchestrator] Socket connection initiated for queued presentation",
       );
     },
@@ -294,8 +283,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   const handleProcessingStatus = useCallback(
     async (pId) => {
-      console.log("[Orchestrator] 🔄 Handling PROCESSING status");
-      console.log("[Orchestrator] Step 1: Loading existing history first...");
 
       setHookStatus(HOOK_STATUS.LOADING_HISTORY);
 
@@ -312,7 +299,6 @@ export default function usePresentationOrchestrator(presentationId) {
       const historyData = await fetchPresentationHistory(pId);
 
       if (historyData) {
-        console.log("[Orchestrator] ✅ History loaded successfully:", {
           logs: historyData.logs.length,
           slides: historyData.slides.length,
         });
@@ -320,7 +306,6 @@ export default function usePresentationOrchestrator(presentationId) {
         // Load history into Redux
         dispatch(setHistoryData(historyData));
 
-        console.log(
           "[Orchestrator] Step 2: Now establishing socket connection for real-time updates...",
         );
       } else {
@@ -341,7 +326,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
       // Socket will automatically connect via usePresentationSocket
       // because currentStatusRef.current is now PROCESSING
-      console.log("[Orchestrator] ✅ Ready for real-time socket updates");
     },
     [dispatch, fetchPresentationHistory],
   );
@@ -354,7 +338,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   const handleCompletedStatus = useCallback(
     async (pId) => {
-      console.log("[Orchestrator] ✅ Handling COMPLETED status");
 
       setHookStatus(HOOK_STATUS.LOADING_HISTORY);
 
@@ -371,7 +354,6 @@ export default function usePresentationOrchestrator(presentationId) {
       const historyData = await fetchPresentationHistory(pId);
 
       if (historyData) {
-        console.log("[Orchestrator] History loaded successfully");
         // TODO: Process and dispatch history data to Redux in future iteration
         // dispatch(setPresentationState({ ...processedHistory, _replaceArrays: true }));
         dispatch(setHistoryData(historyData));
@@ -432,7 +414,6 @@ export default function usePresentationOrchestrator(presentationId) {
       const { p_id, status } = statusData;
       currentStatusRef.current = status;
 
-      console.log(
         `[Orchestrator] 🎯 Routing status: ${status} for presentation: ${p_id}`,
       );
 
@@ -481,13 +462,11 @@ export default function usePresentationOrchestrator(presentationId) {
       hasInitializedRef.current &&
       initializedPresentationIdRef.current === presentationId
     ) {
-      console.log(
         "[Orchestrator] Already initialized for this presentationId, skipping",
       );
       return;
     }
 
-    console.log(
       "[Orchestrator] 🚀 Initializing orchestrator for:",
       presentationId,
     );
@@ -523,7 +502,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   useEffect(() => {
     if (!presentationId) {
-      console.log("[Orchestrator] No presentationId, skipping initialization");
       return;
     }
 
@@ -534,7 +512,6 @@ export default function usePresentationOrchestrator(presentationId) {
     if (isNewPresentationId) {
       // Reset state when presentationId changes (production-grade approach)
       // This prevents stale data from previous presentations
-      console.log(
         "[Orchestrator] 🔄 Presentation ID changed, resetting state for:",
         presentationId,
       );
@@ -554,7 +531,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
     // Cleanup: Only cleanup intervals/timers, not state (state is presentationId-scoped)
     return () => {
-      console.log(
         "[Orchestrator] 🧹 Cleanup for presentation:",
         presentationId,
       );
@@ -578,7 +554,6 @@ export default function usePresentationOrchestrator(presentationId) {
    * Retry mechanism for failed presentations
    */
   const retry = useCallback(() => {
-    console.log("[Orchestrator] 🔄 Retrying...");
     hasInitializedRef.current = false;
     initializedPresentationIdRef.current = null;
     startPresentationCalledRef.current = false;
@@ -595,7 +570,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   const handleFollowUpQueued = useCallback(
     async (pId) => {
-      console.log(
         "[Orchestrator] 🔄 Handling follow-up queued status for:",
         pId,
       );
@@ -619,7 +593,6 @@ export default function usePresentationOrchestrator(presentationId) {
       // Start the presentation process (skip duplicate check for follow-up queries)
       await startPresentation(pId, true);
 
-      console.log(
         "[Orchestrator] ✅ Follow-up queued status handled, socket will connect",
       );
     },
@@ -637,7 +610,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
     // Skip if we're currently initializing (to prevent duplicate startPresentation calls)
     if (isInitializingRef.current) {
-      console.log(
         "[Orchestrator] Skipping Redux status watcher during initialization",
       );
       return;
@@ -645,7 +617,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
     // Handle status changes
     if (reduxStatus && currentStatusRef.current !== reduxStatus) {
-      console.log(
         "[Orchestrator] 🔄 Detected status change in Redux, updating internal state",
         {
           reduxStatus,
@@ -672,7 +643,6 @@ export default function usePresentationOrchestrator(presentationId) {
           currentPId &&
           !startPresentationCalledRef.current
         ) {
-          console.log(
             "[Orchestrator] Status is queued, ensuring presentation is started",
           );
           startPresentation(currentPId);
@@ -680,19 +650,16 @@ export default function usePresentationOrchestrator(presentationId) {
           reduxStatus === PRESENTATION_STATUS.QUEUED &&
           startPresentationCalledRef.current
         ) {
-          console.log(
             "[Orchestrator] startPresentation already called during initialization, skipping",
           );
         }
       } else if (reduxStatus === PRESENTATION_STATUS.COMPLETED) {
         // For completed status, set to ready mode (socket will disconnect automatically)
-        console.log(
           "[Orchestrator] ✅ Presentation completed, transitioning to ready state",
         );
         setHookStatus(HOOK_STATUS.READY);
       } else if (reduxStatus === PRESENTATION_STATUS.FAILED) {
         // For failed status, set to error mode
-        console.log(
           "[Orchestrator] ❌ Presentation failed, transitioning to error state",
         );
         setHookStatus(HOOK_STATUS.ERROR);

@@ -83,7 +83,6 @@ export default function PreviewPanel({
 
   // Debug: Log props relevant to View Slides button
   if (currentAgentType === "presentation" && !browserWorkerSummary) {
-    console.log("[PreviewPanel] View Slides button visibility check:", {
       presentationId,
       status,
       presentationStatus,
@@ -150,7 +149,6 @@ export default function PreviewPanel({
                             <Link
                               href={`/slides?project_id=${presentationId}`}
                               onClick={() => {
-                                console.log("[PreviewPanel] View Slides clicked:", {
                                   presentationId,
                                   href: `/slides?project_id=${presentationId}`,
                                   status,

@@ -58,7 +58,6 @@ const PlagiarismCheckerContentSection = () => {
   
   // Debug logging - track report changes
   useEffect(() => {
-    console.log("[Plagiarism] Component state changed:", {
       hasReport: hasReport,
       reportExists: !!report,
       reportType: report ? typeof report : 'null',
@@ -75,17 +74,14 @@ const PlagiarismCheckerContentSection = () => {
   // Force re-render when report changes from null to object (catches state updates)
   useEffect(() => {
     if (report && !loading) {
-      console.log("[Plagiarism] Report is available and loading is false - should display results");
     }
   }, [report, loading]);
   const highlightRanges = useMemo(() => {
     if (!report || !inputText) {
-      console.log("[Plagiarism] No report or inputText, returning empty ranges");
       return [];
     }
     
     // Log the full report structure for debugging
-    console.log("[Plagiarism] Full report structure:", {
       report,
       sections: report.sections,
       exactMatches: report.exactMatches,
@@ -179,10 +175,8 @@ const PlagiarismCheckerContentSection = () => {
     
     // Process exact matches first (they have highest priority)
     if (report.exactMatches?.length) {
-      console.log("[Plagiarism] Processing exact matches:", report.exactMatches.length);
       
       report.exactMatches.forEach((match, matchIndex) => {
-        console.log(`[Plagiarism] Exact match ${matchIndex + 1}:`, {
           excerpt: match.excerpt,
           span: match.span,
           sourcesCount: match.sources?.length ?? 0,
@@ -199,7 +193,6 @@ const PlagiarismCheckerContentSection = () => {
               return;
             }
             
-            console.log(`[Plagiarism] Trying to match source snippet:`, {
               snippet: sourceSnippet,
               sourceTitle: source.title,
             });
@@ -215,7 +208,6 @@ const PlagiarismCheckerContentSection = () => {
                 
                 // Verify the match makes sense
                 const matchedText = inputText.substring(found.start, found.end);
-                console.log(`[Plagiarism] ✓ Found match for source snippet:`, {
                   sourceSnippet: sourceSnippet.substring(0, 50),
                   matchedText: matchedText.substring(0, 50),
                   start: found.start,
@@ -229,7 +221,6 @@ const PlagiarismCheckerContentSection = () => {
                   similarity: 100, // Exact matches are 100% similar
                 });
               } else {
-                console.log(`[Plagiarism] Skipping duplicate position:`, positionKey);
               }
             } else {
               console.warn(`[Plagiarism] ✗ Could not find source snippet in input:`, {
@@ -246,10 +237,8 @@ const PlagiarismCheckerContentSection = () => {
     
     // Process sections (paraphrased content)
     if (report.sections?.length) {
-      console.log("[Plagiarism] Processing sections:", report.sections.length);
       
       report.sections.forEach((section, sectionIndex) => {
-        console.log(`[Plagiarism] Section ${sectionIndex + 1}:`, {
           excerpt: section.excerpt,
           span: section.span,
           similarity: section.similarity,
@@ -267,7 +256,6 @@ const PlagiarismCheckerContentSection = () => {
               return;
             }
             
-            console.log(`[Plagiarism] Trying to match section source snippet:`, {
               snippet: sourceSnippet,
               sourceTitle: source.title,
             });
@@ -282,7 +270,6 @@ const PlagiarismCheckerContentSection = () => {
                 usedPositions.add(positionKey);
                 
                 const matchedText = inputText.substring(found.start, found.end);
-                console.log(`[Plagiarism] ✓ Found match for section source snippet:`, {
                   sourceSnippet: sourceSnippet.substring(0, 50),
                   matchedText: matchedText.substring(0, 50),
                   start: found.start,
@@ -297,7 +284,6 @@ const PlagiarismCheckerContentSection = () => {
                   similarity: section.similarity ?? 0,
                 });
               } else {
-                console.log(`[Plagiarism] Skipping duplicate position:`, positionKey);
               }
             } else {
               console.warn(`[Plagiarism] ✗ Could not find section source snippet in input:`, {
@@ -315,7 +301,6 @@ const PlagiarismCheckerContentSection = () => {
     // Sort ranges by start position
     ranges.sort((a, b) => a.start - b.start);
     
-    console.log("[Plagiarism] Final highlight ranges:", {
       totalRanges: ranges.length,
       inputTextLength: inputText.length,
       ranges: ranges.slice(0, 10), // First 10 for debugging
@@ -375,7 +360,6 @@ const PlagiarismCheckerContentSection = () => {
       // Small delay to ensure state updates are processed
       const timeoutId = setTimeout(() => {
         isScanningRef.current = false;
-        console.log("[Plagiarism] Loading complete, reset protection disabled");
       }, 500); // 500ms grace period after loading completes
       return () => clearTimeout(timeoutId);
     }
@@ -389,7 +373,6 @@ const PlagiarismCheckerContentSection = () => {
     // Don't reset if we're currently scanning - this prevents race conditions
     // where the editor updates during/after scan completion
     if (isScanningRef.current) {
-      console.log("[Plagiarism] Skipping reset - scan in progress");
       return;
     }
     
@@ -397,7 +380,6 @@ const PlagiarismCheckerContentSection = () => {
     // Check report directly (not hasReport from closure) to avoid stale values
     const currentHasReport = Boolean(report);
     if (currentHasReport && previousText.trim() !== nextValue.trim()) {
-      console.log("[Plagiarism] Text changed, resetting report:", {
         previousLength: previousText.length,
         nextLength: nextValue.length,
         previousTrimmed: previousText.trim().length,
@@ -422,11 +404,9 @@ const PlagiarismCheckerContentSection = () => {
 
     // Prevent multiple clicks - check both enableScan and loading
     if (!enableScan || loading) {
-      console.log("[Plagiarism] Scan blocked:", { enableScan, loading });
       return;
     }
 
-    console.log("[Plagiarism] Starting scan...", {
       hasReport: hasReport,
       reportId: report?.analysisId,
       inputLength: inputText.length,
@@ -442,10 +422,8 @@ const PlagiarismCheckerContentSection = () => {
     try {
       // Always force a fresh scan on button click to ensure latest results
       // This eliminates cache-related issues
-      console.log("[Plagiarism] Calling triggerCheck with forceRefresh=true");
       const scanResult = await triggerCheck(true);
       
-      console.log("[Plagiarism] triggerCheck returned:", {
         hasResult: !!scanResult,
         resultId: scanResult?.analysisId,
         resultSections: scanResult?.sections?.length,
@@ -454,7 +432,6 @@ const PlagiarismCheckerContentSection = () => {
       
       // After triggerCheck completes, the state should be updated via flushSync
       // Log the current state to verify
-      console.log("[Plagiarism] After triggerCheck - component state:", {
         currentReport: !!report,
         currentReportId: report?.analysisId,
         currentLoading: loading,

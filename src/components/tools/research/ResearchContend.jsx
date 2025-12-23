@@ -123,7 +123,6 @@ const ResearchContend = () => {
               return [...updatedPrev, TextMessage];
             });
           } catch (error) {
-            console.log("error", value);
           }
         }
       }
@@ -139,7 +138,6 @@ const ResearchContend = () => {
       setIsLoading(false);
       setUserInput("");
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   }
@@ -152,7 +150,6 @@ const ResearchContend = () => {
         const res = await getResearchQuestion({ history }).unwrap();
         setSuggestedQuestions(res.data);
       } catch (error) {
-        console.log(error);
       }
     })();
   }, [isLoading]);

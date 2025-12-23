@@ -197,14 +197,14 @@ export default function AgentLandingPage() {
     useUploadPresentationFilesMutation();
   // const [initiatePresentation, { isLoading: isInitiatingPresentation }] =
   //   useCreatePresentationMutation();
-  // console.log(myChats, "myChats");
+  // 
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [isInitiatingPresentation, setIsInitiatingPresentation] =
     useState(false);
   const [isInitiatingSheet, setIsInitiatingSheet] = useState(false);
   const [isInitiatingResearch, setIsInitiatingResearch] = useState(false);
 
-  // console.log(selectedNavItem, "-selectedNavItem");
+  // 
 
   // Add this state to your component
   // const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -275,15 +275,13 @@ export default function AgentLandingPage() {
   const [researchModel, setResearchModel] = useState("gemini-2.0-flash");
   const [topLevel, setTopLevel] = useState(3); // used for cofig -> 1.number_of_initial_queries, 2.max_research_loops
 
-  // console.log(currentFiles, "<-currentFiles", currentUrls, "<- currentUrls");
-  console.log(researchModel, topLevel, "research config");
+  // 
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   const handleSelect = (type) => {
-    console.log(`Selected: ${type}`);
     // You can trigger file picker logic here
     handleClose();
   };
@@ -387,9 +385,9 @@ export default function AgentLandingPage() {
             router,
           );
         case "browse":
-          return console.log("browse route");
+          return 
         default:
-          return console.log("all agents route");
+          return 
       }
     } catch (error) {
       // console.error("[AgentLandingPage] Error initiating presentation:", error);
@@ -426,7 +424,6 @@ export default function AgentLandingPage() {
     if (variant === "destructive" || variant === "error") {
       console.error(message);
     } else if (variant === "default" || variant === "success") {
-      console.log("✓", message);
     } else {
       console.info(message);
     }
@@ -442,7 +439,7 @@ export default function AgentLandingPage() {
     removeFile(index);
   };
 
-  // console.log(researchModel, researchLoops, "research model");
+  // 
 
   return (
     <div className="bg-background text-foreground relative flex min-h-[calc(100vh-100px)] flex-col">

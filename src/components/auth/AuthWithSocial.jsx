@@ -22,7 +22,6 @@ export default function AuthWithSocial({ loading, setLoading, title = "in" }) {
       dispatch(logout());
       localStorage.setItem("logout-event", Date.now().toString());
     } catch (error) {
-      console.log("🚀 ~ handleLogout ~ error:", error);
     }
   };
 

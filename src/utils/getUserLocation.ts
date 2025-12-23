@@ -160,6 +160,5 @@ export async function getUserLocation(): Promise<LocationData | null> {
  */
 export async function isUserInBangladesh(): Promise<boolean> {
   const location = await getUserLocation();
-  console.log("User location:", location);
   return location?.countryCode === "BD" || location?.country === "Bangladesh";
 }

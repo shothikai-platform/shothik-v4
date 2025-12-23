@@ -52,7 +52,6 @@ function StyleCard({
     if (videoRef.current) {
       if (isHovered) {
         videoRef.current.play().catch((error) => {
-          console.log("Video play failed:", error);
         });
       } else {
         videoRef.current.pause();
@@ -122,13 +121,7 @@ export default function CreatorStylesModal({
         );
 
         // DEBUG: Log creator styles API response to check for date fields
-        console.log("🔍 Creator Styles API Response Debug:");
-        console.log("Creator:", creatorName);
-        console.log("Full result:", result);
-        console.log("Data:", result.data);
         if (result.data && result.data.length > 0) {
-          console.log("Sample style:", result.data[0]);
-          console.log("Style keys:", Object.keys(result.data[0]));
         }
         if (result.success && result.data) {
           setStyles(result.data);

@@ -48,12 +48,9 @@ export async function createPresentationServer({
 
     const data = await res.json();
 
-    console.log(data, "CREATE PRESENTATION RESPONSE");
 
-    console.log("Create presentation response:", res.status, res.ok, res);
 
     if (!res.ok) {
-      console.log(data.message || "Failed to create presentation");
       return {
         success: false,
         error: data.message || "Failed to create presentation",

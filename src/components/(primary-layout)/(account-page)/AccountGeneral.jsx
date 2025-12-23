@@ -164,7 +164,6 @@ export default function AccountGeneral({ user }) {
         handleImageUploadError();
       }
     } catch (error) {
-      console.log(error);
       handleImageUploadError(error);
     }
     setLoading(false);

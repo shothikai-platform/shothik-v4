@@ -76,7 +76,6 @@ export default function MediaLibraryModal({
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}smart-assets/project/${projectId}`,
       );
-      console.log("Smart Assets Response:", data);
       return data;
     },
     enabled: !!projectId && isOpen,
@@ -89,7 +88,6 @@ export default function MediaLibraryModal({
       const { data } = await api.get(
         `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}ai-media/project/${projectId}`,
       );
-      console.log("AI Media Response:", data);
       return data;
     },
     enabled: !!projectId && isOpen,

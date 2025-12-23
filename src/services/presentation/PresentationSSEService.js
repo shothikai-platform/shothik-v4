@@ -70,7 +70,6 @@ export default class PresentationSSEService {
       await this.processStream(response.body, onUpdate);
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("SSE connection aborted");
         return;
       }
       this.handleError(error, onUpdate);
@@ -87,7 +86,6 @@ export default class PresentationSSEService {
         const { done, value } = await this.reader?.read();
 
         if (done) {
-          console.log("Stream completed");
           // Flush any pending data before closing
           this.flushPendingData(onUpdate);
           break;
@@ -105,7 +103,6 @@ export default class PresentationSSEService {
       }
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("Stream reading aborted");
         return;
       }
       this.handleError(error, onUpdate);
@@ -144,11 +141,9 @@ export default class PresentationSSEService {
   }
 
   handleData(data, onUpdate) {
-    console.log("SSE Data received:", data);
 
     // Handle completion status
     if (data.status === "completed") {
-      console.log("Stream completed by server");
       this.flushPendingData(onUpdate);
       onUpdate({ status: "completed", presentationStatus: "completed" });
       this.disconnect();
@@ -158,7 +153,7 @@ export default class PresentationSSEService {
     // Parse the event using SSEDataParser
     const parsedResult = this.parser.parseEvent(data);
 
-    // console.log(parsedResult, "PARSED DATA");
+    // 
 
     if (!parsedResult) {
       // Parser returned null (e.g., waiting for more data)
@@ -215,7 +210,6 @@ export default class PresentationSSEService {
       (this.config.reconnectDelay || 1000) * Math.pow(2, this.reconnectCount);
     this.reconnectCount++;
 
-    console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectCount})`);
 
     onUpdate({
       error: `Reconnecting... (attempt ${this.reconnectCount})`,
@@ -260,7 +254,6 @@ export default class PresentationSSEService {
   }
 
   disconnect() {
-    console.log("Disconnecting SSE service");
     this.isManualClose = true;
 
     if (this.heartbeatTimer) {

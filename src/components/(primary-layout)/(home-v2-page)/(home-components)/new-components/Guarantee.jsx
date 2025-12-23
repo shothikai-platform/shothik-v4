@@ -46,7 +46,7 @@ export default function Guarantee() {
 
             <Button
               size="lg"
-              onClick={() => console.log("Guarantee CTA clicked")}
+              onClick={() => }
               className={cn(
                 "h-auto px-8 py-3 text-lg font-semibold shadow-lg",
                 "transition-all duration-300",

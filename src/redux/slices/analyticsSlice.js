@@ -167,7 +167,7 @@ const fireToExternalServices = async (event) => {
   // Zoho Webhook
   // ------------------------
   // IMPORTANT: This needs to be handled and reviewed on ZOHO platform how they want the data.
-  // console.log("Sending to Zoho:", JSON.stringify(event, null, 2));
+  // );
   // await fetch("/api/zoho-webhook", {
   //   method: "POST",
   //   headers: {

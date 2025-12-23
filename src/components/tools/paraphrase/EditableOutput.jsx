@@ -272,7 +272,7 @@ function markLongestUnchangedUsingDiff({
         const token = outSentence[ti];
         if (token) token.unchangedLongest = true;
 
-        // console.log("Marking unchanged:", token.word, token.type);
+        // 
       }
     }
   }
@@ -372,7 +372,7 @@ const EnterHandler = Extension.create({
    ============================================================ */
 
 function parseMarkdownText(text) {
-  // console.log(text, "FROM PARSE MARKDOWN");
+  // 
   const marks = [];
   let core = text;
   let trailing = "";
@@ -438,7 +438,7 @@ function getColorStyle(
   let style = "";
   // DEBUG: Check why type is 'none'
   // if (unchangedLongest && showLongest && showChangedWords) {
-  //   console.log("Word type:", type, "Should have a color but type is:", type);
+  //   
   // }
 
   // Base color from type (if showChangedWords is enabled)
@@ -480,7 +480,6 @@ function formatContent(
 ) {
   if (!data) return { type: "doc", content: [] };
 
-  console.log("Formatting content with data:", {
     totalSegments: data.length,
     firstFewSegments: data.slice(0, 3).map((s) => ({
       length: s?.length,
@@ -822,7 +821,7 @@ export default function EditableOutput({
       const sI = Number(el.getAttribute("data-sentence-index"));
       const wI = Number(el.getAttribute("data-word-index"));
 
-      // console.log(`🖱️  Clicked: sentenceIndex=${sI}, wordIndex=${wI}`);
+      // 
 
       // CRITICAL FIX: Map display index back to data array index
       // Count non-newline sentences to find the correct data index
@@ -847,7 +846,7 @@ export default function EditableOutput({
         return;
       }
 
-      // console.log(`📍 Mapped display index ${sI} → data index ${dataIndex}`);
+      // 
 
       // Get word object from the correct data index
       const wObj = data[dataIndex]?.[wI];

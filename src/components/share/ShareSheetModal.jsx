@@ -92,13 +92,6 @@ const ShareSheetModal = ({ open, onClose, sheetId, sheetData, chatId }) => {
     }
 
     try {
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📤 CREATING PRIVATE SHARE");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🆔 Chat ID being saved:", chatId);
-      console.log("📧 Emails:", emailList);
-      console.log("📝 Sheet ID:", sheetId);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       const response = await createPrivateShare({
         agentId: sheetId,
@@ -140,13 +133,6 @@ const ShareSheetModal = ({ open, onClose, sheetId, sheetData, chatId }) => {
 
   const handlePublicShare = async () => {
     try {
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📤 CREATING PUBLIC SHARE");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("🆔 Chat ID being saved:", chatId);
-      console.log("📝 Sheet ID:", sheetId);
-      console.log("📊 Sheet Data rows:", sheetData?.length);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       const response = await createPublicShare({
         agentId: sheetId,

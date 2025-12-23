@@ -17,7 +17,7 @@ export default function GPTsettings({
   const { user } = useSelector((state) => state.auth);
   const paidUser = user?.package && user.package !== "free";
 
-  // console.log(paidUser, "paidUser2");
+  // 
 
   return (
     <>

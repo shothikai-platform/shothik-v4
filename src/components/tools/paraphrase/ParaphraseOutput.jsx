@@ -54,7 +54,6 @@ const ParaphraseOutput = ({
 
   // Effect to clear rephrase suggestions when a new main paraphrase request is made
   useEffect(() => {
-    console.log(`🔄 New paraphrase request: ${paraphraseRequestCounter}`);
     currentRequestRef.current = paraphraseRequestCounter;
     setRephraseData([]);
     setShowRephrase(false);
@@ -64,7 +63,6 @@ const ParaphraseOutput = ({
   // CRITICAL FIX: Log data changes for debugging
   useEffect(() => {
     if (data && data.length > 0) {
-      console.log("📊 ParaphraseOutput data updated:", {
         totalSegments: data.length,
         nonNewlineSegments: data.filter(
           (s) => !(s.length === 1 && s[0].type === "newline"),
@@ -85,7 +83,6 @@ const ParaphraseOutput = ({
             wordsWithSynonyms++;
             sentenceHasSynonyms = true;
             if (sIdx === 0 && wIdx < 3) {
-              console.log(
                 `  ✅ Word "${word.word}" has ${word.synonyms.length} synonyms`,
               );
             }
@@ -94,14 +91,12 @@ const ParaphraseOutput = ({
         if (sentenceHasSynonyms) sentenceWithSynonyms++;
       });
 
-      console.log(
         `📈 Synonym stats: ${sentenceWithSynonyms} sentences, ${wordsWithSynonyms} words with synonyms`,
       );
     }
   }, [data]);
 
   const replaceSynonym = (newWord) => {
-    console.log(
       `🔄 Replacing word at [${synonymsOptions.sentenceIndex}][${synonymsOptions.wordIndex}] with: ${newWord}`,
     );
 
@@ -116,7 +111,6 @@ const ParaphraseOutput = ({
           : sentence,
       );
 
-      console.log("✅ Synonym replaced successfully");
       return newData;
     });
     setSynonymsOptions(synonymInit);
@@ -125,7 +119,6 @@ const ParaphraseOutput = ({
   const handleWordClick = (event, synonyms, sentenceIndex, wordIndex) => {
     event.stopPropagation();
 
-    console.log(`🖱️  Word clicked:`, {
       sentenceIndex,
       wordIndex,
       synonymsCount: synonyms?.length || 0,
@@ -154,7 +147,6 @@ const ParaphraseOutput = ({
   };
 
   const replaceSentence = async (sentenceData) => {
-    console.log(
       `🔄 Replacing sentence at index ${synonymsOptions.sentenceIndex}`,
     );
 
@@ -206,9 +198,7 @@ const ParaphraseOutput = ({
         eventId: newEventId,
       };
 
-      console.log("📤 Sending tagging request:", payload);
       await paraphraseForTagging(payload).unwrap();
-      console.log("✅ Tagging request sent successfully");
     } catch (error) {
       console.error("❌ Error replacing sentence:", error);
       setProcessing({ success: false, loading: false });
@@ -256,7 +246,6 @@ const ParaphraseOutput = ({
         return;
       }
 
-      console.log("🔄 Starting sentence rephrase:", {
         mode: rephraseMode,
         synonymLevel,
         language: selectedLang,
@@ -284,7 +273,6 @@ const ParaphraseOutput = ({
         freezeWord: freezeWords,
       };
 
-      console.log("📤 Rephrase payload:", payload);
 
       const response = await fetch(url, {
         method: "POST",
@@ -334,7 +322,6 @@ const ParaphraseOutput = ({
           setRephraseData(sentences);
         }
 
-        console.log("✅ Rephrase completed successfully");
       }
     } catch (error) {
       console.error("❌ Rephrase error:", error);
@@ -345,7 +332,6 @@ const ParaphraseOutput = ({
   // This useEffect should trigger rephraseSentence when the selected sentence or rephrase mode changes
   useEffect(() => {
     if (sentence && showRephrase) {
-      console.log("🔄 Triggering rephrase due to sentence/mode change");
       rephraseSentence();
     }
   }, [sentence, rephraseMode]);

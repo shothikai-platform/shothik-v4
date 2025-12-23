@@ -80,7 +80,6 @@ export function useElementDeletion(
       return false;
     }
 
-    console.log(
       "useElementDeletion: Attempting to delete element with path:",
       elementPath,
     );
@@ -90,7 +89,6 @@ export function useElementDeletion(
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
-      console.log(
         "useElementDeletion: Element not found by path, trying by ID:",
         elementId,
       );
@@ -99,13 +97,11 @@ export function useElementDeletion(
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
-      console.log(
         "useElementDeletion: Element not found by ID, trying by selected class",
       );
       const selectedElements = doc.querySelectorAll(".element-selected");
       if (selectedElements.length === 1) {
         element = selectedElements[0] as HTMLElement;
-        console.log("useElementDeletion: Found element by selected class");
       }
     }
 
@@ -128,7 +124,6 @@ export function useElementDeletion(
     setIsDeleting(true);
 
     try {
-      console.log("useElementDeletion: Element found, preparing to delete:", {
         tagName: element.tagName,
         id: element.id,
         className: element.className,
@@ -167,7 +162,6 @@ export function useElementDeletion(
       const parent = element.parentElement;
       if (parent) {
         parent.removeChild(element);
-        console.log(
           "useElementDeletion: Element successfully removed from DOM",
         );
       } else {
@@ -188,7 +182,6 @@ export function useElementDeletion(
         }),
       );
 
-      console.log("useElementDeletion: Change tracked in Redux");
 
       // Call onDelete callback
       options.onDelete?.(elementId);

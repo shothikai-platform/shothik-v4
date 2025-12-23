@@ -772,7 +772,7 @@ export function useChangeTracking(
    * if (canUndo) {
    *   const success = undoChange();
    *   if (success) {
-   *     console.log("Change undone successfully");
+   *     
    *   }
    * }
    * ```
@@ -819,7 +819,7 @@ export function useChangeTracking(
    * if (canRedo) {
    *   const success = redoChange();
    *   if (success) {
-   *     console.log("Change redone successfully");
+   *     
    *   }
    * }
    * ```

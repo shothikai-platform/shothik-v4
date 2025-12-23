@@ -44,7 +44,6 @@ function StripePaymentComponent() {
         }
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message || error.data.error);
     }
   };

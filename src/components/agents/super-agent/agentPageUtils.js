@@ -57,10 +57,6 @@ async function handleSlideCreation(
     });
     dispatch(addLog(localUserLog));
 
-    console.log(
-      "[AgentLandingPage] Initiating presentation with message:",
-      inputValue,
-    );
     const token = localStorage.getItem("accessToken");
 
     if (!token) {
@@ -99,18 +95,12 @@ async function handleSlideCreation(
 
     // for action service👇
     if (!response?.success) {
-      console.log("Failed to create presentation");
       showToast("Failed to create presentation. Please try again.");
       setIsSubmitting(false);
       setIsInitiatingPresentation(false);
       return;
     }
     const presentationId = response?.presentationId;
-
-    console.log(
-      "[AgentLandingPage] Presentation initiated with ID:",
-      presentationId,
-    );
 
     if (presentationId) {
       router.push(`/agents/presentation?id=${presentationId}`);
@@ -141,7 +131,7 @@ async function handleSheetGenerationRequest(
   refreshSheetAIToken,
 ) {
   try {
-    // console.log(inputValue, "input value");
+    // 
     sessionStorage.setItem("initialSheetPrompt", inputValue);
 
     setAgentType("sheet");
@@ -201,14 +191,13 @@ async function handleSheetGenerationRequest(
       );
       if (!response.ok) {
         // TODO: Here we need to show user a toast message that we failed
-        // console.log("Failed to create chat");
+        // 
         showToast("Failed to create spreadsheet. Please try again.");
         setIsSubmitting(false);
         setIsInitiatingSheet(false);
         return;
       }
     } catch (error) {
-      console.log("Failed to create chat");
       setIsSubmitting(false);
       setIsInitiatingSheet(false);
       return;
@@ -225,7 +214,6 @@ async function handleSheetGenerationRequest(
 
     router.push(`/agents/sheets/?id=${chatId}`);
   } catch (error) {
-    console.log("[handleSheetGenerationRequest] error:", error);
     setIsSubmitting(false);
     showToast("An error occurred while creating the spreadsheet.");
     setIsInitiatingSheet(false);
@@ -243,7 +231,6 @@ async function handleResearchRequest(
   showToast,
   router,
 ) {
-  console.log("research start", inputValue, researchModel, topLevel);
   try {
     sessionStorage.setItem("initialResearchPrompt", inputValue);
     sessionStorage.setItem(
@@ -284,14 +271,13 @@ async function handleResearchRequest(
         },
       );
       if (!response.ok) {
-        // console.log("Failed to create chat");
+        // 
         showToast("Failed to research. Please try again.");
         setIsSubmitting(false);
         setIsInitiatingResearch(false);
         return;
       }
     } catch (error) {
-      console.log("Failed to create chat");
       setIsSubmitting(false);
       setIsInitiatingResearch(false);
       return;
@@ -308,7 +294,6 @@ async function handleResearchRequest(
 
     router.push(`/agents/research/?id=${chatId}`);
   } catch (error) {
-    console.log("[handleResearchRequest] error:", error);
     setIsSubmitting(false);
     showToast("An error occurred while researching.");
     setIsInitiatingResearch(false);
@@ -325,7 +310,6 @@ async function handleFollowUpQuery(
   showToast,
 ) {
   try {
-    console.log(
       "[handleFollowUpQuery] Sending follow-up query:",
       inputValue,
       "for p_id:",
@@ -373,10 +357,6 @@ async function handleFollowUpQuery(
     });
 
     // Dispatch the optimistic log - ensure it's added to Redux
-    console.log(
-      "[handleFollowUpQuery] Adding optimistic user log:",
-      localUserLog,
-    );
     dispatch(addLog(localUserLog));
 
     setIsLoading(true);
@@ -399,12 +379,7 @@ async function handleFollowUpQuery(
     const returnedPId = response?.presentationId;
     const responseStatus = response?.status; // "queued" status from API
 
-    console.log(
-      "[handleFollowUpQuery] Follow-up query sent successfully. p_id:",
-      returnedPId,
       "status:",
-      responseStatus,
-    );
 
     // Update Redux with the returned p_id and status
     if (returnedPId) {
@@ -413,7 +388,6 @@ async function handleFollowUpQuery(
 
     // Handle the queued status - resume orchestrator process
     if (responseStatus === "queued") {
-      console.log(
         "[handleFollowUpQuery] Status is queued, resuming orchestrator process",
       );
 
@@ -427,9 +401,6 @@ async function handleFollowUpQuery(
 
       // The socket connection will be automatically established by usePresentationSocket
       // because the status is now "queued" in Redux and the orchestrator will detect it
-      console.log(
-        "[handleFollowUpQuery] Socket connection will be established automatically",
-      );
     } else {
       // For other statuses, just update the status
       dispatch(

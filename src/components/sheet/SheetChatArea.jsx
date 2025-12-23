@@ -187,7 +187,6 @@ export default function SheetChatArea({
     return () => {
       // Abort any running SSE stream when leaving this chat
       if (abortControllerRef.current) {
-        console.log("Aborting SSE stream due to chat navigation");
         isNavigationAbortRef.current = true; // Mark as navigation abort BEFORE aborting
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
@@ -213,7 +212,6 @@ export default function SheetChatArea({
 
   const hasAnyConversation = Boolean(chatData?.conversations?.length);
 
-  console.log(chatData, "chatData");
 
   // Effect to control polling based on data completeness
   // Only poll if THIS chat has an active stream - don't auto-poll just because history looks incomplete
@@ -299,7 +297,6 @@ export default function SheetChatArea({
       }
       const initialPrompt = sessionStorage.getItem("initialSheetPrompt");
       if (initialPrompt && initialPrompt.trim()) {
-        console.log("Processing initial prompt:", initialPrompt);
         initialPromptProcessedRef.current = true;
         try {
           await handleMessage(initialPrompt);
@@ -626,7 +623,6 @@ export default function SheetChatArea({
       return;
     }
 
-    console.log("generating");
     setError(null);
     setIsLoading(true);
     streamOwnerChatIdRef.current = actualChatId; // Track which chat owns this stream
@@ -684,7 +680,7 @@ export default function SheetChatArea({
       // Check if simulation has already been processed
       // const simulationKey = `simulation-processed-${s_id}`;
       // if (sessionStorage.getItem(simulationKey)) {
-      //   console.log("Simulation already processed for s_id:", s_id);
+      //   
       //   return;
       // }
 
@@ -757,11 +753,11 @@ export default function SheetChatArea({
         throw new Error(`Server error (${response.status}): ${errorText}`);
       }
 
-      // console.log(response.body, "response body");
+      // 
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
-      // console.log(decoder, "decoder");
+      // 
       let buffer = "";
       let hasReceivedData = false;
 
@@ -779,11 +775,9 @@ export default function SheetChatArea({
           try {
             const data = JSON.parse(line);
 
-            console.log(data, "SSE data");
 
             // Check for validation error first
             if (data?.data?.error) {
-              console.log(
                 "Validation error detected, removing user message and showing toast",
               );
 
@@ -820,7 +814,6 @@ export default function SheetChatArea({
               data.step !== "completed" &&
               data.step !== "validation_error"
             ) {
-              console.log("Processing step:", data);
 
               const stepMessage = getStepMessage(data.step, data.data);
               if (stepMessage) {
@@ -840,7 +833,7 @@ export default function SheetChatArea({
             // Handle completion step. [FOR PRODUCTION]
             // else if (data.step === "completed") {
             //   const responseData = data?.data?.data;
-            //   console.log(responseData, "data from SSE");
+            //   
 
             //   const stepMessage = getStepMessage(data.step, data.data);
             //   if (stepMessage) {
@@ -903,7 +896,6 @@ export default function SheetChatArea({
 
             // FOR SIMULATION
             else if (data.step === "completed") {
-              console.log("Final completion data:", data);
               // First completed step - just has message
               if (
                 data.data?.message &&
@@ -1016,7 +1008,6 @@ export default function SheetChatArea({
             }
             // Lastly step - has the actual data || New update simulation doesn't sending data separately
             else if (!data.step) {
-              console.log("Received actual sheet data:", data.data);
 
               // Update Redux store with sheet data
               dispatch(
@@ -1116,7 +1107,6 @@ export default function SheetChatArea({
       if (error.name === "AbortError") {
         // Check if this was a navigation abort (user left the chat but backend is still processing)
         if (isNavigationAbortRef.current) {
-          console.log(
             "SSE aborted due to navigation - backend still processing",
           );
           isNavigationAbortRef.current = false; // Reset flag
@@ -1126,7 +1116,6 @@ export default function SheetChatArea({
         }
 
         // User explicitly clicked "Stop" - treat as cancellation
-        console.log("Streaming aborted by user");
         dispatch(setSheetStatus({ chatId: actualChatId, status: "cancelled" }));
         dispatch(setActiveStreamingChatId(null)); // Clear streaming flag
         setMessages((prev) => [
@@ -1246,7 +1235,6 @@ export default function SheetChatArea({
 
   // Handle new chat creation - redirect to agents page
   const handleNewChat = () => {
-    console.log("New Chat button clicked - starting redirect process");
 
     // Abort any running stream
     if (abortControllerRef.current) {
@@ -1279,9 +1267,7 @@ export default function SheetChatArea({
     // Navigate to agents page with AI Sheets tab selected
     try {
       router.push("/agents?tab=sheets");
-      console.log("Router.push called for /agents?tab=sheets");
     } catch (error) {
-      console.log("Router.push failed, trying window.location:", error);
       window.location.href = "/agents?tab=sheets";
     }
   };

@@ -851,7 +851,7 @@ const mergeMessagesWithDeduplication = (realLogs, optimisticMessages) => {
     }
   });
 
-  // console.log(merged, "merged logs");
+  // 
 
   return merged.sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),

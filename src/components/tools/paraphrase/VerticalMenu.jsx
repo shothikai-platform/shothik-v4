@@ -128,7 +128,7 @@ const VerticalMenu = ({
   const { user } = useSelector((state) => state.auth);
   const paidUser = user?.package && user.package !== "free";
 
-  // console.log(paidUser, "paidUser");
+  // 
 
   // Memoize mock data to prevent recreation
   const mockPlagiarismData = useMemo(() => {

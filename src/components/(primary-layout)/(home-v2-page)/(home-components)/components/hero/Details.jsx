@@ -20,7 +20,6 @@ const Details = ({ trackClick }) => {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       toast.success(
@@ -31,7 +30,6 @@ const Details = ({ trackClick }) => {
       setShowModal(false);
     } catch (error) {
       // Error toast
-      console.log(error, "error");
     }
   };
 

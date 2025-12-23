@@ -150,7 +150,6 @@ const ParaphraseContend = () => {
 
   const [selectedSynonyms, setSelectedSynonymsState] = useState(SYNONYMS[20]);
   const setSelectedSynonyms = (...args) => {
-    console.log("setSelectedSynonyms called with args:", args);
     setActiveHistoryDetails(null);
     dispatch(setActiveHistory({}));
     return setSelectedSynonymsState(...args);
@@ -162,7 +161,6 @@ const ParaphraseContend = () => {
   const [highlightSentence, setHighlightSentence] = useState(0);
   const [selectedMode, setSelectedModeState] = useState("Standard");
   const setSelectedMode = (...args) => {
-    console.log("setSelectedMode called with args:", args);
     setActiveHistoryDetails(null);
     dispatch(setActiveHistory({}));
     return setSelectedModeState(...args);
@@ -177,12 +175,11 @@ const ParaphraseContend = () => {
   const [recommendedFreezeWords, setRecommendedFreezeWords] = useState([]);
   const [language, setLanguageState] = useState("English (US)");
   const setLanguage = (...args) => {
-    console.log("setLanguage called with args:", args);
     setActiveHistoryDetails(null);
     dispatch(setActiveHistory({}));
     return setLanguageState(...args);
   };
-  // console.log(outputContend, "----------- OUTPUT CONTEND -----------");
+  // 
   // const sampleText =
   //   trySamples.paraphrase[
   //     language && language.startsWith("English")
@@ -202,7 +199,6 @@ const ParaphraseContend = () => {
   const { wordLimit } = useWordLimit("paraphrase");
   const [userInput, setUserInputState] = useState("");
   const setUserInput = (...args) => {
-    console.log("setUserInput called with args:", args);
     setActiveHistoryDetails(null);
     dispatch(setActiveHistory({}));
     return setUserInputState(...args);
@@ -340,7 +336,7 @@ const ParaphraseContend = () => {
     },
   });
 
-  // console.log(isAutoFreezeDetecting, "isAutoFreezeDetecting");
+  // 
 
   // Helper function to count word occurrences in text
   const countWordOccurrences = (text, word) => {
@@ -361,15 +357,11 @@ const ParaphraseContend = () => {
 
   // Modified function to handle freezing with confirmation
   const handleFreezeWord = (word) => {
-    console.log("handleFreezeWord called with word:", word);
-    console.log("Current userInput:", userInput);
     const normalizedWord = word.toLowerCase().trim().replace(/\s+/g, " ");
     const count = countWordOccurrences(userInput, word);
 
-    console.log("Word:", word, "Count:", count);
 
     if (count > 1) {
-      console.log(
         "Opening confirmation dialog for word:",
         word,
         "count:",
@@ -396,7 +388,6 @@ const ParaphraseContend = () => {
         },
       });
     } else {
-      console.log("Directly freezing word (count <= 1):", word);
       // Directly freeze if only one occurrence
       frozenWords.add(normalizedWord);
       toast.success("Frozen successfully");
@@ -405,15 +396,11 @@ const ParaphraseContend = () => {
 
   // Similar function for phrases
   const handleFreezePhrase = (phrase) => {
-    console.log("handleFreezePhrase called with phrase:", phrase);
-    console.log("Current userInput:", userInput);
     const normalizedPhrase = phrase.toLowerCase().trim().replace(/\s+/g, " ");
     const count = countWordOccurrences(userInput, phrase);
 
-    console.log("Phrase:", phrase, "Count:", count);
 
     if (count > 1) {
-      console.log(
         "Opening confirmation dialog for phrase:",
         phrase,
         "count:",
@@ -435,13 +422,11 @@ const ParaphraseContend = () => {
         },
       });
     } else {
-      console.log("Directly freezing phrase (count <= 1):", phrase);
       frozenPhrases.add(normalizedPhrase);
     }
   };
 
   useEffect(() => {
-    console.log("Confirmation dialog state:", confirmationDialog);
   }, [confirmationDialog]);
 
   // Dispatch userInput to Redux
@@ -605,7 +590,6 @@ const ParaphraseContend = () => {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
       // Update both state and ref synchronously
       setSocketId(socket.id);
       socketIdRef.current = socket.id;
@@ -644,10 +628,8 @@ const ParaphraseContend = () => {
     // PLAIN TEXT HANDLER
     // ═══════════════════════════════════════════════════════════
     socket.on("paraphrase-plain", (data) => {
-      console.log("paraphrase-plain:", data);
 
       if (data === ":end:") {
-        console.log("✅ Plain text streaming completed");
         accumulatedText = "";
         setIsLoading(false);
         setCompletedEvents((prev) => ({ ...prev, plain: true }));
@@ -656,7 +638,6 @@ const ParaphraseContend = () => {
 
       // First chunk - clear old results
       if (accumulatedText === "") {
-        console.log("🔄 Starting new paraphrase - clearing old results");
         setResult([]);
         processedIndices.tagging.clear();
         processedIndices.synonyms.clear();
@@ -706,7 +687,6 @@ const ParaphraseContend = () => {
     // ═══════════════════════════════════════════════════════════
     socket.on("paraphrase-tagging", (raw) => {
       if (raw === ":end:") {
-        console.log("✅ Tagging completed for all sentences");
         setCompletedEvents((prev) => ({ ...prev, tagging: true }));
         return;
       }
@@ -731,7 +711,6 @@ const ParaphraseContend = () => {
 
         // Prevent duplicate processing
         if (processedIndices.tagging.has(backendIndex)) {
-          console.log(
             `⏭️  Skipping duplicate tagging for index ${backendIndex}`,
           );
           return;
@@ -742,7 +721,6 @@ const ParaphraseContend = () => {
         return;
       }
 
-      console.log(`📝 Processing tagging for backend index ${backendIndex}`);
 
       setResult((prev) => {
         // Don't process if result is empty
@@ -772,7 +750,6 @@ const ParaphraseContend = () => {
           word: item.word.replace(/[{}]/g, ""),
         }));
 
-        console.log(
           `✅ Tagging updated at result[${targetIdx}] for backend[${backendIndex}]`,
         );
 
@@ -785,7 +762,6 @@ const ParaphraseContend = () => {
     // ═══════════════════════════════════════════════════════════
     socket.on("paraphrase-synonyms", (raw) => {
       if (raw === ":end:") {
-        console.log("✅ Synonyms completed for all sentences");
         setProcessing({ success: true, loading: false });
         setCompletedEvents((prev) => ({ ...prev, synonyms: true }));
         return;
@@ -811,7 +787,6 @@ const ParaphraseContend = () => {
 
         // Prevent duplicate processing
         if (processedIndices.synonyms.has(backendIndex)) {
-          console.log(
             `⏭️  Skipping duplicate synonyms for index ${backendIndex}`,
           );
           return;
@@ -822,7 +797,6 @@ const ParaphraseContend = () => {
         return;
       }
 
-      console.log(`🔍 Processing synonyms for backend index ${backendIndex}`);
 
       setResult((prev) => {
         // Critical: Check if result exists and has content
@@ -852,7 +826,6 @@ const ParaphraseContend = () => {
           word: item.word.replace(/[{}]/g, ""),
         }));
 
-        console.log(
           `✅ Synonyms updated at result[${targetIdx}] for backend[${backendIndex}]`,
           `(${analysis.length} words)`,
         );
@@ -863,7 +836,6 @@ const ParaphraseContend = () => {
 
     // Cleanup: Remove all listeners before component unmount or effect re-run
     return () => {
-      console.log("🔌 Cleaning up socket listeners");
       socket.off("connect");
       socket.off("disconnect");
       socket.off("paraphrase-plain");
@@ -878,9 +850,9 @@ const ParaphraseContend = () => {
   }, [language, accessToken]); // Removed eventId from dependencies to keep socket stable
 
   // useEffect(() => {
-  //   console.log("completedEvents:", completedEvents);
+  //   
   //   if (completedEvents.plain && accessToken) {
-  //     console.log("✅ All socket events finished");
+  //     
 
   //     const timer = setTimeout(() => {
   //       fetchHistory();
@@ -1011,7 +983,7 @@ const ParaphraseContend = () => {
   //   });
 
   //   socket.on("connect", () => {
-  //     console.log("Socket connected:", socket.id);
+  //     
   //     setSocketId(socket.id);
   //   });
 
@@ -1048,7 +1020,7 @@ const ParaphraseContend = () => {
 
   //   // ─── 2) Plain handler: clear `result` on first chunk of each run ────────────
   //   socket.on("paraphrase-plain", (data) => {
-  //     console.log("paraphrase-plain:", data);
+  //     
   //     if (data === ":end:") {
   //       accumulatedText = "";
   //       setIsLoading(false);
@@ -1092,7 +1064,7 @@ const ParaphraseContend = () => {
   //     });
 
   //     setResult(newResult);
-  //     console.log("new plain result:", newResult);
+  //     
   //   });
 
   //   // ─── 3) Tagging handler: map backend index to correct slot ─────────────────
@@ -1126,9 +1098,9 @@ const ParaphraseContend = () => {
 
   //   // ─── 4) Synonyms handler: same index mapping ────────────────────────────────
   //   socket.on("paraphrase-synonyms", (raw) => {
-  //     console.log("paraphrase-synonyms:", raw);
+  //     
   //     if (raw === ":end:") {
-  //       console.log("Synonyms processing completed.");
+  //       
   //       setProcessing({ success: true, loading: false });
   //       return;
   //     }
@@ -1163,7 +1135,7 @@ const ParaphraseContend = () => {
   //   });
 
   //   // socket.on("paraphrase-tagging", (data) => {
-  //   //   console.log('paraphrase-tagging: ', data)
+  //   //   
   //   //   try {
   //   //     const sentence = JSON.parse(data);
   //   //     if (sentence.eventId === eventId) {
@@ -1180,7 +1152,7 @@ const ParaphraseContend = () => {
   //   //
   //   // socket.on("paraphrase-synonyms", (data) => {
   //   //   if (data === ":end:") {
-  //   //     console.log("Synonyms processing completed.");
+  //   //     
   //   //     setProcessing({ success: true, loading: false });
   //   //     return;
   //   //   }
@@ -1309,9 +1281,6 @@ const ParaphraseContend = () => {
       // use the full raw Markdown string for payload
       const textToParaphrase = value || userInput;
 
-      console.log("=== Sending to Backend ===");
-      console.log("Text:", textToParaphrase);
-      console.log("========================");
 
       // but enforce word-limit on a plain-text version
       // strip common markdown tokens for counting
@@ -1333,7 +1302,6 @@ const ParaphraseContend = () => {
       // Update both state and ref synchronously
       setEventId(newEventId);
       eventIdRef.current = newEventId;
-      console.log("EventId:", newEventId, "SocketId:", currentSocketId);
 
       // if (!eventId) return;
 
@@ -1409,7 +1377,6 @@ const ParaphraseContend = () => {
     // Trigger paraphrase if language changes and there is user input
     if (language && userInputValue) {
       if (!processing.loading) {
-        console.log("=== Auto-paraphrasing ===", activeHistory?._id);
         handleSubmit(userInputValue);
       } else {
         toast.info("Please wait while paraphrasing is in progress...");
@@ -1446,7 +1413,6 @@ const ParaphraseContend = () => {
         if (!res.ok) return console.error("Failed to fetch history details");
         const data = await res.json();
 
-        console.log("History details:", data);
 
         setActiveHistoryDetails(data);
 
@@ -1512,7 +1478,6 @@ const ParaphraseContend = () => {
                 values: { text: accumulatedText },
               }),
             );
-            console.log("new plain result:", newResult);
           }
 
           if (data?.response?.tagging) {
@@ -1537,7 +1502,6 @@ const ParaphraseContend = () => {
                   // word: item.word, // preserves markdown tokens
                   word: item.word.replace(/[{}]/g, ""),
                 }));
-                console.log(
                   "updated[targetIdx]: ",
                   updated[targetIdx],
                   "targetIdx: ",
@@ -1572,7 +1536,6 @@ const ParaphraseContend = () => {
                   // word: item.word, // preserves markdown tokens
                   word: item.word.replace(/[{}]/g, ""),
                 }));
-                console.log(
                   "updated[targetIdx]: ",
                   updated[targetIdx],
                   "targetIdx: ",
@@ -1600,7 +1563,6 @@ const ParaphraseContend = () => {
   function extractPlainText(array) {
     // Check if input is an array
     if (!Array.isArray(array)) {
-      console.log("Input must be an array");
       return null;
     }
 
@@ -1666,7 +1628,7 @@ const ParaphraseContend = () => {
       return;
     }
 
-    // console.log("extracting recommendations data");
+    // 
 
     // A simple function to get unique, non-trivial words
     const getWords = userInput
@@ -1687,7 +1649,7 @@ const ParaphraseContend = () => {
       .sort(() => 0.5 - Math.random())
       .slice(0, 3);
 
-    // console.log(randomWords, "recomended words");
+    // 
 
     setRecommendedFreezeWords(randomWords);
   }, [userInputValue, stableFrozenWords]); // This effect runs whenever userInput, frozenWords changes

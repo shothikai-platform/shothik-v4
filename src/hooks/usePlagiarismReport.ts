@@ -43,7 +43,6 @@ export const usePlagiarismReport = (text: string) => {
   // Debug: Log when state actually changes
   useEffect(() => {
     if (state.report) {
-      console.log("[Plagiarism Hook] State report updated:", {
         reportId: state.report?.analysisId,
         sectionsCount: state.report?.sections?.length,
         exactMatchesCount: state.report?.exactMatches?.length,
@@ -114,7 +113,6 @@ export const usePlagiarismReport = (text: string) => {
       // Prevent duplicate requests (unless force refresh)
       // Use ref for synchronous check to avoid race conditions
       if (isRequestInProgressRef.current && !options?.forceRefresh) {
-        console.log(
           "[Plagiarism] Request already in progress, skipping duplicate",
         );
         return;
@@ -124,7 +122,6 @@ export const usePlagiarismReport = (text: string) => {
       if (!options?.forceRefresh) {
         const cachedReport = getCachedReport(trimmedText);
         if (cachedReport) {
-          console.log("[Plagiarism] Returning cached report:", {
             reportId: cachedReport?.analysisId,
             sectionsCount: cachedReport?.sections?.length,
             exactMatchesCount: cachedReport?.exactMatches?.length,
@@ -150,7 +147,6 @@ export const usePlagiarismReport = (text: string) => {
         abortControllerRef.current &&
         !abortControllerRef.current.signal.aborted
       ) {
-        console.log("[Plagiarism] Aborting previous request");
         stopActiveRequest();
       }
 
@@ -169,7 +165,6 @@ export const usePlagiarismReport = (text: string) => {
       }));
 
       try {
-        console.log("[Plagiarism] Starting scan request...", {
           textLength: text.length,
           requestId,
           forceRefresh: options?.forceRefresh,
@@ -191,12 +186,10 @@ export const usePlagiarismReport = (text: string) => {
         // Verify this is still the current request (not superseded by a newer one)
         const isCurrentRequest = abortControllerRef.current === abortController;
         if (!isCurrentRequest) {
-          console.log("[Plagiarism] Request was superseded by newer request", { requestId });
           isRequestInProgressRef.current = false;
           return;
         }
 
-        console.log("[Plagiarism] Scan completed successfully", { 
           requestId,
           report: !!report,
           reportId: report?.analysisId,
@@ -222,7 +215,6 @@ export const usePlagiarismReport = (text: string) => {
 
         // CRITICAL FIX: Use flushSync to force React to process state update immediately
         // This ensures the component re-renders with the new report synchronously
-        console.log("[Plagiarism] Updating state with report (using flushSync)", { 
           requestId,
           reportId: report?.analysisId,
           isCurrentRequest,
@@ -244,7 +236,6 @@ export const usePlagiarismReport = (text: string) => {
         });
         
         // Verify state was updated (for debugging)
-        console.log("[Plagiarism] State update flushed, React should have re-rendered", {
           requestId,
           reportId: report?.analysisId,
         });
@@ -261,7 +252,6 @@ export const usePlagiarismReport = (text: string) => {
       } catch (error) {
         // Check if this is the current request (not a stale one)
         if (abortControllerRef.current !== abortController) {
-          console.log("[Plagiarism] Ignoring stale request error", { requestId });
           return;
         }
 

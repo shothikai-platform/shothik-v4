@@ -27,7 +27,7 @@ export default function ClaritySection() {
 
   const handleStepClick = (idx) => {
     // trackFeatureClick will be added later
-    // console.log(`Step clicked: ${step}`);
+    // 
 
     // tracking
     trackClick(trackingList.PROCESS_STEP_CLICK, {
@@ -38,14 +38,12 @@ export default function ClaritySection() {
 
   const handleBenefitClick = (benefit) => {
     // trackFeatureClick will be added later
-    console.log(`Benefit clicked: ${benefit}`);
   };
 
   const handleEmailSubmit = async (email) => {
     try {
       const result = await registerUserForBetaList({ email }).unwrap();
 
-      console.log(result, "result");
 
       // Success toast
       toast.success(

@@ -57,7 +57,6 @@ function CreatorCard({
     if (videoRef.current) {
       if (isHovered) {
         videoRef.current.play().catch((error) => {
-          console.log("Video play failed:", error);
         });
       } else {
         videoRef.current.pause();
@@ -161,17 +160,12 @@ export default function AvatarsSection({ onToolClick }: AvatarsSectionProps) {
         );
 
         if (result.data && result.data.results) {
-          console.log("Results count:", result.data.results.length);
-          console.log("Sample creator:", result.data.results[0]);
-          console.log(
             "Creator object keys:",
             Object.keys(result.data.results[0] || "No keys"),
           );
         }
 
         // DEBUG: Check if we have date information in response headers or metadata
-        console.log("Response headers:", result.headers);
-        console.log("Response metadata:", result.metadata);
 
         if (result.success && result.data) {
           const fetchedCreators = result.data.results || [];

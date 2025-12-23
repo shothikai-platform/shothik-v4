@@ -50,7 +50,6 @@ export default function PresentationAgentPageV2({ presentationId }) {
     if (variant === "error" || variant === "destructive") {
       console.error("[Toast]", message);
     } else if (variant === "success") {
-      console.log("[Toast] ✓", message);
     } else {
       console.info("[Toast]", message);
     }
@@ -92,7 +91,6 @@ export default function PresentationAgentPageV2({ presentationId }) {
   const { hookStatus, error, retry, currentStatus, socketConnected } =
     usePresentationOrchestrator(presentationId);
 
-  console.log("[Page] Presentation state:", {
     hookStatus,
     currentStatus,
     socketConnected,

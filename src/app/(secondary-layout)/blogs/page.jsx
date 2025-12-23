@@ -34,7 +34,6 @@ const Index = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log("Fetching blog data from API...");
 
         // Fetch posts and categories in parallel
         const [postsResponse, categoriesResponse] = await Promise.all([
@@ -42,19 +41,15 @@ const Index = () => {
           blogApi.getCategories(),
         ]);
 
-        console.log("Posts response:", postsResponse);
-        console.log("Categories response:", categoriesResponse);
 
         if (postsResponse.success) {
           setPosts(postsResponse.data);
-          console.log("Posts loaded:", postsResponse.data.length);
         } else {
           console.warn("Posts response not successful:", postsResponse);
         }
 
         if (categoriesResponse.success) {
           setCategories(categoriesResponse.data);
-          console.log("Categories loaded:", categoriesResponse.data.length);
         } else {
           console.warn(
             "Categories response not successful:",
@@ -66,7 +61,6 @@ const Index = () => {
         setError(`Failed to fetch blog data: ${err.message}`);
 
         // Add fallback mock data for testing
-        console.log("Using fallback mock data...");
         const mockPosts = [
           {
             _id: "mock-1",

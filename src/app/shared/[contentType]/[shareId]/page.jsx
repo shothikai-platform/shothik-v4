@@ -37,7 +37,6 @@ const SharedContentPage = () => {
             setLoading(false);
             return;
           } catch (parseError) {
-            console.log("Failed to parse session data:", parseError);
           }
         }
 
@@ -58,7 +57,6 @@ const SharedContentPage = () => {
               throw new Error("Failed to fetch share data");
             }
           } catch (backendError) {
-            console.log("Backend fetch failed, using demo data:", backendError);
 
             // Fallback to demo data if backend fails
             const demoData = {

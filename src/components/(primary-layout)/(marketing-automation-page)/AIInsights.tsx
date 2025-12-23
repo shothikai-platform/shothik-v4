@@ -151,7 +151,6 @@ export default function AIInsights() {
       router.push(`/marketing-automation/insights/${analysisId}/mindmap`);
     } else if (cardId === "reports") {
       // TODO: Navigate to reports view
-      console.log("Reports view coming soon");
     }
   };
 

@@ -198,7 +198,6 @@ const parseHistoryToolCall = (logEntry) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistoryUserMessage = (logEntry) => {
-  console.log("[HistoryParser] Parsing user message");
 
   const log = {
     id: generateHistoryLogId("user", logEntry.timestamp),
@@ -219,7 +218,6 @@ const parseHistoryUserMessage = (logEntry) => {
  * @returns {Object} Object containing log entry and metadata
  */
 const parseHistoryPresentationSpecExtractor = (logEntry) => {
-  console.log("[HistoryParser] Parsing presentation spec extractor");
 
   let parsedOutput = {};
 
@@ -266,7 +264,6 @@ const parseHistoryPresentationSpecExtractor = (logEntry) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistoryKeywordResearchAgent = (logEntry) => {
-  console.log("[HistoryParser] Parsing keyword research agent");
 
   let keywords = [];
 
@@ -302,7 +299,6 @@ const parseHistoryKeywordResearchAgent = (logEntry) => {
  * @returns {Object} Formatted browser worker log entry
  */
 const parseHistoryBrowserWorker = (logEntry, existingLogs = []) => {
-  console.log("[HistoryParser] Parsing browser worker:", logEntry.author);
 
   const workerNumber = extractBrowserWorkerNumber(logEntry.author);
   const workerAuthor = `browser_worker_${workerNumber}`;
@@ -378,7 +374,6 @@ const parseHistoryBrowserWorker = (logEntry, existingLogs = []) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistoryLightweightPlanningAgent = (logEntry) => {
-  console.log("[HistoryParser] Parsing lightweight planning agent");
 
   let parsedOutput = {};
 
@@ -411,7 +406,6 @@ const parseHistoryLightweightPlanningAgent = (logEntry) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistoryLightweightSlideGeneration = (logEntry) => {
-  console.log("[HistoryParser] Parsing lightweight slide generation");
 
   const log = {
     id: generateHistoryLogId("LightweightSlideGeneration", logEntry.timestamp),
@@ -426,7 +420,6 @@ const parseHistoryLightweightSlideGeneration = (logEntry) => {
 };
 
 const parseHistoryMultiSlideModification = (logEntry) => {
-  console.log("[HistoryParser] Parsing multi slide modification orchestrator");
 
   const parsedPayload = safeParseJson(logEntry.parsed_output);
   const modifications = parsedPayload?.modifications;
@@ -474,7 +467,6 @@ const parseHistoryMultiSlideModification = (logEntry) => {
 };
 
 const parseHistorySingleSlideModifier = (logEntry) => {
-  console.log("[HistoryParser] Parsing single slide modifier");
 
   const text =
     logEntry.parsed_output ||
@@ -529,7 +521,6 @@ const containsMarkdown = (text) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistorySlideInsertionOrchestrator = (logEntry) => {
-  console.log("[HistoryParser] Parsing slide insertion orchestrator");
 
   // From history: parsed_output contains the message (can be string or object)
   // Normalize to text/content for consistent display
@@ -576,7 +567,6 @@ const parseHistorySlideInsertionOrchestrator = (logEntry) => {
  * @returns {Object} Formatted log entry
  */
 const parseHistorySlideOrchestrationAgent = (logEntry) => {
-  console.log("[HistoryParser] Parsing slide orchestration agent");
 
   // From history: parsed_output contains the message (can be string or object)
   // Normalize to text/content for consistent display
@@ -620,7 +610,6 @@ const parseHistorySlideOrchestrationAgent = (logEntry) => {
  * @returns {Array} Array of formatted slide entries
  */
 const parseHistorySlides = (slidesArray = []) => {
-  console.log("[HistoryParser] Parsing slides, count:", slidesArray.length);
 
   if (!Array.isArray(slidesArray) || slidesArray.length === 0) {
     return [];
@@ -653,7 +642,6 @@ const parseHistorySlides = (slidesArray = []) => {
  * @returns {Object} Structured presentation state ready for Redux
  */
 export const parseHistoryData = (historyResponse) => {
-  console.log("[HistoryParser] Starting history data parsing");
 
   if (!historyResponse) {
     console.error("[HistoryParser] No history response provided");
@@ -668,7 +656,6 @@ export const parseHistoryData = (historyResponse) => {
     let extractedMetadata = null;
 
     if (Array.isArray(logs)) {
-      console.log("[HistoryParser] Processing", logs.length, "log entries");
 
       logs.forEach((logEntry) => {
         const parsed = parseHistoryLogEntry(logEntry, parsedLogs);
@@ -718,7 +705,6 @@ export const parseHistoryData = (historyResponse) => {
       parsedState.totalSlides = extractedMetadata.totalSlides;
     }
 
-    console.log("[HistoryParser] Parsing complete:", {
       logsCount: parsedLogs.length,
       slidesCount: parsedSlides.length,
       status: parsedState.status,

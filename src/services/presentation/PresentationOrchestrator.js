@@ -45,7 +45,6 @@ export default class PresentationOrchestrator {
   }
 
   async handleStatus(pId, status, onUpdate) {
-    console.log("Handling status:", status);
     onUpdate({ presentationStatus: status });
 
     switch (status) {
@@ -86,7 +85,6 @@ export default class PresentationOrchestrator {
 
   async loadHistory(pId, onUpdate) {
     try {
-      console.log("Loading history for:", pId);
       const history = await this.apiService.getHistory(pId);
 
       // Parse history data using HistoryDataParser
@@ -104,7 +102,6 @@ export default class PresentationOrchestrator {
         _replaceArrays: true, // Signal to replace, not append
       });
 
-      console.log("History loaded:", {
         logsCount: parsedHistory.logs.length,
         slidesCount: parsedHistory.slides.length,
         title: metadata.title,
@@ -121,13 +118,11 @@ export default class PresentationOrchestrator {
   startStatusPolling(pId, onUpdate) {
     const interval = this.config.statusCheckInterval || 5000;
 
-    console.log(`Starting status polling every ${interval}ms`);
 
     this.statusCheckTimer = setInterval(async () => {
       try {
         const statusResponse = await this.apiService.checkStatus(pId);
 
-        console.log("Status poll result:", statusResponse.status);
 
         // Only react to terminal status changes
         if (
@@ -144,7 +139,6 @@ export default class PresentationOrchestrator {
   }
 
   stop() {
-    console.log("Stopping orchestrator");
 
     if (this.statusCheckTimer) {
       clearInterval(this.statusCheckTimer);

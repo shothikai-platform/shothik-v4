@@ -194,7 +194,6 @@ const FeaturePopupApplier = () => {
       handleClose();
     } else {
       // Handle other action types (custom logic)
-      console.log("Custom action clicked:", action);
       // You can add custom handler logic here
     }
   };

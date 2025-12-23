@@ -35,13 +35,10 @@ export default function MediaCanvas() {
 
   // Debug wrapper for setGeneratedMedia
   const handleMediaUploaded = (mediaUrls: string[]) => {
-    console.log("MediaCanvas: setGeneratedMedia called with:", mediaUrls);
-    console.log(
       "MediaCanvas: Current generatedMedia before update:",
       generatedMedia,
     );
     setGeneratedMedia(mediaUrls);
-    console.log("MediaCanvas: setGeneratedMedia called successfully");
   };
   const [isGenerating, setIsGenerating] = useState(false);
   const [editPrompt, setEditPrompt] = useState("");
@@ -64,17 +61,14 @@ export default function MediaCanvas() {
           if (foundAd.imageUrls && foundAd.imageUrls.length > 0) {
             // Carousel with multiple images
             setGeneratedMedia(foundAd.imageUrls);
-            console.log(
               `Loaded ${foundAd.imageUrls.length} carousel images from database`,
             );
           } else if (foundAd.imageUrl) {
             // Single image
             setGeneratedMedia([foundAd.imageUrl]);
-            console.log("Loaded single image from database");
           } else if (foundAd.videoUrl) {
             // Video
             setGeneratedMedia([foundAd.videoUrl]);
-            console.log("Loaded video from database");
           }
         } else {
           console.error("Ad not found");
@@ -107,7 +101,6 @@ export default function MediaCanvas() {
         // Handle carousel with multiple images
         if (result.mediaUrls && result.mediaUrls.length > 0) {
           setGeneratedMedia(result.mediaUrls);
-          console.log(`Generated ${result.mediaUrls.length} carousel images`);
         } else if (result.mediaUrl) {
           // Single image/video
           setGeneratedMedia([result.mediaUrl]);
@@ -201,7 +194,6 @@ export default function MediaCanvas() {
 
     try {
       // TODO: Implement save to ad
-      console.log("Saving media to ad:", adId);
       router.push(`/marketing-automation/canvas/${projectId}`);
     } catch (error) {
       console.error("Error saving media:", error);

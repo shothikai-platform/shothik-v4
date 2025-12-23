@@ -77,7 +77,6 @@ const safeParseJson = (value) => {
  * @returns {Object} Parsed session data
  */
 export const parseConnectedEvent = (payload) => {
-  console.log("[Parser] Parsing connected event:", payload);
 
   return {
     sessionId: payload.session_id || null,
@@ -94,7 +93,6 @@ export const parseConnectedEvent = (payload) => {
  * @returns {Object} Formatted log entry
  */
 export const parseUserMessage = (message) => {
-  console.log("[Parser] Parsing user message:", message);
 
   // Preserve user_message field for matching with optimistic logs
   const userMessageText = message.user_message || message.content || "";
@@ -125,7 +123,6 @@ export const parseUserMessage = (message) => {
  * @returns {Object} Contains both log entry and extracted metadata
  */
 export const parsePresentationSpecExtractor = (message) => {
-  console.log("[Parser] Parsing presentation spec extractor:", message);
 
   const logEntry = {
     id: generateLogId("presentation_spec_extractor_agent", message.timestamp),
@@ -154,7 +151,6 @@ export const parsePresentationSpecExtractor = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseKeywordResearchAgent = (message) => {
-  console.log("[Parser] Parsing keyword research agent:", message);
 
   const logEntry = {
     id: generateLogId("KeywordResearchAgent", message.timestamp),
@@ -168,7 +164,6 @@ export const parseKeywordResearchAgent = (message) => {
 };
 
 export const parseMultiSlideModificationOrchestrator = (message) => {
-  console.log(
     "[Parser] Parsing multi slide modification orchestrator:",
     message,
   );
@@ -225,7 +220,6 @@ export const parseMultiSlideModificationOrchestrator = (message) => {
 };
 
 export const parseSingleSlideModifier = (message) => {
-  console.log("[Parser] Parsing single slide modifier:", message);
 
   const logEntry = {
     id: generateLogId("single_slide_modifier", message.timestamp),
@@ -251,7 +245,6 @@ export const parseSingleSlideModifier = (message) => {
  * @returns {Object} Contains updated/new log entry and update type
  */
 export const parseBrowserWorker = (message, existingLogs = []) => {
-  console.log("[Parser] Parsing browser worker:", message);
 
   const workerNumber = extractBrowserWorkerNumber(message.author);
   const workerAuthor = `browser_worker_${workerNumber}`;
@@ -333,7 +326,6 @@ export const parseBrowserWorker = (message, existingLogs = []) => {
  * @returns {Object} Formatted log entry
  */
 export const parseLightweightPlanningAgent = (message) => {
-  console.log("[Parser] Parsing lightweight planning agent:", message);
 
   const logEntry = {
     id: generateLogId("lightweight_planning_agent", message.timestamp),
@@ -352,7 +344,6 @@ export const parseLightweightPlanningAgent = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseLightweightSlideGeneration = (message) => {
-  console.log("[Parser] Parsing lightweight slide generation:", message);
 
   const logEntry = {
     id: generateLogId("LightweightSlideGeneration", message.timestamp),
@@ -404,7 +395,6 @@ const containsMarkdown = (text) => {
  * @returns {Object} Formatted log entry
  */
 export const parseToolCall = (message) => {
-  console.log("[Parser] Parsing tool call:", message);
 
   // Normalize agent_name to author for consistency
   const agentName = message.agent_name || message.author || "unknown_agent";
@@ -434,7 +424,6 @@ export const parseToolCall = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseSlideInsertionOrchestrator = (message) => {
-  console.log("[Parser] Parsing slide insertion orchestrator:", message);
 
   // From streaming: text field contains the message
   // Normalize to text/content for consistent display
@@ -465,7 +454,6 @@ export const parseSlideInsertionOrchestrator = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseSlideOrchestrationAgent = (message) => {
-  console.log("[Parser] Parsing slide orchestration agent:", message);
 
   // From streaming: text field contains the message
   // Normalize to text/content for consistent display
@@ -555,7 +543,6 @@ const normalizeToolResponseMessage = (message) => {
  * @returns {Object} Contains updated/new slide entry and update type
  */
 export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
-  console.log("[Parser] Parsing enhanced slide generator:", message);
 
   // Try slide_index first, then extract from author
   const slideNumber =
@@ -617,7 +604,6 @@ export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
     };
   } else if (isInsertion) {
     // Insertion detected - new slide at existing position
-    console.log(
       "[Parser] Insertion detected at slideNumber:",
       slideNumber,
       "Existing slide will be reordered",
@@ -699,7 +685,6 @@ const parseSlideUpdateEvent = (message, existingSlides = []) => {
  * @returns {Object} Parsed data with update instructions
  */
 export const parseAgentOutput = (message, currentState = {}) => {
-  console.log("[Parser] Parsing agent output:", {
     author: message.author || message.agent_name,
     type: message.type,
   });
@@ -860,7 +845,6 @@ export const parseAgentOutput = (message, currentState = {}) => {
  * @returns {Object} Status update
  */
 export const parseTerminalEvent = (message) => {
-  console.log("[Parser] Parsing terminal event:", message);
 
   return {
     status: message.status || "completed",

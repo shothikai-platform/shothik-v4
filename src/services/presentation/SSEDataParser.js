@@ -87,7 +87,6 @@ export default class SSEDataParser {
     try {
       const text = data.text || data.parsed_output || "";
 
-      console.log(text, "VIBE ESTIMATOR");
 
       // Remove markdown code blocks
       const cleanText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "");

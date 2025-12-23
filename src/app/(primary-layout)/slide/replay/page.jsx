@@ -49,8 +49,8 @@ export default function SlideReplay() {
     );
   }, []);
 
-  //   console.log(logsData, "logsData");
-  //   console.log(slides, "slides");
+  //   
+  //   
 
   return (
     <div
@@ -195,7 +195,6 @@ async function runSlideSimulation(
 
         try {
           const data = JSON.parse(line);
-          console.log(data, "slide data");
 
           // Store slides in state
           if (data.slides) {
@@ -218,12 +217,10 @@ async function runSlideSimulation(
             return; // Stop reading
           }
         } catch (err) {
-          console.log("JSON parse error", err);
         }
       }
     }
   } catch (error) {
-    console.log("Simulation error:", error);
     setStatus("error");
     setSlideDataLoading(false);
     abortController.abort();
@@ -277,7 +274,7 @@ async function runLogsSimulation(
 
         try {
           const data = JSON.parse(line);
-          //   console.log(data, "logs data");
+          //   
           // Store slides in state
           if (data.logs) {
             setLogsData((prev) => [...prev, data.logs]);
@@ -292,12 +289,10 @@ async function runLogsSimulation(
             return; // Stop reading
           }
         } catch (err) {
-          console.log("JSON parse error", err);
         }
       }
     }
   } catch (error) {
-    console.log("Logs data fetching error :", error);
     setLogsStatus("failed");
     setLogsLoading(false);
   }

@@ -58,7 +58,6 @@ export const researchCoreSlice = createSlice({
 
       // Adding comprehensive deduplication logic
       if (!shouldAddEvent(state.streamEvents, newEvent)) {
-        console.log("Duplicate event detected, skipping:", newEvent);
         return; // Exit early without modifying state
       }
 

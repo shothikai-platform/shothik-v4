@@ -28,11 +28,9 @@ export default function FounderVideoSection() {
 
   // Mock analytics functions
   const trackFeatureClick = (action, section) => {
-    console.log(`Analytics: ${action} in ${section}`);
   };
 
   const trackAgentInteraction = (interaction) => {
-    console.log(`Analytics: ${interaction}`);
   };
 
   const handleVideoPlay = () => {

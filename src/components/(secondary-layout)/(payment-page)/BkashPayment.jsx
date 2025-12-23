@@ -30,7 +30,7 @@ function BkashPyamentComponent() {
         amount: totalBill,
         payment_type: tenure,
       };
-      // console.log("Payload sent to bkashPayment:", payload); // New debugging line
+      //  // New debugging line
       const data = await bkashPayment(payload).unwrap();
       window.location.href = data?.bkashURL;
     } catch (error) {

@@ -54,7 +54,6 @@ export default function ChatBox({
       try {
         const response = await campaignAPI.getChatHistory(projectId);
         if (response.success && response.data.messages?.length > 0) {
-          console.log(
             "✅ Loading chat history:",
             response.data.messages.length,
             "messages",
@@ -121,7 +120,6 @@ export default function ChatBox({
 
       // If data was modified, trigger reload in parent component
       if (response.data.dataModified && onDataModified) {
-        console.log("✅ Campaign data modified, triggering reload...");
         onDataModified();
       }
     } catch (error) {

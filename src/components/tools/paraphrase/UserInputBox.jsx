@@ -174,7 +174,6 @@ const InputSentenceHighlighter = Extension.create({
             }
 
             // Debug logging
-            console.log(
               `📝 Input: Found ${sentences.length} sentences, highlighting index ${highlightSentence}`,
             );
             if (highlightSentence >= sentences.length) {
@@ -445,7 +444,7 @@ function UserInputBox({
         // const plainText = customMarkdownSerializer.serialize(editor.state.doc); // Extracts plain text content
         const plainText = customMarkdownSerializer.serialize(editor.state.doc); // Extracts plain text content
         // setUserInput(plainText); // Pass plain text to the parent component
-        // console.log(editor.getJSON().content, "JSON DATA");
+        // .content, "JSON DATA");
         setUserInput(plainText);
       },
     },

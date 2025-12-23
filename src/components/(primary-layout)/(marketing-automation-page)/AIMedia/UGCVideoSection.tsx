@@ -115,7 +115,6 @@ export default function UGCVideoSection() {
   useEffect(() => {
     if (selectedAd) {
       const ad = userAds.find((a: Ad) => a.id === selectedAd) as any;
-      console.log("Selected Ad for UGC Video:", ad);
     }
   }, [selectedAd, userAds]);
 
@@ -217,7 +216,6 @@ export default function UGCVideoSection() {
         },
       };
 
-      console.log("Generating UGC Video with Aurora API:", payload);
 
       const result = await generateUGCVideoMutation.mutateAsync(payload);
 

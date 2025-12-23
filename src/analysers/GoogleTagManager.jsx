@@ -18,7 +18,6 @@ const GoogleTagManager = () => {
       event: "gtm.js",
     });
 
-    console.log("GTM initialized");
   }, []);
 
   return (

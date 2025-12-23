@@ -488,7 +488,6 @@ const SummarizeContentSection = () => {
 
               if (response.ok) {
                 const result = await response.json();
-                console.log(
                   "✅ Keyword API response from",
                   endpoint,
                   ":",
@@ -519,7 +518,6 @@ const SummarizeContentSection = () => {
                 }
 
                 if (keywordsData.length > 0) {
-                  console.log("🎯 Keywords from API:", keywordsData);
                   setKeywords(keywordsData);
                   setIsKeywordsLoading(false);
                   return; // Success, exit
@@ -536,9 +534,7 @@ const SummarizeContentSection = () => {
         }
 
         // If API fails or no accessToken, use client-side extraction
-        console.log("📝 Using client-side keyword extraction");
         const extractedKeywords = extractKeywordsClientSide(payload.text);
-        console.log("🎯 Extracted keywords:", extractedKeywords);
         setKeywords(extractedKeywords);
       } catch (error) {
         console.error("❌ Error extracting keywords:", error);
@@ -552,27 +548,21 @@ const SummarizeContentSection = () => {
 
   // Fetch keywords when text changes
   useEffect(() => {
-    console.log("🔄 Keywords useEffect triggered");
-    console.log(
       "📄 debouncedPlainText:",
       debouncedPlainText?.substring(0, 50) + "...",
     );
-    console.log(
       "📏 debouncedPlainText length:",
       debouncedPlainText?.length || 0,
     );
 
     const trimmedText = debouncedPlainText?.trim() || "";
-    console.log("✂️ Trimmed text length:", trimmedText.length);
 
     if (trimmedText.length > 10) {
-      console.log(
         "✅ Triggering keyword fetch for text length:",
         trimmedText.length,
       );
       fetchKeywords({ text: trimmedText });
     } else {
-      console.log(
         "⚠️ Text too short for keywords, clearing. Length:",
         trimmedText.length,
       );
@@ -598,8 +588,6 @@ const SummarizeContentSection = () => {
 
       try {
         const url = process.env.NEXT_PUBLIC_API_URL_WITH_PREFIX + "/summarize";
-        console.log("Streaming request to:", url);
-        console.log("payload", payload);
 
         const response = await fetch(url, {
           method: "POST",

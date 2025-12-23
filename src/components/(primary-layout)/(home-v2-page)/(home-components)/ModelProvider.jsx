@@ -8,7 +8,6 @@ export default function ModelProvider() {
   const [open, setOpen] = useState(false);
 
   const handleEmailSubmit = async (email) => {
-    console.log("Email submitted:", email);
     // Here we would typically send the email to your backend
     // await fetch('/api/subscribe', { method: 'POST', body: JSON.stringify({ email }) });
   };

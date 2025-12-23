@@ -342,7 +342,6 @@ const AiDetectorContentSection = () => {
 
     if (selectedSection?._id === sectionId) return;
 
-    console.log("Fetching section:", sectionId, selectedSection);
 
     const setCurrentSection = async () => {
       try {

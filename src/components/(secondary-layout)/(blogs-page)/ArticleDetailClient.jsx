@@ -42,21 +42,17 @@ export default function ArticleDetailClient({ slug }) {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        console.log("Fetching post with slug:", slug);
 
         // Fetch specific post by slug
         const postResponse = await blogApi.getPostBySlug(slug);
-        console.log("Post response:", postResponse);
 
         if (postResponse.success) {
           setPost(postResponse.data);
-          console.log("Post loaded successfully");
 
           // Fetch related posts (same category)
           const allPostsResponse = await blogApi.getPosts({
             state: "published",
           });
-          console.log("All posts response for related:", allPostsResponse);
 
           if (allPostsResponse.success) {
             const related = allPostsResponse.data
@@ -67,7 +63,6 @@ export default function ArticleDetailClient({ slug }) {
               )
               .slice(0, 3);
             setRelatedPosts(related);
-            console.log("Related posts found:", related.length);
           }
         } else {
           console.warn("Post response not successful:", postResponse);

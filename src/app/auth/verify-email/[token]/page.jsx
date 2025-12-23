@@ -19,7 +19,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      // console.log("Email verification successful!");
+      // 
       toast.success("Email verification successful!");
       setTimeout(() => {
         router.push("/");

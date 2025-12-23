@@ -5,8 +5,6 @@ export default async function ArticleDetail({ params }) {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug;
 
-  console.log("Resolved params:", resolvedParams);
-  console.log("Post slug:", slug);
 
   // Return client component with the resolved slug
   return <ArticleDetailClient slug={slug} />;

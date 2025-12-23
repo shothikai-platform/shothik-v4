@@ -83,7 +83,6 @@ export const useSheetAiStream = () => {
             },
 
             onConnection: (data) => {
-              console.log("Connection established:", data);
               setConnectionState("connected");
               dispatch(
                 setSheetState({
@@ -95,7 +94,6 @@ export const useSheetAiStream = () => {
             },
 
             onProgress: (data) => {
-              console.log("Progress update:", data);
               setStreamingStats((prev) => ({
                 ...prev,
                 messagesReceived: prev.messagesReceived + 1,
@@ -112,7 +110,6 @@ export const useSheetAiStream = () => {
             },
 
             onData: (data) => {
-              console.log("Data received:", data);
               setStreamingStats((prev) => ({
                 ...prev,
                 messagesReceived: prev.messagesReceived + 1,
@@ -133,7 +130,6 @@ export const useSheetAiStream = () => {
             },
 
             onLogs: (data) => {
-              console.log("Logs received:", data);
               setStreamingStats((prev) => ({
                 ...prev,
                 messagesReceived: prev.messagesReceived + 1,
@@ -152,7 +148,6 @@ export const useSheetAiStream = () => {
             },
 
             onSheetUpdate: (data) => {
-              console.log("Sheet update:", data);
               setStreamingStats((prev) => ({
                 ...prev,
                 messagesReceived: prev.messagesReceived + 1,
@@ -172,7 +167,6 @@ export const useSheetAiStream = () => {
             },
 
             onComplete: (data) => {
-              console.log("Generation complete:", data);
               setIsStreaming(false);
               setConnectionState("disconnected");
               streamingRef.current = false;
@@ -214,7 +208,6 @@ export const useSheetAiStream = () => {
             },
 
             onDisconnect: () => {
-              console.log("Stream disconnected");
               setConnectionState("disconnected");
               streamingRef.current = false;
 
@@ -224,7 +217,6 @@ export const useSheetAiStream = () => {
             },
 
             onReconnecting: () => {
-              console.log("Attempting to reconnect...");
               setConnectionState("reconnecting");
               dispatch(
                 setSheetState({
@@ -235,7 +227,6 @@ export const useSheetAiStream = () => {
             },
 
             onMaxReconnectAttemptsReached: () => {
-              console.log("Max reconnection attempts reached");
               setError(new Error("Connection lost. Please try again."));
               setIsStreaming(false);
               setConnectionState("failed");

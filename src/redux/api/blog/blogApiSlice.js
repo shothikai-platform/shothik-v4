@@ -40,7 +40,6 @@ export const blogApiSlice = createApi({
     }),
     likeContend: builder.mutation({
       query: (options) => {
-        console.log("url: ", `${options.api}/like/${options.id}`);
         return {
           url: `${options.api}/like/${options.id}`,
           method: "PATCH",

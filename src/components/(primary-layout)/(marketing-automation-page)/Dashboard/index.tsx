@@ -112,14 +112,11 @@ export default function Dashboard() {
       if (response.ok) {
         const result = await response.json();
         const campaignData = result.data || result;
-        console.log("📊 Full Response:", result);
-        console.log("📊 Campaign Data:", campaignData);
 
         // Filter only published campaigns with Meta IDs
         const publishedCampaigns =
           campaignData.campaigns
             ?.filter((c: Campaign) => {
-              console.log(
                 `Campaign: ${c.name}, Status: ${c.status}, MetaID: ${c.metaCampaignId}`,
               );
               return c.metaCampaignId && c.status === "published";
@@ -142,7 +139,6 @@ export default function Dashboard() {
               };
             }) || [];
 
-        console.log("✅ Published campaigns:", publishedCampaigns);
         setCampaigns(publishedCampaigns);
 
         // Fetch insights for published campaigns
@@ -173,7 +169,6 @@ export default function Dashboard() {
 
       if (response.ok) {
         const insightsData = await response.json();
-        console.log("📈 Insights data:", insightsData);
 
         // Map insights to campaigns
         const campaignsWithInsights = campaigns.map((campaign) => {
@@ -213,7 +208,6 @@ export default function Dashboard() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("💡 Suggestions:", result);
         setSuggestions(result.suggestions || result.data || []);
       }
     } catch (error) {

@@ -11,7 +11,7 @@ export default function AutoParaphraseSettings() {
 
   const handleAutoParaphraseToggle = () => {
     dispatch(toggleParaphraseOption("automaticStartParaphrasing")); // "automaticStartParaphrasing" -> is the key to set auto paraphrasing true on redux
-    // console.log("Auto paraphrase toggled to:", newValue);
+    // 
   };
   return (
     <div className={cn("w-full")}>

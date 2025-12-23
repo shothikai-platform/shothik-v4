@@ -293,12 +293,10 @@ export default function AgentPage({ specificAgent, presentationId }) {
 
   const handleApplyAutoFixes = () => {
     // This can be wired to a future API call for auto-fixing
-    console.log("Applying auto-fixes...");
   };
 
   const handleRegenerateWithFeedback = () => {
     // This can be wired to a future API call for regeneration
-    console.log("Regenerating with feedback...");
   };
 
   return (

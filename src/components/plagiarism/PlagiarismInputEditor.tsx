@@ -92,7 +92,6 @@ const findSnippetInText = (
     const apiText = inputText.substring(apiStart, apiEnd);
     const similarity = calculateTextSimilarity(apiText, snippet);
     
-    console.log("[Plagiarism Editor] Verifying API position:", {
       apiStart,
       apiEnd,
       apiText: apiText.substring(0, 50),
@@ -177,7 +176,6 @@ const findSnippetInText = (
     }
     
     if (bestMatch && bestMatch.similarity >= 0.7) {
-      console.log("[Plagiarism Editor] Found fuzzy match:", {
         similarity: bestMatch.similarity,
         start: bestMatch.start,
         end: bestMatch.end,
@@ -352,7 +350,6 @@ const PlagiarismInputEditor = ({
         const doc = editor.state.doc;
         const decorations = computeDocDecorations(doc, value, highlights);
         
-        console.log("[Plagiarism Editor] Updating highlights:", {
           highlightsCount: highlights.length,
           decorationsCount: decorations.length,
           valueLength: value.length,
@@ -369,7 +366,6 @@ const PlagiarismInputEditor = ({
           editor.view.dispatch(editor.state.tr);
           
           // Verify decorations are applied
-          console.log("[Plagiarism Editor] Highlights applied");
         });
       } catch (error) {
         console.error("[Plagiarism Editor] Error updating highlights:", error);

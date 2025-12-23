@@ -7,7 +7,6 @@ import { useEffect, useRef } from "react";
 const ReferenceModal = ({ open, onClose, reference, sources, anchorEl }) => {
   const modalRef = useRef(null);
 
-  console.log("ReferenceModal props:", {
     open,
     reference,
     sources: sources?.length,

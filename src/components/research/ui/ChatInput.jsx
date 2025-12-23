@@ -36,7 +36,6 @@ const ChatInput = () => {
   const handleSubmit = async () => {
     if (!inputValue.trim() || isStreaming) return;
 
-    console.log("Submitting research query:", inputValue);
     // return;
     try {
       dispatch(setUserPrompt(inputValue));

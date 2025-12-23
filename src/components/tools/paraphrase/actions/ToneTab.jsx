@@ -31,7 +31,6 @@ const ToneTab = ({ text, plainOutput }) => {
 
     async function fetchScores() {
       try {
-        console.log("Fetching tone scores", { originalText, paraphrasedText });
         const res = await fetch(`${API_BASE}/tone/check`, {
           method: "POST",
           headers: {
@@ -44,7 +43,6 @@ const ToneTab = ({ text, plainOutput }) => {
           throw new Error(`API returned status ${res.status}`);
         }
         const data = await res.json();
-        console.log("Tone scores data:", data);
         setScores(data);
       } catch (err) {
         console.error("Error fetching tone scores", err);

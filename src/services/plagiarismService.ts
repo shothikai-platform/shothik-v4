@@ -101,8 +101,6 @@ export const analyzePlagiarism = async ({
   }
 
   const url = `${baseUrl}${ANALYZE_ENDPOINT}`;
-  console.log("[PlagiarismService] Making request to:", url);
-  console.log("[PlagiarismService] Request options:", {
     method: "POST",
     hasToken: !!token,
     textLength: text.length,
@@ -120,7 +118,6 @@ export const analyzePlagiarism = async ({
       }),
       signal,
     });
-    console.log("[PlagiarismService] Response status:", response.status);
   } catch (fetchError) {
     // Handle network errors or abort errors
     if (fetchError instanceof Error && fetchError.name === "AbortError") {
@@ -182,17 +179,14 @@ export const analyzePlagiarism = async ({
   let raw: RawPlagiarismResponse;
   try {
     const responseText = await response.text();
-    console.log(
       "[PlagiarismService] Response text length:",
       responseText.length,
     );
-    console.log(
       "[PlagiarismService] Response preview:",
       responseText.substring(0, 200),
     );
 
     raw = JSON.parse(responseText) as RawPlagiarismResponse;
-    console.log("[PlagiarismService] Parsed response:", {
       hasOverallSimilarity: !!raw.overallSimilarity,
       sectionsCount: raw.paraphrasedSections?.length ?? 0,
       exactMatchesCount: raw.exactMatches?.length ?? 0,
@@ -210,7 +204,6 @@ export const analyzePlagiarism = async ({
   }
 
   const mappedReport = mapToReport(raw);
-  console.log("[PlagiarismService] Mapped report:", {
     score: mappedReport.score,
     sectionsCount: mappedReport.sections.length,
     exactMatchesCount: mappedReport.exactMatches?.length ?? 0,

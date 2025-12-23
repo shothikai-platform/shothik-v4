@@ -63,7 +63,6 @@ class SheetAiStreamService {
       return { success: true };
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("Stream was aborted");
         return { success: false, error: "Stream aborted" };
       }
 
@@ -89,7 +88,6 @@ class SheetAiStreamService {
         const { done, value } = await reader.read();
 
         if (done) {
-          console.log("Stream completed");
           this.callbacks.onComplete?.({ type: "stream_ended" });
           break;
         }
@@ -135,7 +133,6 @@ class SheetAiStreamService {
       }
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("Stream reading was aborted");
         return;
       }
 
@@ -176,11 +173,9 @@ class SheetAiStreamService {
     } else if (line.startsWith("event: ")) {
       // Handle event type if needed
       const eventType = line.slice(7).trim();
-      console.log("Event type:", eventType);
     } else if (line.startsWith("id: ")) {
       // Handle event ID if needed
       const eventId = line.slice(4).trim();
-      console.log("Event ID:", eventId);
     } else if (line.startsWith("retry: ")) {
       // Handle retry interval
       const retryMs = parseInt(line.slice(7).trim());
@@ -201,13 +196,11 @@ class SheetAiStreamService {
 
     switch (type) {
       case "connection":
-        console.log("Connection established:", payload);
         this.callbacks.onConnection?.(payload);
         break;
 
       case "progress":
         // Handle progress updates with different steps
-        console.log(`Progress - ${payload.step}: ${payload.message}`);
         this.callbacks.onProgress?.(payload);
 
         // Store local conversation ID for tracking
@@ -240,7 +233,6 @@ class SheetAiStreamService {
 
       case "content":
         // Handle the main content response
-        console.log("Received content:", payload);
 
         // Store conversation IDs
         if (payload.conversationId) {
@@ -257,7 +249,6 @@ class SheetAiStreamService {
         break;
 
       case "completion":
-        console.log("Conversation completed:", payload);
         this.callbacks.onComplete?.(payload);
         this.disconnect();
         break;
@@ -291,7 +282,6 @@ class SheetAiStreamService {
         break;
 
       default:
-        console.log("Received message:", messageWithTimestamp);
         this.callbacks.onMessage?.(messageWithTimestamp);
     }
   }
@@ -305,7 +295,6 @@ class SheetAiStreamService {
       const delay =
         this.reconnectInterval * Math.pow(2, this.reconnectAttempts - 1);
 
-      console.log(
         `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
       );
 
@@ -314,11 +303,9 @@ class SheetAiStreamService {
           this.callbacks.onReconnecting?.();
           // You would need to store the original parameters to reconnect
           // This is a simplified version - you might want to store these params
-          console.log("Reconnection would happen here");
         }
       }, delay);
     } else {
-      console.log("Max reconnection attempts reached");
       this.callbacks.onMaxReconnectAttemptsReached?.();
     }
   }

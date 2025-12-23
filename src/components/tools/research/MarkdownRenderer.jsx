@@ -213,7 +213,7 @@ const MarkdownRenderer = ({ content }) => {
     link(href) {
       if (!isValidUrl(href)) return null;
       linkItem += 1;
-      // console.log({ linkItem });
+      // 
       return (
         <sup key={this.elementId}>
           <RenderHoverCard href={href} text={linkItem} isCitation={true} />

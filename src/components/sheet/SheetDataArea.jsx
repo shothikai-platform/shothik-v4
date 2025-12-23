@@ -373,7 +373,6 @@ export default function SheetDataArea() {
   );
   const currentSavePoint = useSelector(selectActiveSavePoint);
 
-  console.log(sheetStatus, "sheet status");
 
   const dispatch = useDispatch();
 
@@ -454,7 +453,6 @@ export default function SheetDataArea() {
               timestamp: new Date().toISOString(),
             }).unwrap();
 
-            console.log("Sheet data saved successfully to API");
           }
         }
       } catch (error) {
@@ -932,7 +930,6 @@ export default function SheetDataArea() {
       // Focus the new window
       newWindow.focus();
 
-      console.log("Opened sheet data in new window");
     } else {
       // Fallback if popup is blocked
       alert(
@@ -943,7 +940,6 @@ export default function SheetDataArea() {
 
   // Handle refresh - could trigger a re-generation
   const handleRefresh = () => {
-    console.log("Refresh sheet data");
 
     if (!currentSavePoint) return;
 
@@ -951,7 +947,6 @@ export default function SheetDataArea() {
       (g) => g.id === currentSavePoint.activeGenerationId,
     );
 
-    console.log(activeGen, "activeGen");
 
     if (sheetStatus === "error") {
       if (activeGen) {
@@ -998,7 +993,6 @@ export default function SheetDataArea() {
       rowKeyGetter: (row) => row.id,
       defaultSortColumns: [],
       onSortColumnsChange: (sortColumns) => {
-        console.log("Sort columns changed:", sortColumns);
       },
       // Removed reorder functionality
       enableColumnReordering: false,

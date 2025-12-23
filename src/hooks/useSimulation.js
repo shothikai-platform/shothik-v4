@@ -74,7 +74,6 @@ export const useSimulation = (
         prompt: prompt,
       });
 
-      console.log(`🎯 SIMULATION: Running ${agent_type} simulation ${s_id}`);
     };
 
     runSimulation();

@@ -70,7 +70,6 @@ export const authApi = authApiSlice.injectEndpoints({
             dispatch(loggedIn(result?.data?.token));
           }
         } catch (err) {
-          console.log("token error: ", err);
         }
       },
     }),
@@ -88,7 +87,6 @@ export const authApi = authApiSlice.injectEndpoints({
             dispatch(authApi.util.invalidateTags(["User"]));
           }
         } catch (err) {
-          console.log(err);
           // do nothing
         }
       },
@@ -120,13 +118,11 @@ export const authApi = authApiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          console.log("result", result);
           if (result?.data?.token) {
             dispatch(loggedIn(result?.data?.token));
             dispatch(authApi.util.invalidateTags(["User"]));
           }
         } catch (err) {
-          console.log("google login error: ", err);
           // do nothing
         }
       },

@@ -109,7 +109,7 @@ const ModeNavigation = ({
     initialModes.some((m) => m.value === selectedMode) ? null : selectedMode,
   );
 
-  // console.log(extraModes, "extraModes 2");
+  // 
 
   // Menu state for "More"
   const [moreOpen, setMoreOpen] = React.useState(false);
@@ -342,7 +342,7 @@ const ModeNavigation = ({
     // handleMoreClose(); // Close the More menu
   };
 
-  // console.log(extraModes, "extraModes");
+  // 
 
   return (
     <>

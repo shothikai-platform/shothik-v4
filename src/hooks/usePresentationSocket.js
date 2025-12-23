@@ -54,7 +54,6 @@ export default function usePresentationSocket(pId, token) {
    */
   const processAgentOutputMessage = useCallback(
     (message) => {
-      console.log("[Socket] Processing agent_output:", {
         author: message.author,
         type: message.type,
         timestamp: message.timestamp,
@@ -66,7 +65,6 @@ export default function usePresentationSocket(pId, token) {
         // Parse the message
         const parsed = parseAgentOutput(message, currentState);
 
-        console.log("[Socket] Parsed result:", {
           type: parsed.type,
           author:
             parsed.data?.author ||
@@ -106,7 +104,6 @@ export default function usePresentationSocket(pId, token) {
                 optimisticLogIndex !== undefined &&
                 optimisticLogIndex !== -1
               ) {
-                console.log(
                   "[Socket] 🔄 Replacing optimistic user log with backend log",
                   {
                     optimisticIndex: optimisticLogIndex,
@@ -139,7 +136,6 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (duplicateUserMessage) {
-                console.log(
                   "[Socket] ⏭️ Skipping duplicate user message (same content):",
                   parsed.data.user_message?.substring(0, 50),
                 );
@@ -150,7 +146,6 @@ export default function usePresentationSocket(pId, token) {
             // Skip unknown agent logs during streaming
             // Unknown logs should not be added to Redux to avoid cluttering the UI
             if (parsed.data.author === "unknown" || !parsed.data.author) {
-              console.log(
                 "[Socket] ⏭️ Skipping unknown agent log during streaming:",
                 parsed.data.author,
               );
@@ -166,7 +161,6 @@ export default function usePresentationSocket(pId, token) {
             );
 
             if (logExists) {
-              console.log(
                 "[Socket] ⏭️ Skipping duplicate log:",
                 parsed.data.author,
               );
@@ -195,7 +189,6 @@ export default function usePresentationSocket(pId, token) {
             );
 
             if (metadataLogExists) {
-              console.log("[Socket] ⏭️ Skipping duplicate metadata log");
               break;
             }
 
@@ -208,7 +201,6 @@ export default function usePresentationSocket(pId, token) {
           case "browser_worker":
             // Browser workers always update, so we process them
             if (parsed.updateType === "update") {
-              console.log(
                 "[Socket] Updating browser worker log at index:",
                 parsed.logIndex,
               );
@@ -225,7 +217,6 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (workerExists) {
-                console.log(
                   "[Socket] ⏭️ Browser worker already exists from history, will update incrementally:",
                   parsed.logEntry.author,
                 );
@@ -244,7 +235,6 @@ export default function usePresentationSocket(pId, token) {
                   );
                 }
               } else {
-                console.log(
                   "[Socket] Creating new browser worker log:",
                   parsed.logEntry.author,
                 );
@@ -253,7 +243,6 @@ export default function usePresentationSocket(pId, token) {
             }
 
             if (parsed.isComplete) {
-              console.log(
                 "[Socket] ✅ Browser worker completed:",
                 parsed.logEntry.author,
               );
@@ -263,7 +252,6 @@ export default function usePresentationSocket(pId, token) {
           case "slide":
             // Handle insertions (new slide at existing position - requires reordering)
             if (parsed.updateType === "insert") {
-              console.log(
                 "[Socket] Inserting slide at index:",
                 parsed.insertIndex,
                 "This will trigger reordering",
@@ -277,7 +265,6 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (parsed.slideEntry.isComplete) {
-                console.log(
                   "[Socket] ✅ Slide inserted and completed:",
                   parsed.slideEntry.slideNumber,
                 );
@@ -291,7 +278,6 @@ export default function usePresentationSocket(pId, token) {
               (slide) => slide.slideNumber === parsed.slideEntry.slideNumber,
             );
 
-            console.log("[Socket] Processing slide:", {
               updateType: parsed.updateType,
               slideNumber: parsed.slideEntry.slideNumber,
               hasThinking: !!parsed.slideEntry.thinking,
@@ -301,7 +287,6 @@ export default function usePresentationSocket(pId, token) {
             });
 
             if (slideExists && parsed.updateType === "create") {
-              console.log(
                 "[Socket] ⚠️ Slide exists from history, forcing update instead of create:",
                 parsed.slideEntry.slideNumber,
               );
@@ -330,7 +315,6 @@ export default function usePresentationSocket(pId, token) {
             }
 
             if (parsed.slideEntry.isComplete) {
-              console.log(
                 "[Socket] ✅ Slide completed:",
                 parsed.slideEntry.slideNumber,
               );
@@ -359,7 +343,6 @@ export default function usePresentationSocket(pId, token) {
 
     isProcessingRef.current = true;
 
-    console.log(
       `[Socket] Processing ${messageBufferRef.current.length} buffered messages`,
     );
 
@@ -386,7 +369,6 @@ export default function usePresentationSocket(pId, token) {
     if (!pId || !token) {
       // Only clean up if there's an existing socket
       if (socketRef.current) {
-        console.log(
           "[Socket] 🧹 Cleaning up socket (pId/token missing or component unmounting)",
         );
         socketRef.current.removeAllListeners();
@@ -405,7 +387,6 @@ export default function usePresentationSocket(pId, token) {
       return;
     }
 
-    console.log("[Socket] 🔌 Initializing NEW socket connection:", {
       pId,
       baseUrl,
     });
@@ -430,19 +411,16 @@ export default function usePresentationSocket(pId, token) {
 
     // All event handlers here...
     socket.on("connect", () => {
-      console.log("[Socket] ✅ CONNECTED:", socket.id);
       dispatch(setStatus({ status: "streaming" }));
       setTimeout(() => processBuffer(), 100);
     });
 
     socket.on("connected", (payload) => {
-      console.log("[Socket] 🎉 Server welcome:", payload);
       const sessionData = parseConnectedEvent(payload);
       dispatch(setSessionData(sessionData));
     });
 
     socket.on("agent_output", (message) => {
-      console.log("[Socket] 📨 AGENT OUTPUT:", {
         author: message.author,
         type: message.type,
         event: message.event,
@@ -458,7 +436,6 @@ export default function usePresentationSocket(pId, token) {
         (message.status === "completed" && message.author === "terminal");
 
       if (isTerminalEvent) {
-        console.log(
           "[Socket] 🏁 Terminal/completion event detected, closing socket",
         );
         const terminalData = parseTerminalEvent(message);
@@ -472,11 +449,9 @@ export default function usePresentationSocket(pId, token) {
         // Use socketRef.current to ensure we're disconnecting the correct socket instance
         const currentSocket = socketRef.current;
         if (currentSocket && currentSocket.connected) {
-          console.log("[Socket] 🔌 Disconnecting socket due to completion");
           setTimeout(() => {
             if (currentSocket && currentSocket.connected) {
               currentSocket.disconnect();
-              console.log("[Socket] ✅ Socket disconnected after completion");
             }
           }, 500); // Reduced delay for faster cleanup
         }
@@ -491,20 +466,16 @@ export default function usePresentationSocket(pId, token) {
     socket.on("message", (data) => {});
 
     socket.on("disconnect", (reason) => {
-      console.log("[Socket] 🔌 Disconnected:", reason);
     });
 
     // Connect
-    console.log("[Socket] 🚀 Connecting...");
     socket.connect();
 
     // Cleanup function - runs when component unmounts or dependencies change
     return () => {
-      console.log("[Socket] 🧹 Cleanup - disconnecting socket");
 
       // Process any remaining buffered messages before disconnecting
       if (messageBufferRef.current.length > 0) {
-        console.log(
           `[Socket] Processing ${messageBufferRef.current.length} buffered messages before cleanup`,
         );
         processBuffer();
@@ -516,7 +487,6 @@ export default function usePresentationSocket(pId, token) {
         socketRef.current.disconnect();
         socketRef.current = null;
         messageBufferRef.current = [];
-        console.log("[Socket] ✅ Socket cleanup completed");
       }
     };
   }, [pId, token, dispatch]);
@@ -532,7 +502,6 @@ export default function usePresentationSocket(pId, token) {
       return;
     }
 
-    console.log("[Socket] 📤 Subscribing to:", p_id);
     socket.emit("subscribe_presentation", { p_id });
   }, []);
 
@@ -552,7 +521,6 @@ export default function usePresentationSocket(pId, token) {
   const disconnect = useCallback(() => {
     const socket = socketRef.current;
     if (socket) {
-      console.log("[Socket] 🔌 Manual disconnect");
       socket.disconnect();
     }
   }, []);

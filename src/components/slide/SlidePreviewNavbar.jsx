@@ -74,7 +74,7 @@ export default function SlidePreviewNavbar({
   isSharedPage = false,
   projectId: projectIdProp,
 }) {
-  // console.log(shareSettings, "shareSettings");
+  // 
   const { openPresentation } = usePresentation();
   const isMobile = useResponsive("down", "sm");
   const isTablet = useResponsive("down", "md");

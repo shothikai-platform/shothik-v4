@@ -21,11 +21,9 @@ const buildDecorationSet = (
   highlights: PlagiarismDecoration[],
 ) => {
   if (!highlights?.length) {
-    console.log("[Plagiarism Extension] No highlights provided");
     return DecorationSet.empty;
   }
 
-  console.log("[Plagiarism Extension] Building decorations:", {
     highlightsCount: highlights.length,
     docSize: doc.content.size,
     highlights: highlights.slice(0, 3),
@@ -74,7 +72,6 @@ const buildDecorationSet = (
       });
     });
 
-  console.log("[Plagiarism Extension] Created decorations:", {
     decorationsCount: decorations.length,
     validRanges: highlights.filter(r => 
       typeof r?.from === "number" && 
@@ -131,7 +128,6 @@ export const PlagiarismHighlightExtension = Extension.create({
       state: {
         init: (_, state) => {
           const decorations = buildDecorationSet(state.doc, extension.storage.highlights);
-          console.log("[Plagiarism Extension] Plugin initialized:", {
             storageHighlights: extension.storage.highlights.length,
             hasDecorations: decorations !== DecorationSet.empty,
           });
@@ -140,7 +136,6 @@ export const PlagiarismHighlightExtension = Extension.create({
         apply(tr, old, oldState, newState) {
           const meta = tr.getMeta(pluginKey);
           if (meta && Array.isArray(meta.highlights)) {
-            console.log("[Plagiarism Extension] Applying highlights from meta:", {
               highlightsCount: meta.highlights.length,
             });
             extension.storage.highlights = meta.highlights;
@@ -151,7 +146,6 @@ export const PlagiarismHighlightExtension = Extension.create({
           }
 
           if (tr.docChanged) {
-            console.log("[Plagiarism Extension] Doc changed, rebuilding decorations");
             return buildDecorationSet(
               newState.doc,
               extension.storage.highlights,
@@ -165,7 +159,6 @@ export const PlagiarismHighlightExtension = Extension.create({
         decorations(state) {
           const decorations = plugin.getState(state) ?? null;
           if (decorations && decorations !== DecorationSet.empty) {
-            console.log("[Plagiarism Extension] Returning decorations");
           }
           return decorations;
         },

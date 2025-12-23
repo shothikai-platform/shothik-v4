@@ -111,7 +111,6 @@ export default function HeaderTitleWithDownload({
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0);
           const dataURL = canvas.toDataURL("image/png");
-          console.log("SHOTHIK AI logo loaded successfully from file");
           resolve(dataURL);
         } catch (error) {
           console.error("Failed to convert logo to base64:", error);
@@ -175,9 +174,7 @@ export default function HeaderTitleWithDownload({
       }
 
       // ===== LOAD LOGO FOR PDF =====
-      console.log("Loading logo for PDF...");
       const logoBase64 = await loadShothikLogo();
-      console.log("Logo ready:", logoBase64 ? "Yes" : "No");
 
       // Convert markdown to HTML and sanitize
       const html =
@@ -215,12 +212,10 @@ export default function HeaderTitleWithDownload({
       // ===== ADD HEADER WITH LOGO TO FIRST PAGE =====
       if (logoBase64) {
         try {
-          console.log("Adding logo to PDF at position:", margin, yPosition);
           // Logo size to match AI Detection Report (width: 120, increased height for better proportion)
           doc.addImage(logoBase64, "PNG", margin, yPosition, 120, 40);
           yPosition += 50; // Increased spacing after logo for better margin bottom
           currentLineCount += 2;
-          console.log("Logo added successfully!");
         } catch (error) {
           console.error("Error adding logo image:", error);
           // Fallback: Add text logo if image fails

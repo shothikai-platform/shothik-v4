@@ -29,7 +29,6 @@ const CustomModeContent = ({
   const [modeName, setModeName] = useState(existingModeName);
   const [localError, setLocalError] = useState(null);
 
-  console.log(modeName, "modeName in CustomModeContent");
 
   useEffect(() => {
     setModeName(existingModeName);

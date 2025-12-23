@@ -58,9 +58,8 @@ export default function ResearchAgentPage({
 
   const researchConfig = JSON.parse(sessionStorage.getItem("r-config"));
 
-  console.log(researchCore, "research from ResearchAgentPage");
 
-  // console.log(loadingResearchHistory, "loadingResearchHistory");
+  // 
 
   // const initialQuery = sessionStorage.getItem("activeResearchChatId") || "";
   const initialUserPrompt = sessionStorage.getItem("initialResearchPrompt");
@@ -115,7 +114,7 @@ export default function ResearchAgentPage({
           const { researches, hasActiveQueue } =
             await loadChatResearchesWithQueueCheck();
 
-          //console.log(researches.length, hasActiveQueue, researchCore?.isPolling, researchCore?.isStreaming);
+          //
 
           // Only start new research if:
           // 1. No existing researches AND

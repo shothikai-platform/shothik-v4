@@ -47,7 +47,7 @@ export default function AnalyticsLoader() {
     if (scriptsReady && !isLoaded) {
       dispatch(markScriptsLoaded());
       initializeWithConsent(true);
-      // console.log("scripts loaded");
+      // 
     }
   }, [scriptsReady, isLoaded, dispatch]);
 
