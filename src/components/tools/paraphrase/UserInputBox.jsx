@@ -174,6 +174,7 @@ const InputSentenceHighlighter = Extension.create({
             }
 
             // Debug logging
+            console.log(
               `📝 Input: Found ${sentences.length} sentences, highlighting index ${highlightSentence}`,
             );
             if (highlightSentence >= sentences.length) {

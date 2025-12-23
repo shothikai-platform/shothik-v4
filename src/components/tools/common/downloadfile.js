@@ -224,6 +224,7 @@ const downloadAsPdf = async (outputContent, filename) => {
   try {
 
     // Debug: before injecting anything
+    console.log(
       "pdfMake.vfs keys sample:",
       Object.keys(pdfMake.vfs || {}).slice(0, 12),
     );
@@ -270,9 +271,9 @@ const downloadAsPdf = async (outputContent, filename) => {
     const bengaliFontName = Object.keys(bengaliFonts || {})[0] || null;
 
     if (!bengaliFontName) {
+      console.warn(
         "No Bengali font loaded; PDF generation will still proceed for English content.",
       );
-    } else {
     }
 
     const plainText = markdownToPlainText(outputContent);

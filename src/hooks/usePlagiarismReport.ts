@@ -43,6 +43,7 @@ export const usePlagiarismReport = (text: string) => {
   // Debug: Log when state actually changes
   useEffect(() => {
     if (state.report) {
+      console.log({
         reportId: state.report?.analysisId,
         sectionsCount: state.report?.sections?.length,
         exactMatchesCount: state.report?.exactMatches?.length,
@@ -113,6 +114,7 @@ export const usePlagiarismReport = (text: string) => {
       // Prevent duplicate requests (unless force refresh)
       // Use ref for synchronous check to avoid race conditions
       if (isRequestInProgressRef.current && !options?.forceRefresh) {
+        console.log(
           "[Plagiarism] Request already in progress, skipping duplicate",
         );
         return;
@@ -122,6 +124,7 @@ export const usePlagiarismReport = (text: string) => {
       if (!options?.forceRefresh) {
         const cachedReport = getCachedReport(trimmedText);
         if (cachedReport) {
+          console.log({
             reportId: cachedReport?.analysisId,
             sectionsCount: cachedReport?.sections?.length,
             exactMatchesCount: cachedReport?.exactMatches?.length,
@@ -165,6 +168,7 @@ export const usePlagiarismReport = (text: string) => {
       }));
 
       try {
+        console.log({
           textLength: text.length,
           requestId,
           forceRefresh: options?.forceRefresh,
@@ -190,6 +194,7 @@ export const usePlagiarismReport = (text: string) => {
           return;
         }
 
+        console.log({
           requestId,
           report: !!report,
           reportId: report?.analysisId,
@@ -215,6 +220,7 @@ export const usePlagiarismReport = (text: string) => {
 
         // CRITICAL FIX: Use flushSync to force React to process state update immediately
         // This ensures the component re-renders with the new report synchronously
+        console.log({
           requestId,
           reportId: report?.analysisId,
           isCurrentRequest,
@@ -236,6 +242,7 @@ export const usePlagiarismReport = (text: string) => {
         });
         
         // Verify state was updated (for debugging)
+        console.log({
           requestId,
           reportId: report?.analysisId,
         });

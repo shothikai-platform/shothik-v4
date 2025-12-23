@@ -63,6 +63,7 @@ const ParaphraseOutput = ({
   // CRITICAL FIX: Log data changes for debugging
   useEffect(() => {
     if (data && data.length > 0) {
+      console.log({
         totalSegments: data.length,
         nonNewlineSegments: data.filter(
           (s) => !(s.length === 1 && s[0].type === "newline"),
@@ -83,6 +84,7 @@ const ParaphraseOutput = ({
             wordsWithSynonyms++;
             sentenceHasSynonyms = true;
             if (sIdx === 0 && wIdx < 3) {
+              console.log(
                 `  ✅ Word "${word.word}" has ${word.synonyms.length} synonyms`,
               );
             }
@@ -91,12 +93,14 @@ const ParaphraseOutput = ({
         if (sentenceHasSynonyms) sentenceWithSynonyms++;
       });
 
+      console.log(
         `📈 Synonym stats: ${sentenceWithSynonyms} sentences, ${wordsWithSynonyms} words with synonyms`,
       );
     }
   }, [data]);
 
   const replaceSynonym = (newWord) => {
+    console.log(
       `🔄 Replacing word at [${synonymsOptions.sentenceIndex}][${synonymsOptions.wordIndex}] with: ${newWord}`,
     );
 
@@ -119,6 +123,7 @@ const ParaphraseOutput = ({
   const handleWordClick = (event, synonyms, sentenceIndex, wordIndex) => {
     event.stopPropagation();
 
+    console.log({
       sentenceIndex,
       wordIndex,
       synonymsCount: synonyms?.length || 0,
@@ -147,6 +152,7 @@ const ParaphraseOutput = ({
   };
 
   const replaceSentence = async (sentenceData) => {
+    console.log(
       `🔄 Replacing sentence at index ${synonymsOptions.sentenceIndex}`,
     );
 
@@ -246,6 +252,7 @@ const ParaphraseOutput = ({
         return;
       }
 
+      console.log({
         mode: rephraseMode,
         synonymLevel,
         language: selectedLang,

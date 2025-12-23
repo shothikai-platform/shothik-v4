@@ -480,6 +480,7 @@ function formatContent(
 ) {
   if (!data) return { type: "doc", content: [] };
 
+  console.log({
     totalSegments: data.length,
     firstFewSegments: data.slice(0, 3).map((s) => ({
       length: s?.length,
