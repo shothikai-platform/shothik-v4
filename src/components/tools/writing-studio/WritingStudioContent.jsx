@@ -59,6 +59,7 @@ import { setShowLoginModal } from "@/redux/slices/auth";
 import { cn } from "@/lib/utils";
 import { getFullAnalysis } from "@/lib/text-analysis";
 import { searchAll, formatCitation } from "@/lib/citation-lookup";
+import { analyzePlagiarism } from "@/services/plagiarismService";
 import {
   BookOpen,
   TrendingUp,
@@ -997,6 +998,86 @@ function ReferenceListPanel({ references, onRemove, citationFormat, onCopyAll })
   );
 }
 
+function PlagiarismCheckPanel({ result, isChecking, error, onRetry }) {
+  const getScoreColor = (score) => {
+    if (score === null || score === undefined) return "bg-muted";
+    if (score <= 10) return "bg-green-500";
+    if (score <= 25) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  const getScoreLabel = (score) => {
+    if (score === null || score === undefined) return "Not checked";
+    if (score <= 10) return "Original";
+    if (score <= 25) return "Some matches found";
+    return "High similarity";
+  };
+
+  const score = result?.score ?? null;
+
+  return (
+    <div className="p-4 border rounded-lg bg-muted/20">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium flex items-center gap-2">
+          <FileSearch className="h-4 w-4" />
+          Plagiarism Check
+        </span>
+        {isChecking && <Loader2 className="h-4 w-4 animate-spin" />}
+      </div>
+      
+      {error ? (
+        <div className="space-y-2">
+          <p className="text-xs text-destructive">{error}</p>
+          <Button size="sm" variant="outline" onClick={onRetry} className="w-full">
+            <RefreshCw className="h-3 w-3 mr-1" />
+            Retry
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Similarity</span>
+            <span className={cn(
+              "font-medium",
+              score !== null && score <= 10 && "text-green-600",
+              score !== null && score > 10 && score <= 25 && "text-yellow-600",
+              score !== null && score > 25 && "text-red-600"
+            )}>
+              {score !== null ? `${score}%` : "—"}
+            </span>
+          </div>
+          <Progress value={score || 0} className="h-2" />
+          <div className="flex items-center gap-1 text-xs">
+            <div className={cn("w-2 h-2 rounded-full", getScoreColor(score))} />
+            <span className="text-muted-foreground">{getScoreLabel(score)}</span>
+          </div>
+          
+          {result?.sections && result.sections.length > 0 && (
+            <div className="mt-3 pt-3 border-t">
+              <p className="text-xs font-medium mb-2">Matches ({result.sections.length})</p>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {result.sections.slice(0, 5).map((section, i) => (
+                  <div key={i} className="flex items-center justify-between text-xs p-1.5 bg-background rounded">
+                    <span className="truncate flex-1 text-muted-foreground">
+                      {section.source || section.sourceUrl || "Source"}
+                    </span>
+                    <span className={cn(
+                      "font-medium ml-2",
+                      section.similarityScore <= 25 ? "text-yellow-600" : "text-red-600"
+                    )}>
+                      {section.similarityScore || 0}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AIScorePanel({ aiScore, isScanning }) {
   const getScoreColor = (score) => {
     if (score === null) return "bg-muted";
@@ -1065,6 +1146,9 @@ export default function WritingStudioContent() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeLimitType, setUpgradeLimitType] = useState("ai_actions");
   const [usage, setUsage] = useState({ ai_actions: 0, citations: 0, ai_scans: 0 });
+  const [isCheckingPlagiarism, setIsCheckingPlagiarism] = useState(false);
+  const [plagiarismResult, setPlagiarismResult] = useState(null);
+  const [plagiarismError, setPlagiarismError] = useState(null);
   const isPro = user?.package && user.package !== "free";
   const selectionRef = useRef({ from: 0, to: 0 });
   const analysisTimeoutRef = useRef(null);
@@ -1310,6 +1394,41 @@ export default function WritingStudioContent() {
       toast.error("Failed to scan. Please try again.");
     } finally {
       setIsScanning(false);
+    }
+  };
+
+  const handleCheckPlagiarism = async () => {
+    const text = editor?.getText() || "";
+    if (!text.trim() || text.trim().split(/\s+/).length < 50) {
+      toast.error("Please write at least 50 words before checking");
+      return;
+    }
+
+    if (!user) {
+      dispatch(setShowLoginModal(true));
+      return;
+    }
+
+    if (!isPro) {
+      setUpgradeLimitType("plagiarism");
+      setShowUpgradeModal(true);
+      return;
+    }
+
+    setIsCheckingPlagiarism(true);
+    setPlagiarismError(null);
+    
+    try {
+      const result = await analyzePlagiarism({ text });
+      setPlagiarismResult(result);
+      toast.success("Plagiarism check complete!");
+    } catch (error) {
+      console.error("Plagiarism check error:", error);
+      const errorMessage = error?.message || "Failed to check plagiarism. Please try again.";
+      setPlagiarismError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsCheckingPlagiarism(false);
     }
   };
 
@@ -1910,6 +2029,40 @@ export default function WritingStudioContent() {
                     {wordCount < 50 && (
                       <p className="text-xs text-muted-foreground text-center">
                         Write at least 50 words to enable AI detection
+                      </p>
+                    )}
+
+                    <Separator />
+
+                    <PlagiarismCheckPanel 
+                      result={plagiarismResult} 
+                      isChecking={isCheckingPlagiarism} 
+                      error={plagiarismError}
+                      onRetry={handleCheckPlagiarism}
+                    />
+
+                    <Button
+                      onClick={handleCheckPlagiarism}
+                      disabled={isCheckingPlagiarism || wordCount < 50}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      {isCheckingPlagiarism ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Checking...
+                        </>
+                      ) : (
+                        <>
+                          <FileSearch className="h-4 w-4 mr-2" />
+                          Check for Plagiarism
+                        </>
+                      )}
+                    </Button>
+
+                    {wordCount < 50 && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        Write at least 50 words to check for plagiarism
                       </p>
                     )}
 

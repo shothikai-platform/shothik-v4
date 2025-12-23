@@ -101,11 +101,6 @@ export const analyzePlagiarism = async ({
   }
 
   const url = `${baseUrl}${ANALYZE_ENDPOINT}`;
-    method: "POST",
-    hasToken: !!token,
-    textLength: text.length,
-    hasSignal: !!signal,
-  });
 
   let response: Response;
   try {
@@ -179,20 +174,7 @@ export const analyzePlagiarism = async ({
   let raw: RawPlagiarismResponse;
   try {
     const responseText = await response.text();
-      "[PlagiarismService] Response text length:",
-      responseText.length,
-    );
-      "[PlagiarismService] Response preview:",
-      responseText.substring(0, 200),
-    );
-
     raw = JSON.parse(responseText) as RawPlagiarismResponse;
-      hasOverallSimilarity: !!raw.overallSimilarity,
-      sectionsCount: raw.paraphrasedSections?.length ?? 0,
-      exactMatchesCount: raw.exactMatches?.length ?? 0,
-      hasSources: !!raw.sources,
-      hasCitations: !!raw.citations,
-    });
   } catch (jsonError) {
     // If response is not valid JSON, it might be an error response
     console.error("[PlagiarismService] JSON parse error:", jsonError);
@@ -204,10 +186,6 @@ export const analyzePlagiarism = async ({
   }
 
   const mappedReport = mapToReport(raw);
-    score: mappedReport.score,
-    sectionsCount: mappedReport.sections.length,
-    exactMatchesCount: mappedReport.exactMatches?.length ?? 0,
-  });
 
   return mappedReport;
 };

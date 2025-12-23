@@ -29,6 +29,7 @@ const FREE_FEATURES = [
   { text: "Export to TXT only", included: true },
   { text: "Unlimited AI actions", included: false },
   { text: "AI detection scans", included: false },
+  { text: "Plagiarism checking", included: false },
   { text: "Advanced writing analysis", included: false },
   { text: "Export to DOCX/HTML", included: false },
   { text: "Priority support", included: false },
@@ -39,6 +40,7 @@ const PRO_FEATURES = [
   { text: "Full readability & tone analysis", included: true },
   { text: "Unlimited citation lookups", included: true },
   { text: "AI detection scans", included: true },
+  { text: "Plagiarism checking", included: true },
   { text: "Export to DOCX/HTML/TXT", included: true },
   { text: "Advanced writing templates", included: true },
   { text: "Priority support", included: true },
@@ -50,6 +52,7 @@ export function WritingStudioUpgradeModal({ open, onClose, limitType = "ai_actio
     citations: "You've reached your daily citation lookup limit",
     export: "DOCX and HTML export requires an upgrade",
     ai_scan: "AI detection scans require an upgrade",
+    plagiarism: "Plagiarism checking requires an upgrade",
   };
 
   return (
