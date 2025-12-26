@@ -30,6 +30,7 @@
  */
 
 import api from "@/lib/api";
+import type { Campaign, AdSet, Ad, Persona } from "@/types/campaign";
 
 /**
  * Campaign API
@@ -172,10 +173,10 @@ export const campaignAPI = {
   saveCampaignData: async (
     projectId: string,
     data: {
-      campaigns: any[];
-      adSets: any[];
-      ads: any[];
-      personas: any[];
+      campaigns: Campaign[];
+      adSets: AdSet[];
+      ads: Ad[];
+      personas: Persona[];
     },
   ) => {
     const response = await api.post(
@@ -275,7 +276,7 @@ export const campaignAPI = {
    * console.log(improvedAd.headline); // Updated with social proof element
    * ```
    */
-  improveAd: async (projectId: string, currentAd: any, feedback: string) => {
+  improveAd: async (projectId: string, currentAd: Ad, feedback: string) => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/improve-ad/${projectId}`,
       {

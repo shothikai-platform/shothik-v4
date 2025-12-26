@@ -1,5 +1,6 @@
 // hooks/useStreamingLogs.ts
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { AgentLog, LogHookResult, SessionStatus } from "@/types/logs";
 
 // Storage key for tracking animated logs
 const ANIMATED_LOGS_KEY = "streamingLogs_animated";
@@ -26,7 +27,7 @@ const saveAnimatedLogs = (animatedSet: Set<string>) => {
 };
 
 // Generate unique ID for a log - now handles objects safely
-const generateLogId = (log: any, index: number): string => {
+const generateLogId = (log: AgentLog, index: number): string => {
   const contentSlice =
     typeof log.parsed_output === "string"
       ? log.parsed_output.slice(0, 50)
@@ -35,22 +36,22 @@ const generateLogId = (log: any, index: number): string => {
 };
 
 export const useStreamingLogs = (
-  realLogs: any[],
+  realLogs: AgentLog[],
   isLoading: boolean,
   status: string,
   presentationId: string,
-) => {
-  const [processedLogs, setProcessedLogs] = useState([]);
-  const [visibleLogs, setVisibleLogs] = useState([]);
+): LogHookResult => {
+  const [processedLogs, setProcessedLogs] = useState<AgentLog[]>([]);
+  const [visibleLogs, setVisibleLogs] = useState<AgentLog[]>([]);
   const [currentlyTypingIndex, setCurrentlyTypingIndex] = useState(-1);
   const [showThinking, setShowThinking] = useState(false);
 
-  const allLogsRef = useRef([]);
+  const allLogsRef = useRef<AgentLog[]>([]);
   const nextLogIndexRef = useRef(0);
   const isTypingRef = useRef(false);
-  const typingTimeoutRef = useRef(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const animatedLogsRef = useRef<Set<string>>(getAnimatedLogs());
-  const sessionStatusRef = useRef<string>("processing");
+  const sessionStatusRef = useRef<SessionStatus>("processing");
   const backgroundProcessingRef = useRef(false);
 
   const currentAnimationRef = useRef<{
@@ -78,7 +79,7 @@ export const useStreamingLogs = (
     }
   }, []);
 
-  const shouldAnimateLog = useCallback((log: any, index: number): boolean => {
+  const shouldAnimateLog = useCallback((log: AgentLog, index: number): boolean => {
     const logId = generateLogId(log, index);
     const hasBeenAnimated = animatedLogsRef.current.has(logId);
 
@@ -98,7 +99,7 @@ export const useStreamingLogs = (
     return !hasBeenAnimated;
   }, []);
 
-  const markLogAsAnimated = useCallback((log: any, index: number) => {
+  const markLogAsAnimated = useCallback((log: AgentLog, index: number) => {
     const logId = generateLogId(log, index);
     animatedLogsRef.current.add(logId);
     saveAnimatedLogs(animatedLogsRef.current);
@@ -198,11 +199,11 @@ export const useStreamingLogs = (
   );
 
   const determineSessionStatus = useCallback(
-    (logs: any[]): string => {
+    (logs: AgentLog[]): SessionStatus => {
       if (!logs || logs.length === 0) return "processing";
 
       const statusLog = logs.find((log) => log.status);
-      if (statusLog) {
+      if (statusLog && statusLog.status) {
         return statusLog.status;
       }
 

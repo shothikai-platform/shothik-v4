@@ -1,6 +1,7 @@
 import api from "@/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 interface Project {
   _id: string;
@@ -27,7 +28,7 @@ interface AnalysisPayload {
 
 // Fetch all projects
 export const useProjects = () => {
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   return useQuery<Project[]>({
     queryKey: ["projects"],
@@ -43,7 +44,7 @@ export const useProjects = () => {
 
 // Fetch single project
 export const useProject = (projectId: string) => {
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   return useQuery({
     queryKey: ["project", projectId],

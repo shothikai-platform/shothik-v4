@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { setAlertMessage, setShowAlert } from "@/redux/slices/tools";
+import type { RootState } from "@/redux/store";
 import {
   getCachedReport,
   setCachedReport,
@@ -29,7 +30,7 @@ const normalizeKey = (text: string) => text.trim().toLowerCase();
 export const usePlagiarismReport = (text: string) => {
   const dispatch = useDispatch();
 
-  const accessToken = useSelector((state: any) => state?.auth?.accessToken);
+  const accessToken = useSelector((state: RootState) => state?.auth?.accessToken);
   const abortControllerRef = useRef<AbortController | null>(null);
   const isRequestInProgressRef = useRef<boolean>(false);
 

@@ -29,17 +29,18 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 import TransactionDetailModal from "./TransactionDetailModal";
 
 // Using native Date methods for consistency with project
 
 export default function AccountWalletSection() {
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state: any) => state.auth || {});
+  const { accessToken } = useSelector((state: RootState) => state.auth || {});
 
   // Get wallet from Redux state
   const { wallet, isLoading: walletLoading } = useSelector(
-    (state: any) => state.user_wallet || { wallet: null, isLoading: false },
+    (state: RootState) => state.user_wallet || { wallet: null, isLoading: false },
   );
 
   // Pagination state for payment transactions

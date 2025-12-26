@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { campaignAPI, metaAPI } from "@/services/marketing-automation.service";
 import type { Ad } from "@/types/campaign";
 import { getRouteState } from "@/utils/getRouteState";
+import type { RootState } from "@/redux/store";
 import {
   Activity,
   ArrowLeft,
@@ -99,7 +100,7 @@ export default function FacebookAccountSelectionScreen() {
   const [isLoadingPixels, setIsLoadingPixels] = useState(false);
   const [pixelsWarning, setPixelsWarning] = useState<string>("");
 
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   // Get selected ad IDs from navigation state (memoized by JSON string to prevent re-renders)
   const selectedAdIdsString = JSON.stringify(state?.selectedAdIds || []);

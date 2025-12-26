@@ -55,7 +55,7 @@ export class ObjectToFormDataConverter {
   /**
    * Append value to FormData with proper handling
    */
-  private appendValue(key: string, value: any, parentKey?: string): void {
+  private appendValue(key: string, value: unknown, parentKey?: string): void {
     const fieldName = this.buildFieldName(key, parentKey);
 
     if (this.shouldSkipValue(value)) {
@@ -105,7 +105,7 @@ export class ObjectToFormDataConverter {
   /**
    * Check if value should be skipped
    */
-  private shouldSkipValue(value: any): boolean {
+  private shouldSkipValue(value: unknown): boolean {
     return (
       (this.options.skipNulls && this.isNull(value)) ||
       (this.options.skipUndefined && this.isUndefined(value))
@@ -115,27 +115,27 @@ export class ObjectToFormDataConverter {
   /**
    * Type checking methods
    */
-  private isNull(value: any): boolean {
+  private isNull(value: unknown): value is null {
     return value === null;
   }
 
-  private isUndefined(value: any): boolean {
+  private isUndefined(value: unknown): value is undefined {
     return value === undefined;
   }
 
-  private isArray(value: any): boolean {
+  private isArray(value: unknown): value is unknown[] {
     return Array.isArray(value);
   }
 
-  private isFileOrBlob(value: any): boolean {
+  private isFileOrBlob(value: unknown): value is File | Blob {
     return value instanceof File || value instanceof Blob;
   }
 
-  private isDate(value: any): boolean {
+  private isDate(value: unknown): value is Date {
     return value instanceof Date;
   }
 
-  private isPlainObject(value: any): boolean {
+  private isPlainObject(value: unknown): value is Record<string, unknown> {
     return (
       typeof value === "object" &&
       value !== null &&
@@ -158,7 +158,7 @@ export class ObjectToFormDataConverter {
     }
   }
 
-  private handleArray(fieldName: string, value: any[]): void {
+  private handleArray(fieldName: string, value: unknown[]): void {
     if (value.length === 0) {
       this.formData.append(
         this.options.arrayNotation ? `${fieldName}[]` : fieldName,
@@ -176,7 +176,7 @@ export class ObjectToFormDataConverter {
     });
   }
 
-  private handleArrayItem(arrayKey: string, item: any): void {
+  private handleArrayItem(arrayKey: string, item: unknown): void {
     if (this.isNull(item) || this.isUndefined(item)) {
       if (
         (!this.options.skipNulls && this.isNull(item)) ||
@@ -202,14 +202,14 @@ export class ObjectToFormDataConverter {
 
   private handlePlainObject(
     fieldName: string,
-    value: Record<string, any>,
+    value: Record<string, unknown>,
   ): void {
     Object.entries(value).forEach(([nestedKey, nestedValue]) => {
       this.appendValue(nestedKey, nestedValue, fieldName);
     });
   }
 
-  private handlePrimitiveValue(fieldName: string, value: any): void {
+  private handlePrimitiveValue(fieldName: string, value: unknown): void {
     this.formData.append(fieldName, this.convertToString(value));
   }
 
@@ -222,7 +222,7 @@ export class ObjectToFormDataConverter {
       : date.toISOString();
   }
 
-  private convertToString(value: any): string {
+  private convertToString(value: unknown): string {
     if (typeof value === "string") {
       return value;
     }
@@ -242,7 +242,7 @@ export class ObjectToFormDataConverter {
     return String(value);
   }
 
-  private stringifyValue(value: any): string {
+  private stringifyValue(value: unknown): string {
     try {
       return JSON.stringify(value);
     } catch (error) {
@@ -272,8 +272,8 @@ export class FormDataToObjectConverter {
   /**
    * Convert FormData back to object for debugging
    */
-  public static convert(formData: FormData): Record<string, any> {
-    const result: Record<string, any> = {};
+  public static convert(formData: FormData): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
 
     for (const [key, value] of formData.entries()) {
       if (result[key]) {

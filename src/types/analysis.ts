@@ -103,7 +103,7 @@ export interface ProductAnalysis {
 
 export interface StreamUpdate {
   step: string;
-  data: any;
+  data: Record<string, unknown>;
   timestamp: string;
 }
 
