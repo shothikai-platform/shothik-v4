@@ -31,6 +31,335 @@
 
 import api from "@/lib/api";
 
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
+/**
+ * Represents a marketing campaign with objectives and settings
+ */
+export interface Campaign {
+  id?: string;
+  name: string;
+  objective: string;
+  status?: "active" | "paused" | "draft";
+  budget?: number;
+  startDate?: string;
+  endDate?: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Represents an ad set with targeting and scheduling configuration
+ */
+export interface AdSet {
+  id?: string;
+  campaignId?: string;
+  name: string;
+  targeting: AdTargeting;
+  budget?: number;
+  bidStrategy?: string;
+  schedule?: {
+    startTime?: string;
+    endTime?: string;
+  };
+}
+
+/**
+ * Geographic and demographic targeting configuration for ad sets
+ */
+export interface AdTargeting {
+  locations?: string[];
+  ageMin?: number;
+  ageMax?: number;
+  gender?: "male" | "female" | "all";
+  interests?: string[];
+  behaviors?: string[];
+  customAudiences?: string[];
+}
+
+/**
+ * Represents an individual ad with copy, creative, and CTA
+ */
+export interface Ad {
+  id?: string;
+  adSetId?: string;
+  headline: string;
+  body: string;
+  cta: string;
+  ctaUrl?: string;
+  mediaUrl?: string;
+  mediaType?: "image" | "video";
+  format?: "single-image" | "carousel" | "video" | "slideshow";
+  status?: "active" | "paused" | "draft";
+}
+
+/**
+ * Represents a target audience persona
+ */
+export interface Persona {
+  id?: string;
+  name: string;
+  age?: string;
+  gender?: string;
+  interests?: string[];
+  painPoints?: string[];
+  goals?: string[];
+  behaviors?: string[];
+  demographics?: Record<string, unknown>;
+}
+
+/**
+ * Complete campaign data structure including all related entities
+ */
+export interface CampaignData {
+  campaigns: Campaign[];
+  adSets: AdSet[];
+  ads: Ad[];
+  personas: Persona[];
+}
+
+/**
+ * AI-powered campaign suggestions response
+ */
+export interface CampaignSuggestions {
+  personas: Persona[];
+  objectives: string[];
+  strategies: string[];
+  suggestedBudget?: number;
+  recommendedPlatforms?: string[];
+}
+
+/**
+ * Chat message in the conversation history
+ */
+export interface ChatMessage {
+  id?: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  timestamp: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * AI chat response
+ */
+export interface ChatResponse {
+  message: string;
+  role: "assistant";
+  timestamp: string;
+  suggestions?: string[];
+}
+
+/**
+ * Parameters for generating an ad with AI
+ */
+export interface GenerateAdParams {
+  product: string;
+  persona: string;
+  awareness_stage: "unaware" | "problem-aware" | "solution-aware" | "product-aware" | "most-aware";
+  format: "single-image" | "carousel" | "video" | "slideshow";
+  angle?: string;
+}
+
+/**
+ * Generated ad response from AI
+ */
+export interface GeneratedAd extends Ad {
+  variants?: Partial<Ad>[];
+  confidence?: number;
+}
+
+/**
+ * Region selection for media regeneration (image coordinates)
+ */
+export interface MediaRegion {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Generated media response
+ */
+export interface GeneratedMedia {
+  url: string;
+  type: "image" | "video";
+  width?: number;
+  height?: number;
+  format?: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Batch media generation result
+ */
+export interface BatchMediaResult {
+  media: Array<{
+    adId: string;
+    url: string;
+    type: "image" | "video";
+    status: "success" | "failed";
+    error?: string;
+  }>;
+  totalProcessed: number;
+  successCount: number;
+  failedCount: number;
+}
+
+/**
+ * ImageKit authentication parameters for client-side uploads
+ */
+export interface ImageKitAuth {
+  signature: string;
+  token: string;
+  expire: number;
+  publicKey?: string;
+}
+
+/**
+ * City data for geographic targeting
+ */
+export interface City {
+  key: string;
+  name: string;
+  region?: string;
+  country: string;
+  type?: string;
+  population?: number;
+}
+
+/**
+ * CTA (Call-to-Action) with destination URL mapping
+ */
+export interface CtaWithUrl {
+  cta: string;
+  url: string;
+}
+
+/**
+ * Ad publishing result from Meta platforms
+ */
+export interface PublishAdsResult {
+  campaignIds: string[];
+  adSetIds: string[];
+  adIds: string[];
+  status: "pending_review" | "active" | "rejected" | "paused";
+  errors?: string[];
+  warnings?: string[];
+}
+
+/**
+ * Meta OAuth authentication data
+ */
+export interface MetaAuthData {
+  authUrl: string;
+  state: string;
+  scope?: string[];
+}
+
+/**
+ * Facebook page information
+ */
+export interface FacebookPage {
+  id: string;
+  name: string;
+  category?: string;
+  accessToken?: string;
+  tasks?: string[];
+}
+
+/**
+ * Meta Business Account information
+ */
+export interface BusinessAccount {
+  id: string;
+  name: string;
+  verificationStatus?: string;
+  permissions?: string[];
+}
+
+/**
+ * Meta Ad Account information
+ */
+export interface AdAccount {
+  id: string;
+  name: string;
+  accountId: string;
+  currency?: string;
+  timezone?: string;
+  balance?: number;
+}
+
+/**
+ * Meta user data including connected assets
+ */
+export interface MetaUserData {
+  profile: {
+    id: string;
+    name: string;
+    email?: string;
+  };
+  pages: FacebookPage[];
+  businessAccounts: BusinessAccount[];
+  adAccounts: AdAccount[];
+  permissions: string[];
+  isConnected: boolean;
+}
+
+/**
+ * User's Meta account selections
+ */
+export interface MetaSelections {
+  selectedPageIds: string[];
+  selectedBusinessAccountId: string;
+  selectedAdsAccountId: string;
+}
+
+/**
+ * Meta Pixel information for conversion tracking
+ */
+export interface MetaPixel {
+  id: string;
+  name: string;
+  code?: string;
+  lastFiredTime?: string;
+  isActive?: boolean;
+}
+
+/**
+ * Webhook subscription status
+ */
+export interface WebhookStatus {
+  isSubscribed: boolean;
+  subscribedFields: string[];
+  callbackUrl?: string;
+  verifyToken?: string;
+}
+
+/**
+ * Webhook subscription result
+ */
+export interface WebhookSubscription {
+  success: boolean;
+  subscribedFields: string[];
+  pageId: string;
+}
+
+/**
+ * Standard API success response
+ */
+export interface ApiSuccessResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+// ============================================================================
+// Campaign API
+// ============================================================================
+
 /**
  * Campaign API
  *
@@ -46,7 +375,7 @@ export const campaignAPI = {
    * including target audiences, messaging strategies, and campaign objectives.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @returns {Promise<Object>} Campaign suggestions data including personas, objectives, and strategies
+   * @returns {Promise<CampaignSuggestions>} Campaign suggestions data including personas, objectives, and strategies
    * @throws {Error} If the API request fails or projectId is invalid
    *
    * @example
@@ -56,7 +385,7 @@ export const campaignAPI = {
    * console.log(suggestions.objectives); // Campaign objectives
    * ```
    */
-  getInitialSuggestions: async (projectId: string) => {
+  getInitialSuggestions: async (projectId: string): Promise<CampaignSuggestions> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/initial-suggestions/${projectId}`,
     );
@@ -72,7 +401,7 @@ export const campaignAPI = {
    *
    * @param {string} projectId - The unique identifier of the marketing project
    * @param {string} message - The user's message to send to the AI assistant
-   * @returns {Promise<Object>} AI response containing the reply and updated conversation state
+   * @returns {Promise<ChatResponse>} AI response containing the reply and updated conversation state
    * @throws {Error} If the API request fails or parameters are invalid
    *
    * @example
@@ -84,7 +413,7 @@ export const campaignAPI = {
    * console.log(response.message); // AI's response
    * ```
    */
-  chat: async (projectId: string, message: string) => {
+  chat: async (projectId: string, message: string): Promise<ChatResponse> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/chat/${projectId}`,
       {
@@ -101,7 +430,7 @@ export const campaignAPI = {
    * specified project, maintaining chronological order.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @returns {Promise<Array>} Array of chat messages with timestamps and roles
+   * @returns {Promise<ChatMessage[]>} Array of chat messages with timestamps and roles
    * @throws {Error} If the API request fails or projectId is invalid
    *
    * @example
@@ -112,7 +441,7 @@ export const campaignAPI = {
    * });
    * ```
    */
-  getChatHistory: async (projectId: string) => {
+  getChatHistory: async (projectId: string): Promise<ChatMessage[]> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/chat-history/${projectId}`,
     );
@@ -126,7 +455,7 @@ export const campaignAPI = {
    * This action is irreversible and will remove all context from the AI assistant.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @returns {Promise<Object>} Confirmation response
+   * @returns {Promise<ApiSuccessResponse>} Confirmation response
    * @throws {Error} If the API request fails or projectId is invalid
    *
    * @example
@@ -135,7 +464,7 @@ export const campaignAPI = {
    * console.log('Chat history cleared - AI will start fresh');
    * ```
    */
-  clearChatHistory: async (projectId: string) => {
+  clearChatHistory: async (projectId: string): Promise<ApiSuccessResponse> => {
     const response = await api.delete(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/chat-history/${projectId}`,
     );
@@ -150,34 +479,29 @@ export const campaignAPI = {
    * the user has finalized their campaign structure.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @param {Object} data - Complete campaign data structure
-   * @param {Array} data.campaigns - Array of campaign objects
-   * @param {Array} data.adSets - Array of ad set objects (grouped ads with targeting)
-   * @param {Array} data.ads - Array of individual ad objects (copy, creative, CTA)
-   * @param {Array} data.personas - Array of target persona/audience definitions
-   * @returns {Promise<Object>} Saved campaign data with server-generated IDs
+   * @param {CampaignData} data - Complete campaign data structure
+   * @param {Campaign[]} data.campaigns - Array of campaign objects
+   * @param {AdSet[]} data.adSets - Array of ad set objects (grouped ads with targeting)
+   * @param {Ad[]} data.ads - Array of individual ad objects (copy, creative, CTA)
+   * @param {Persona[]} data.personas - Array of target persona/audience definitions
+   * @returns {Promise<CampaignData>} Saved campaign data with server-generated IDs
    * @throws {Error} If the API request fails or data structure is invalid
    *
    * @example
    * ```typescript
-   * const campaignData = {
+   * const campaignData: CampaignData = {
    *   campaigns: [{ name: 'Summer Sale', objective: 'CONVERSIONS' }],
-   *   adSets: [{ name: 'Young Adults 18-25', targeting: {...} }],
+   *   adSets: [{ name: 'Young Adults 18-25', targeting: { locations: ['Dhaka'] } }],
    *   ads: [{ headline: 'Save 50%!', body: '...', cta: 'SHOP_NOW' }],
-   *   personas: [{ name: 'Tech Enthusiast', age: '18-35', interests: [...] }]
+   *   personas: [{ name: 'Tech Enthusiast', age: '18-35', interests: ['technology'] }]
    * };
    * const saved = await campaignAPI.saveCampaignData('project-123', campaignData);
    * ```
    */
   saveCampaignData: async (
     projectId: string,
-    data: {
-      campaigns: any[];
-      adSets: any[];
-      ads: any[];
-      personas: any[];
-    },
-  ) => {
+    data: CampaignData,
+  ): Promise<CampaignData> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/data/${projectId}`,
       data,
@@ -192,7 +516,7 @@ export const campaignAPI = {
    * ads, and personas previously saved for this project.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @returns {Promise<Object>} Campaign data object containing campaigns, adSets, ads, and personas arrays
+   * @returns {Promise<CampaignData>} Campaign data object containing campaigns, adSets, ads, and personas arrays
    * @throws {Error} If the API request fails or projectId is invalid
    *
    * @example
@@ -202,7 +526,7 @@ export const campaignAPI = {
    * console.log(`Total ads: ${data.ads.length}`);
    * ```
    */
-  getCampaignData: async (projectId: string) => {
+  getCampaignData: async (projectId: string): Promise<CampaignData> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/data/${projectId}`,
     );
@@ -216,13 +540,13 @@ export const campaignAPI = {
    * awareness stage. Uses AI to generate headlines, body text, and call-to-action
    * that align with best practices for the chosen format.
    *
-   * @param {Object} params - Ad generation parameters
+   * @param {GenerateAdParams} params - Ad generation parameters
    * @param {string} params.product - Product or service being advertised
    * @param {string} params.persona - Target audience persona/segment
    * @param {string} params.awareness_stage - Customer awareness level (e.g., 'problem-aware', 'solution-aware', 'product-aware')
    * @param {string} params.format - Ad format (e.g., 'single-image', 'carousel', 'video')
    * @param {string} [params.angle] - Optional creative angle or unique selling proposition
-   * @returns {Promise<Object>} Generated ad with headline, body, CTA, and additional variants
+   * @returns {Promise<GeneratedAd>} Generated ad with headline, body, CTA, and additional variants
    * @throws {Error} If the API request fails or required parameters are missing
    *
    * @example
@@ -238,13 +562,7 @@ export const campaignAPI = {
    * console.log(ad.cta); // "Start Tracking"
    * ```
    */
-  generateAd: async (params: {
-    product: string;
-    persona: string;
-    awareness_stage: string;
-    format: string;
-    angle?: string;
-  }) => {
+  generateAd: async (params: GenerateAdParams): Promise<GeneratedAd> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/generate-ad`,
       params,
@@ -260,9 +578,9 @@ export const campaignAPI = {
    * while maintaining the core message and intent.
    *
    * @param {string} projectId - The unique identifier of the marketing project
-   * @param {Object} currentAd - The current ad object to be improved
+   * @param {Ad} currentAd - The current ad object to be improved
    * @param {string} feedback - User feedback describing desired improvements (e.g., "Make it more urgent", "Focus on price value")
-   * @returns {Promise<Object>} Improved ad copy with revised headline, body, and CTA
+   * @returns {Promise<GeneratedAd>} Improved ad copy with revised headline, body, and CTA
    * @throws {Error} If the API request fails or parameters are invalid
    *
    * @example
@@ -275,7 +593,7 @@ export const campaignAPI = {
    * console.log(improvedAd.headline); // Updated with social proof element
    * ```
    */
-  improveAd: async (projectId: string, currentAd: any, feedback: string) => {
+  improveAd: async (projectId: string, currentAd: Ad, feedback: string): Promise<GeneratedAd> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/improve-ad/${projectId}`,
       {
@@ -299,8 +617,8 @@ export const campaignAPI = {
    * @param {string} adAccountId - Meta ad account ID for billing and management
    * @param {string} [pixelId] - Optional Meta Pixel ID for conversion tracking
    * @param {string} [businessAccountId] - Optional Meta Business Manager account ID
-   * @param {Array<{cta: string, url: string}>} [ctasWithUrls] - Optional array mapping CTAs to destination URLs
-   * @returns {Promise<Object>} Publishing status and Meta campaign IDs
+   * @param {CtaWithUrl[]} [ctasWithUrls] - Optional array mapping CTAs to destination URLs
+   * @returns {Promise<PublishAdsResult>} Publishing status and Meta campaign IDs
    * @throws {Error} If the API request fails, authentication is invalid, or Meta API returns errors
    *
    * @example
@@ -328,8 +646,8 @@ export const campaignAPI = {
     adAccountId: string,
     pixelId?: string,
     businessAccountId?: string,
-    ctasWithUrls?: Array<{ cta: string; url: string }>,
-  ) => {
+    ctasWithUrls?: CtaWithUrl[],
+  ): Promise<PublishAdsResult> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/publish-ads/${projectId}`,
       {
@@ -361,7 +679,7 @@ export const mediaAPI = {
    *
    * @param {string} projectId - The unique identifier of the marketing project
    * @param {string} adId - The unique identifier of the ad
-   * @returns {Promise<Object>} Generated media object with URL, type, and metadata
+   * @returns {Promise<GeneratedMedia>} Generated media object with URL, type, and metadata
    * @throws {Error} If the API request fails or IDs are invalid
    *
    * @example
@@ -371,7 +689,7 @@ export const mediaAPI = {
    * console.log(media.type); // 'image' or 'video'
    * ```
    */
-  generateMedia: async (projectId: string, adId: string) => {
+  generateMedia: async (projectId: string, adId: string): Promise<GeneratedMedia> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/generate/${projectId}/${adId}`,
     );
@@ -386,7 +704,7 @@ export const mediaAPI = {
    *
    * @param {string} projectId - The unique identifier of the marketing project
    * @param {string[]} adIds - Array of ad IDs to generate media for
-   * @returns {Promise<Object>} Batch generation results with media URLs mapped to ad IDs
+   * @returns {Promise<BatchMediaResult>} Batch generation results with media URLs mapped to ad IDs
    * @throws {Error} If the API request fails or any ad ID is invalid
    *
    * @example
@@ -397,7 +715,7 @@ export const mediaAPI = {
    * });
    * ```
    */
-  generateMediaBatch: async (projectId: string, adIds: string[]) => {
+  generateMediaBatch: async (projectId: string, adIds: string[]): Promise<BatchMediaResult> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/generate-batch/${projectId}`,
       {
@@ -417,8 +735,8 @@ export const mediaAPI = {
    * @param {string} projectId - The unique identifier of the marketing project
    * @param {string} adId - The unique identifier of the ad
    * @param {string} prompt - Custom prompt describing desired changes (e.g., "Add a sunset background", "Make colors more vibrant")
-   * @param {Array<{x: number, y: number, width: number, height: number}>} [selectedRegions] - Optional array of image regions to focus on or modify
-   * @returns {Promise<Object>} Regenerated media with updated URL
+   * @param {MediaRegion[]} [selectedRegions] - Optional array of image regions to focus on or modify
+   * @returns {Promise<GeneratedMedia>} Regenerated media with updated URL
    * @throws {Error} If the API request fails or parameters are invalid
    *
    * @example
@@ -436,13 +754,8 @@ export const mediaAPI = {
     projectId: string,
     adId: string,
     prompt: string,
-    selectedRegions?: Array<{
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }>,
-  ) => {
+    selectedRegions?: MediaRegion[],
+  ): Promise<GeneratedMedia> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/regenerate/${projectId}/${adId}`,
       {
@@ -464,7 +777,7 @@ export const mediaAPI = {
    * @param {string} adId - The unique identifier of the ad
    * @param {string} mediaUrl - The URL of the uploaded media
    * @param {"image" | "video"} mediaType - The type of media being uploaded
-   * @returns {Promise<Object>} Confirmation with saved media details
+   * @returns {Promise<ApiSuccessResponse>} Confirmation with saved media details
    * @throws {Error} If the API request fails or media URL is invalid
    *
    * @example
@@ -483,7 +796,7 @@ export const mediaAPI = {
     adId: string,
     mediaUrl: string,
     mediaType: "image" | "video",
-  ) => {
+  ): Promise<ApiSuccessResponse> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/save/${projectId}/${adId}`,
       {
@@ -501,7 +814,7 @@ export const mediaAPI = {
    * required for direct client-side uploads to ImageKit. This enables secure
    * media uploads without exposing API keys in the frontend.
    *
-   * @returns {Promise<Object>} ImageKit auth parameters including signature, token, and expiration
+   * @returns {Promise<ImageKitAuth>} ImageKit auth parameters including signature, token, and expiration
    * @throws {Error} If the API request fails or ImageKit is not configured
    *
    * @example
@@ -514,7 +827,7 @@ export const mediaAPI = {
    * });
    * ```
    */
-  getImageKitAuth: async () => {
+  getImageKitAuth: async (): Promise<ImageKitAuth> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}imagekit/auth`,
     );
@@ -529,7 +842,7 @@ export const mediaAPI = {
    *
    * @param {string} query - City name search query
    * @param {string} [country="BD"] - ISO country code (defaults to Bangladesh)
-   * @returns {Promise<Array>} Array of matching cities with IDs, names, and Meta targeting keys
+   * @returns {Promise<City[]>} Array of matching cities with IDs, names, and Meta targeting keys
    * @throws {Error} If the API request fails or query is empty
    *
    * @example
@@ -540,7 +853,7 @@ export const mediaAPI = {
    * });
    * ```
    */
-  searchCities: async (query: string, country: string = "BD") => {
+  searchCities: async (query: string, country: string = "BD"): Promise<City[]> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/search-cities?q=${encodeURIComponent(
         query,
@@ -555,7 +868,7 @@ export const mediaAPI = {
    * Returns a pre-defined list of major Bangladeshi cities with their official
    * Meta targeting keys. Useful for quick targeting setup without search.
    *
-   * @returns {Promise<Array>} Array of common Bangladesh cities with Meta targeting data
+   * @returns {Promise<City[]>} Array of common Bangladesh cities with Meta targeting data
    * @throws {Error} If the API request fails
    *
    * @example
@@ -564,7 +877,7 @@ export const mediaAPI = {
    * // Returns: [{ name: 'Dhaka', key: '123', ... }, { name: 'Chittagong', key: '456', ... }]
    * ```
    */
-  getCommonCities: async () => {
+  getCommonCities: async (): Promise<City[]> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/common-cities`,
     );
@@ -587,7 +900,7 @@ export const metaAPI = {
    * the authorization URL that the user should be redirected to for granting
    * permissions to manage their Facebook pages and ad accounts.
    *
-   * @returns {Promise<Object>} OAuth data including authorization URL and state token
+   * @returns {Promise<MetaAuthData>} OAuth data including authorization URL and state token
    * @throws {Error} If the API request fails or OAuth configuration is invalid
    *
    * @example
@@ -596,7 +909,7 @@ export const metaAPI = {
    * window.location.href = authData.authUrl; // Redirect user to Facebook
    * ```
    */
-  initiateAuth: async () => {
+  initiateAuth: async (): Promise<MetaAuthData> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/facebook`,
     );
@@ -610,7 +923,7 @@ export const metaAPI = {
    * business accounts, ad accounts, and current permission status. This data
    * is used to populate account selection interfaces.
    *
-   * @returns {Promise<Object>} User data including profile, pages, business accounts, and ad accounts
+   * @returns {Promise<MetaUserData>} User data including profile, pages, business accounts, and ad accounts
    * @throws {Error} If the API request fails or user is not authenticated
    *
    * @example
@@ -621,7 +934,7 @@ export const metaAPI = {
    * console.log(userData.businessAccounts); // Business Manager accounts
    * ```
    */
-  getUserData: async () => {
+  getUserData: async (): Promise<MetaUserData> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/user-data`,
     );
@@ -635,11 +948,11 @@ export const metaAPI = {
    * ad account to use for campaign operations. These selections are used as
    * defaults for subsequent API calls.
    *
-   * @param {Object} data - Selection data
+   * @param {MetaSelections} data - Selection data
    * @param {string[]} data.selectedPageIds - Array of Facebook page IDs to use
    * @param {string} data.selectedBusinessAccountId - Meta Business Manager account ID
    * @param {string} data.selectedAdsAccountId - Meta Ads account ID for billing
-   * @returns {Promise<Object>} Confirmation of saved selections
+   * @returns {Promise<ApiSuccessResponse>} Confirmation of saved selections
    * @throws {Error} If the API request fails or selections are invalid
    *
    * @example
@@ -651,11 +964,7 @@ export const metaAPI = {
    * });
    * ```
    */
-  updateSelections: async (data: {
-    selectedPageIds: string[];
-    selectedBusinessAccountId: string;
-    selectedAdsAccountId: string;
-  }) => {
+  updateSelections: async (data: MetaSelections): Promise<ApiSuccessResponse> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/update-selections`,
       data,
@@ -671,7 +980,7 @@ export const metaAPI = {
    * retargeting, and measuring ad campaign effectiveness.
    *
    * @param {string} businessAccountId - Meta Business Manager account ID
-   * @returns {Promise<Array>} Array of pixel objects with IDs, names, and configuration
+   * @returns {Promise<MetaPixel[]>} Array of pixel objects with IDs, names, and configuration
    * @throws {Error} If the API request fails or business account is invalid
    *
    * @example
@@ -682,7 +991,7 @@ export const metaAPI = {
    * });
    * ```
    */
-  getPixels: async (businessAccountId: string) => {
+  getPixels: async (businessAccountId: string): Promise<MetaPixel[]> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/pixels`,
       {
@@ -700,7 +1009,7 @@ export const metaAPI = {
    * status and configured event types.
    *
    * @param {string} pageId - Facebook page ID to check
-   * @returns {Promise<Object>} Webhook status including subscribed events and configuration
+   * @returns {Promise<WebhookStatus>} Webhook status including subscribed events and configuration
    * @throws {Error} If the API request fails or page ID is invalid
    *
    * @example
@@ -710,7 +1019,7 @@ export const metaAPI = {
    * console.log(status.subscribedFields); // ['messages', 'messaging_postbacks']
    * ```
    */
-  getWebhookStatus: async (pageId: string) => {
+  getWebhookStatus: async (pageId: string): Promise<WebhookStatus> => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/webhook/status/${pageId}`,
     );
@@ -725,7 +1034,7 @@ export const metaAPI = {
    * other page interactions for automated responses and engagement tracking.
    *
    * @param {string} pageId - Facebook page ID to subscribe
-   * @returns {Promise<Object>} Subscription confirmation with active event types
+   * @returns {Promise<WebhookSubscription>} Subscription confirmation with active event types
    * @throws {Error} If the API request fails, page ID is invalid, or webhook is already subscribed
    *
    * @example
@@ -735,7 +1044,7 @@ export const metaAPI = {
    * console.log(result.subscribedFields); // Configured event types
    * ```
    */
-  subscribeWebhook: async (pageId: string) => {
+  subscribeWebhook: async (pageId: string): Promise<WebhookSubscription> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/webhook/subscribe`,
       {
@@ -752,7 +1061,7 @@ export const metaAPI = {
    * stop receiving real-time updates about page interactions after unsubscription.
    *
    * @param {string} pageId - Facebook page ID to unsubscribe
-   * @returns {Promise<Object>} Unsubscription confirmation
+   * @returns {Promise<ApiSuccessResponse>} Unsubscription confirmation
    * @throws {Error} If the API request fails or page ID is invalid
    *
    * @example
@@ -761,7 +1070,7 @@ export const metaAPI = {
    * console.log('Webhook disabled for page');
    * ```
    */
-  unsubscribeWebhook: async (pageId: string) => {
+  unsubscribeWebhook: async (pageId: string): Promise<ApiSuccessResponse> => {
     const response = await api.post(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/webhook/unsubscribe`,
       {
@@ -778,7 +1087,7 @@ export const metaAPI = {
    * deletes stored access tokens. This action is irreversible and will require
    * the user to re-authenticate to use Facebook features again.
    *
-   * @returns {Promise<Object>} Disconnection confirmation
+   * @returns {Promise<ApiSuccessResponse>} Disconnection confirmation
    * @throws {Error} If the API request fails
    *
    * @example
@@ -788,7 +1097,7 @@ export const metaAPI = {
    * // User must re-authenticate to use Meta features
    * ```
    */
-  disconnect: async () => {
+  disconnect: async (): Promise<ApiSuccessResponse> => {
     const response = await api.delete(
       `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}connect/facebook`,
     );
