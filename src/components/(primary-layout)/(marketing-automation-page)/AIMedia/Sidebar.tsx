@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { RootState } from "@/redux/store";
 import {
   FileVideo,
   Film,
@@ -55,7 +56,7 @@ export default function Sidebar({
   activeSidebar,
   setActiveSidebar,
 }: SidebarProps) {
-  const { accessToken, user } = useSelector((state: any) => state.auth);
+  const { accessToken, user } = useSelector((state: RootState) => state.auth);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

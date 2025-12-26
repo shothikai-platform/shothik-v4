@@ -8,6 +8,7 @@ import { Check, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 import SuccessCheckIcon from "../icons/SuccessCheckIcon";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -418,7 +419,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   planId,
 }) => {
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state: any) => state?.auth);
+  const { accessToken } = useSelector((state: RootState) => state?.auth);
 
   const handleAuthPopup = () => {
     if (!accessToken) {

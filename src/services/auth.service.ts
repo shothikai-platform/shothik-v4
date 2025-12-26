@@ -4,7 +4,7 @@ import { ENV } from "@/config/env";
 interface AuthResponse {
   success: boolean;
   message: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 export class AuthService {

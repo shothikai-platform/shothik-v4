@@ -1,18 +1,11 @@
 import api from "@/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
-interface Voice {
-  voice_id: string;
-  voice_name: string;
-  preview_audio_url?: string;
-  gender?: string;
-  age?: string;
-  accent?: string;
-}
-
-interface GroupedVoices {
-  [gender: string]: Voice[];
-}
+import type {
+  GroupedVoices,
+  RawGroupedVoices,
+  RawVoiceData,
+  VideoGenerationPayload,
+} from "@/types/media";
 
 interface Ad {
   id: string;
@@ -32,18 +25,6 @@ interface ScriptGenerationResponse {
   error?: string;
 }
 
-interface VideoGenerationPayload {
-  requestId: string; // Added for backend database model
-  video_inputs: any[];
-  aspect_ratio: string;
-  background_music?: any;
-  cta_end?: any;
-  webhook_url?: string;
-  name: string;
-  model_version: string;
-  metadata?: any; // Added for tracking additional data
-}
-
 // Fetch voices
 export const useVoices = () => {
   return useQuery<GroupedVoices>({
@@ -54,7 +35,7 @@ export const useVoices = () => {
       );
 
       // Get the actual data
-      const voicesData = data.success && data.data ? data.data : data;
+      const voicesData: RawGroupedVoices = data.success && data.data ? data.data : data;
 
       // Transform the data structure
       // API returns: { male: [{ name, gender, accents: [{id, accent_name, preview_url}] }] }
@@ -64,9 +45,9 @@ export const useVoices = () => {
       for (const gender in voicesData) {
         transformedData[gender] = [];
 
-        voicesData[gender].forEach((voice: any) => {
+        voicesData[gender].forEach((voice: RawVoiceData) => {
           // Flatten each accent into a separate voice entry
-          voice.accents.forEach((accent: any) => {
+          voice.accents.forEach((accent) => {
             transformedData[gender].push({
               voice_id: accent.id,
               voice_name: `${voice.name} - ${accent.accent_name}`,

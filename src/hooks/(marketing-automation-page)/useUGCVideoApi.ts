@@ -9,12 +9,12 @@ interface GenerateUGCVideoPayload {
   name?: string;
   text_prompt?: string;
   model_version?: "aurora_v1" | "aurora_v1_fast";
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 interface GenerateUGCVideoResponse {
   success: boolean;
-  data?: any;
+  data?: Record<string, unknown>;
   error?: string;
   message?: string;
 }

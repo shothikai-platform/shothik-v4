@@ -3,6 +3,7 @@
 import { metaAPI } from "@/services/marketing-automation.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 interface MetaUserData {
   user: {
@@ -38,7 +39,7 @@ interface MetaUserData {
 
 // Fetch Meta user data
 export const useMetaData = () => {
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   return useQuery<MetaUserData | null>({
     queryKey: ["metaData"],
@@ -80,7 +81,7 @@ export const useMetaDisconnect = () => {
 
 // Fetch pixels for a business account
 export const useMetaPixels = (businessAccountId: string) => {
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   return useQuery({
     queryKey: ["metaPixels", businessAccountId],
@@ -107,7 +108,7 @@ export const useUpdateMetaSelections = () => {
 
 // Get webhook subscription status for a page
 export const useWebhookStatus = (pageId: string) => {
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   return useQuery({
     queryKey: ["webhookStatus", pageId],

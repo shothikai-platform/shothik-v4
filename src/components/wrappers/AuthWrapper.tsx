@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 interface AuthWrapperProps {
   readonly children: React.ReactNode;
@@ -14,7 +15,7 @@ const AuthWrapper = ({ children, redirect }: AuthWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { accessToken } = useSelector((state: any) => state.auth);
+  const { accessToken } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     // Check for accessToken in Redux state or localStorage

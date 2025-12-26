@@ -2,6 +2,7 @@
 
 import type { TFeatureEndpoint } from "@/types/feature-endpoint.type";
 import type { TFeature } from "@/types/user-wallet.type";
+import type { RootState } from "@/redux/store";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
@@ -38,9 +39,9 @@ type ValidationResult = {
  */
 export const useAccessValidation = () => {
   const featureEndpoints = useSelector(
-    (state: any) => state.feature_endpoints?.featureEndpoints || [],
+    (state: RootState) => state.feature_endpoints?.featureEndpoints || [],
   );
-  const wallet = useSelector((state: any) => state.user_wallet?.wallet);
+  const wallet = useSelector((state: RootState) => state.user_wallet?.wallet);
 
   const validate = useMemo(() => {
     return (params: ValidationParams): ValidationResult => {

@@ -1,13 +1,14 @@
 // hooks/useStaticLogs.ts
 import { useState, useEffect, useRef } from "react";
+import type { AgentLog, LogHookResult, SessionStatus } from "@/types/logs";
 
 export const useStaticLogs = (
-  realLogs: any[],
+  realLogs: AgentLog[],
   isLoading: boolean,
   status: string,
-) => {
-  const [visibleLogs, setVisibleLogs] = useState<any[]>([]);
-  const sessionStatusRef = useRef<string>("processing");
+): LogHookResult => {
+  const [visibleLogs, setVisibleLogs] = useState<AgentLog[]>([]);
+  const sessionStatusRef = useRef<SessionStatus>("processing");
 
   useEffect(() => {
     sessionStatusRef.current = status;

@@ -7,7 +7,7 @@ export type TSettingsState = {
   layout?: "vertical" | "horizontal";
 
   // features settings
-  demo?: any;
+  demo?: Record<string, unknown>;
   paraphraseOptions: {
     paraphraseQuotations: boolean;
     avoidContractions: boolean;
