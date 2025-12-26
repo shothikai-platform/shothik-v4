@@ -1,5 +1,6 @@
 "use client";
 import { modes } from "@/_mock/tools/paraphrase";
+import { ENV } from "@/config/env";
 import { trySamples } from "@/_mock/trySamples";
 import { trackEvent } from "@/analysers/eventTracker";
 import { Button } from "@/components/ui/button";
@@ -504,8 +505,8 @@ const ParaphraseContend = () => {
 
   const fetchHistory = async () => {
     const API_BASE =
-      process.env.NEXT_PUBLIC_API_URL +
-      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/api`;
+      ENV.api_url +
+      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api`;
 
     // const API_BASE = "http://localhost:3050/api";
 
@@ -559,8 +560,8 @@ const ParaphraseContend = () => {
     // Reset completion flags
     setCompletedEvents({ plain: false, tagging: false, synonyms: false });
 
-    const socket = io(process.env.NEXT_PUBLIC_API_URL, {
-      path: `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/socket.io`,
+    const socket = io(ENV.api_url, {
+      path: `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/socket.io`,
       transports: ["websocket"],
       auth: { token: accessToken },
       reconnection: true,
@@ -899,8 +900,8 @@ const ParaphraseContend = () => {
     search = "",
   } = {}) => {
     const API_BASE =
-      process.env.NEXT_PUBLIC_API_URL +
-      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/api`;
+      ENV.api_url +
+      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api`;
 
     // const API_BASE = "http://localhost:3050/api";
     try {
@@ -1373,8 +1374,8 @@ const ParaphraseContend = () => {
 
   useEffect(() => {
     const API_BASE =
-      process.env.NEXT_PUBLIC_API_URL +
-      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/api`;
+      ENV.api_url +
+      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api`;
 
     // const API_BASE = "http://localhost:3050/api";
 
@@ -1857,7 +1858,7 @@ const ParaphraseContend = () => {
                 ) : null}
 
                 {showMessage.show &&
-                isModeLockedForUser(showMessage.Component, user?.package) ? (
+                  isModeLockedForUser(showMessage.Component, user?.package) ? (
                   <UpdateComponent Component={showMessage.Component} />
                 ) : null}
               </div>
@@ -1892,7 +1893,7 @@ const ParaphraseContend = () => {
 
       <MultipleFileUpload
         isMobile={isMobile}
-        setInput={() => {}}
+        setInput={() => { }}
         paidUser={paidUser}
         freezeWords={[]}
         selectedMode={selectedMode}

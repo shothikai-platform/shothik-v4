@@ -1,4 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+import { ENV } from "@/config/env";
 import { baseQuery } from "../config";
 
 export const toolsApiSlice = createApi({
@@ -20,7 +21,7 @@ export const toolsApiSlice = createApi({
     }),
     paraphraseForTagging: builder.mutation({
       query: (payload) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/api/paraphrase-for-tagging`,
+        url: `${ENV.api_url}/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api/paraphrase-for-tagging`,
         // url: `${process.env.NEXT_PUBLIC_PARAPHRASE_API_URL}/api/paraphrase-for-tagging`,
         method: "POST",
         body: payload,
@@ -37,7 +38,7 @@ export const toolsApiSlice = createApi({
     }),
     paraphrased: builder.mutation({
       query: (payload) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL}/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX}/api/paraphraseV2`,
+        url: `${ENV.api_url}/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api/paraphraseV2`,
         // url: `${process.env.NEXT_PUBLIC_PARAPHRASE_API_URL}/api/paraphraseV2`,
         method: "POST",
         body: payload,

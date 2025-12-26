@@ -1,4 +1,6 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL_WITH_PREFIX || "";
+import { ENV } from "@/config/env";
+
+const API_BASE = ENV.api_url + `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api`;
 
 export class ParaphraseServiceError extends Error {
   status: number;
