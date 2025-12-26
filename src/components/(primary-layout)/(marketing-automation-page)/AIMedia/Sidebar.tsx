@@ -52,6 +52,16 @@ interface SidebarProps {
   setActiveSidebar: (id: MediaSidebarSectionId) => void;
 }
 
+/**
+ * Render a vertical media navigation sidebar with selectable sections.
+ *
+ * Displays a list of media sections, highlights the currently active section,
+ * and calls `setActiveSidebar` when a section is clicked.
+ *
+ * @param activeSidebar - The id of the currently active sidebar section
+ * @param setActiveSidebar - Callback invoked with a section id to change the active section
+ * @returns The JSX element for the sidebar navigation
+ */
 export default function Sidebar({
   activeSidebar,
   setActiveSidebar,

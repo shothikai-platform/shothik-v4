@@ -32,7 +32,13 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import TransactionDetailModal from "./TransactionDetailModal";
 
-// Using native Date methods for consistency with project
+/**
+ * Render the account wallet section showing wallet summary, accessible features, and paginated payment and token transactions with detail modals.
+ *
+ * The component reads wallet and authentication state from Redux, synchronizes wallet data via react-query, and provides UI for viewing transaction details (payments and tokens) in modals. It also shows package/plan information, credits, expiration status, and a list of accessible features when present.
+ *
+ * @returns The component's rendered JSX: a wallet overview, an accessible-features list (when available), tabs for Payments and Credits with paginated transaction lists, and transaction detail modals.
+ */
 
 export default function AccountWalletSection() {
   const dispatch = useDispatch();

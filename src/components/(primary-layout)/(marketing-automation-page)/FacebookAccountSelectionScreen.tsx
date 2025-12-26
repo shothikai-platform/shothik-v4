@@ -87,6 +87,13 @@ interface FacebookData {
   selectedAdsAccountId: string;
 }
 
+/**
+ * Render a screen for selecting Facebook Pages, Business and Ad Accounts, optional Meta Pixels, and configuring CTA URLs before publishing ads for a project.
+ *
+ * Presents account and pixel selection UIs, displays CTA URL editing and a selection summary, manages loading and saving states, and invokes the publish flow for the selected ads.
+ *
+ * @returns The React element that provides the account/pixel selection interface, CTA configuration, and publish controls for the current project.
+ */
 export default function FacebookAccountSelectionScreen() {
   const { projectId } = useParams<{ projectId: string }>();
   const router = useRouter();
