@@ -85,8 +85,8 @@ export const useCustomModes = () => {
     if (apiError) {
       setError(
         apiError?.data?.error ||
-          apiError?.error ||
-          "Failed to load custom modes",
+        apiError?.error ||
+        "Failed to load custom modes",
       );
     }
   }, [apiError]);
@@ -227,10 +227,10 @@ export const useCustomModes = () => {
           const updatedModes = localCustomModes.map((mode) =>
             mode.id === modeId || mode._id === modeId
               ? {
-                  ...mode,
-                  name: trimmedName,
-                  updatedAt: new Date().toISOString(),
-                }
+                ...mode,
+                name: trimmedName,
+                updatedAt: new Date().toISOString(),
+              }
               : mode,
           );
           setLocalCustomModes(updatedModes);

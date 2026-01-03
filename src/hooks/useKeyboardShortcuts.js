@@ -25,6 +25,7 @@ const useKeyboardShortcuts = (shortcuts, enabled = true) => {
       if (event.altKey) keys.push("alt");
 
       // Add the actual key (lowercase)
+      if (!event.key) return;
       const key = event.key.toLowerCase();
       if (!["control", "shift", "alt", "meta"].includes(key)) {
         keys.push(key);

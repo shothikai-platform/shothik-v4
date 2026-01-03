@@ -89,6 +89,7 @@
     "marked": "^16.4.1",
     "marked-react": "^3.0.2",
     "mind-elixir": "^5.3.5",
+    "mongoose": "^9.1.1",
     "motion": "^12.23.24",
     "next": "16.0.7",
     "pdfmake": "^0.2.20",

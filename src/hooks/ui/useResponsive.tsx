@@ -31,23 +31,25 @@ const useResponsive = (
       case "between":
         return min && max
           ? window.matchMedia(`(min-width:${min}px) and (max-width:${max}px)`)
-              .matches
+            .matches
           : false;
       default: // "only"
         return min && max
           ? window.matchMedia(`(min-width:${min}px) and (max-width:${max}px)`)
-              .matches
+            .matches
           : min
             ? window.matchMedia(`(min-width:${min}px)`).matches
             : false;
     }
   };
 
-  const [matches, setMatches] = useState<boolean>(
-    typeof window !== "undefined" ? getMatches() : false,
-  );
+  const [matches, setMatches] = useState<boolean>(false);
 
   useEffect(() => {
+    // Set initial value on client side
+    setMatches(getMatches());
+
+    // Listen for resize
     const handleResize = () => setMatches(getMatches());
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

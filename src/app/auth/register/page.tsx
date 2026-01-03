@@ -1,5 +1,7 @@
+"use client";
+
 import React from 'react';
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/providers/AuthProvider';
 
 const RegisterPage = () => {
   const { register } = useAuth();
@@ -26,7 +28,14 @@ const RegisterPage = () => {
       return;
     }
 
-    await register(data);
+    try {
+      await register(data.name, data.email, data.password, data.country);
+      // Handle success (maybe redirect?)
+      alert("Registration successful!");
+      window.location.href = '/auth/login';
+    } catch (err) {
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -60,7 +69,7 @@ const RegisterPage = () => {
             <option value="Bangladesh">Bangladesh</option>
             <option value="India">India</option>
             <option value="USA">USA</option>
-            <!-- Add more countries as needed -->
+
           </select>
         </div>
 

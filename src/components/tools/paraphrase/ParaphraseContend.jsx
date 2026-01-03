@@ -504,9 +504,7 @@ const ParaphraseContend = () => {
   };
 
   const fetchHistory = async () => {
-    const API_BASE =
-      ENV.api_url +
-      `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/api`;
+    const API_BASE = ENV.api_url + "/api";
 
     // const API_BASE = "http://localhost:3050/api";
 
@@ -561,8 +559,8 @@ const ParaphraseContend = () => {
     setCompletedEvents({ plain: false, tagging: false, synonyms: false });
 
     const socket = io(ENV.api_url, {
-      path: `/${process.env.NEXT_PUBLIC_PARAPHRASE_REDIRECT_PREFIX || "paraphrase"}/socket.io`,
-      transports: ["websocket"],
+      path: "/socket.io",
+      transports: ["polling", "websocket"],
       auth: { token: accessToken },
       reconnection: true,
       reconnectionAttempts: 5,
@@ -1301,7 +1299,16 @@ const ParaphraseContend = () => {
         eventId: newEventId, // Always use the newly generated eventId
       };
 
-      await paraphrased(payload).unwrap();
+      // Emit event directly via socket
+      if (socketRef.current) {
+        socketRef.current.emit("paraphrase", payload);
+      } else {
+        console.error("Socket not connected");
+        return;
+      }
+
+      // Removed RTK Query mutation since data flow is via socket
+      // await paraphrased(payload).unwrap();
 
       if (isMobile && outputRef.current) {
         outputRef.current.scrollIntoView({

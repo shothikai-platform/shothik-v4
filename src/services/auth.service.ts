@@ -8,21 +8,21 @@ interface AuthResponse {
 }
 
 export class AuthService {
-  private apiUrl: string = ENV.api_url;
+  private apiUrl: string = `${ENV.api_url}/api`;
 
   async login(
     email: string,
     password: string,
     authtype: string,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/login`, { email, password, authtype });
+    return axios.post(`${this.apiUrl}/auth/login`, { email, password, authtype });
   }
 
   async oneTapLogin(
     email: string,
     oneTapUser: boolean,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/login`, { email, oneTapUser });
+    return axios.post(`${this.apiUrl}/auth/login`, { email, oneTapUser });
   }
 
   async loginV2(
@@ -40,12 +40,12 @@ export class AuthService {
     country: string,
     authtype: string,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/register`, {
+    return axios.post(`${this.apiUrl}/auth/register`, {
       name,
       email,
       password,
       country,
-      authtype,
+      auth_type: authtype,
     });
   }
 
@@ -53,7 +53,7 @@ export class AuthService {
     code: string,
     country: string,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/google-login`, { code, country });
+    return axios.post(`${this.apiUrl}/auth/google-login`, { code, country });
   }
 
   getGoogleOAuthUrl(): string {
@@ -61,29 +61,35 @@ export class AuthService {
   }
 
   async forgotPassword(email: string): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/forgot-password`, { email });
+    return axios.post(`${this.apiUrl}/auth/forgot-password`, { email });
   }
 
   async resetPassword(
     key: string,
     password: string,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/reset-password/${key}`, { password });
+    return axios.post(`${this.apiUrl}/auth/reset-password/${key}`, { password });
   }
 
   async resendVerificationEmail(
     email: string,
   ): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/send-verify-email`, { email });
+    return axios.post(`${this.apiUrl}/auth/send-verify-email`, { email });
   }
 
   async verifyEmail(key: string): Promise<AxiosResponse<AuthResponse>> {
-    return axios.post(`${this.apiUrl}/verify-email/${key}`);
+    return axios.post(`${this.apiUrl}/auth/verify-email/${key}`);
   }
 
   async regenerateToken(token: string): Promise<AxiosResponse<AuthResponse>> {
-    return axios.get(`${this.apiUrl}/token-generate`, {
+    return axios.get(`${this.apiUrl}/auth/token-generate`, {
       headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  async getUser(token: string): Promise<AxiosResponse<AuthResponse>> {
+    return axios.get(`${this.apiUrl}/user/profile`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
   }
 

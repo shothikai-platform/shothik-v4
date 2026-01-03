@@ -1,3 +1,4 @@
+"use client";
 // src/components/tools/paraphrase/ModeNavigation.jsx
 import { modes } from "@/_mock/tools/paraphrase";
 import { StepRange } from "@/components/common/StepRange";
@@ -60,6 +61,11 @@ const ModeNavigation = ({
     trackModeUsage,
     clearError,
   } = useCustomModes();
+
+  // Hydration fix: Ensure client matches server initial render (Guest/Free)
+  const [hasMounted, setHasMounted] = React.useState(false);
+  React.useEffect(() => { setHasMounted(true); }, []);
+  const effectivePackage = hasMounted ? (userPackage || "free") : "free";
 
   // Modal state
   const [customModeModalOpen, setCustomModeModalOpen] = React.useState(false);
@@ -170,7 +176,7 @@ const ModeNavigation = ({
       return;
     }
 
-    const isValid = modeObj.package.includes(userPackage || "free");
+    const isValid = modeObj.package.includes(effectivePackage);
 
     if (isValid) {
       setSelectedMode(value);
@@ -193,8 +199,8 @@ const ModeNavigation = ({
   // Build list of tabs
   const displayedModes = extraMode
     ? [...initialModes, allModes.find((m) => m.value === extraMode)].filter(
-        Boolean,
-      ) // Remove undefined
+      Boolean,
+    ) // Remove undefined
     : initialModes;
 
   // Ensure extraMode stays in sync with selectedMode
@@ -391,7 +397,7 @@ const ModeNavigation = ({
                         <span
                           className={`inline-flex items-center gap-1 ${mode.value === selectedMode ? "text-[#00AB55]" : "text-[#858481]"}`}
                         >
-                          {!mode.package.includes(userPackage || "free") && (
+                          {!mode.package.includes(effectivePackage) && (
                             <Lock className="h-3 w-3" />
                           )}
                           {mode.value}
@@ -433,7 +439,7 @@ const ModeNavigation = ({
                     }
                   >
                     <span className="inline-flex items-center gap-2">
-                      {!mode.package.includes(userPackage || "free") && (
+                      {!mode.package.includes(effectivePackage) && (
                         <Lock className="h-3 w-3" />
                       )}
                       {mode.isCustom && (
