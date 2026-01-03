@@ -14,3 +14,5 @@ fasttext-wheel
 nltk
 numpy
 scipy
+accelerate
+protobuf
