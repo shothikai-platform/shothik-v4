@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
 # 2. Install Python Dependencies
 # Install Torch CPU first to avoid 2GB+ CUDA download
 COPY requirements.txt .
-RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt
 
 # 3. Setup Directories & Scripts
