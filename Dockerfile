@@ -1,75 +1,49 @@
-FROM node:18-slim AS builder
+# Production Cloud Build Dockerfile
+# Optimized for caching and CPU performance
+
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies for Sharp and other native modules
+# 1. Install System Dependencies
 RUN apt-get update && apt-get install -y \
-  build-essential \
-  python3 \
-  pkg-config \
-  libvips-dev \
-  libcfitsio-dev \
-  && rm -rf /var/lib/apt/lists/*
+    build-essential \
+    curl \
+    git \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY package*.json ./
+# 2. Install Python Dependencies
+# Install Torch CPU first to avoid 2GB+ CUDA download
+COPY requirements-base.txt requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Remove any existing Sharp installation and do a clean install
-RUN npm ci --include=optional
-RUN npm uninstall sharp
-RUN npm install --platform=linux --arch=x64 sharp
+# 3. Setup Directories & Scripts
+RUN mkdir -p /models/paraphrase \
+    /models/translation \
+    /models/vectors \
+    /models/stanza_resources \
+    /models/fasttext
 
-COPY . .
+COPY scripts /app/scripts
 
-ARG NEXT_PUBLIC_SOCKET_URL
-ARG NEXT_PUBLIC_API_URL_WITH_PREFIX
-ARG NEXT_PUBLIC_DOMAIN_URL
-ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
-ARG NEXT_PUBLIC_PARAPHRASE_API_URL
-ARG NEXT_PUBLIC_PARAPHRASE_SOCKET_URL
+# 4. BAKING MODELS
+RUN python /app/scripts/download_and_convert_models.py --step t5
+RUN python -m spacy download en_core_web_sm
 
-ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
-ENV NEXT_PUBLIC_API_URL_WITH_PREFIX=$NEXT_PUBLIC_API_URL_WITH_PREFIX
-ENV NEXT_PUBLIC_DOMAIN_URL=$NEXT_PUBLIC_DOMAIN_URL
-ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
-ENV NEXT_PUBLIC_PARAPHRASE_API_URL=$NEXT_PUBLIC_PARAPHRASE_API_URL
-ENV NEXT_PUBLIC_PARAPHRASE_SOCKET_URL=$NEXT_PUBLIC_PARAPHRASE_SOCKET_URL
+# 5. Copy Application Code
+COPY backend-services/nlp-inference-service .
 
-RUN npm run build
+# 6. Runtime Configuration
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV STANZA_RESOURCES_DIR=/models/stanza_resources
+# Offline mode ensures we use baked models and don't download at runtime
+ENV TRANSFORMERS_OFFLINE=1
+ENV HF_HUB_OFFLINE=1
 
-# ---------- Runner ----------
-FROM node:18-slim AS runner
+EXPOSE 8080
 
-WORKDIR /app
-
-# Install only runtime dependencies for Sharp
-RUN apt-get update && apt-get install -y \
-  libvips42 \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY package*.json ./
-
-# Install production dependencies and ensure Sharp works
-RUN npm ci --only=production --include=optional
-RUN npm uninstall sharp  
-RUN npm install --platform=linux --arch=x64 sharp
-
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-
-ARG NEXT_PUBLIC_SOCKET_URL
-ARG NEXT_PUBLIC_API_URL_WITH_PREFIX
-ARG NEXT_PUBLIC_DOMAIN_URL
-ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
-ARG NEXT_PUBLIC_PARAPHRASE_API_URL
-ARG NEXT_PUBLIC_PARAPHRASE_SOCKET_URL
-
-ENV NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL
-ENV NEXT_PUBLIC_API_URL_WITH_PREFIX=$NEXT_PUBLIC_API_URL_WITH_PREFIX
-ENV NEXT_PUBLIC_DOMAIN_URL=$NEXT_PUBLIC_DOMAIN_URL
-ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
-ENV NEXT_PUBLIC_PARAPHRASE_API_URL=$NEXT_PUBLIC_PARAPHRASE_API_URL
-ENV NEXT_PUBLIC_PARAPHRASE_SOCKET_URL=$NEXT_PUBLIC_PARAPHRASE_SOCKET_URL
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]
