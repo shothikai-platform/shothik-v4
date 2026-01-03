@@ -29,11 +29,12 @@ RUN mkdir -p /models/paraphrase \
 COPY scripts /app/scripts
 
 # 4. BAKING MODELS (The Heavy Step)
-# Runs during Cloud Build. Downloads and converts T5, NLLB, etc.
-# Note: Provide arguments compatible with your script. 
-# Step 1132: You added argparse --step.
-# We want ALL steps.
-RUN python /app/scripts/download_and_convert_models.py --step all
+# Runs during Cloud Build. Downloads T5 (Paraphrase).
+# We skip 'all' to avoid OOM on NLLB for now, and Stanza is unused (we use SpaCy).
+RUN python /app/scripts/download_and_convert_models.py --step t5
+
+# Download SpaCy Model (Used for Entity/Freeze)
+RUN python -m spacy download en_core_web_sm
 
 # 5. Copy Application Code
 COPY . .
