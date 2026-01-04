@@ -18,10 +18,15 @@ if docker pull habiib91/nlp-inference-service:latest; then
     echo "🎉 NLP Backend is LIVE (Production Mode)."
 else
     echo "⚠️  Cloud Image not ready yet."
-    echo "🔄 Falling back to Local Dev Setup (Downloads models locally)..."
+    echo "🔄 Starting with LOCALLY built image (nlp-inference-service:latest)..."
     
-    # Run the setup script we created earlier
-    ./backend-services/nlp-inference-service/setup-docker-files.sh
+    # Run the locally built image
+    if ! docker image inspect nlp-inference-service:latest >/dev/null 2>&1; then
+        echo "❌ ERROR: Local image nlp-inference-service:latest not found!"
+        echo "   Please build the image first or ensure it exists locally."
+        exit 1
+    fi
+    docker run -d --name nlp-service -p 8080:8080 nlp-inference-service:latest
 fi
 
 echo ""

@@ -60,6 +60,7 @@ import MultipleFileUpload from "../common/MultipleFileUpload";
 import UserActionInput from "../common/UserActionInput";
 import AutoFreezeSettings from "./AutoFreezeSettings";
 import AutoParaphraseSettings from "./AutoParaphraseSettings";
+import SocketDebug from "../../common/SocketDebug";
 
 // Define the punctuation marks that require specific spacing rules.
 // This constant can be easily updated if more punctuation types need to be included.
@@ -504,7 +505,7 @@ const ParaphraseContend = () => {
   };
 
   const fetchHistory = async () => {
-    const API_BASE = ENV.api_url + "/api";
+    const API_BASE = ENV.api_url;
 
     // const API_BASE = "http://localhost:3050/api";
 
@@ -558,8 +559,8 @@ const ParaphraseContend = () => {
     // Reset completion flags
     setCompletedEvents({ plain: false, tagging: false, synonyms: false });
 
-    const socket = io(ENV.api_url, {
-      path: "/socket.io",
+    const socket = io("http://localhost:5001", {
+      path: "/paraphrase/socket.io",
       transports: ["polling", "websocket"],
       auth: { token: accessToken },
       reconnection: true,
@@ -1648,7 +1649,8 @@ const ParaphraseContend = () => {
           </div>
         </div>
 
-        <div className="flex w-full min-w-0 flex-1 gap-2 overflow-visible">
+        {process.env.NODE_ENV === "development" && <SocketDebug />}
+        <div className="flex w-full flex-col gap-5 lg:gap-8">
           <Card className="border-border mt-0 flex w-full min-w-0 flex-1 flex-col gap-0 overflow-visible rounded-[12px] rounded-tl-none border py-0">
             <div className="border-border flex items-center border-b px-2 py-1 md:hidden">
               <LanguageMenu
