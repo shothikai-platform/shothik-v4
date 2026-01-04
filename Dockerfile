@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PyTorch (CPU) - Expensive Layer
+# We install globally in the builder
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir \
     torch==2.1.0 \
@@ -18,18 +19,18 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     torchaudio==2.1.0 \
     --index-url https://download.pytorch.org/whl/cpu
 
-# Install Dependencies
+# Install Dependencies (Globally)
 COPY requirements-base.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-cache-dir -r requirements-base.txt --target /install
+    pip install --no-cache-dir -r requirements-base.txt
 
-# Download Models (Bake into Builder)
+# Download Models
 COPY scripts /build/scripts
-# T5 disabled temporarily for stability, can enable if memory permits
+# T5 disabled temporarily
 # RUN python /build/scripts/download_and_convert_models.py --step t5
-RUN python -m spacy download en_core_web_sm --target /install
+RUN python -m spacy download en_core_web_sm
 
-# Validating Model Paths (Simulate Install)
+# Validating Model Paths
 RUN mkdir -p /models/paraphrase /models/translation /models/vectors /models/stanza_resources /models/fasttext
 
 # Stage 2: Runtime (Slim)
@@ -37,23 +38,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Runtime System Deps (libgomp for OMP)
+# Runtime System Deps
 RUN apt-get update && apt-get install -y \
     libgomp1 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Python packages from builder
-COPY --from=builder /install /usr/local/lib/python3.11/site-packages
-# Copy Torch if it wasn't in /install (Torch installs to site-packages by default, wait)
-# The builder installed torch to default site-packages, not /install?
-# Ah, builder step 2 installed to default. Step 3 installed to /install.
-# We need to copy BOTH.
-# Actually, let's simplify: Just install everything to default in builder, and copy site-packages.
-# Or use the user's snippet logic.
-
-# REVISED STRATEGY: 
-# Copy from /usr/local/lib/python3.11/site-packages (Torch)
+# Copy Python packages from builder (Standard Location)
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
