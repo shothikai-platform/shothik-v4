@@ -132,7 +132,7 @@ shothik-v4/
    This will:
    - Clear port 8080
    - Pull or run the NLP Docker image
-   - Start the service at `http://localhost:3000`
+   - Start the service at `http://localhost:8080`
 
    Alternatively, build and run manually:
    ```bash
