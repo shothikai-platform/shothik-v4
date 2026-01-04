@@ -7,6 +7,9 @@ on:
       - "main"
     paths:
       - "backend-services/nlp-inference-service/**"
+      - "Dockerfile"
+      - "scripts/**"
+      - "requirements-base.txt"
 
 jobs:
   docker:
