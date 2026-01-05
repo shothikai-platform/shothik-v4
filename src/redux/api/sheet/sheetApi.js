@@ -111,6 +111,32 @@ export const sheetApiSlice = createApi({
       providesTags: ["MyChats"],
     }),
 
+    // Upload files for Sheet
+    uploadSheetFiles: builder.mutation({
+      query: ({ files, userId }) => {
+        const formData = new FormData();
+        const fileArray = Array.isArray(files) ? files : [files];
+        fileArray.forEach((file) => {
+          formData.append("files", file);
+        });
+        if (userId) {
+          formData.append("user_id", userId);
+        }
+        return {
+          url: "/upload-file",
+          method: "POST",
+          body: formData,
+        };
+      },
+      transformErrorResponse: (response) => {
+        return {
+          status: response.status,
+          data: response.data || "Upload failed",
+          originalError: response,
+        };
+      },
+    }),
+
     // Save edited sheet data - try multiple approaches
     saveEditedSheetData: builder.mutation({
       query: ({
@@ -152,4 +178,5 @@ export const {
   useGetChatHistoryQuery,
   useGetMyChatsQuery,
   useSaveEditedSheetDataMutation,
+  useUploadSheetFilesMutation,
 } = sheetApiSlice;
