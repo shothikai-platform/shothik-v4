@@ -112,6 +112,18 @@ export class AuthService {
       headers: { Authorization: `Bearer ${token}` },
     });
   }
+
+  async validateToken(token: string): Promise<any> {
+    try {
+      const response = await this.getUser(token);
+      if (response.data) {
+        return (response.data as any).data || response.data;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
 }
 
 export default AuthService;
