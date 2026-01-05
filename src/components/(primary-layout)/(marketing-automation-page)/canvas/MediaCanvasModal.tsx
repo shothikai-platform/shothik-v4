@@ -57,9 +57,10 @@ export default function MediaCanvasModal({
     // TODO: Replace with actual API call
     setTimeout(() => {
       // Simulate generated media
-      const placeholderImage = `https://via.placeholder.com/1080x1080/667eea/ffffff?text=${encodeURIComponent(
-        isVideoFormat ? "Generated Video" : "Generated Image",
-      )}`;
+      // Use a data URL to avoid external dependency and ensure download works in offline/restricted environments
+      const placeholderImage = isVideoFormat
+        ? "data:video/mp4;base64,AAAA" // Minimal invalid video but string nonetheless
+        : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
       setGeneratedMedia(placeholderImage);
       setMediaHistory((prev) => [...prev, placeholderImage]);
       setIsGenerating(false);
@@ -73,9 +74,7 @@ export default function MediaCanvasModal({
 
     // TODO: Replace with actual API call
     setTimeout(() => {
-      const editedImage = `https://via.placeholder.com/1080x1080/f093fb/ffffff?text=${encodeURIComponent(
-        "Edited: " + editPrompt.substring(0, 20),
-      )}`;
+      const editedImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
       setGeneratedMedia(editedImage);
       setMediaHistory((prev) => [...prev, editedImage]);
       setEditPrompt("");
@@ -99,14 +98,30 @@ export default function MediaCanvasModal({
     });
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!generatedMedia) return;
 
-    // TODO: Implement actual download
-    const link = document.createElement("a");
-    link.href = generatedMedia;
-    link.download = `${ad.headline}-media.${isVideoFormat ? "mp4" : "png"}`;
-    link.click();
+    try {
+      const response = await fetch(generatedMedia);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${ad.headline}-media.${isVideoFormat ? "mp4" : "png"}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading media:", error);
+      const link = document.createElement("a");
+      link.href = generatedMedia;
+      link.download = `${ad.headline}-media.${isVideoFormat ? "mp4" : "png"}`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
