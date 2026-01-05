@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Copy, Trash2 } from "lucide-react";
 
 // Utility to count words and sentences
@@ -21,21 +26,35 @@ const ActionToolbar = ({ text, handleCopy, handleClear }) => {
         <span className="hidden xl:inline">{sentences} /</span> {words} Words
       </div>
 
-      <button
-        onClick={handleClear}
-        className="hover:bg-muted flex size-8 items-center justify-center rounded"
-        title="Delete"
-      >
-        <Trash2 className="size-4" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleClear}
+            className="hover:bg-muted flex size-8 items-center justify-center rounded"
+            aria-label="Clear text"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Clear text</p>
+        </TooltipContent>
+      </Tooltip>
 
-      <button
-        onClick={handleCopy}
-        className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
-        title="Copy"
-      >
-        <Copy className="size-4" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleCopy}
+            className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
+            aria-label="Copy text"
+          >
+            <Copy className="size-4" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Copy text</p>
+        </TooltipContent>
+      </Tooltip>
     </>
   );
 };
