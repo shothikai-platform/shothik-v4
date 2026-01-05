@@ -24,6 +24,7 @@ import useNavItemFiles from "@/hooks/useNavItemFiles";
 import useSheetAiToken from "@/hooks/useRegisterSheetService";
 import { cn } from "@/lib/utils";
 import { useUploadPresentationFilesMutation } from "@/redux/api/presentation/presentationApi";
+import { useUploadSheetFilesMutation } from "@/redux/api/sheet/sheetApi";
 import { setSheetToken, setShowLoginModal } from "@/redux/slices/auth";
 import {
   BookOpen,
@@ -195,6 +196,8 @@ export default function AgentLandingPage() {
 
   const [uploadFilesForSlides, { isLoading: isUploadingSlides }] =
     useUploadPresentationFilesMutation();
+  const [uploadFilesForSheets, { isLoading: isUploadingSheets }] =
+    useUploadSheetFilesMutation();
   // const [initiatePresentation, { isLoading: isInitiatingPresentation }] =
   //   useCreatePresentationMutation();
   // 
@@ -229,9 +232,7 @@ export default function AgentLandingPage() {
         case "slides":
           return await uploadFilesForSlides(uploadData).unwrap();
         case "sheets":
-          // TODO: Add sheets upload mutation when available
-          // return await uploadFilesForSheets(uploadData).unwrap();
-          throw new Error("Sheet file upload not yet implemented");
+          return await uploadFilesForSheets(uploadData).unwrap();
         case "research":
           // TODO: Add research upload mutation when available
           // return await uploadFilesForResearch(uploadData).unwrap();
@@ -240,7 +241,7 @@ export default function AgentLandingPage() {
           throw new Error(`Invalid agent type: ${selectedNavItem}`);
       }
     },
-    isUploading: isUploadingSlides, // TODO: Combine with other upload states when available
+    isUploading: isUploadingSlides || isUploadingSheets, // TODO: Combine with other upload states when available
     addFiles,
     prepareUploadData: (files, userId) => ({
       files,

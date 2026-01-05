@@ -6,13 +6,15 @@ export const sheetApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     // baseUrl: "https://sheetai.pixigenai.com/api",
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/sheet`,
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers, { endpoint }) => {
       // const token = localStorage.getItem("sheetai-token");
       const token = localStorage.getItem("accessToken");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-      headers.set("Content-Type", "application/json");
+      if (endpoint !== "uploadSheetFiles") {
+        headers.set("Content-Type", "application/json");
+      }
       return headers;
     },
   }),
@@ -145,6 +147,38 @@ export const sheetApiSlice = createApi({
         return response;
       },
     }),
+
+    // Upload file for Sheets
+    uploadSheetFiles: builder.mutation({
+      query: ({ files, userId }) => {
+        const formData = new FormData();
+
+        // Ensure files is an array and append each file
+        const fileArray = Array.isArray(files) ? files : [files];
+        fileArray.forEach((file) => {
+          formData.append("files", file);
+        });
+
+        // Add userId if provided
+        if (userId) {
+          formData.append("user_id", userId);
+        }
+
+        return {
+          url: "/upload-file",
+          method: "POST",
+          body: formData,
+        };
+      },
+      // Enhanced error handling
+      transformErrorResponse: (response, meta, arg) => {
+        return {
+          status: response.status,
+          data: response.data || "Upload failed",
+          originalError: response,
+        };
+      },
+    }),
   }),
 });
 
@@ -152,4 +186,5 @@ export const {
   useGetChatHistoryQuery,
   useGetMyChatsQuery,
   useSaveEditedSheetDataMutation,
+  useUploadSheetFilesMutation,
 } = sheetApiSlice;
