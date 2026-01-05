@@ -190,7 +190,6 @@ async function handleSheetGenerationRequest(
         },
       );
       if (!response.ok) {
-        // TODO: Here we need to show user a toast message that we failed
         // 
         showToast("Failed to create spreadsheet. Please try again.");
         setIsSubmitting(false);

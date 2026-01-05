@@ -24,6 +24,8 @@ import useNavItemFiles from "@/hooks/useNavItemFiles";
 import useSheetAiToken from "@/hooks/useRegisterSheetService";
 import { cn } from "@/lib/utils";
 import { useUploadPresentationFilesMutation } from "@/redux/api/presentation/presentationApi";
+import { useUploadResearchFilesMutation } from "@/redux/api/research/researchChatApi";
+import { useUploadSheetFilesMutation } from "@/redux/api/sheet/sheetApi";
 import { setSheetToken, setShowLoginModal } from "@/redux/slices/auth";
 import {
   BookOpen,
@@ -45,6 +47,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import SearchDropdown from "./SearchDropDown";
 import { useAgentContext } from "./shared/AgentContextProvider";
 import {
@@ -195,6 +198,10 @@ export default function AgentLandingPage() {
 
   const [uploadFilesForSlides, { isLoading: isUploadingSlides }] =
     useUploadPresentationFilesMutation();
+  const [uploadFilesForSheets, { isLoading: isUploadingSheets }] =
+    useUploadSheetFilesMutation();
+  const [uploadFilesForResearch, { isLoading: isUploadingResearch }] =
+    useUploadResearchFilesMutation();
   // const [initiatePresentation, { isLoading: isInitiatingPresentation }] =
   //   useCreatePresentationMutation();
   // 
@@ -229,18 +236,15 @@ export default function AgentLandingPage() {
         case "slides":
           return await uploadFilesForSlides(uploadData).unwrap();
         case "sheets":
-          // TODO: Add sheets upload mutation when available
-          // return await uploadFilesForSheets(uploadData).unwrap();
-          throw new Error("Sheet file upload not yet implemented");
+          return await uploadFilesForSheets(uploadData).unwrap();
         case "research":
-          // TODO: Add research upload mutation when available
-          // return await uploadFilesForResearch(uploadData).unwrap();
-          throw new Error("Research file upload not yet implemented");
+          return await uploadFilesForResearch(uploadData).unwrap();
         default:
           throw new Error(`Invalid agent type: ${selectedNavItem}`);
       }
     },
-    isUploading: isUploadingSlides, // TODO: Combine with other upload states when available
+    isUploading:
+      isUploadingSlides || isUploadingSheets || isUploadingResearch,
     addFiles,
     prepareUploadData: (files, userId) => ({
       files,
@@ -419,13 +423,14 @@ export default function AgentLandingPage() {
     setShowOnboarding(false);
   };
 
-  // to show toast - currently using console instead of UI toast
+  // to show toast
   const showToast = (message, variant = "destructive") => {
     if (variant === "destructive" || variant === "error") {
-      console.error(message);
-    } else if (variant === "default" || variant === "success") {
+      toast.error(message);
+    } else if (variant === "success") {
+      toast.success(message);
     } else {
-      console.info(message);
+      toast.info(message);
     }
   };
 

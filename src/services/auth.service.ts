@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ENV } from "@/config/env";
 
-interface AuthResponse {
+export interface AuthResponse {
   success: boolean;
   message: string;
   data?: Record<string, unknown>;
@@ -111,6 +111,18 @@ export class AuthService {
     return axios.get(`${this.apiUrl}/check-permission`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+  }
+
+  async validateToken(token: string): Promise<any> {
+    try {
+      const response = await this.getUser(token);
+      if (response.data) {
+        return (response.data as any).data || response.data;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 }
 
