@@ -44,34 +44,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
     const token = localStorage.getItem("jwt_token");
     if (token) {
-      // TODO: Implement validateToken in AuthService or use a profile endpoint
-      // For now, valid if token exists (basic check)
-      authService.regenerateToken(token)
-        .then(async (response: any) => {
-          // Assuming regenerateToken returns success or a new token
-          if (response.data?.success || response.data?.token) {
-            const newToken = response.data?.token || token;
-            if (newToken !== token) localStorage.setItem("jwt_token", newToken);
-
-            // Fetch real user profile
-            try {
-              const userRes = await authService.getUser(newToken);
-              // Adjust based on actual response structure for user profile
-              // authApi.js says getUser returns result.data which is the user object directly or nested
-              // Let's assume response.data.data or response.data
-              const userData = (userRes.data as any).data || userRes.data;
-              if (userData) {
-                setUser({ ...userData, id: userData._id || userData.id });
-                setIsAuthenticated(true);
-              } else {
-                throw new Error("User data empty");
-              }
-            } catch (userErr) {
-              console.error("Failed to fetch user profile", userErr);
-              // Keep token but maybe set user as partial or retry?
-              // For now, fail auth if we can't get user
-              throw userErr;
-            }
+      authService
+        .validateToken(token)
+        .then((userData) => {
+          if (userData) {
+            setUser({ ...userData, id: userData._id || userData.id });
+            setIsAuthenticated(true);
           } else {
             throw new Error("Invalid token");
           }
