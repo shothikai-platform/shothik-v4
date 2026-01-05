@@ -32,12 +32,25 @@ export default function MediaCanvas() {
   const [ad, setAd] = useState<Ad | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [generatedMedia, setGeneratedMedia] = useState<string[]>([]);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+
+  // Ensure currentMediaIndex is valid when generatedMedia changes
+  useEffect(() => {
+    if (
+      generatedMedia.length > 0 &&
+      currentMediaIndex >= generatedMedia.length
+    ) {
+      setCurrentMediaIndex(0);
+    }
+  }, [generatedMedia, currentMediaIndex]);
 
   // Debug wrapper for setGeneratedMedia
   const handleMediaUploaded = (mediaUrls: string[]) => {
-      "MediaCanvas: Current generatedMedia before update:",
-      generatedMedia,
-    );
+    // If replacing media, reset index to 0
+    // If appending, we might want to keep index or move to new one.
+    // For now, let's reset to 0 if the length changes significantly or if we want to show the new upload.
+    // But since this is a general handler, let's rely on the useEffect above for bounds check,
+    // and if completely new media is set, we might want to reset.
     setGeneratedMedia(mediaUrls);
   };
   const [isGenerating, setIsGenerating] = useState(false);
@@ -61,8 +74,6 @@ export default function MediaCanvas() {
           if (foundAd.imageUrls && foundAd.imageUrls.length > 0) {
             // Carousel with multiple images
             setGeneratedMedia(foundAd.imageUrls);
-              `Loaded ${foundAd.imageUrls.length} carousel images from database`,
-            );
           } else if (foundAd.imageUrl) {
             // Single image
             setGeneratedMedia([foundAd.imageUrl]);
@@ -178,15 +189,45 @@ export default function MediaCanvas() {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (generatedMedia.length === 0) return;
 
-    // TODO: Implement actual download
-    // For now, download the first image/video
-    const link = document.createElement("a");
-    link.href = generatedMedia[0];
-    link.download = `${ad?.headline}-media.${isVideoFormat ? "mp4" : "png"}`;
-    link.click();
+    const indexToDownload = isVideoFormat ? 0 : currentMediaIndex;
+    const mediaUrl = generatedMedia[indexToDownload];
+
+    try {
+      // Fetch the blob
+      const response = await fetch(mediaUrl);
+      if (!response.ok) throw new Error("Network response was not ok");
+      const blob = await response.blob();
+
+      // Create object URL
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+
+      // Determine extension
+      let extension = isVideoFormat ? "mp4" : "png";
+      const contentType = response.headers.get("content-type");
+      if (contentType) {
+        if (contentType.includes("video/mp4")) extension = "mp4";
+        else if (contentType.includes("image/jpeg")) extension = "jpg";
+        else if (contentType.includes("image/png")) extension = "png";
+        else if (contentType.includes("image/webp")) extension = "webp";
+      }
+
+      link.download = `${ad?.headline || "ad"}-media-${indexToDownload + 1}.${extension}`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback to opening in new tab
+      window.open(mediaUrl, "_blank");
+    }
   };
 
   const handleSaveAndApply = async () => {
@@ -421,6 +462,8 @@ export default function MediaCanvas() {
                 projectId={projectId || ""}
                 adId={adId || ""}
                 onMediaUploaded={setGeneratedMedia}
+                currentImageIndex={currentMediaIndex}
+                onIndexChange={setCurrentMediaIndex}
               />
             )}
           </div>

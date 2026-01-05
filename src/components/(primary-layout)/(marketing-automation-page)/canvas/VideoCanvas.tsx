@@ -69,11 +69,6 @@ export default function VideoCanvas({
       const mediaUrl = await uploadToImageKit(file, "ads");
 
       // Save to ad
-        projectId,
-        adId,
-        mediaUrl,
-        mediaType: "video",
-      });
       const saveResult = await mediaAPI.saveUploadedMedia(
         projectId,
         adId,

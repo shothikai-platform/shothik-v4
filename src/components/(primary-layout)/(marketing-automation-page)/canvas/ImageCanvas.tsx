@@ -30,6 +30,8 @@ interface ImageCanvasProps {
   projectId: string;
   adId: string;
   onMediaUploaded: (mediaUrls: string[]) => void;
+  currentImageIndex: number;
+  onIndexChange: (index: number) => void;
 }
 
 export default function ImageCanvas({
@@ -42,6 +44,8 @@ export default function ImageCanvas({
   projectId,
   adId,
   onMediaUploaded,
+  currentImageIndex,
+  onIndexChange,
 }: ImageCanvasProps) {
   const [selectedRegions, setSelectedRegions] = useState<
     Array<{
@@ -60,7 +64,6 @@ export default function ImageCanvas({
     y: number;
     imageIndex: number;
   } | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -221,8 +224,10 @@ export default function ImageCanvas({
                         variant="secondary"
                         size="icon"
                         onClick={() =>
-                          setCurrentImageIndex((prev) =>
-                            prev > 0 ? prev - 1 : generatedMedia.length - 1,
+                          onIndexChange(
+                            currentImageIndex > 0
+                              ? currentImageIndex - 1
+                              : generatedMedia.length - 1,
                           )
                         }
                         className="absolute top-1/2 left-4 z-10 -translate-y-1/2 rounded-full shadow-lg"
@@ -233,8 +238,10 @@ export default function ImageCanvas({
                         variant="secondary"
                         size="icon"
                         onClick={() =>
-                          setCurrentImageIndex((prev) =>
-                            prev < generatedMedia.length - 1 ? prev + 1 : 0,
+                          onIndexChange(
+                            currentImageIndex < generatedMedia.length - 1
+                              ? currentImageIndex + 1
+                              : 0,
                           )
                         }
                         className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full shadow-lg"
@@ -364,7 +371,7 @@ export default function ImageCanvas({
                 <Button
                   key={index}
                   variant={currentImageIndex === index ? "default" : "outline"}
-                  onClick={() => setCurrentImageIndex(index)}
+                  onClick={() => onIndexChange(index)}
                   className="relative aspect-square overflow-hidden rounded-lg border-2 p-0"
                 >
                   <img
