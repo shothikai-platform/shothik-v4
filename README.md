@@ -8,7 +8,8 @@ The tools are categorized into three main pillars:
 * Humanize GPT: "Humanizes" AI text to bypass detection.
 * Plagiarism Checker: Scans for duplicate content.
 * Grammar Fix: Advanced correction for grammar and spelling.
-* Summarizer & Translator: Utility tools for condensing and translating text.
+* Summarizer: Condenses text into concise summaries with length options (short, medium, long).
+* Translator: Utility tool for translating text.
 2. Shothik Agents (Automation)
 * AI Slides: Generates presentation slides automatically.
 * AI Sheets: Automates spreadsheet tasks and data management.

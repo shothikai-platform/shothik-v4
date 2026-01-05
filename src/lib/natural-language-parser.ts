@@ -1,5 +1,5 @@
 export interface ParsedCommand {
-  action: "research" | "create_presentation" | "verify" | "sources" | "outline" | "rewrite" | "image" | "unknown";
+  action: "research" | "create_presentation" | "verify" | "sources" | "outline" | "rewrite" | "image" | "summarize" | "unknown";
   topic: string;
   generateSlides: boolean;
   originalInput: string;
@@ -7,6 +7,7 @@ export interface ParsedCommand {
   metadata?: {
     slideNumber?: number;
     presentationType?: string;
+    summaryLength?: "short" | "medium" | "long";
   };
 }
 
@@ -72,6 +73,16 @@ const REWRITE_TRIGGERS = [
   "rephrase",
   "reword",
   "make better",
+];
+
+const SUMMARIZE_TRIGGERS = [
+  "summarize",
+  "summary",
+  "sum up",
+  "give me a summary",
+  "what's the main point",
+  "tl;dr",
+  "too long didn't read",
 ];
 
 const IMAGE_TRIGGERS = [
@@ -176,6 +187,28 @@ export function parseNaturalLanguage(input: string): ParsedCommand {
     }
   }
 
+  // Detect summarize requests
+  for (const trigger of SUMMARIZE_TRIGGERS) {
+    if (lowerInput.includes(trigger)) {
+      // Extract summary length preference
+      let summaryLength: "short" | "medium" | "long" = "medium";
+      if (lowerInput.includes("brief") || lowerInput.includes("short") || lowerInput.includes("tl;dr")) {
+        summaryLength = "short";
+      } else if (lowerInput.includes("detailed") || lowerInput.includes("long") || lowerInput.includes("comprehensive")) {
+        summaryLength = "long";
+      }
+      
+      return {
+        action: "summarize",
+        topic: extractTopic(lowerInput, trigger),
+        generateSlides: false,
+        originalInput: input,
+        confidence: 0.9,
+        metadata: { summaryLength },
+      };
+    }
+  }
+
   // Detect image requests
   for (const trigger of IMAGE_TRIGGERS) {
     if (lowerInput.includes(trigger)) {
@@ -262,6 +295,32 @@ function parseSlashCommand(input: string): ParsedCommand {
     };
   }
 
+  // /summarize command
+  const summarizeMatch = trimmed.match(/^\/summarize\s*(.*)$/);
+  if (summarizeMatch) {
+    // Extract length option if specified
+    let summaryLength: "short" | "medium" | "long" = "medium";
+    const args = summarizeMatch[1].trim();
+    
+    if (args.includes("--short") || args.includes("-s")) {
+      summaryLength = "short";
+    } else if (args.includes("--long") || args.includes("-l")) {
+      summaryLength = "long";
+    }
+    
+    // Extract the actual topic (remove length flags)
+    const topic = args.replace(/--(short|long)|-(s|l)/g, '').trim();
+    
+    return {
+      action: "summarize",
+      topic: topic,
+      generateSlides: false,
+      originalInput: input,
+      confidence: 1.0,
+      metadata: { summaryLength },
+    };
+  }
+
   // /image command
   const imageMatch = trimmed.match(/^\/image\s*(.*)$/);
   if (imageMatch) {
@@ -296,12 +355,13 @@ function extractTopic(input: string, trigger: string): string {
   let afterTrigger = input.substring(triggerIndex + trigger.length).trim();
   
   // Remove common prepositions at the start
-  afterTrigger = afterTrigger.replace(/^(about|on|for|regarding|concerning|of)\s+/i, "");
+  afterTrigger = afterTrigger.replace(/^(about|on|for|regarding|concerning|of|in|with|at)\s+/i, "");
   
   // Remove filler phrases that might appear at the end
-  afterTrigger = afterTrigger.replace(/\s+(and\s+)?(make|create|generate|build)\s+(slides?|presentation|deck).*$/i, "");
+  afterTrigger = afterTrigger.replace(/\s+(and\s+)?(make|create|generate|build|write|give\s+me)\s+(slides?|presentation|deck|summary|outline).*$/i, "");
   afterTrigger = afterTrigger.replace(/\s+for\s+me\s*$/i, "");
   afterTrigger = afterTrigger.replace(/\s+please\s*$/i, "");
+  afterTrigger = afterTrigger.replace(/\s+thanks\s*$/i, "");
   
   // Remove trailing punctuation
   afterTrigger = afterTrigger.replace(/[?.!]+$/, "");
@@ -309,19 +369,20 @@ function extractTopic(input: string, trigger: string): string {
   // If nothing left, try to get text before the trigger
   if (!afterTrigger) {
     let beforeTrigger = input.substring(0, triggerIndex).trim();
-    
+     
     // Remove filler phrases from the beginning
-    beforeTrigger = beforeTrigger.replace(/^(i\s+need|i\s+want|can\s+you|please|help\s+me)\s+/i, "");
+    beforeTrigger = beforeTrigger.replace(/^(i\s+need|i\s+want|can\s+you|please|help\s+me|could\s+you|would\s+you)\s+/i, "");
     beforeTrigger = beforeTrigger.replace(/^(to\s+)?/i, "");
-    
+    beforeTrigger = beforeTrigger.replace(/^(a|an|the)\s+/i, "");
+     
     return beforeTrigger || input.trim();
   }
-  
+   
   return afterTrigger.trim();
 }
 
 export function formatConfirmationMessage(parsed: ParsedCommand): string {
-  const { action, topic, generateSlides, confidence } = parsed;
+  const { action, topic, generateSlides, confidence, metadata } = parsed;
   
   if (confidence < 0.5) {
     return `I'm not sure what you want me to do. Try:\n• "create slides about [topic]"\n• "/research [topic] --slides"\n• "verify [claim]"`;
@@ -330,31 +391,35 @@ export function formatConfirmationMessage(parsed: ParsedCommand): string {
   switch (action) {
     case "create_presentation":
       return `🎯 I'll create a presentation about "${topic}"\n\n🔬 Starting research and slide generation...`;
-    
+     
     case "research":
       if (generateSlides) {
         return `🎯 I'll research "${topic}" and create slides\n\n🔬 Starting deep research...`;
       }
       return `🔬 Starting research on "${topic}"\n\n⏳ This may take a moment...`;
-    
+     
     case "verify":
       return `✓ I'll verify: "${topic}"\n\n🔍 Checking sources...`;
-    
+     
     case "outline":
       return `📋 Creating outline for: "${topic}"`;
-    
+     
     case "rewrite":
-      if (parsed.metadata?.slideNumber) {
-        return `✏️ Improving slide #${parsed.metadata.slideNumber}...`;
+      if (metadata?.slideNumber) {
+        return `✏️ Improving slide #${metadata.slideNumber}...`;
       }
       return `✏️ I'll help rewrite that content`;
-    
+     
     case "image":
       return `🖼️ Searching for images${topic ? ` related to "${topic}"` : ""}...`;
-    
+ 
+    case "summarize":
+      const lengthDesc = metadata?.summaryLength === "short" ? "brief" : metadata?.summaryLength === "long" ? "detailed" : "concise";
+      return `📝 Creating a ${lengthDesc} summary${topic ? ` of "${topic}"` : ""}...`;
+ 
     case "sources":
       return `📚 Showing all citations...`;
-    
+ 
     default:
       return `I'm not sure what you want. Try describing what you need in plain English!`;
   }

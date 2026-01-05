@@ -1,0 +1,30 @@
+# Content Analysis Service - Python Dependencies
+
+# Core dependencies
+fastapi==0.110.0
+uvicorn==0.27.0
+python-multipart==0.0.6
+pydantic==2.6.0
+
+# NLP and ML dependencies
+spacy==3.7.2
+scikit-learn==1.4.0
+nltk==3.8.1
+textblob==0.17.1
+transformers==4.38.0
+torch==2.1.0
+sentence-transformers==2.2.2
+
+# Utility dependencies
+python-dotenv==1.0.0
+requests==2.31.0
+loguru==0.7.2
+
+# Performance and async
+aiohttp==3.9.1
+async-timeout==4.0.3
+
+# API documentation
+# (Optional, for development)
+# fastapi-utils==0.2.1
+# pydantic-settings==2.1.0

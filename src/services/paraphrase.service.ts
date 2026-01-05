@@ -39,16 +39,23 @@ interface DisabledTermsResult {
 }
 
 const handleFetchError = async (response: Response): Promise<never> => {
-  let errorData: { message?: string } = {};
+  let errorData: { message?: string; details?: unknown } = {};
   try {
     errorData = await response.json();
   } catch {
-    errorData = { message: response.statusText || "Request failed" };
+    errorData = {
+      message: response.statusText || "Request failed",
+      details: { status: response.status }
+    };
   }
+  
+  const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+  const errorDetails = errorData.details || errorData;
+  
   throw new ParaphraseServiceError(
-    errorData.message || "Request failed",
+    errorMessage,
     response.status,
-    errorData
+    errorDetails
   );
 };
 
