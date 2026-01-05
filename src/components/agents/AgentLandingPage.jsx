@@ -487,6 +487,7 @@ export default function AgentLandingPage() {
               size="icon"
               onClick={handleCloseOnboarding}
               className="h-6 w-6 shrink-0"
+              aria-label="Close onboarding"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -549,6 +550,7 @@ export default function AgentLandingPage() {
           <CardContent>
             <div className="mb-4 flex items-center gap-3">
               <Textarea
+                aria-label="Prompt input"
                 placeholder={
                   selectedNavItem === "slides"
                     ? "Create a presentation about..."
@@ -624,6 +626,14 @@ export default function AgentLandingPage() {
                           size="icon"
                           className="bg-primary hover:bg-primary/90 h-10 w-10 rounded-full disabled:cursor-not-allowed disabled:opacity-50"
                           data-rybbit-event="Agent Start"
+                          aria-label={
+                            isInitiatingPresentation ||
+                            isInitiatingSheet ||
+                            isInitiatingResearch ||
+                            isUploading
+                              ? "Processing..."
+                              : "Start generation"
+                          }
                         >
                           {isInitiatingPresentation ||
                           isInitiatingSheet ||
