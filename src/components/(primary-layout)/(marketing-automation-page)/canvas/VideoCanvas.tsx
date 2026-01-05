@@ -69,6 +69,7 @@ export default function VideoCanvas({
       const mediaUrl = await uploadToImageKit(file, "ads");
 
       // Save to ad
+      console.log({
         projectId,
         adId,
         mediaUrl,

@@ -35,6 +35,7 @@ export default function MediaCanvas() {
 
   // Debug wrapper for setGeneratedMedia
   const handleMediaUploaded = (mediaUrls: string[]) => {
+    console.log(
       "MediaCanvas: Current generatedMedia before update:",
       generatedMedia,
     );
@@ -61,6 +62,7 @@ export default function MediaCanvas() {
           if (foundAd.imageUrls && foundAd.imageUrls.length > 0) {
             // Carousel with multiple images
             setGeneratedMedia(foundAd.imageUrls);
+            console.log(
               `Loaded ${foundAd.imageUrls.length} carousel images from database`,
             );
           } else if (foundAd.imageUrl) {
@@ -193,7 +195,23 @@ export default function MediaCanvas() {
     if (generatedMedia.length === 0 || !projectId || !adId) return;
 
     try {
-      // TODO: Implement save to ad
+      // Prepare media payload based on ad format and generated content
+      const mediaData: {
+        imageUrl?: string;
+        imageUrls?: string[];
+        videoUrl?: string;
+      } = {};
+
+      if (isVideoFormat) {
+        mediaData.videoUrl = generatedMedia[0];
+      } else if (generatedMedia.length > 1) {
+        mediaData.imageUrls = generatedMedia;
+      } else {
+        mediaData.imageUrl = generatedMedia[0];
+      }
+
+      await campaignAPI.updateAdMedia(projectId, adId, mediaData);
+
       router.push(`/marketing-automation/canvas/${projectId}`);
     } catch (error) {
       console.error("Error saving media:", error);

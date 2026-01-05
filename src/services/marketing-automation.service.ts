@@ -288,6 +288,30 @@ export const campaignAPI = {
   },
 
   /**
+   * Update the media for a specific ad
+   *
+   * @param {string} projectId - Project ID
+   * @param {string} adId - Ad ID
+   * @param {Object} mediaData - Object containing imageUrl, imageUrls, or videoUrl
+   * @returns {Promise<Object>} Updated ad object
+   */
+  updateAdMedia: async (
+    projectId: string,
+    adId: string,
+    mediaData: {
+      imageUrl?: string;
+      imageUrls?: string[];
+      videoUrl?: string;
+    },
+  ) => {
+    const response = await api.post(
+      `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}campaign/update-ad-media/${projectId}/${adId}`,
+      mediaData,
+    );
+    return response.data;
+  },
+
+  /**
    * Publish ads to Meta (Facebook/Instagram) platforms
    *
    * Submits finalized ads to Meta's advertising platform for review and publishing.
