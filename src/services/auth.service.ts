@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ENV } from "@/config/env";
 
-interface AuthResponse {
+export interface AuthResponse {
   success: boolean;
   message: string;
   data?: Record<string, unknown>;
