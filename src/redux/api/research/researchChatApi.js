@@ -45,6 +45,32 @@ export const researchChatApi = createApi({
       }),
       invalidatesTags: ["Research-Chat"],
     }),
+
+    // Upload files for Research
+    uploadResearchFiles: builder.mutation({
+      query: ({ files, userId }) => {
+        const formData = new FormData();
+        const fileArray = Array.isArray(files) ? files : [files];
+        fileArray.forEach((file) => {
+          formData.append("files", file);
+        });
+        if (userId) {
+          formData.append("user_id", userId);
+        }
+        return {
+          url: "/upload-file",
+          method: "POST",
+          body: formData,
+        };
+      },
+      transformErrorResponse: (response) => {
+        return {
+          status: response.status,
+          data: response.data || "Upload failed",
+          originalError: response,
+        };
+      },
+    }),
   }),
 });
 
@@ -54,4 +80,5 @@ export const {
   useGetOneChatQuery,
   useUpdateChatNameMutation,
   useDeleteChatMutation,
+  useUploadResearchFilesMutation,
 } = researchChatApi;
