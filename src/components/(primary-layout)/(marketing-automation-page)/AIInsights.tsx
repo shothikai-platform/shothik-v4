@@ -8,7 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import useResponsive from "@/hooks/ui/useResponsive";
 import { cn } from "@/lib/utils";
 import { getRouteState } from "@/utils/getRouteState";
-import { AlignCenter, ArrowLeft, Brain, Lightbulb, Send } from "lucide-react";
+import {
+  AlignCenter,
+  ArrowLeft,
+  Brain,
+  FileText,
+  Lightbulb,
+  Send,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -144,13 +151,20 @@ export default function AIInsights() {
       color: "",
       bgColor: "",
     },
+    {
+      id: "reports",
+      title: "Reports",
+      icon: <FileText className="h-5 w-5" />,
+      color: "",
+      bgColor: "",
+    },
   ];
 
   const handleStudioCardClick = (cardId: string) => {
     if (cardId === "mindmap") {
       router.push(`/marketing-automation/insights/${analysisId}/mindmap`);
     } else if (cardId === "reports") {
-      // TODO: Navigate to reports view
+      router.push(`/marketing-automation/insights/${analysisId}/reports`);
     }
   };
 
