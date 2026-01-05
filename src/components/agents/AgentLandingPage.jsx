@@ -45,6 +45,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import SearchDropdown from "./SearchDropDown";
 import { useAgentContext } from "./shared/AgentContextProvider";
 import {
@@ -419,13 +420,14 @@ export default function AgentLandingPage() {
     setShowOnboarding(false);
   };
 
-  // to show toast - currently using console instead of UI toast
+  // to show toast
   const showToast = (message, variant = "destructive") => {
     if (variant === "destructive" || variant === "error") {
-      console.error(message);
-    } else if (variant === "default" || variant === "success") {
+      toast.error(message);
+    } else if (variant === "success") {
+      toast.success(message);
     } else {
-      console.info(message);
+      toast.info(message);
     }
   };
 
