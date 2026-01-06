@@ -1,11 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const SLIDE_WIDTH = 1280;
 const SLIDE_HEIGHT = 720;
 
-export const SlideCard = ({ slide, index, totalSlides }) => {
+export const SlideCard = React.memo(({ slide, index, totalSlides }) => {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
@@ -116,4 +116,6 @@ export const SlideCard = ({ slide, index, totalSlides }) => {
       </Card>
     </div>
   );
-};
+});
+
+SlideCard.displayName = "SlideCard";

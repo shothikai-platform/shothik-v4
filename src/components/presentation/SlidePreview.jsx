@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlignmentGuidesSkeleton } from "./editing/AlignmentGuidesSkeleton";
 import { EditingErrorBoundary } from "./editing/EditingErrorBoundary";
 import { EditingToolbarSkeleton } from "./editing/EditingToolbarSkeleton";
@@ -74,14 +74,14 @@ const SLIDE_WIDTH = 1280;
 const SLIDE_HEIGHT = 720;
 const SLIDE_ASPECT_RATIO = SLIDE_WIDTH / SLIDE_HEIGHT;
 
-export default function SlidePreview({
+const SlidePreview = React.memo(({
   slide,
   index,
   activeTab,
   onTabChange,
   totalSlides,
   presentationId,
-}) {
+}) => {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
@@ -578,7 +578,10 @@ export default function SlidePreview({
       </Snackbar> */}
     </Card>
   );
-}
+});
+
+SlidePreview.displayName = "SlidePreview";
+export default SlidePreview;
 
 // =========== UTILITY FUNCTIONS 👇 ===========
 
