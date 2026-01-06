@@ -1,0 +1,3 @@
+## 2025-05-24 - Accessibility on Icon-only Buttons
+**Learning:** Many icon-only buttons in the `src/components/buttons` directory were missing `aria-label` attributes and tooltips. This makes them inaccessible to screen readers and potentially confusing to visual users who might not immediately recognize the icon's meaning.
+**Action:** Always check icon-only buttons for `aria-label` and consider wrapping them in a `Tooltip` component. When using the shadcn/ui `Tooltip` component, ensure `TooltipTrigger` uses `asChild` if the trigger is already a button or interactive element to avoid invalid nesting.
