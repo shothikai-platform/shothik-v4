@@ -13,6 +13,7 @@ import { useAutoSave } from "@/hooks/presentation/useAutoSave";
 import { useSlideEditor } from "@/hooks/presentation/useSlideEditor";
 import { createEnhancedIframeContentFromHTML } from "@/lib/presentationEditScripts";
 import { cn } from "@/lib/utils";
+import DOMPurify from "isomorphic-dompurify";
 import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -686,7 +687,11 @@ const EnhancedThinkingTab = ({ slide, dimensions }) => {
         )}
       >
         {processedContent ? (
-          <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(processedContent),
+            }}
+          />
         ) : (
           <p className="text-muted-foreground text-[0.9em] leading-[1.6] whitespace-pre-wrap">
             {slide?.thought}
