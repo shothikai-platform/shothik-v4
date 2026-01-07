@@ -952,6 +952,18 @@ export default function ChatArea({
     );
   }, [realLogs, deduplicatedOptimisticMessages]);
 
+  // Optimize agent log lookup: O(N) -> O(1)
+  const processedLogsMap = useMemo(() => {
+    const map = new Map();
+    processedLogs.forEach((log, index) => {
+      // We want the index of the first occurrence, matching findIndex behavior
+      if (!map.has(log.timestamp)) {
+        map.set(log.timestamp, index);
+      }
+    });
+    return map;
+  }, [processedLogs]);
+
   return (
     <>
       <div className="border-border bg-background flex h-full max-h-full flex-col overflow-hidden border-r">
@@ -997,11 +1009,9 @@ export default function ChatArea({
                   />
                 );
               } else if (log.role === "agent") {
-                const agentIndex = processedLogs.findIndex(
-                  (processedLog) => processedLog.timestamp === log.timestamp,
-                );
+                const agentIndex = processedLogsMap.get(log.timestamp);
 
-                if (agentIndex >= 0) {
+                if (agentIndex !== undefined) {
                   return (
                     <StreamingMessage
                       key={processedLogs[agentIndex].id}
