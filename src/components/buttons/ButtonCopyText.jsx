@@ -3,8 +3,20 @@ import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
+const ButtonCopyText = ({
+  className,
+  text,
+  onClick,
+  children,
+  isTooltip = true,
+  ...props
+}) => {
   const [showCopy, setShowCopy] = useState(true);
 
   const handleCopy = async (e) => {
@@ -20,12 +32,13 @@ const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
     }
   };
 
-  return (
+  const button = (
     <button
       onClick={(e) => {
         handleCopy(e);
         onClick?.(e);
       }}
+      aria-label="Copy to clipboard"
       className={cn(
         "flex size-8 cursor-pointer items-center justify-center rounded",
         className,
@@ -35,6 +48,19 @@ const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
       {children ||
         (showCopy ? <Copy className="size-5" /> : <Check className="size-5" />)}
     </button>
+  );
+
+  if (!isTooltip) {
+    return button;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent>
+        <p>Copy to clipboard</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
