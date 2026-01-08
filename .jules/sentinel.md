@@ -1,0 +1,4 @@
+## 2024-05-23 - XSS Mitigation in Markdown Rendering
+**Vulnerability:** Unsanitized usage of `dangerouslySetInnerHTML` with `marked` output in `ResearchContent` and `ResearchContentWithReferences` components. This allowed potential XSS attacks if the markdown content contained malicious HTML/JS.
+**Learning:** Even when using libraries like `marked`, the output must be sanitized before being rendered with `dangerouslySetInnerHTML`. In Next.js applications, use `isomorphic-dompurify` instead of standard `dompurify` to avoid Server-Side Rendering (SSR) hydration mismatches and `window is not defined` errors.
+**Prevention:** Always wrap `marked()` output (or any other HTML generation) with `DOMPurify.sanitize()` (imported from `isomorphic-dompurify`) before passing it to `dangerouslySetInnerHTML`.
