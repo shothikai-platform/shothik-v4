@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { AlignmentGuidesSkeleton } from "./editing/AlignmentGuidesSkeleton";
 import { EditingErrorBoundary } from "./editing/EditingErrorBoundary";
 import { EditingToolbarSkeleton } from "./editing/EditingToolbarSkeleton";
@@ -74,7 +74,7 @@ const SLIDE_WIDTH = 1280;
 const SLIDE_HEIGHT = 720;
 const SLIDE_ASPECT_RATIO = SLIDE_WIDTH / SLIDE_HEIGHT;
 
-export default function SlidePreview({
+const SlidePreview = memo(function SlidePreview({
   slide,
   index,
   activeTab,
@@ -120,7 +120,7 @@ export default function SlidePreview({
     index,
   );
 
-  // 
+  //
 
   // Copy to clipboard function
   const handleCopy = async () => {
@@ -578,7 +578,11 @@ export default function SlidePreview({
       </Snackbar> */}
     </Card>
   );
-}
+});
+
+SlidePreview.displayName = "SlidePreview";
+
+export default SlidePreview;
 
 // =========== UTILITY FUNCTIONS 👇 ===========
 
@@ -648,7 +652,7 @@ const parseSimpleMarkdown = (text) => {
 const EnhancedThinkingTab = ({ slide, dimensions }) => {
   const [processedContent, setProcessedContent] = useState("");
 
-  // 
+  //
 
   useEffect(() => {
     if (slide?.thinking) {

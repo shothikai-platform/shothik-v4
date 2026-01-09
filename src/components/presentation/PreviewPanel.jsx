@@ -8,7 +8,7 @@ import { Chart, registerables } from "chart.js";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SlidePreview from "./SlidePreview";
 import BrowserWorkerMarkdown from "./v2/BrowserWorkerMarkdown";
 
@@ -44,12 +44,12 @@ export default function PreviewPanel({
   const [previewTab, setPreviewTab] = useState("preview");
   const [slideTabs, setSlideTabs] = useState({});
 
-  const handleSlideTabChange = (slideIndex, newValue) => {
+  const handleSlideTabChange = useCallback((slideIndex, newValue) => {
     setSlideTabs((prev) => ({
       ...prev,
       [slideIndex]: newValue,
     }));
-  };
+  }, []);
 
   // Determine if presentation is still generating (same logic as PresentationLogsUi)
   // This ensures consistent loading state across both panels
@@ -83,13 +83,16 @@ export default function PreviewPanel({
 
   // Debug: Log props relevant to View Slides button
   if (currentAgentType === "presentation" && !browserWorkerSummary) {
+    console.log({
       presentationId,
       status,
       presentationStatus,
       hasReplay,
       shouldShowButton:
         (status === "completed" || status === "saved") && !hasReplay,
-      href: presentationId ? `/slides?project_id=${presentationId}` : "MISSING_ID",
+      href: presentationId
+        ? `/slides?project_id=${presentationId}`
+        : "MISSING_ID",
     });
   }
 
@@ -149,6 +152,7 @@ export default function PreviewPanel({
                             <Link
                               href={`/slides?project_id=${presentationId}`}
                               onClick={() => {
+                                console.log({
                                   presentationId,
                                   href: `/slides?project_id=${presentationId}`,
                                   status,
