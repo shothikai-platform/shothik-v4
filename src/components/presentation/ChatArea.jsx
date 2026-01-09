@@ -574,6 +574,24 @@ const PlanModifierLog = memo(({ data }) => {
 
 PlanModifierLog.displayName = "PlanModifierLog";
 
+// Custom comparison function for StreamingMessage to prevent unnecessary re-renders
+const areStreamingMessagePropsEqual = (prevProps, nextProps) => {
+  const isLogEqual =
+    prevProps.log.id === nextProps.log.id &&
+    prevProps.log.agent_name === nextProps.log.agent_name &&
+    prevProps.log.timestamp === nextProps.log.timestamp &&
+    prevProps.log.parsed_output === nextProps.log.parsed_output;
+
+  return (
+    isLogEqual &&
+    prevProps.isTyping === nextProps.isTyping &&
+    prevProps.logIndex === nextProps.logIndex &&
+    prevProps.sessionStatus === nextProps.sessionStatus &&
+    prevProps.isNearEnd === nextProps.isNearEnd &&
+    prevProps.onTypingComplete === nextProps.onTypingComplete
+  );
+};
+
 const StreamingMessage = memo(
   ({
     log,
@@ -583,7 +601,7 @@ const StreamingMessage = memo(
     registerAnimationCallback,
     unregisterAnimationCallback,
     sessionStatus,
-    processedLogs,
+    isNearEnd,
   }) => {
     const [displayedText, setDisplayedText] = useState("");
     const [isComplete, setIsComplete] = useState(!isTyping);
@@ -615,7 +633,7 @@ const StreamingMessage = memo(
       isTyping &&
       isSessionActive &&
       sessionStatus === "processing" &&
-      logIndex >= processedLogs.length - 2;
+      isNearEnd;
 
     const prepareWords = useCallback((text) => {
       if (!text) return [];
@@ -812,6 +830,7 @@ const StreamingMessage = memo(
       </div>
     );
   },
+  areStreamingMessagePropsEqual,
 );
 StreamingMessage.displayName = "StreamingMessage";
 
@@ -952,6 +971,18 @@ export default function ChatArea({
     );
   }, [realLogs, deduplicatedOptimisticMessages]);
 
+  // Create a map for O(1) lookup of processed logs by timestamp
+  const processedLogsMap = useMemo(() => {
+    const map = new Map();
+    processedLogs.forEach((log, index) => {
+      // Use the first occurrence to match findIndex behavior
+      if (!map.has(log.timestamp)) {
+        map.set(log.timestamp, { log, index });
+      }
+    });
+    return map;
+  }, [processedLogs]);
+
   return (
     <>
       <div className="border-border bg-background flex h-full max-h-full flex-col overflow-hidden border-r">
@@ -997,22 +1028,24 @@ export default function ChatArea({
                   />
                 );
               } else if (log.role === "agent") {
-                const agentIndex = processedLogs.findIndex(
-                  (processedLog) => processedLog.timestamp === log.timestamp,
-                );
+                const processedEntry = processedLogsMap.get(log.timestamp);
 
-                if (agentIndex >= 0) {
+                if (processedEntry) {
+                  const { log: processedLog, index: agentIndex } =
+                    processedEntry;
+                  const isNearEnd = agentIndex >= processedLogs.length - 2;
+
                   return (
                     <StreamingMessage
-                      key={processedLogs[agentIndex].id}
-                      log={processedLogs[agentIndex]}
+                      key={processedLog.id}
+                      log={processedLog}
                       logIndex={agentIndex}
                       isTyping={agentIndex === currentlyTypingIndex}
                       onTypingComplete={handleTypingComplete}
                       registerAnimationCallback={registerAnimationCallback}
                       unregisterAnimationCallback={unregisterAnimationCallback}
                       sessionStatus={sessionStatus}
-                      processedLogs={processedLogs}
+                      isNearEnd={isNearEnd}
                     />
                   );
                 }
