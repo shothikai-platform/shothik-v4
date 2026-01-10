@@ -21,8 +21,8 @@ import { useSelector } from "react-redux";
 
 export default function InputArea({
   currentAgentType,
-  inputValue,
-  setInputValue,
+  inputValue, // Optional: if provided, we can still respect it for backward compatibility or controlled usage
+  setInputValue, // Optional
   onSend,
   isLoading,
   setUploadedFiles,
@@ -36,6 +36,39 @@ export default function InputArea({
   const { user } = useSelector((state) => state.auth);
   const [uploadFiles, { isLoading: isUploading, error: uploadError }] =
     useUploadPresentationFilesMutation();
+
+  // Internal state for input value when not controlled externally
+  const [internalInputValue, setInternalInputValue] = useState("");
+
+  const isControlled = inputValue !== undefined && setInputValue !== undefined;
+  const currentInputValue = isControlled ? inputValue : internalInputValue;
+
+  const handleInputChange = (e) => {
+    if (isControlled) {
+      setInputValue(e.target.value);
+    } else {
+      setInternalInputValue(e.target.value);
+    }
+  };
+
+  const handleSend = () => {
+    const textToSend = currentInputValue;
+    if (!textToSend.trim()) return;
+
+    if (onSend) {
+      onSend(textToSend);
+    }
+
+    if (isControlled) {
+      // If controlled, parent handles clearing (usually)
+      // But if parent relies on us to trigger send and then clear, we might need to verify protocol.
+      // However, usually onSend triggers a state update in parent.
+      // If parent passes setInputValue, we assume parent clears it or we can clear it if setInputValue allows.
+      setInputValue("");
+    } else {
+      setInternalInputValue("");
+    }
+  };
 
   const [toast, setToast] = useState({
     open: false,
@@ -74,9 +107,10 @@ export default function InputArea({
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
-      "Selected files:",
-      files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
-    );
+    // console.log(
+    //   "Selected files:",
+    //   files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
+    // );
 
     // Check file type and size
     const allowedTypes = [
@@ -115,10 +149,11 @@ export default function InputArea({
       userId: user._id,
     };
 
-      filesCount: files.length,
-      userId: user._id,
-      fileNames: files.map((f) => f.name),
-    });
+    // console.log("Preparing upload with data:", {
+    //   filesCount: files.length,
+    //   userId: user._id,
+    //   fileNames: files.map((f) => f.name),
+    // });
 
     try {
       // Show loading state
@@ -250,12 +285,12 @@ export default function InputArea({
                   ? "Create a presentation about..."
                   : "Ask anything, create anything...")
               }
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={currentInputValue}
+              onChange={handleInputChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  onSend();
+                  handleSend();
                 }
               }}
               disabled={disabled}
@@ -303,9 +338,12 @@ export default function InputArea({
               </DropdownMenu>
 
               <Button
-                onClick={() => onSend()}
+                onClick={handleSend}
                 disabled={
-                  !inputValue.trim() || isLoading || isUploading || disabled
+                  !currentInputValue.trim() ||
+                  isLoading ||
+                  isUploading ||
+                  disabled
                 }
                 size="icon"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
