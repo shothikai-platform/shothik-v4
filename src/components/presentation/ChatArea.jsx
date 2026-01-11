@@ -583,7 +583,7 @@ const StreamingMessage = memo(
     registerAnimationCallback,
     unregisterAnimationCallback,
     sessionStatus,
-    processedLogs,
+    isRecent,
   }) => {
     const [displayedText, setDisplayedText] = useState("");
     const [isComplete, setIsComplete] = useState(!isTyping);
@@ -615,7 +615,7 @@ const StreamingMessage = memo(
       isTyping &&
       isSessionActive &&
       sessionStatus === "processing" &&
-      logIndex >= processedLogs.length - 2;
+      isRecent;
 
     const prepareWords = useCallback((text) => {
       if (!text) return [];
@@ -1012,7 +1012,7 @@ export default function ChatArea({
                       registerAnimationCallback={registerAnimationCallback}
                       unregisterAnimationCallback={unregisterAnimationCallback}
                       sessionStatus={sessionStatus}
-                      processedLogs={processedLogs}
+                      isRecent={agentIndex >= processedLogs.length - 2}
                     />
                   );
                 }
