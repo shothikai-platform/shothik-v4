@@ -851,7 +851,7 @@ const mergeMessagesWithDeduplication = (realLogs, optimisticMessages) => {
     }
   });
 
-  // 
+  //
 
   return merged.sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
@@ -952,6 +952,19 @@ export default function ChatArea({
     );
   }, [realLogs, deduplicatedOptimisticMessages]);
 
+  // Optimization: Create a map for O(1) lookup of processed logs by timestamp
+  // This avoids the O(N*M) complexity in the rendering loop where N is total messages and M is processed logs
+  const processedLogsMap = useMemo(() => {
+    const map = new Map();
+    processedLogs.forEach((log, index) => {
+      // Only store the first occurrence to match findIndex behavior
+      if (log.timestamp && !map.has(log.timestamp)) {
+        map.set(log.timestamp, index);
+      }
+    });
+    return map;
+  }, [processedLogs]);
+
   return (
     <>
       <div className="border-border bg-background flex h-full max-h-full flex-col overflow-hidden border-r">
@@ -997,11 +1010,9 @@ export default function ChatArea({
                   />
                 );
               } else if (log.role === "agent") {
-                const agentIndex = processedLogs.findIndex(
-                  (processedLog) => processedLog.timestamp === log.timestamp,
-                );
+                const agentIndex = processedLogsMap.get(log.timestamp);
 
-                if (agentIndex >= 0) {
+                if (agentIndex !== undefined) {
                   return (
                     <StreamingMessage
                       key={processedLogs[agentIndex].id}

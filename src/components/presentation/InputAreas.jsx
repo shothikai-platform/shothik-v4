@@ -74,9 +74,10 @@ export default function InputArea({
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
-      "Selected files:",
-      files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
-    );
+    // console.log(
+    //   "Selected files:",
+    //   files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
+    // );
 
     // Check file type and size
     const allowedTypes = [
@@ -115,10 +116,11 @@ export default function InputArea({
       userId: user._id,
     };
 
-      filesCount: files.length,
-      userId: user._id,
-      fileNames: files.map((f) => f.name),
-    });
+    // console.log({
+    //   filesCount: files.length,
+    //   userId: user._id,
+    //   fileNames: files.map((f) => f.name),
+    // });
 
     try {
       // Show loading state
