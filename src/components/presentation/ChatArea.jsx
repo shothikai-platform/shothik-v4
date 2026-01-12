@@ -952,6 +952,19 @@ export default function ChatArea({
     );
   }, [realLogs, deduplicatedOptimisticMessages]);
 
+  // Bolt: Optimize lookup from O(N*M) to O(N) by creating a map of timestamp -> index
+  const processedLogsMap = useMemo(() => {
+    const map = new Map();
+    processedLogs.forEach((log, index) => {
+      // Only set the first occurrence to match findIndex behavior
+      // Handle potential undefined timestamps safely
+      if (!map.has(log.timestamp)) {
+        map.set(log.timestamp, index);
+      }
+    });
+    return map;
+  }, [processedLogs]);
+
   return (
     <>
       <div className="border-border bg-background flex h-full max-h-full flex-col overflow-hidden border-r">
@@ -997,9 +1010,7 @@ export default function ChatArea({
                   />
                 );
               } else if (log.role === "agent") {
-                const agentIndex = processedLogs.findIndex(
-                  (processedLog) => processedLog.timestamp === log.timestamp,
-                );
+                const agentIndex = processedLogsMap.get(log.timestamp) ?? -1;
 
                 if (agentIndex >= 0) {
                   return (
