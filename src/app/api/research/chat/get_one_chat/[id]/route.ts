@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function GET(
     request: Request,
@@ -8,9 +9,17 @@ export async function GET(
 ) {
     try {
         const { id } = await params;
+
+        // Security Check: Authenticate user
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         await dbConnect();
 
-        const chat = await ResearchChat.findById(id);
+        // Security Check: Ensure user owns the chat (IDOR protection)
+        const chat = await ResearchChat.findOne({ _id: id, userId: user._id });
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
