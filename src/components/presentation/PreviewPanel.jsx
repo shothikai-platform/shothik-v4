@@ -8,7 +8,7 @@ import { Chart, registerables } from "chart.js";
 import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SlidePreview from "./SlidePreview";
 import BrowserWorkerMarkdown from "./v2/BrowserWorkerMarkdown";
 
@@ -44,12 +44,12 @@ export default function PreviewPanel({
   const [previewTab, setPreviewTab] = useState("preview");
   const [slideTabs, setSlideTabs] = useState({});
 
-  const handleSlideTabChange = (slideIndex, newValue) => {
+  const handleSlideTabChange = useCallback((slideIndex, newValue) => {
     setSlideTabs((prev) => ({
       ...prev,
       [slideIndex]: newValue,
     }));
-  };
+  }, []);
 
   // Determine if presentation is still generating (same logic as PresentationLogsUi)
   // This ensures consistent loading state across both panels
