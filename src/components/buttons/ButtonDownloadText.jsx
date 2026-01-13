@@ -4,6 +4,11 @@ import { Check, Download } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { downloadFile } from "../tools/common/downloadfile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ButtonDownloadText = ({
   className,
@@ -29,24 +34,32 @@ const ButtonDownloadText = ({
   };
 
   return (
-    <button
-      onClick={(e) => {
-        handleDownload(e);
-        onClick?.(e);
-      }}
-      className={cn(
-        "flex size-8 cursor-pointer items-center justify-center rounded",
-        className,
-      )}
-      {...props}
-    >
-      {children ||
-        (showDownload ? (
-          <Download className="size-5" />
-        ) : (
-          <Check className="size-5" />
-        ))}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={(e) => {
+            handleDownload(e);
+            onClick?.(e);
+          }}
+          className={cn(
+            "flex size-8 cursor-pointer items-center justify-center rounded",
+            className,
+          )}
+          aria-label={showDownload ? "Download text" : "Downloaded"}
+          {...props}
+        >
+          {children ||
+            (showDownload ? (
+              <Download className="size-5" />
+            ) : (
+              <Check className="size-5" />
+            ))}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{showDownload ? "Download text" : "Downloaded!"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
