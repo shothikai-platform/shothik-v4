@@ -899,6 +899,20 @@ export default function ChatArea({
     unregisterAnimationCallback,
   } = useStreamingLogs(realLogs, isLoading, status, presentationId);
 
+  // Optimization: Create a map for O(1) lookup of processed logs by timestamp
+  // This reduces rendering complexity from O(N^2) to O(N) where N is the number of messages
+  const processedLogsMap = useMemo(() => {
+    const map = new Map();
+    processedLogs.forEach((log, index) => {
+      // We only set the index if the timestamp hasn't been seen yet
+      // This preserves the behavior of findIndex (finding the first match)
+      if (log.timestamp && !map.has(log.timestamp)) {
+        map.set(log.timestamp, index);
+      }
+    });
+    return map;
+  }, [processedLogs]);
+
   const scrollContainerRef = useRef(null);
   const autoScrollRef = useRef(true);
 
@@ -997,9 +1011,9 @@ export default function ChatArea({
                   />
                 );
               } else if (log.role === "agent") {
-                const agentIndex = processedLogs.findIndex(
-                  (processedLog) => processedLog.timestamp === log.timestamp,
-                );
+                const agentIndex = processedLogsMap.has(log.timestamp)
+                  ? processedLogsMap.get(log.timestamp)
+                  : -1;
 
                 if (agentIndex >= 0) {
                   return (
