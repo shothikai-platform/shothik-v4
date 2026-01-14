@@ -835,23 +835,24 @@ StreamingMessage.displayName = "StreamingMessage";
 // };
 
 const mergeMessagesWithDeduplication = (realLogs, optimisticMessages) => {
-  // Preserve agent logs from realLogs
-  const agentLogs = realLogs.filter((log) => log.role === "agent");
+  // Create a Set of existing user messages for O(1) lookup
+  const existingUserMessages = new Set();
+
+  for (const log of realLogs) {
+    if (log.role === "user") {
+      const content = log.message ? log.message.trim() : undefined;
+      existingUserMessages.add(content);
+    }
+  }
 
   const merged = [...realLogs];
 
-  optimisticMessages.forEach((optMsg) => {
-    const exists = realLogs.some(
-      (real) =>
-        real.role === "user" && real.message?.trim() === optMsg.message?.trim(),
-    );
-
-    if (!exists) {
+  for (const optMsg of optimisticMessages) {
+    const content = optMsg.message ? optMsg.message.trim() : undefined;
+    if (!existingUserMessages.has(content)) {
       merged.push(optMsg);
     }
-  });
-
-  // 
+  }
 
   return merged.sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
