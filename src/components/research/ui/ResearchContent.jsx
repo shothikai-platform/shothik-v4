@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
-import { marked } from "marked";
+import { marked } from "@/lib/marked-config";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
