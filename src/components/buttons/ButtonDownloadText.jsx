@@ -1,4 +1,11 @@
 "use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Check, Download } from "lucide-react";
 import { useState } from "react";
@@ -29,24 +36,31 @@ const ButtonDownloadText = ({
   };
 
   return (
-    <button
-      onClick={(e) => {
-        handleDownload(e);
-        onClick?.(e);
-      }}
-      className={cn(
-        "flex size-8 cursor-pointer items-center justify-center rounded",
-        className,
-      )}
-      {...props}
-    >
-      {children ||
-        (showDownload ? (
-          <Download className="size-5" />
-        ) : (
-          <Check className="size-5" />
-        ))}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            handleDownload(e);
+            onClick?.(e);
+          }}
+          className={cn("cursor-pointer", className)}
+          aria-label={showDownload ? "Download text" : "Downloaded"}
+          {...props}
+        >
+          {children ||
+            (showDownload ? (
+              <Download className="size-5" />
+            ) : (
+              <Check className="size-5" />
+            ))}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{showDownload ? "Download text" : "Downloaded"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
