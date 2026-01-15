@@ -1,20 +1,25 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import ResearchChat from '@/models/ResearchChat';
-import { getAuthenticatedUser } from '@/lib/server-auth';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import ResearchChat from "@/models/ResearchChat";
+import { getAuthenticatedUser } from "@/lib/server-auth";
 
 export async function GET(request: Request) {
-    try {
-        const user = await getAuthenticatedUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        await dbConnect();
-        const chats = await ResearchChat.find({ userId: user._id || user.id }).sort({ updatedAt: -1 });
-        return NextResponse.json(chats);
-    } catch (error) {
-        console.error('Error fetching research chats:', error);
-        return NextResponse.json({ error: 'Failed to fetch chats' }, { status: 500 });
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    await dbConnect();
+    const chats = await ResearchChat.find({ userId: user._id || user.id }).sort(
+      { updatedAt: -1 },
+    );
+    return NextResponse.json(chats);
+  } catch (error) {
+    console.error("Error fetching research chats:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch chats" },
+      { status: 500 },
+    );
+  }
 }
