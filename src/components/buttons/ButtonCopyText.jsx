@@ -3,6 +3,12 @@ import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
   const [showCopy, setShowCopy] = useState(true);
@@ -21,20 +27,31 @@ const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
   };
 
   return (
-    <button
-      onClick={(e) => {
-        handleCopy(e);
-        onClick?.(e);
-      }}
-      className={cn(
-        "flex size-8 cursor-pointer items-center justify-center rounded",
-        className,
-      )}
-      {...props}
-    >
-      {children ||
-        (showCopy ? <Copy className="size-5" /> : <Check className="size-5" />)}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            handleCopy(e);
+            onClick?.(e);
+          }}
+          className={cn("size-8", className)}
+          aria-label={showCopy ? "Copy text" : "Copied"}
+          {...props}
+        >
+          {children ||
+            (showCopy ? (
+              <Copy className="size-5" />
+            ) : (
+              <Check className="size-5" />
+            ))}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{showCopy ? "Copy" : "Copied"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
