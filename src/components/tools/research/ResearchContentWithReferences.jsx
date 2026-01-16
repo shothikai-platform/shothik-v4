@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import { useState } from "react";
 import CombinedActions from "./CombinedActions";
@@ -188,7 +189,9 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: DOMPurify.sanitize(marked(processedContent), {
+                ADD_ATTR: ["data-reference", "target"],
+              }),
             }}
           />
 
