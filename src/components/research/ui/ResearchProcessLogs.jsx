@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -94,28 +94,28 @@ const aggregateFromEvents = (events = []) => {
   return { summary, uniqueSources, queries };
 };
 
-const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
-  const stepLabel = STEP_LABELS[ev.step] || ev.step || "Step";
-  const timestamp = ev.timestamp ? defaultFormatTime(ev.timestamp) : "";
+const ProcessTimelineItem = memo(({ event, isLast, isActive }) => {
+  const stepLabel = STEP_LABELS[event.step] || event.step || "Step";
+  const timestamp = event.timestamp ? defaultFormatTime(event.timestamp) : "";
   const messageCandidates = [
-    ev.data?.message,
-    ev.data?.title,
-    ev.data?.text,
-    ev.data?.output,
-    ev.data?.description,
+    event.data?.message,
+    event.data?.title,
+    event.data?.text,
+    event.data?.output,
+    event.data?.description,
   ];
   const message = messageCandidates.find(Boolean) || null;
 
   const badges = [];
-  if (ev.data?.sources_gathered?.length)
-    badges.push(`${ev.data.sources_gathered.length} sources`);
-  if (ev.data?.sources_count) badges.push(`${ev.data.sources_count} sources`);
-  if (ev.data?.search_query?.length)
-    badges.push(`${ev.data.search_query.length} queries`);
-  if (ev.data?.search_queries?.length)
-    badges.push(`${ev.data.search_queries.length} queries`);
-  if (ev.data?.images_found !== undefined)
-    badges.push(`${ev.data.images_found} images`);
+  if (event.data?.sources_gathered?.length)
+    badges.push(`${event.data.sources_gathered.length} sources`);
+  if (event.data?.sources_count) badges.push(`${event.data.sources_count} sources`);
+  if (event.data?.search_query?.length)
+    badges.push(`${event.data.search_query.length} queries`);
+  if (event.data?.search_queries?.length)
+    badges.push(`${event.data.search_queries.length} queries`);
+  if (event.data?.images_found !== undefined)
+    badges.push(`${event.data.images_found} images`);
 
   return (
     <div className="relative flex gap-3 pb-4">
@@ -153,17 +153,17 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
                   </p>
                 )}
 
-                {Array.isArray(ev.data?.search_query) &&
-                  ev.data.search_query.length > 0 && (
+                {Array.isArray(event.data?.search_query) &&
+                  event.data.search_query.length > 0 && (
                     <div className="mt-1 flex flex-wrap gap-1">
-                      {ev.data.search_query.slice(0, 3).map((q, i) => (
+                      {event.data.search_query.slice(0, 3).map((q, i) => (
                         <Badge key={i} variant="outline">
                           {shortText(q, 40)}
                         </Badge>
                       ))}
-                      {ev.data.search_query.length > 3 && (
+                      {event.data.search_query.length > 3 && (
                         <Badge variant="default">
-                          +{ev.data.search_query.length - 3} more
+                          +{event.data.search_query.length - 3} more
                         </Badge>
                       )}
                     </div>
@@ -189,7 +189,8 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
       </div>
     </div>
   );
-};
+});
+ProcessTimelineItem.displayName = "ProcessTimelineItem";
 
 const ResearchProcessLogs = ({
   streamEvents = [],
@@ -201,40 +202,35 @@ const ResearchProcessLogs = ({
       return null;
     }
 
-    let activeIndex = -1;
-    const steps = streamEvents.map((e, idx) => ({ ...e, __idx: idx }));
-
-    if (isStreaming) {
-      for (let i = steps.length - 1; i >= 0; i--) {
-        if (steps[i].step !== "completed") {
-          activeIndex = i;
-          break;
-        }
-      }
-    } else {
-      activeIndex = steps.length - 1;
-    }
-
     const { summary, uniqueSources, queries } =
       aggregateFromEvents(streamEvents);
 
     return {
-      steps: steps.map((s, i) => ({ ...s, isActive: i === activeIndex })),
       summary,
       uniqueSources,
       queries,
     };
+  }, [streamEvents]);
+
+  const activeIndex = useMemo(() => {
+    if (!isStreaming || !streamEvents.length) return streamEvents.length - 1;
+    for (let i = streamEvents.length - 1; i >= 0; i--) {
+        if (streamEvents[i].step !== "completed") {
+            return i;
+        }
+    }
+    return -1;
   }, [streamEvents, isStreaming]);
 
   if (!processed) return null;
 
-  const { steps, summary, uniqueSources, queries } = processed;
-
+  const { summary, uniqueSources, queries } = processed;
+  // Fallback to first event if researches empty
   const mainTitle =
     (researches &&
       researches[0] &&
       (researches[0].title || researches[0].name)) ||
-    steps[0]?.data?.title ||
+      (streamEvents[0]?.data?.title) ||
     "Research Process";
 
   return (
@@ -346,12 +342,12 @@ const ResearchProcessLogs = ({
 
       {/* Timeline */}
       <div>
-        {steps.map((ev, idx) => (
+        {streamEvents.map((event, idx) => (
           <ProcessTimelineItem
-            key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
-            ev={ev}
-            isLast={idx === steps.length - 1}
-            isActive={ev.isActive}
+            key={`${event.step}-${event.timestamp || idx}-${idx}`}
+            event={event}
+            isLast={idx === streamEvents.length - 1}
+            isActive={idx === activeIndex}
           />
         ))}
       </div>

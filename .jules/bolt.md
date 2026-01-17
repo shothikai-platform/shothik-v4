@@ -1,0 +1,3 @@
+## 2024-05-23 - React.memo Optimization Strategy
+**Learning:** When using `React.memo` on list items (e.g., `ProcessTimelineItem`), it is crucial to ensure that the props passed to it are stable references. If the parent component recreates the props (e.g., via `map` returning new objects `{...item, extraProp}`), memoization is defeated.
+**Action:** Instead of spreading and enriching objects in the `map` function, calculate derived state (like `isActive` or `isLast`) separately and pass the original stable data object plus the derived primitives as separate props. This ensures that `React.memo` can effectively compare props by reference and prevent unnecessary re-renders.
