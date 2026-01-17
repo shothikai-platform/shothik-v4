@@ -1,0 +1,30 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1681ms
+ ○ Compiling /palette-test ...
+ HEAD /palette-test 200 in 13.7s (compile: 12.5s, render: 1154ms)
+ ○ Compiling / ...
+ GET / 200 in 9.4s (compile: 8.6s, render: 842ms)
+ GET / 200 in 284ms (compile: 27ms, render: 257ms)
+ GET / 200 in 189ms (compile: 12ms, render: 177ms)
+ GET / 200 in 218ms (compile: 7ms, render: 211ms)
+ GET /palette-test 200 in 154ms (compile: 6ms, render: 148ms)
+ GET / 200 in 397ms (compile: 224ms, render: 173ms)
+ GET / 200 in 161ms (compile: 8ms, render: 153ms)
+ GET /palette-test 200 in 966ms (compile: 288ms, render: 678ms)
+ GET / 200 in 394ms (compile: 218ms, render: 176ms)
+ GET / 200 in 183ms (compile: 6ms, render: 177ms)
+ GET /palette-test 200 in 101ms (compile: 6ms, render: 95ms)
