@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -30,7 +30,6 @@ const defaultFormatTime = (ts) => {
   try {
     const d = new Date(ts);
     return d.toLocaleTimeString([], {
-      hour12: false,
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
@@ -94,7 +93,17 @@ const aggregateFromEvents = (events = []) => {
   return { summary, uniqueSources, queries };
 };
 
-const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
+const arePropsEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.isLast === nextProps.isLast &&
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.ev.step === nextProps.ev.step &&
+    prevProps.ev.timestamp === nextProps.ev.timestamp &&
+    prevProps.ev.data === nextProps.ev.data
+  );
+};
+
+const ProcessTimelineItem = memo(({ ev, isLast, isActive }) => {
   const stepLabel = STEP_LABELS[ev.step] || ev.step || "Step";
   const timestamp = ev.timestamp ? defaultFormatTime(ev.timestamp) : "";
   const messageCandidates = [
@@ -189,7 +198,7 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
       </div>
     </div>
   );
-};
+}, arePropsEqual);
 
 const ResearchProcessLogs = ({
   streamEvents = [],
