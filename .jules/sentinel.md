@@ -1,0 +1,4 @@
+## 2025-02-18 - Research Chat IDOR Vulnerabilities
+**Vulnerability:** Several API endpoints (`get_one_chat`, `delete_chat`, `update_name`) were completely unprotected, allowing any user (or unauthenticated visitor) to read, modify, or delete any research chat by just guessing the ID.
+**Learning:** Next.js App Router API routes do not inherit authentication middleware automatically if not configured. In this project, middleware.ts was present but seemingly not covering these routes or not enforcing auth, and the route handlers themselves lacked manual checks.
+**Prevention:** Always explicitly call `getAuthenticatedUser()` (or equivalent auth check) at the start of every sensitive API route. Always include `userId` in the MongoDB query (e.g., `findOne({ _id: id, userId: user._id })`) to enforce ownership at the database level.
