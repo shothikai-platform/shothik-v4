@@ -1,4 +1,9 @@
 "use client";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
@@ -21,20 +26,33 @@ const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
   };
 
   return (
-    <button
-      onClick={(e) => {
-        handleCopy(e);
-        onClick?.(e);
-      }}
-      className={cn(
-        "flex size-8 cursor-pointer items-center justify-center rounded",
-        className,
-      )}
-      {...props}
-    >
-      {children ||
-        (showCopy ? <Copy className="size-5" /> : <Check className="size-5" />)}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={showCopy ? "Copy text" : "Copied"}
+          onClick={(e) => {
+            handleCopy(e);
+            onClick?.(e);
+          }}
+          className={cn(
+            "flex size-8 cursor-pointer items-center justify-center rounded",
+            className,
+          )}
+          {...props}
+        >
+          {children ||
+            (showCopy ? (
+              <Copy className="size-5" />
+            ) : (
+              <Check className="size-5" />
+            ))}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{showCopy ? "Copy text" : "Copied"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
