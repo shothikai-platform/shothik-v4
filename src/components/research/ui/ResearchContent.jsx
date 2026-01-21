@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
-import { marked } from "marked";
+import Marked from "marked-react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
@@ -37,10 +37,11 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
           "prose-th:p-2 prose-th:text-left prose-td:p-2",
         )}
       >
-        <div
-          className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
-        />
+        <div className="w-full max-w-full overflow-hidden">
+          <Marked breaks gfm>
+            {typeof message === "string" ? message : String(message || "")}
+          </Marked>
+        </div>
       </div>
 
       {message.sources && message.sources.length > 0 && (
