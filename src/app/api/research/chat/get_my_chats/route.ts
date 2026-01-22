@@ -11,7 +11,9 @@ export async function GET(request: Request) {
         }
 
         await dbConnect();
-        const chats = await ResearchChat.find({ userId: user._id || user.id }).sort({ updatedAt: -1 });
+        const chats = await ResearchChat.find({ userId: user._id || user.id })
+            .select('-messages') // Optimization: Exclude messages to reduce payload size
+            .sort({ updatedAt: -1 });
         return NextResponse.json(chats);
     } catch (error) {
         console.error('Error fetching research chats:', error);
