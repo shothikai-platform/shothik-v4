@@ -1,0 +1,4 @@
+## 2026-01-22 - IDOR in Research Chat API
+**Vulnerability:** Research Chat API endpoints (`get_one_chat`, `delete_chat`, `update_name`) relied solely on `_id` for resource retrieval, lacking authentication checks and `userId` ownership validation. This allowed any user to view, update, or delete any research chat by guessing the ID.
+**Learning:** Next.js App Router handlers require explicit authentication verification (`getAuthenticatedUser`) and authorization (checking `userId` in database queries) for every private route. Absence of middleware enforcement makes it easy to forget these checks.
+**Prevention:** Implement a pattern where every database query for user-owned resources must use `findOne({ _id: id, userId: user._id })` instead of `findById(id)`. Ensure `getAuthenticatedUser()` is called and validated at the start of every protected route handler.
