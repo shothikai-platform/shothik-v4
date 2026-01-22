@@ -1,0 +1,48 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 2.9s
+ ○ Compiling /verification-temp ...
+ ⨯ ./src/components/tools/research/ReferenceModal.jsx:12:12
+Parsing ecmascript source code failed
+[0m [90m 10 |[39m     open[33m,[39m
+ [90m 11 |[39m     reference[33m,[39m
+[31m[1m>[22m[39m[90m 12 |[39m     sources[33m:[39m sources[33m?[39m[33m.[39mlength[33m,[39m
+ [90m    |[39m            [31m[1m^[22m[39m
+ [90m 13 |[39m     anchorEl[33m,[39m
+ [90m 14 |[39m   })[33m;[39m
+ [90m 15 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component Browser]
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component Browser]
+    ./src/app/verification-temp/page.jsx [Client Component Browser]
+    ./src/app/verification-temp/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component SSR]
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component SSR]
+    ./src/app/verification-temp/page.jsx [Client Component SSR]
+    ./src/app/verification-temp/page.jsx [Server Component]
+
+
+ GET /verification-temp 500 in 18.9s (compile: 18.7s, render: 191ms)
+ ✓ Compiled in 387ms
+ GET /verification-temp 200 in 1440ms (compile: 358ms, render: 1082ms)
+ ELIFECYCLE  Command failed.
+[?25h
