@@ -1,0 +1,15 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1638ms
+ ○ Compiling /test-buttons ...
+ GET /test-buttons 200 in 16.4s (compile: 14.8s, render: 1603ms)
+ GET /test-buttons 200 in 142ms (compile: 13ms, render: 129ms)
+ GET /test-buttons 200 in 141ms (compile: 12ms, render: 128ms)
