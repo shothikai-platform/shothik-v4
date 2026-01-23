@@ -7,9 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import NextImage from "next/image";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // NOTE: This component expects a `researchItem` prop shaped like the sample data
 // you included. If you keep a different shape, adapt the helpers below.
@@ -759,33 +764,41 @@ export default function HeaderTitleWithDownload({
 
       {/* Download button that opens a small menu */}
       <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "bg-background hover:bg-accent flex items-center justify-center rounded-md shadow-sm hover:shadow-md",
-              "h-6 min-h-6 w-6 min-w-6 p-1",
-              "md:h-7 md:min-h-7 md:w-7 md:min-w-7",
-              "lg:h-9 lg:min-h-9 lg:w-9 lg:min-w-9 lg:p-2",
-              "xl:h-12 xl:min-h-12 xl:w-12 xl:min-w-12 xl:p-3",
-            )}
-          >
-            <NextImage
-              src={"/agents/edit.svg"}
-              alt={"Download"}
-              width={24}
-              height={24}
-              className={cn(
-                "h-full w-full object-contain",
-                // Light mode: keep original or slightly darker for contrast
-                "opacity-80",
-                // Dark mode: invert to white/light color for visibility
-                "dark:brightness-0 dark:invert dark:opacity-100",
-              )}
-            />
-          </Button>
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Download options"
+                className={cn(
+                  "bg-background hover:bg-accent flex items-center justify-center rounded-md shadow-sm hover:shadow-md",
+                  "h-6 min-h-6 w-6 min-w-6 p-1",
+                  "md:h-7 md:min-h-7 md:w-7 md:min-w-7",
+                  "lg:h-9 lg:min-h-9 lg:w-9 lg:min-w-9 lg:p-2",
+                  "xl:h-12 xl:min-h-12 xl:w-12 xl:min-w-12 xl:p-3",
+                )}
+              >
+                <NextImage
+                  src={"/agents/edit.svg"}
+                  alt={"Download"}
+                  width={24}
+                  height={24}
+                  className={cn(
+                    "h-full w-full object-contain",
+                    // Light mode: keep original or slightly darker for contrast
+                    "opacity-80",
+                    // Dark mode: invert to white/light color for visibility
+                    "dark:brightness-0 dark:invert dark:opacity-100",
+                  )}
+                />
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Download options</p>
+          </TooltipContent>
+        </Tooltip>
         <DropdownMenuContent align="end" className="mt-1">
           <DropdownMenuItem onClick={downloadPdfFromMarkdown}>
             Download PDF
