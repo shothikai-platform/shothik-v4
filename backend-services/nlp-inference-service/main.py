@@ -1,9 +1,11 @@
 
 import logging
 from contextlib import asynccontextmanager
+import os
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from services.model_loader import ModelLoader 
+from services.model_loader import ModelLoader
 from routes import paraphrase
 from socket_app import socket_app
 
@@ -54,12 +56,23 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS (Allow local frontend)
+# Secure CORS policy by loading allowed origins from an environment variable.
+# This prevents unauthorized domains from making requests to the API.
+# Example: ALLOWED_ORIGINS="http://localhost:3000,https://your-frontend.com"
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS: List[str] = [
+    origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
+]
+
+# In development, you might want to uncomment the following for easier local testing:
+# if not ALLOWED_ORIGINS and os.getenv("PYTHON_ENV") == "development":
+#     ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Secure this in production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
