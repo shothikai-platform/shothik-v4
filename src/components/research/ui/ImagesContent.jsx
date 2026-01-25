@@ -9,8 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ExternalLink, Image as ImageIcon } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const ImageCard = ({ image, onClick }) => (
   <Card
@@ -19,11 +25,11 @@ const ImageCard = ({ image, onClick }) => (
   >
     <div className="bg-muted relative h-[200px] overflow-hidden">
       <img
-        src={image.url || image.thumbnail_url }
+        src={image.url || image.thumbnail_url}
         alt={image.alt_text || image.title}
         className="h-full w-full object-cover object-center"
         //onError={(e) => {
-          //e.target.src = "/placeholder-image.png";
+        //e.target.src = "/placeholder-image.png";
         //}}
       />
     </div>
@@ -39,17 +45,27 @@ const ImageCard = ({ image, onClick }) => (
           {image.width} × {image.height}
         </Badge>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(image.context_url, "_blank");
-          }}
-        >
-          <ExternalLink className="h-4 w-4" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                aria-label="Open source in new tab"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(image.context_url, "_blank");
+                }}
+              >
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Open source</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </CardContent>
   </Card>
@@ -71,7 +87,7 @@ const ImageModal = ({ image, open, onClose }) => (
             alt={image.alt_text || image.title}
             className="bg-muted h-auto max-h-[70vh] w-full rounded-lg object-contain"
             //onError={(e) => {
-              //e.target.src = "/placeholder-image.png";
+            //e.target.src = "/placeholder-image.png";
             //}}
           />
 
