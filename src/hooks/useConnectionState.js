@@ -3,8 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 
 export const useConnectionState = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+  const [isOnline, setIsOnline] = useState(
+    typeof navigator !== "undefined" ? navigator.onLine : true,
+  );
+  const [isPageVisible, setIsPageVisible] = useState(
+    typeof document !== "undefined" ? !document.hidden : true,
+  );
   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
 
   useEffect(() => {
