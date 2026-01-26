@@ -1,10 +1,10 @@
 "use client";
 
+import React, { memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -30,7 +30,6 @@ const defaultFormatTime = (ts) => {
   try {
     const d = new Date(ts);
     return d.toLocaleTimeString([], {
-      hour12: false,
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
@@ -94,7 +93,7 @@ const aggregateFromEvents = (events = []) => {
   return { summary, uniqueSources, queries };
 };
 
-const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
+const ProcessTimelineItem = memo(({ ev, isLast, isActive }) => {
   const stepLabel = STEP_LABELS[ev.step] || ev.step || "Step";
   const timestamp = ev.timestamp ? defaultFormatTime(ev.timestamp) : "";
   const messageCandidates = [
@@ -189,7 +188,9 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
       </div>
     </div>
   );
-};
+});
+
+ProcessTimelineItem.displayName = "ProcessTimelineItem";
 
 const ResearchProcessLogs = ({
   streamEvents = [],
@@ -202,24 +203,24 @@ const ResearchProcessLogs = ({
     }
 
     let activeIndex = -1;
-    const steps = streamEvents.map((e, idx) => ({ ...e, __idx: idx }));
 
     if (isStreaming) {
-      for (let i = steps.length - 1; i >= 0; i--) {
-        if (steps[i].step !== "completed") {
+      for (let i = streamEvents.length - 1; i >= 0; i--) {
+        if (streamEvents[i].step !== "completed") {
           activeIndex = i;
           break;
         }
       }
     } else {
-      activeIndex = steps.length - 1;
+      activeIndex = streamEvents.length - 1;
     }
 
     const { summary, uniqueSources, queries } =
       aggregateFromEvents(streamEvents);
 
     return {
-      steps: steps.map((s, i) => ({ ...s, isActive: i === activeIndex })),
+      streamEvents,
+      activeIndex,
       summary,
       uniqueSources,
       queries,
@@ -228,13 +229,13 @@ const ResearchProcessLogs = ({
 
   if (!processed) return null;
 
-  const { steps, summary, uniqueSources, queries } = processed;
+  const { streamEvents: events, activeIndex, summary, uniqueSources, queries } = processed;
 
   const mainTitle =
     (researches &&
       researches[0] &&
       (researches[0].title || researches[0].name)) ||
-    steps[0]?.data?.title ||
+    events[0]?.data?.title ||
     "Research Process";
 
   return (
@@ -346,12 +347,12 @@ const ResearchProcessLogs = ({
 
       {/* Timeline */}
       <div>
-        {steps.map((ev, idx) => (
+        {events.map((ev, idx) => (
           <ProcessTimelineItem
             key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
             ev={ev}
-            isLast={idx === steps.length - 1}
-            isActive={ev.isActive}
+            isLast={idx === events.length - 1}
+            isActive={idx === activeIndex}
           />
         ))}
       </div>
