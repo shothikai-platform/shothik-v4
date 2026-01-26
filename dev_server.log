@@ -1,0 +1,35 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1511ms
+ ○ Compiling /verification-temp ...
+ ⨯ ReferenceError: document is not defined
+    at useConnectionState (src/hooks/useConnectionState.js:7:55)
+    at useResearchStream (src/hooks/useResearchStream.js:37:25)
+    at ChatInput (src/components/research/ui/ChatInput.jsx:35:62)
+   5 | export const useConnectionState = () => {
+   6 |   const [isOnline, setIsOnline] = useState(navigator.onLine);
+>  7 |   const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+     |                                                       ^
+   8 |   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
+   9 |
+  10 |   useEffect(() => { {
+  digest: '2910089791'
+}
+ GET /verification-temp 500 in 15.2s (compile: 13.2s, render: 2.1s)
+ GET /verification-temp 200 in 469ms (compile: 95ms, render: 374ms)
+ GET /verification-temp 200 in 123ms (compile: 12ms, render: 110ms)
+ GET /verification-temp 200 in 484ms (compile: 109ms, render: 374ms)
+ GET /verification-temp 200 in 213ms (compile: 9ms, render: 203ms)
