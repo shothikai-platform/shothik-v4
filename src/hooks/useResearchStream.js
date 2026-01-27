@@ -3,6 +3,7 @@
 import { addMessage } from "@/redux/slices/researchChatSlice";
 import {
   addStreamEvent,
+  addStreamEvents,
   finishResearch,
   setConnectionStatus,
   setError,
@@ -470,6 +471,8 @@ export const useResearchStream = () => {
             const lines = buffer.split("\n");
             buffer = lines.pop() || "";
 
+            const eventsToDispatch = [];
+
             for (const line of lines) {
               if (line.trim()) {
                 try {
@@ -480,7 +483,7 @@ export const useResearchStream = () => {
                   }
 
                   if (event.step) {
-                    dispatch(addStreamEvent(event));
+                    eventsToDispatch.push(event);
 
                     // Update stored metadata with latest step
                     if (event.data?.jobId) {
@@ -498,6 +501,10 @@ export const useResearchStream = () => {
                   console.error("Failed to parse stream event:", parseError);
                 }
               }
+            }
+
+            if (eventsToDispatch.length > 0) {
+              dispatch(addStreamEvents(eventsToDispatch));
             }
           }
         }

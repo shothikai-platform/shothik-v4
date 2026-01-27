@@ -76,6 +76,41 @@ export const researchCoreSlice = createSlice({
       state.streamEvents.push(eventWithMetadata);
       state.lastEventTimestamp = Date.now();
     },
+    addStreamEvents: (state, action) => {
+      const newEvents = action.payload;
+
+      if (!Array.isArray(newEvents) || newEvents.length === 0) return;
+
+      const validEvents = [];
+
+      for (const event of newEvents) {
+        // Check against current state
+        const isDuplicateInState = !shouldAddEvent(state.streamEvents, event);
+        if (isDuplicateInState) continue;
+
+        // Check against pending batch
+        const isDuplicateInBatch = !shouldAddEvent(validEvents, event);
+        if (isDuplicateInBatch) continue;
+
+        validEvents.push(event);
+      }
+
+      if (validEvents.length === 0) return;
+
+      const eventsWithMetadata = validEvents.map((event) => ({
+        ...event,
+        sequenceNumber: state.eventSequenceNumber++,
+        receivedAt: Date.now(),
+      }));
+
+      state.streamEvents.push(...eventsWithMetadata);
+
+      if (state.streamEvents.length > 100) {
+        state.streamEvents = state.streamEvents.slice(-100);
+      }
+
+      state.lastEventTimestamp = Date.now();
+    },
     updateStreamingMessage: (state, action) => {
       state.streamingMessage += action.payload;
     },
@@ -221,6 +256,7 @@ export const researchCoreSlice = createSlice({
 export const {
   startStreaming,
   addStreamEvent,
+  addStreamEvents,
   updateStreamingMessage,
   finishResearch,
   setError,
