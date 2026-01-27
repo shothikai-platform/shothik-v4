@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -94,7 +94,7 @@ const aggregateFromEvents = (events = []) => {
   return { summary, uniqueSources, queries };
 };
 
-const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
+const ProcessTimelineItem = memo(({ ev, isLast, isActive }) => {
   const stepLabel = STEP_LABELS[ev.step] || ev.step || "Step";
   const timestamp = ev.timestamp ? defaultFormatTime(ev.timestamp) : "";
   const messageCandidates = [
@@ -120,7 +120,7 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
   return (
     <div className="relative flex gap-3 pb-4">
       {/* Timeline Line */}
-      <div className="flex flex-col items-center">
+      <div className="flex-col items-center flex">
         <div
           className={cn(
             "h-2.5 w-2.5 rounded-full shadow-none",
@@ -189,7 +189,9 @@ const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
       </div>
     </div>
   );
-};
+});
+
+ProcessTimelineItem.displayName = "ProcessTimelineItem";
 
 const ResearchProcessLogs = ({
   streamEvents = [],
@@ -201,40 +203,37 @@ const ResearchProcessLogs = ({
       return null;
     }
 
-    let activeIndex = -1;
-    const steps = streamEvents.map((e, idx) => ({ ...e, __idx: idx }));
-
-    if (isStreaming) {
-      for (let i = steps.length - 1; i >= 0; i--) {
-        if (steps[i].step !== "completed") {
-          activeIndex = i;
-          break;
-        }
-      }
-    } else {
-      activeIndex = steps.length - 1;
-    }
-
     const { summary, uniqueSources, queries } =
       aggregateFromEvents(streamEvents);
 
     return {
-      steps: steps.map((s, i) => ({ ...s, isActive: i === activeIndex })),
       summary,
       uniqueSources,
       queries,
     };
+  }, [streamEvents]);
+
+  const activeIndex = useMemo(() => {
+    if (!streamEvents?.length) return -1;
+    if (isStreaming) {
+      for (let i = streamEvents.length - 1; i >= 0; i--) {
+        if (streamEvents[i].step !== "completed") {
+          return i;
+        }
+      }
+    }
+    return streamEvents.length - 1;
   }, [streamEvents, isStreaming]);
 
   if (!processed) return null;
 
-  const { steps, summary, uniqueSources, queries } = processed;
+  const { summary, uniqueSources, queries } = processed;
 
   const mainTitle =
     (researches &&
       researches[0] &&
       (researches[0].title || researches[0].name)) ||
-    steps[0]?.data?.title ||
+    streamEvents[0]?.data?.title ||
     "Research Process";
 
   return (
@@ -346,12 +345,12 @@ const ResearchProcessLogs = ({
 
       {/* Timeline */}
       <div>
-        {steps.map((ev, idx) => (
+        {streamEvents.map((ev, idx) => (
           <ProcessTimelineItem
             key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
             ev={ev}
-            isLast={idx === steps.length - 1}
-            isActive={ev.isActive}
+            isLast={idx === streamEvents.length - 1}
+            isActive={idx === activeIndex}
           />
         ))}
       </div>
