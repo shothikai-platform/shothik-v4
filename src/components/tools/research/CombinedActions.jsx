@@ -634,8 +634,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
     setExportMenuOpen(false);
   };
 
-  const handleRewrite = () => {
-  };
+  const handleRewrite = () => {};
 
   const handleFeedback = async (type) => {
     if (isSubmitting) return;
@@ -665,6 +664,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button
+                    aria-label="Share"
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
@@ -718,6 +718,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button
+                    aria-label="Export"
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
@@ -739,6 +740,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="Rewrite"
                 variant="ghost"
                 size="icon"
                 onClick={handleRewrite}
@@ -761,6 +763,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="Yes, helpful"
                 variant="ghost"
                 size="icon"
                 onClick={() => handleFeedback("helpful")}
@@ -781,6 +784,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="No, not helpful"
                 variant="ghost"
                 size="icon"
                 onClick={() => handleFeedback("not-helpful")}
