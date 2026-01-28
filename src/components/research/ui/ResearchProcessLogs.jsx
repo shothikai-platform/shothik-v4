@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { useMemo } from "react";
+import ProcessTimelineItem from "./ProcessTimelineItem";
+import { shortText } from "./researchUtils";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -14,37 +16,6 @@ import { useMemo } from "react";
  *  - researches: optional meta info
  *  - isStreaming: boolean
  */
-
-const STEP_LABELS = {
-  queued: "Queued",
-  generate_query: "Query generation",
-  web_research: "Web research",
-  reflection: "Analysis & reflection",
-  finalize_answer: "Finalizing answer",
-  image_search: "Image search",
-  completed: "Completed",
-};
-
-const defaultFormatTime = (ts) => {
-  if (!ts) return "";
-  try {
-    const d = new Date(ts);
-    return d.toLocaleTimeString([], {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  } catch {
-    return String(ts);
-  }
-};
-
-const shortText = (text, n = 220) => {
-  if (!text) return "";
-  const s = String(text).trim();
-  return s.length > n ? s.slice(0, n) + "…" : s;
-};
 
 const aggregateFromEvents = (events = []) => {
   const summary = { totalSources: 0, totalQueries: 0, researchLoops: 0 };
@@ -94,103 +65,6 @@ const aggregateFromEvents = (events = []) => {
   return { summary, uniqueSources, queries };
 };
 
-const ProcessTimelineItem = ({ ev, isLast, isActive }) => {
-  const stepLabel = STEP_LABELS[ev.step] || ev.step || "Step";
-  const timestamp = ev.timestamp ? defaultFormatTime(ev.timestamp) : "";
-  const messageCandidates = [
-    ev.data?.message,
-    ev.data?.title,
-    ev.data?.text,
-    ev.data?.output,
-    ev.data?.description,
-  ];
-  const message = messageCandidates.find(Boolean) || null;
-
-  const badges = [];
-  if (ev.data?.sources_gathered?.length)
-    badges.push(`${ev.data.sources_gathered.length} sources`);
-  if (ev.data?.sources_count) badges.push(`${ev.data.sources_count} sources`);
-  if (ev.data?.search_query?.length)
-    badges.push(`${ev.data.search_query.length} queries`);
-  if (ev.data?.search_queries?.length)
-    badges.push(`${ev.data.search_queries.length} queries`);
-  if (ev.data?.images_found !== undefined)
-    badges.push(`${ev.data.images_found} images`);
-
-  return (
-    <div className="relative flex gap-3 pb-4">
-      {/* Timeline Line */}
-      <div className="flex flex-col items-center">
-        <div
-          className={cn(
-            "h-2.5 w-2.5 rounded-full shadow-none",
-            isActive ? "bg-primary animate-pulse" : "bg-muted-foreground/40",
-          )}
-        />
-        {!isLast && <div className="bg-border w-0.5 flex-1" />}
-      </div>
-
-      {/* Timeline Content */}
-      <div className="flex-1 py-1">
-        <Card className="mb-1 rounded">
-          <CardContent className="pt-1 pb-3">
-            <div className="flex justify-between gap-2">
-              <div className="flex-1">
-                <p className="text-sm font-semibold">
-                  <span
-                    className={cn(
-                      "relative inline-block overflow-hidden",
-                      isLast && "animate-shine",
-                    )}
-                  >
-                    {stepLabel}
-                  </span>
-                </p>
-
-                {message && (
-                  <p className="text-muted-foreground mt-0.5 text-sm">
-                    {shortText(message, 260)}
-                  </p>
-                )}
-
-                {Array.isArray(ev.data?.search_query) &&
-                  ev.data.search_query.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {ev.data.search_query.slice(0, 3).map((q, i) => (
-                        <Badge key={i} variant="outline">
-                          {shortText(q, 40)}
-                        </Badge>
-                      ))}
-                      {ev.data.search_query.length > 3 && (
-                        <Badge variant="default">
-                          +{ev.data.search_query.length - 3} more
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-              </div>
-
-              <div className="ml-1 flex flex-col items-end">
-                <span className="text-muted-foreground text-xs">
-                  {timestamp}
-                </span>
-
-                <div className="mt-0.5 flex flex-wrap justify-end gap-0.5">
-                  {badges.slice(0, 3).map((b, i) => (
-                    <Badge key={i} variant="outline">
-                      {b}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
-
 const ResearchProcessLogs = ({
   streamEvents = [],
   researches = [],
@@ -202,24 +76,23 @@ const ResearchProcessLogs = ({
     }
 
     let activeIndex = -1;
-    const steps = streamEvents.map((e, idx) => ({ ...e, __idx: idx }));
 
     if (isStreaming) {
-      for (let i = steps.length - 1; i >= 0; i--) {
-        if (steps[i].step !== "completed") {
+      for (let i = streamEvents.length - 1; i >= 0; i--) {
+        if (streamEvents[i].step !== "completed") {
           activeIndex = i;
           break;
         }
       }
     } else {
-      activeIndex = steps.length - 1;
+      activeIndex = streamEvents.length - 1;
     }
 
     const { summary, uniqueSources, queries } =
       aggregateFromEvents(streamEvents);
 
     return {
-      steps: steps.map((s, i) => ({ ...s, isActive: i === activeIndex })),
+      activeIndex,
       summary,
       uniqueSources,
       queries,
@@ -228,13 +101,13 @@ const ResearchProcessLogs = ({
 
   if (!processed) return null;
 
-  const { steps, summary, uniqueSources, queries } = processed;
+  const { activeIndex, summary, uniqueSources, queries } = processed;
 
   const mainTitle =
     (researches &&
       researches[0] &&
       (researches[0].title || researches[0].name)) ||
-    steps[0]?.data?.title ||
+    streamEvents[0]?.data?.title ||
     "Research Process";
 
   return (
@@ -346,12 +219,12 @@ const ResearchProcessLogs = ({
 
       {/* Timeline */}
       <div>
-        {steps.map((ev, idx) => (
+        {streamEvents.map((ev, idx) => (
           <ProcessTimelineItem
             key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
             ev={ev}
-            isLast={idx === steps.length - 1}
-            isActive={ev.isActive}
+            isLast={idx === streamEvents.length - 1}
+            isActive={idx === activeIndex}
           />
         ))}
       </div>
