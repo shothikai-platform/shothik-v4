@@ -1,0 +1,68 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1651ms
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ○ Compiling /verification-temp ...
+ ⨯ ReferenceError: document is not defined
+    at useConnectionState (src/hooks/useConnectionState.js:7:55)
+    at useResearchStream (src/hooks/useResearchStream.js:37:25)
+    at ChatInput (src/components/research/ui/ChatInput.jsx:35:62)
+   5 | export const useConnectionState = () => {
+   6 |   const [isOnline, setIsOnline] = useState(navigator.onLine);
+>  7 |   const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+     |                                                       ^
+   8 |   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
+   9 |
+  10 |   useEffect(() => { {
+  digest: '4240610513'
+}
+ GET /verification-temp 200 in 24.0s (compile: 21.9s, render: 2.1s)
+ GET /undefined/api/user/profile 404 in 2.7s (compile: 2.4s, render: 362ms)
+ GET /undefined/api/user-limit 404 in 2.8s (compile: 2.6s, render: 143ms)
+ ⨯ ReferenceError: document is not defined
+    at useConnectionState (src/hooks/useConnectionState.js:7:55)
+    at useResearchStream (src/hooks/useResearchStream.js:37:25)
+    at ChatInput (src/components/research/ui/ChatInput.jsx:35:62)
+   5 | export const useConnectionState = () => {
+   6 |   const [isOnline, setIsOnline] = useState(navigator.onLine);
+>  7 |   const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+     |                                                       ^
+   8 |   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
+   9 |
+  10 |   useEffect(() => { {
+  digest: '4240610513'
+}
+ GET /verification-temp 200 in 384ms (compile: 15ms, render: 369ms)
+ GET /undefined/api/user/profile 404 in 1580ms (compile: 60ms, render: 1520ms)
+ GET /undefined/api/user-limit 404 in 1585ms (compile: 30ms, render: 1556ms)
+ ⨯ ReferenceError: document is not defined
+    at useConnectionState (src/hooks/useConnectionState.js:7:55)
+    at useResearchStream (src/hooks/useResearchStream.js:37:25)
+    at ChatInput (src/components/research/ui/ChatInput.jsx:35:62)
+   5 | export const useConnectionState = () => {
+   6 |   const [isOnline, setIsOnline] = useState(navigator.onLine);
+>  7 |   const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+     |                                                       ^
+   8 |   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
+   9 |
+  10 |   useEffect(() => { {
+  digest: '4240610513'
+}
+ GET /verification-temp 200 in 350ms (compile: 7ms, render: 343ms)
+ GET /undefined/api/user-limit 404 in 1584ms (compile: 18ms, render: 1566ms)
+ GET /undefined/api/user/profile 404 in 1584ms (compile: 83ms, render: 1501ms)
+ ✓ Compiled in 319ms
