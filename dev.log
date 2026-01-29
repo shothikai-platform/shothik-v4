@@ -66,3 +66,319 @@ https://nextjs.org/telemetry
  GET /undefined/api/user-limit 404 in 1584ms (compile: 18ms, render: 1566ms)
  GET /undefined/api/user/profile 404 in 1584ms (compile: 83ms, render: 1501ms)
  ✓ Compiled in 319ms
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /tmp/next-panic-30609759922941152e4cc0e363778131.log.
+
+To help make Turbopack better, report this error by clicking here: https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Next.js%20package%20not%20found&body=Turbopack%20version%3A%20%60b1a04a84%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0ATurbopack%20Error%3A%20Next.js%20package%20not%20found%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace
+-----
+
+Error: Turbopack build failed with 1 errors:
+./src/app
+Error: Next.js inferred your workspace root, but it may not be correct.
+    We couldn't find the Next.js package (next/package.json) from the project directory: /app/src/app
+     To fix this, set turbopack.root in your Next.js config, or ensure the Next.js package is resolvable from this directory.
+    Note: For security and performance reasons, files outside of the project directory will not be compiled.
+    See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+
+    at ignore-listed frames
+ ⚠ Installing TypeScript as it was not found while loading "next.config.ts".
+
+Installing devDependencies (pnpm):
+- typescript
+
+ WARN  Moving @eslint/eslintrc that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @playwright/test that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tailwindcss/typography that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @testing-library/dom that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @testing-library/react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tailwindcss/postcss that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @types/node that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @types/pdfmake that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @types/react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @types/react-dom that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving babel-plugin-react-compiler that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving eslint that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving eslint-config-next that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving eslint-config-prettier that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving globals that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving jsdom that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving prettier-plugin-css-order that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving prettier-plugin-tailwindcss that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving tailwindcss that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving tw-animate-css that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving typescript that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving vitest that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving prettier that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @bprogress/next that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @eslint/js that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @floating-ui/dom that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @hookform/resolvers that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @monaco-editor/react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-accordion that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-alert-dialog that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-aspect-ratio that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-avatar that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-checkbox that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-collapsible that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-context-menu that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-dialog that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-dropdown-menu that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-hover-card that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-label that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-menubar that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-navigation-menu that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-popover that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-progress that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-radio-group that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-scroll-area that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-select that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-separator that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-slider that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-slot that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-switch that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-tabs that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-toggle that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-toggle-group that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-tooltip that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @radix-ui/react-visually-hidden that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @react-oauth/google that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @reduxjs/toolkit that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @stripe/stripe-js that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tanstack/react-query that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/core that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-blockquote that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-bold that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-bullet-list that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-hard-break that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-heading that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-highlight that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-italic that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-link that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-horizontal-rule that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-list-item that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-ordered-list that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-placeholder that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-text that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-text-align that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extension-underline that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/extensions that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/pm that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving @tiptap/starter-kit that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving axios that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving chart.js that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving class-variance-authority that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving clsx that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving cmdk that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving date-fns that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving diff that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving docx that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving dompurify that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving driver.js that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving embla-carousel-react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving file-saver that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving framer-motion that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving html-react-parser that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving html2canvas that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving input-otp that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving ioredis that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving jspdf that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving lucide-react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving mammoth that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving jwt-decode that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving markdown-it that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving marked that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving marked-react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving mind-elixir that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving mongoose that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving motion that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving next that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving pdfmake that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving pptxgenjs that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving prosemirror-model that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving prosemirror-state that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-chartjs-2 that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-contenteditable that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-data-grid that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-day-picker that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-dom that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-hook-form that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-icons that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-markdown that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-pdf that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-redux that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-resizable-panels that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-share that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-syntax-highlighter that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving react-toastify that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving recharts that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving remark-gfm that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving socket.io-client that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving remove-markdown-and-html that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving vaul that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving tailwind-merge that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving xlsx that was installed by a different package manager to "node_modules/.ignored"
+ WARN  Moving zod that was installed by a different package manager to "node_modules/.ignored"
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 76, reused 76, downloaded 0, added 0
+Progress: resolved 90, reused 90, downloaded 0, added 0
+Progress: resolved 92, reused 92, downloaded 0, added 0
+ WARN  deprecated next@16.0.7: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
+Progress: resolved 111, reused 111, downloaded 0, added 0
+Progress: resolved 157, reused 157, downloaded 0, added 0
+Progress: resolved 329, reused 324, downloaded 0, added 0
+Progress: resolved 440, reused 431, downloaded 0, added 0
+Progress: resolved 585, reused 580, downloaded 0, added 0
+Progress: resolved 622, reused 613, downloaded 0, added 0
+Progress: resolved 722, reused 695, downloaded 0, added 0
+Progress: resolved 950, reused 866, downloaded 0, added 0
+Progress: resolved 1065, reused 943, downloaded 4, added 0
+Progress: resolved 1066, reused 946, downloaded 5, added 0
+Already up to date
+Progress: resolved 1066, reused 946, downloaded 5, added 0, done
+
+dependencies:
++ @bprogress/next 3.2.12
++ @eslint/js 9.39.2
++ @floating-ui/dom 1.7.4
++ @hookform/resolvers 5.2.2
++ @monaco-editor/react 4.7.0
++ @radix-ui/react-accordion 1.2.12
++ @radix-ui/react-alert-dialog 1.1.15
++ @radix-ui/react-aspect-ratio 1.1.7
++ @radix-ui/react-avatar 1.1.10
++ @radix-ui/react-checkbox 1.3.3
++ @radix-ui/react-collapsible 1.1.12
++ @radix-ui/react-context-menu 2.2.16
++ @radix-ui/react-dialog 1.1.15
++ @radix-ui/react-dropdown-menu 2.1.16
++ @radix-ui/react-hover-card 1.1.15
++ @radix-ui/react-label 2.1.7
++ @radix-ui/react-menubar 1.1.16
++ @radix-ui/react-navigation-menu 1.2.14
++ @radix-ui/react-popover 1.1.15
++ @radix-ui/react-progress 1.1.7
++ @radix-ui/react-radio-group 1.3.8
++ @radix-ui/react-scroll-area 1.2.10
++ @radix-ui/react-select 2.2.6
++ @radix-ui/react-separator 1.1.7
++ @radix-ui/react-slider 1.3.6
++ @radix-ui/react-slot 1.2.3
++ @radix-ui/react-switch 1.2.6
++ @radix-ui/react-tabs 1.1.13
++ @radix-ui/react-toggle 1.1.10
++ @radix-ui/react-toggle-group 1.1.11
++ @radix-ui/react-tooltip 1.2.8
++ @radix-ui/react-visually-hidden 1.2.3
++ @react-oauth/google 0.12.2
++ @reduxjs/toolkit 2.9.2
++ @stripe/stripe-js 8.2.0
++ @tanstack/react-query 5.90.6
++ @tiptap/core 3.10.1
++ @tiptap/extension-blockquote 3.10.1
++ @tiptap/extension-bold 3.10.1
++ @tiptap/extension-bullet-list 3.10.1
++ @tiptap/extension-hard-break 3.10.1
++ @tiptap/extension-heading 3.10.1
++ @tiptap/extension-highlight 3.10.1
++ @tiptap/extension-horizontal-rule 3.10.1
++ @tiptap/extension-italic 3.10.1
++ @tiptap/extension-link 3.10.1
++ @tiptap/extension-list-item 3.10.1
++ @tiptap/extension-ordered-list 3.10.1
++ @tiptap/extension-placeholder 3.10.1
++ @tiptap/extension-text 3.10.1
++ @tiptap/extension-text-align 3.10.1
++ @tiptap/extension-underline 3.10.1
++ @tiptap/extensions 3.10.1
++ @tiptap/pm 3.10.1
++ @tiptap/react 3.10.1
++ @tiptap/starter-kit 3.10.1
++ axios 1.13.2
++ chart.js 4.5.1
++ class-variance-authority 0.7.1
++ clsx 2.1.1
++ cmdk 1.1.1
++ date-fns 4.1.0
++ diff 8.0.2
++ docx 9.5.1
++ dompurify 3.3.0
++ driver.js 1.3.6
++ embla-carousel-react 8.6.0
++ file-saver 2.0.5
++ framer-motion 12.23.24
++ html-react-parser 5.2.7
++ html2canvas 1.4.1
++ input-otp 1.4.2
++ ioredis 5.8.2
++ jspdf 3.0.3
++ jwt-decode 4.0.0
++ lucide-react 0.548.0
++ mammoth 1.11.0
++ markdown-it 14.1.0
++ marked 16.4.1
++ marked-react 3.0.2
++ mind-elixir 5.3.5
++ mongoose 9.1.1
++ motion 12.23.24
++ next 16.0.7 deprecated
++ pdfmake 0.2.20
++ pptxgenjs 4.0.1
++ prosemirror-model 1.25.4
++ prosemirror-state 1.4.4
++ react 19.2.0
++ react-chartjs-2 5.3.1
++ react-contenteditable 3.3.7
++ react-data-grid 7.0.0-beta.58
++ react-day-picker 9.11.1
++ react-dom 19.2.0
++ react-hook-form 7.66.0
++ react-icons 5.5.0
++ react-markdown 10.1.0
++ react-pdf 10.2.0
++ react-redux 9.2.0
++ react-resizable-panels 3.0.6
++ react-share 5.2.2
++ react-syntax-highlighter 16.1.0
++ react-toastify 11.0.5
++ recharts 2.15.4
++ remark-gfm 4.0.1
++ remove-markdown-and-html 0.1.0
++ socket.io-client 4.8.1
++ tailwind-merge 3.3.1
++ vaul 1.1.2
++ xlsx 0.18.5
++ zod 4.1.12
+
+devDependencies:
++ @eslint/eslintrc 3.3.1
++ @playwright/test 1.57.0
++ @tailwindcss/postcss 4.1.16
++ @tailwindcss/typography 0.5.19
++ @testing-library/dom 10.4.1
++ @testing-library/react 16.3.2
++ @types/node 20.19.24
++ @types/pdfmake 0.2.12
++ @types/react 19.2.2
++ @types/react-dom 19.2.2
++ babel-plugin-react-compiler 1.0.0
++ eslint 9.39.0
++ eslint-config-next 16.0.0
++ eslint-config-prettier 10.1.8
++ globals 16.5.0
++ jsdom 27.4.0
++ prettier 3.6.2
++ prettier-plugin-css-order 2.1.2
++ prettier-plugin-tailwindcss 0.7.1
++ tailwindcss 4.1.16
++ tw-animate-css 1.4.0
++ typescript 5.9.3
++ vitest 4.0.6
+
+Done in 20.4s using pnpm v10.28.0
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[?25h
+ ELIFECYCLE  Command failed with exit code 1.
