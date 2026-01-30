@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -90,6 +95,32 @@ const ChatInput = () => {
 
   const hasFiles = currentFiles.length;
 
+  const isDisabled =
+    !inputValue.trim() ||
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
+
+  const tooltipText = isDisabled
+    ? !inputValue.trim()
+      ? "Enter a topic to start"
+      : "Research in progress"
+    : "Start research";
+
+  const SendButton = (
+    <Button
+      onClick={handleSubmit}
+      disabled={isDisabled}
+      size="icon"
+      aria-label={tooltipText}
+      className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
+    >
+      <Send className="h-5 w-5" />
+    </Button>
+  );
+
   return (
     <div className="relative z-[11] mx-auto w-full max-w-[1000px] py-2">
       <div className="bg-background border-border mx-auto max-w-[1000px] rounded-2xl border p-6 shadow-md">
@@ -127,21 +158,23 @@ const ChatInput = () => {
             </div>
 
             <div className="flex flex-row-reverse items-center gap-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
-                size="icon"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  {isDisabled ? (
+                    <span
+                      tabIndex={0}
+                      className="inline-flex cursor-not-allowed rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      {SendButton}
+                    </span>
+                  ) : (
+                    SendButton
+                  )}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{tooltipText}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
