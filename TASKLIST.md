@@ -37,19 +37,18 @@
 ## 🟠 HIGH PRIORITY - PR Backlog & Code Quality
 
 ### Performance Optimizations ⚡
-Multiple performance PRs need review:
-- [ ] PR #154: Optimize ResearchAgentPage rendering with memoized ResearchItem
-- [ ] PR #149: Optimize Research List Rendering with Memoization  
-- [ ] PR #144: Optimized and secured SheetSession list endpoint
-- [ ] PR #143: Optimize ResearchContentWithReferences rendering
-- [ ] PR #137: Optimize ResearchProcessLogs re-renders
+Multiple automated performance PRs need review:
+- [ ] PR #154: Optimize ResearchAgentPage rendering with memoized ResearchItem (automated) 🤖
+- [ ] PR #149: Optimize Research List Rendering with Memoization (automated) 🤖
+- [ ] PR #144: Optimized and secured SheetSession list endpoint (automated) 🤖
+- [ ] PR #143: Optimize ResearchContentWithReferences rendering (automated) 🤖
+- [ ] PR #137: Optimize ResearchProcessLogs re-renders (automated) 🤖
 
 ### Accessibility Improvements 🎨
-- [ ] PR #148: Add tooltip to ChatInput send button
-- [ ] PR #142: Add accessible tooltip to ChatInput send button
-- [ ] PR #138: Improve Chat Input Accessibility
-- [ ] PR #136: Enhanced accessibility for icon-only buttons
-- [ ] PR #152: Semantic Links for Research Sources
+**Note**: Multiple PRs address similar ChatInput improvements - consolidation recommended
+- [ ] PR #148 / #142 / #138: ChatInput accessibility improvements (tooltip, ARIA labels) - **DUPLICATE - Choose one**
+- [ ] PR #136: Enhanced accessibility for icon-only buttons (automated) 🤖
+- [ ] PR #152: Semantic Links for Research Sources (automated) 🎨
 
 ### Feature Development
 - [ ] PR #150: Implement media editing API integration
@@ -103,12 +102,14 @@ Multiple performance PRs need review:
    - Confirm "combined state" logic works as expected
 
 ## 📊 Summary Statistics
-- **Open PRs**: 20+ (many automated by security/performance bots)
-- **Critical Security Issues**: 6 PRs requiring immediate attention
-- **Performance Optimizations**: 5 PRs pending review
-- **Accessibility Improvements**: 5 PRs pending review
+- **Total Open PRs**: 26+ PRs identified
+  - 🤖 **Automated PRs**: ~15 (security scanner, performance optimizer, accessibility checker)
+  - 👤 **Manual PRs**: ~11 (feature development, documentation)
+- **Critical Security Issues**: 6 PRs requiring immediate attention (4 IDOR, 2 CORS)
+- **Performance Optimizations**: 5 automated PRs pending review
+- **Accessibility Improvements**: 5 PRs pending review (3 duplicates for ChatInput)
 - **Code TODOs**: 8 items identified in codebase
-- **Feature PRs**: 2 pending review
+- **Feature PRs**: 3 pending review (media editing, downloads, branch protection)
 
 ## 🎯 RECOMMENDED ACTION PLAN
 
@@ -138,4 +139,11 @@ Multiple performance PRs need review:
 - All core feature branches have been merged into `main`
 - **URGENT**: Security vulnerabilities must be addressed before feature development
 - Consider implementing automated security scanning in CI/CD pipeline
-- Many PRs appear to be automated suggestions - prioritize manual code review for critical paths
+
+### About Automated PRs 🤖
+- Many PRs are created by bots (Sentinel 🛡️, Bolt ⚡, Palette 🎨)
+- **Sentinel**: Security vulnerability scanner
+- **Bolt**: Performance optimization suggestions
+- **Palette**: Accessibility improvements
+- **Action**: Manual review required for all automated PRs - they may have false positives or breaking changes
+- **Recommendation**: Consolidate duplicate automated PRs before merging
