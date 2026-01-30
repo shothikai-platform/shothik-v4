@@ -121,6 +121,14 @@
     "xlsx": "^0.18.5",
     "zod": "^4.1.12"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js",
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.57.0",
