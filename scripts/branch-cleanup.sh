@@ -4,8 +4,6 @@
 # This script helps identify stale branches that may need cleanup
 # It does NOT delete branches automatically - it only reports them
 
-set -e
-
 echo "========================================="
 echo "Branch Cleanup Helper for Shothik V4"
 echo "========================================="
@@ -30,7 +28,11 @@ fi
 
 # Fetch latest data from remote
 echo -e "${BLUE}Fetching latest data from remote...${NC}"
-git fetch --prune
+if ! git fetch --prune 2>&1; then
+    echo -e "${YELLOW}Warning: Could not fetch from remote. Using local data only.${NC}"
+    echo -e "${YELLOW}Note: Some branch information may be outdated.${NC}"
+    echo ""
+fi
 
 echo ""
 echo "========================================="

@@ -4,7 +4,7 @@
 
 ### Current Repository Status
 - **Repository**: shothikai-platform/shothik-v4
-- **Default Branch**: 7e32e45b2eebee010d26a0a62373c3f62eaaae66 (main/staticv4)
+- **Default Branch**: main
 - **Total Branches**: 31 branches (as of January 30, 2026)
 
 ### Branch Inventory
@@ -161,8 +161,10 @@ To maintain consistency, enforce the following naming conventions:
 - `bugfix/<description>` - Bug fixes
 - `hotfix/<description>` - Critical production fixes
 - `release/<version>` - Release branches
-- `bolt/<description>` - Automated tool branches
-- `copilot/<description>` - AI-assisted development branches
+- `bolt/<description>` - Automated tool branches (may include numeric suffixes)
+- `copilot/<description>` - AI-assisted development branches (may include numeric suffixes)
+
+**Note**: Numeric suffixes (e.g., `bolt/optimize-research-logs-10467543325828170030`) are acceptable for automated tool branches.
 
 ## Monitoring and Maintenance
 

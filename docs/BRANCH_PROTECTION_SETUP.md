@@ -136,7 +136,7 @@ git push --force-with-lease origin your-branch
 
 ## Additional Resources
 
-- [Detailed Branch Protection Documentation](./BRANCH_PROTECTION.md)
+- [Detailed Branch Protection Documentation](../BRANCH_PROTECTION.md)
 - [GitHub Official Documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches)
 - [Code Owners Documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
 

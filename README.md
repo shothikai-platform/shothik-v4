@@ -79,6 +79,7 @@ This repository follows strict branch protection rules to maintain code quality 
 
 1. Create a feature branch following the naming convention: `<type>/<description>`
    - Types: `feature`, `bugfix`, `hotfix`, `release`
+   - Special types for automated tools: `bolt`, `copilot`
 2. Make your changes following our coding standards
 3. Ensure all tests pass and linting is clean
 4. Open a pull request against the `main` branch
