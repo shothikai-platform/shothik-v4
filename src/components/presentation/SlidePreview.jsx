@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlignmentGuidesSkeleton } from "./editing/AlignmentGuidesSkeleton";
 import { EditingErrorBoundary } from "./editing/EditingErrorBoundary";
 import { EditingToolbarSkeleton } from "./editing/EditingToolbarSkeleton";
@@ -481,9 +481,7 @@ export default function SlidePreview({
                     iframeScale={dimensions.scale}
                     onGridToggle={setGridEnabled}
                     onAlignmentGuidesChange={setAlignmentGuides}
-                    onSave={() => {
-                      // TODO: Implement save functionality in Phase 5
-                    }}
+                    onSave={() => autoSave.saveSlide()}
                   />
                 </EditingErrorBoundary>
               )}
