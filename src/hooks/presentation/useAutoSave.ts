@@ -139,8 +139,6 @@ export function useAutoSave(
     }
 
     if (hasUnsavedChanges) {
-        "useAutoSave: Unsaved changes detected, scheduling auto-save",
-      );
       debouncedSave.current();
     }
   }, [hasUnsavedChanges, options.enabled, debouncedSave]);
