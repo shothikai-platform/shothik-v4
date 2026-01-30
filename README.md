@@ -55,3 +55,32 @@ To run the NLP service securely, you must configure the following environment va
         ```
 
 **Note**: If this variable is not set, the API will not accept requests from any origin, effectively disabling it.
+
+---
+
+## Development Guidelines
+
+### Branch Protection and Management
+
+This repository follows strict branch protection rules to maintain code quality and security. Please review our [Branch Protection Guidelines](./BRANCH_PROTECTION.md) for detailed information.
+
+**Key Points:**
+- The `main` branch is protected and requires pull request reviews
+- All pull requests must pass automated checks before merging
+- Branch naming conventions should be followed (see BRANCH_PROTECTION.md)
+- Code owners will be automatically requested for review based on the files changed
+
+**Quick Reference:**
+- 📖 [Branch Protection Documentation](./BRANCH_PROTECTION.md)
+- 👥 [Code Owners](./.github/CODEOWNERS)
+- 🔒 [Branch Protection Workflow](./.github/workflows/branch-protection-check.yml)
+
+### Contributing
+
+1. Create a feature branch following the naming convention: `<type>/<description>`
+   - Types: `feature`, `bugfix`, `hotfix`, `release`
+2. Make your changes following our coding standards
+3. Ensure all tests pass and linting is clean
+4. Open a pull request against the `main` branch
+5. Address any review comments and ensure all checks pass
+6. Once approved, the PR can be merged

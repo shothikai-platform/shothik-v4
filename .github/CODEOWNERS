@@ -1,0 +1,52 @@
+# CODEOWNERS file for shothik-v4
+# This file defines individuals or teams responsible for code in the repository.
+# 
+# Each line is a file pattern followed by one or more owners.
+# The owners will be automatically requested for review when someone opens a pull request that modifies files matching the pattern.
+#
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# Uncomment and update with actual GitHub usernames or team names
+# * @shothikai-platform/core-team
+
+# Frontend code
+/src/ @shothikai-platform/frontend-team
+/src/app/ @shothikai-platform/frontend-team
+/src/components/ @shothikai-platform/frontend-team
+
+# Backend services
+/backend-services/ @shothikai-platform/backend-team
+/backend-services/nlp-inference-service/ @shothikai-platform/ml-team @shothikai-platform/backend-team
+
+# Infrastructure and DevOps
+/.github/ @shothikai-platform/devops-team
+/Dockerfile @shothikai-platform/devops-team
+/cloudbuild.yaml @shothikai-platform/devops-team
+/.github/workflows/ @shothikai-platform/devops-team
+
+# Configuration files
+/package.json @shothikai-platform/core-team
+/package-lock.json @shothikai-platform/core-team
+/tsconfig.json @shothikai-platform/core-team
+/next.config.ts @shothikai-platform/core-team
+
+# Documentation
+/docs/ @shothikai-platform/docs-team
+*.md @shothikai-platform/docs-team
+/README.md @shothikai-platform/core-team
+
+# Testing
+/e2e/ @shothikai-platform/qa-team
+/playwright.config.ts @shothikai-platform/qa-team
+/vitest.config.ts @shothikai-platform/qa-team
+
+# Security-sensitive files
+/.github/workflows/branch-protection-check.yml @shothikai-platform/security-team @shothikai-platform/devops-team
+/BRANCH_PROTECTION.md @shothikai-platform/devops-team
+
+# Note: Replace the team names above with actual GitHub team names or individual usernames
+# Example formats:
+#   @username
+#   @organization/team-name
+#   user@example.com (email addresses are also supported)

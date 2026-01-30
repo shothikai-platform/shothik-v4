@@ -1,0 +1,224 @@
+name: Branch Protection Validation
+
+# This workflow helps enforce branch protection policies
+# It runs checks that complement GitHub's branch protection rules
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staticv4
+  push:
+    branches:
+      - main
+      - staticv4
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check PR title format
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          
+          # Check if PR title follows conventional commit format
+          if ! echo "$PR_TITLE" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?:.+'; then
+            echo "::warning::PR title should follow conventional commit format (e.g., 'feat: add new feature')"
+            echo "::warning::Current title: $PR_TITLE"
+            echo "::warning::Valid prefixes: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+          fi
+      
+      - name: Check for merge conflicts
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # Fetch the base branch
+          git fetch origin ${{ github.base_ref }}
+          
+          # Try to merge to check for conflicts
+          if ! git merge --no-commit --no-ff origin/${{ github.base_ref }}; then
+            echo "::error::This PR has merge conflicts with ${{ github.base_ref }}"
+            git merge --abort
+            exit 1
+          else
+            git merge --abort
+            echo "✅ No merge conflicts detected"
+          fi
+      
+      - name: Check branch is up to date
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          
+          BASE_SHA=$(git rev-parse origin/${{ github.base_ref }})
+          MERGE_BASE=$(git merge-base HEAD origin/${{ github.base_ref }})
+          
+          if [ "$BASE_SHA" != "$MERGE_BASE" ]; then
+            echo "::warning::This branch is not up to date with ${{ github.base_ref }}"
+            echo "::warning::Please rebase or merge the latest changes from ${{ github.base_ref }}"
+          else
+            echo "✅ Branch is up to date with ${{ github.base_ref }}"
+          fi
+
+  lint-check:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint || echo "::warning::Linting issues found. Please fix them before merging."
+      
+      - name: TypeScript type check
+        run: npx tsc --noEmit || echo "::warning::TypeScript errors found. Please fix them before merging."
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run security audit
+        run: |
+          npm audit --audit-level=high || echo "::warning::Security vulnerabilities found. Please address them."
+      
+      - name: Check for secrets
+        run: |
+          # Check for common patterns of secrets in code
+          if grep -r -E "(api[_-]?key|apikey|secret|password|token|auth[_-]?token)" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" . | grep -v "node_modules" | grep -v ".git"; then
+            echo "::warning::Potential secrets or sensitive data detected in code. Please review."
+          else
+            echo "✅ No obvious secrets detected"
+          fi
+
+  enforce-linear-history:
+    name: Enforce Linear History
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check for merge commits
+        run: |
+          # Get all commits in the PR
+          git fetch origin ${{ github.base_ref }}
+          
+          # Check if there are any merge commits
+          MERGE_COMMITS=$(git log --merges origin/${{ github.base_ref }}..HEAD --oneline)
+          
+          if [ -n "$MERGE_COMMITS" ]; then
+            echo "::error::This PR contains merge commits. Please rebase to maintain linear history."
+            echo "Merge commits found:"
+            echo "$MERGE_COMMITS"
+            exit 1
+          else
+            echo "✅ No merge commits detected - linear history maintained"
+          fi
+
+  branch-naming-check:
+    name: Branch Naming Convention
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Check branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          # Check if branch follows naming convention
+          if echo "$BRANCH_NAME" | grep -qE '^(feature|bugfix|hotfix|release|bolt|copilot)/[a-z0-9-]+'; then
+            echo "✅ Branch name follows convention: $BRANCH_NAME"
+          else
+            echo "::warning::Branch name '$BRANCH_NAME' doesn't follow recommended convention"
+            echo "::warning::Recommended format: <type>/<description>"
+            echo "::warning::Types: feature, bugfix, hotfix, release, bolt, copilot"
+          fi
+
+  stale-branch-notifier:
+    name: Stale Branch Notification
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check branch age
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          # Get the date of the first commit in the branch
+          FIRST_COMMIT_DATE=$(git log --reverse --format=%ct origin/${{ github.base_ref }}..HEAD | head -1)
+          CURRENT_DATE=$(date +%s)
+          
+          # Calculate age in days
+          if [ -n "$FIRST_COMMIT_DATE" ]; then
+            BRANCH_AGE_DAYS=$(( ($CURRENT_DATE - $FIRST_COMMIT_DATE) / 86400 ))
+            
+            echo "Branch age: $BRANCH_AGE_DAYS days"
+            
+            if [ $BRANCH_AGE_DAYS -gt 30 ]; then
+              echo "::warning::This branch is $BRANCH_AGE_DAYS days old. Consider reviewing if it's still needed."
+            else
+              echo "✅ Branch age is acceptable ($BRANCH_AGE_DAYS days)"
+            fi
+          fi
+
+  summary:
+    name: Protection Check Summary
+    runs-on: ubuntu-latest
+    needs: [validate-pr, lint-check, security-check, enforce-linear-history, branch-naming-check, stale-branch-notifier]
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+      - name: Summary
+        run: |
+          echo "## Branch Protection Checks Summary"
+          echo ""
+          echo "All automated checks have been completed."
+          echo "Please ensure all required checks pass before merging."
+          echo ""
+          echo "### Required Actions:"
+          echo "- ✅ All conversations must be resolved"
+          echo "- ✅ At least 1 approval required"
+          echo "- ✅ All status checks must pass"
+          echo ""
+          echo "For more information, see BRANCH_PROTECTION.md"
