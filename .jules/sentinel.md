@@ -7,3 +7,13 @@
 **Vulnerability:** IDOR in `src/app/api/research/research/create_research_queue/route.ts`. The route allowed any user to create research for any chat by ID without ownership verification.
 **Learning:** Even streaming endpoints must verify resource ownership before processing. Use `findOne({ _id, userId })` instead of `findById`.
 **Prevention:** Always authenticate users and verify ownership for all user-specific resources, including streaming/async endpoints.
+
+## 2026-01-31 - IDOR in Get One Chat
+**Vulnerability:** The `get_one_chat` endpoint in `src/app/api/research/chat/get_one_chat/[id]/route.ts` allowed accessing any chat by ID without checking the `userId`.
+**Learning:** `findById` alone is insufficient for user-scoped resources. Authentication does not imply authorization for a specific resource.
+**Prevention:** Always use `findOne({ _id: id, userId: currentUser.id })` for user-specific resources, or explicitly check ownership after fetching.
+
+## 2026-01-31 - IDOR in Delete Chat API
+**Vulnerability:** The `DELETE /api/research/chat/delete_chat/[id]` endpoint lacked authentication and authorization checks, allowing any user to delete any chat via `findByIdAndDelete`.
+**Learning:** API routes using dynamic IDs (`[id]`) must explicitly validate ownership. `findByIdAndDelete` is dangerous in multi-tenant contexts.
+**Prevention:** Always use `findOneAndDelete({ _id: id, userId: currentUser._id })` for user-owned resources and enforce authentication.
