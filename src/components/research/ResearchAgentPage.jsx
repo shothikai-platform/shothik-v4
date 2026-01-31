@@ -14,25 +14,21 @@ import {
   researchCoreState,
   resetResearchCore,
   setIsSimulating,
-  setResearchSelectedTab,
   setSimulationStatus,
 } from "@/redux/slices/researchCoreSlice";
 import { clearResearchUiState } from "@/redux/slices/researchUiSlice";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderTitle from "./ui/HeaderTitle";
-import ResearchDataArea from "./ui/ResearchDataArea";
+import ResearchItem from "./ui/ResearchItem";
 import ResearchPageSkeletonLoader from "./ui/ResearchPageSkeletonLoader";
 import ResearchStreamingShell from "./ui/ResearchStreamingShell";
-import TabsPanel from "./ui/TabPanel";
 
 export default function ResearchAgentPage({
   loadingResearchHistory,
   setLoadingResearchHistory,
 }) {
   const scrollRef = useRef(null);
-  const researchRefs = useRef({}); // Ref to store individual research item DOM elements
   const [isInitializingResearch, setIsInitializingResearch] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(20); // default
   const [isSimulationCompleted, setIsSimulationCompleted] = useState(false);
@@ -210,61 +206,13 @@ export default function ResearchAgentPage({
       <div className="flex flex-col gap-2 sm:gap-4">
         {researchCore?.researches.length > 0 &&
           researchCore?.researches?.map((research, idx) => (
-            <div
+            <ResearchItem
               key={research._id}
-              ref={(el) => (researchRefs.current[research._id] = el)} // Assign ref to each research item
-            >
-              <div className="bg-background sticky top-0 z-10">
-                <HeaderTitle
-                  headerHeight={headerHeight}
-                  setHeaderHeight={setHeaderHeight}
-                  query={research.query}
-                  researchItem={research}
-                />
-                <TabsPanel
-                  selectedTab={research.selectedTab}
-                  sources={research.sources}
-                  images={research.images}
-                  onTabChange={(newValue) => {
-                    dispatch(
-                      setResearchSelectedTab({
-                        researchId: research._id,
-                        selectedTab: newValue,
-                      }),
-                    );
-                    // Scroll to the research item when its tab is clicked
-                    if (researchRefs.current[research._id]) {
-                      researchRefs.current[research._id].scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }
-                  }}
-                />
-              </div>
-
-              {/* data area */}
-              <ResearchDataArea
-                selectedTab={research.selectedTab}
-                research={research}
-                isLastData={idx === researchCore?.researches?.length - 1}
-                onSwitchTab={(newTab) => {
-                  dispatch(
-                    setResearchSelectedTab({
-                      researchId: research._id,
-                      selectedTab: newTab,
-                    }),
-                  );
-                  // Scroll to the research item when switching tabs
-                  if (researchRefs.current[research._id]) {
-                    researchRefs.current[research._id].scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }
-                }}
-              />
-            </div>
+              research={research}
+              headerHeight={headerHeight}
+              setHeaderHeight={setHeaderHeight}
+              isLastData={idx === researchCore?.researches?.length - 1}
+            />
           ))}
       </div>
 
