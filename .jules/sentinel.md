@@ -17,3 +17,8 @@
 **Vulnerability:** The `DELETE /api/research/chat/delete_chat/[id]` endpoint lacked authentication and authorization checks, allowing any user to delete any chat via `findByIdAndDelete`.
 **Learning:** API routes using dynamic IDs (`[id]`) must explicitly validate ownership. `findByIdAndDelete` is dangerous in multi-tenant contexts.
 **Prevention:** Always use `findOneAndDelete({ _id: id, userId: currentUser._id })` for user-owned resources and enforce authentication.
+
+## 2026-01-31 - Overly Permissive CORS Policy
+**Vulnerability:** The `nlp-inference-service` had an overly permissive CORS policy, allowing requests with any header (`allow_headers=["*"]`). This violates the principle of least privilege.
+**Learning:** When implementing a backend security policy change (like CORS), a full audit of the client-side codebase is necessary to understand all possible interactions. Don't just rely on grep - trace API calls to ensure changes won't break features.
+**Prevention:** Restrict CORS headers to only those explicitly required (`Content-Type`, `Authorization`). Audit frontend to confirm no other headers are needed before deployment.
