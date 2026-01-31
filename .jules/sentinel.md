@@ -1,0 +1,6 @@
+## 2024-08-01 - The Importance of a Full Frontend Audit for Backend Security Changes
+**Vulnerability:** The `nlp-inference-service` had an overly permissive CORS policy, allowing requests with any header (`allow_headers=["*"]`). This violates the principle of least privilege.
+
+**Learning:** My initial fix was to restrict headers to `Content-Type` and `Authorization` based on a preliminary review of the frontend's API clients. However, a code review correctly flagged this as a potential breaking change. A deeper, more thorough audit of the entire `src` directory was required to confirm that no other headers were being sent to this specific service. A "Custom Tools" feature was discovered that allows users to send arbitrary headers, but I had to trace the API calls to confirm that this feature communicated with a different backend service, making my initial fix safe.
+
+**Prevention:** When implementing a backend security policy change, especially one that could impact client-side functionality like a CORS policy, a simple `grep` is not enough. A full audit of the client-side codebase is necessary to understand all possible interactions with the backend service. This includes tracing the origin of API calls to ensure that the new policy will not inadvertently break a feature that was not immediately obvious.
