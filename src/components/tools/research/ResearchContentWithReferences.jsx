@@ -1,8 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { sanitizeHtml } from "@/lib/security";
 import { marked } from "marked";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -67,10 +68,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -107,11 +104,12 @@ const ResearchContentWithReferences = ({
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
-
   const processedContent = processContentWithReferences(contentStr);
+  const [sanitizedContent, setSanitizedContent] = useState("");
+
+  useEffect(() => {
+    setSanitizedContent(sanitizeHtml(marked(processedContent)));
+  }, [processedContent]);
 
   // Configure marked options
   marked.setOptions({
@@ -188,7 +186,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: sanitizedContent,
             }}
           />
 
