@@ -64,6 +64,9 @@ ALLOWED_ORIGINS: List[str] = [
     origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
 ]
 
+if not ALLOWED_ORIGINS:
+    logger.warning("⚠️ ALLOWED_ORIGINS is not set. API will block all cross-origin requests.")
+
 # In development, you might want to uncomment the following for easier local testing:
 # if not ALLOWED_ORIGINS and os.getenv("PYTHON_ENV") == "development":
 #     ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
@@ -73,7 +76,7 @@ app.add_middleware(
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 @app.get("/health")

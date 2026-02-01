@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 import logging
 import time
@@ -16,11 +16,11 @@ router = APIRouter()
 
 # --- Request/Response Models ---
 class ParaphraseRequest(BaseModel):
-    text: str
+    text: str = Field(..., max_length=5000, description="The text to paraphrase")
     mode: str = "standard"  # standard, fluency, formal, creative
     language: str = "English" # Added for Pivot Strategy
-    num_variants: int = 1   # How many versions to generate?
-    sensitivity: float = 0.5 # For semantic checking (future use)
+    num_variants: int = Field(1, ge=1, le=5, description="Number of variants to generate")
+    sensitivity: float = Field(0.5, ge=0, le=1, description="Sensitivity for semantic checking")
 
 class ParaphraseResponse(BaseModel):
     original: str
