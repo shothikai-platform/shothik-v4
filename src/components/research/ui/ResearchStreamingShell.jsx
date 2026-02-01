@@ -3,10 +3,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchProcessLogs from "./ResearchProcessLogs";
 
@@ -79,26 +84,37 @@ const ResearchStreamingShell = ({
           </h1>
 
           {/* Download button placeholder - matches HeaderTitle */}
-          <Button
-            disabled
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "bg-accent flex items-center justify-center rounded-md opacity-50 shadow-sm",
-              "h-6 min-h-6 w-6 min-w-6 p-1",
-              "md:h-7 md:min-h-7 md:w-7 md:min-w-7",
-              "lg:h-9 lg:min-h-9 lg:w-9 lg:min-w-9 lg:p-2",
-              "xl:h-12 xl:min-h-12 xl:w-12 xl:min-w-12 xl:p-3",
-            )}
-          >
-            <Image
-              src={"/agents/edit.svg"}
-              alt={"Download"}
-              width={24}
-              height={24}
-              className="h-full w-full object-contain"
-            />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                tabIndex={0}
+                className="focus-visible:ring-ring rounded-md outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              >
+                <Button
+                  disabled
+                  aria-label="Download options (disabled)"
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    "bg-accent flex items-center justify-center rounded-md opacity-50 shadow-sm",
+                    "h-6 min-h-6 w-6 min-w-6 p-1",
+                    "md:h-7 md:min-h-7 md:w-7 md:min-w-7",
+                    "lg:h-9 lg:min-h-9 lg:w-9 lg:min-w-9 lg:p-2",
+                    "xl:h-12 xl:min-h-12 xl:w-12 xl:min-w-12 xl:p-3",
+                  )}
+                >
+                  <Image
+                    src={"/agents/edit.svg"}
+                    alt={"Download"}
+                    width={24}
+                    height={24}
+                    className="h-full w-full object-contain"
+                  />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Available after research completes</TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Tab Panel - Matches TabsPanel */}
