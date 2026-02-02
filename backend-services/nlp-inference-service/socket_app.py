@@ -1,14 +1,22 @@
 
 import socketio
 import logging
+import os
 from services.model_loader import ModelLoader
 from services.paraphrase_engine import ParaphraseEngine
 from services.text_processor import TextProcessor
 
 logger = logging.getLogger(__name__)
 
+# Secure CORS policy: load allowed origins from environment variable.
+# Default to empty list if not set, which blocks all cross-origin requests for security.
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS = [
+    origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
+]
+
 # Create Socket.IO Server (Async)
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=ALLOWED_ORIGINS)
 
 # Wrap in ASGI App
 socket_app = socketio.ASGIApp(sio)
@@ -27,16 +35,22 @@ async def paraphrase(sid, data):
     Handles the 'paraphrase' event from Frontend.
     Data format expected: { "text": "...", "mode": "...", "eventId": "..." }
     """
-    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
-    
     text = data.get("text")
     mode = data.get("mode", "standard")
+
+    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
     synonym_level = data.get("synonym", "basic").lower() # basic, intermediate, advanced
     freeze_words = data.get("freeze", "")
     language = data.get("language", "English")
     event_id = data.get("eventId")
     
+    # Security: Input validation to prevent DoS (Denial of Service) attacks
+    # by limiting the maximum length of processed text.
     if not text:
+        return
+
+    if len(text) > 5000:
+        logger.warning(f"DoS Protection: Rejected request from {sid} with text length {len(text)}")
         return
 
     try:

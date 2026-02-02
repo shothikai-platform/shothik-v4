@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Insecure CORS and Socket.IO DoS Protection]
+**Vulnerability:** Overly permissive CORS (wildcards) and lack of input length validation in the Socket.IO server within the NLP inference service.
+**Learning:** While the REST API might have strict CORS and validation (via Pydantic), the Websocket/Socket.IO entry points in the same service are often overlooked and remain insecure.
+**Prevention:** Ensure that all entry points, including REST and Socket.IO, share or replicate security policies like CORS origin restrictions and input size limits.
