@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
     - uses: pnpm/action-setup@v3
@@ -17,7 +17,7 @@ jobs:
         version: 9
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install
