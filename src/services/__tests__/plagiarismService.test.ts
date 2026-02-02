@@ -20,6 +20,7 @@ const buildFetchResponse = ({
   ok,
   status,
   json: vi.fn().mockResolvedValue(json),
+  text: vi.fn().mockResolvedValue(JSON.stringify(json)), // Added missing text() method mock
 });
 
 describe("plagiarismService", () => {
