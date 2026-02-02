@@ -140,8 +140,6 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
@@ -211,6 +209,7 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
+      console.log({
         model: payload.model,
         modelState: model,
         level: payload.level,
@@ -232,6 +231,8 @@ const HumanizedContend = () => {
         const inputParagraphs = text
           .split(/\n\s*\n/)
           .filter((p) => p.trim().length > 0).length;
+
+        console.log({
           variationsCount: data.output.length,
           inputParagraphs: inputParagraphs,
           expectedBehavior:
