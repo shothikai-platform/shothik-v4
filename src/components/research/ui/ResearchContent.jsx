@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { sanitizeHtml } from "@/lib/security";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
@@ -39,7 +40,7 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(marked(message)) }}
         />
       </div>
 
