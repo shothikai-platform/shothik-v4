@@ -3,8 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 
 export const useConnectionState = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+  const [isOnline, setIsOnline] = useState(
+    typeof navigator !== "undefined" ? navigator.onLine : true,
+  );
+  const [isPageVisible, setIsPageVisible] = useState(
+    typeof document !== "undefined" ? !document.hidden : true,
+  );
   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
 
   useEffect(() => {
@@ -35,6 +39,7 @@ export const useConnectionState = () => {
   }, []);
 
   const storeConnectionMetadata = useCallback((jobId, step = "queued") => {
+    if (typeof window === "undefined") return;
     const metadata = {
       jobId,
       lastStep: step,
@@ -49,11 +54,13 @@ export const useConnectionState = () => {
   }, []);
 
   const getStoredMetadata = useCallback(() => {
+    if (typeof window === "undefined") return null;
     const stored = sessionStorage.getItem("researchConnectionMetadata");
     return stored ? JSON.parse(stored) : null;
   }, []);
 
   const clearConnectionMetadata = useCallback(() => {
+    if (typeof window === "undefined") return;
     sessionStorage.removeItem("currentResearchJobId");
     sessionStorage.removeItem("researchConnectionMetadata");
   }, []);

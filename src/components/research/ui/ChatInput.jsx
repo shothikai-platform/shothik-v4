@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -28,6 +29,13 @@ const ChatInput = () => {
   const { isStreaming } = useSelector((state) => state.researchCore);
 
   const { startResearch, cancelResearch } = useResearchStream();
+
+  const isProcessing =
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -96,6 +104,7 @@ const ChatInput = () => {
         <div className="mb-4 flex items-center gap-4">
           <Textarea
             placeholder="Enter a new research topic"
+            aria-label="Research topic input"
             value={inputValue}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
@@ -129,18 +138,20 @@ const ChatInput = () => {
             <div className="flex flex-row-reverse items-center gap-4">
               <Button
                 onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
+                disabled={!inputValue.trim() || isProcessing}
                 size="icon"
+                aria-label={
+                  isProcessing
+                    ? "Processing research request"
+                    : "Start research"
+                }
                 className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
               >
-                <Send className="h-5 w-5" />
+                {isProcessing ? (
+                  <Spinner className="h-5 w-5" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
