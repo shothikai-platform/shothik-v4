@@ -3,11 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 
 export const useConnectionState = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isPageVisible, setIsPageVisible] = useState(!document.hidden);
+  const [isOnline, setIsOnline] = useState(true);
+  const [isPageVisible, setIsPageVisible] = useState(true);
   const [lastDisconnectTime, setLastDisconnectTime] = useState(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsOnline(navigator.onLine);
+      setIsPageVisible(!document.hidden);
+    }
+
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => {
       setIsOnline(false);

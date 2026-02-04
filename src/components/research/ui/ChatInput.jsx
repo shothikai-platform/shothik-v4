@@ -3,8 +3,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 const ChatInput = () => {
   const [inputValue, setInputValue] = useState("");
@@ -32,6 +39,19 @@ const ChatInput = () => {
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+
+  const isProcessing =
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
+
+  const tooltipText = isProcessing
+    ? "Research in progress..."
+    : !inputValue.trim()
+      ? "Enter a topic to start"
+      : "Start research";
 
   const handleSubmit = async () => {
     if (!inputValue.trim() || isStreaming) return;
@@ -127,21 +147,35 @@ const ChatInput = () => {
             </div>
 
             <div className="flex flex-row-reverse items-center gap-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
-                size="icon"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    tabIndex={!inputValue.trim() || isProcessing ? 0 : undefined}
+                    className={cn(
+                      "rounded-full outline-none",
+                      (!inputValue.trim() || isProcessing) &&
+                        "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2",
+                    )}
+                  >
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!inputValue.trim() || isProcessing}
+                      aria-label="Send research query"
+                      size="icon"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
+                    >
+                      {isProcessing ? (
+                        <Spinner className="h-5 w-5" />
+                      ) : (
+                        <Send className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{tooltipText}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
