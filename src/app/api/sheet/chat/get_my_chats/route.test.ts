@@ -1,11 +1,12 @@
 import { GET } from "./route";
-import ResearchChat from "@/models/ResearchChat";
+import SheetSession from "@/models/SheetSession";
 import { getAuthenticatedUser } from "@/lib/server-auth";
 import { NextResponse } from "next/server";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
+// Mock dependencies
 vi.mock("@/lib/dbConnect", () => ({ default: vi.fn() }));
-vi.mock("@/models/ResearchChat");
+vi.mock("@/models/SheetSession");
 vi.mock("@/lib/server-auth");
 vi.mock("next/server", () => {
   return {
@@ -19,7 +20,7 @@ vi.mock("next/server", () => {
   };
 });
 
-describe("GET /api/research/chat/get_my_chats", () => {
+describe("GET /api/sheet/chat/get_my_chats", () => {
   const mockUser = { _id: "user123" };
 
   beforeEach(() => {
@@ -27,18 +28,17 @@ describe("GET /api/research/chat/get_my_chats", () => {
     (getAuthenticatedUser as any).mockResolvedValue(mockUser);
   });
 
-  it("should use lean() optimization", async () => {
+  it("should filter by userId and use lean()", async () => {
     const mockQuery = {
-      select: vi.fn().mockReturnThis(),
       sort: vi.fn().mockReturnThis(),
       lean: vi.fn().mockResolvedValue([]),
     };
-    (ResearchChat.find as any).mockReturnValue(mockQuery);
+    (SheetSession.find as any).mockReturnValue(mockQuery);
 
-    await GET(new Request("http://localhost/api/research/chat/get_my_chats"));
+    await GET(new Request("http://localhost/api/sheet/chat/get_my_chats"));
 
-    expect(ResearchChat.find).toHaveBeenCalledWith({ userId: mockUser._id });
-    expect(mockQuery.select).toHaveBeenCalledWith("-messages");
+    // We expect it to call find({ userId: ... })
+    expect(SheetSession.find).toHaveBeenCalledWith({ userId: mockUser._id });
     expect(mockQuery.lean).toHaveBeenCalled();
   });
 });
