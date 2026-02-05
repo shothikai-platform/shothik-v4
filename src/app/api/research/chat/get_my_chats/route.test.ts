@@ -12,11 +12,12 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFind, mockSelect, mockSort } = vi.hoisted(() => {
+const { mockFind, mockSelect, mockSort, mockLean } = vi.hoisted(() => {
   return {
     mockFind: vi.fn(),
     mockSelect: vi.fn(),
     mockSort: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -43,14 +44,13 @@ describe('GET /api/research/chat/get_my_chats', () => {
     vi.clearAllMocks();
 
     // Setup generic mock chain
-    mockSort.mockResolvedValue([{ _id: '1', name: 'Chat 1' }]);
+    mockLean.mockResolvedValue([{ _id: '1', name: 'Chat 1' }]);
+    mockSort.mockReturnValue({ lean: mockLean });
     mockSelect.mockReturnValue({ sort: mockSort });
 
-    // Default behavior for find: return object with select (and sort for backward compatibility if needed,
-    // but the test will enforce select usage)
+    // Default behavior for find: return object with select
     mockFind.mockReturnValue({
         select: mockSelect,
-        sort: mockSort // We include this so the UNOPTIMIZED code doesn't crash, allowing us to assert lack of select call
     });
   });
 
@@ -62,19 +62,15 @@ describe('GET /api/research/chat/get_my_chats', () => {
     expect(response.status).toBe(401);
   });
 
-  it('should fetch chats with messages excluded for performance', async () => {
+  it('should fetch chats with messages excluded and use lean for performance', async () => {
     const mockUser = { _id: 'user123' };
     (getAuthenticatedUser as any).mockResolvedValue(mockUser);
 
     await GET(new Request('http://localhost/api/research/chat/get_my_chats'));
 
     expect(mockFind).toHaveBeenCalledWith({ userId: 'user123' });
-
-    // THIS IS THE CRITICAL ASSERTION
-    // It verifies that .select('-messages') was called
     expect(mockSelect).toHaveBeenCalledWith('-messages');
-
-    // And ensure sort is called after select
     expect(mockSort).toHaveBeenCalledWith({ updatedAt: -1 });
+    expect(mockLean).toHaveBeenCalled();
   });
 });
