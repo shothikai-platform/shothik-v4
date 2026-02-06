@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-26 - [Global Data Leak in Sheet Sessions]
+**Vulnerability:** `get_my_chats` endpoint for Sheet sessions returned the entire collection (`.find({})`) without authentication or user scoping.
+**Learning:** Copy-pasting patterns (like "get all") without context-aware security checks (like "get *my* data") leads to massive data leaks.
+**Prevention:** All "list" endpoints must start with a strict `userId` filter. Never use bare `.find({})` on user-owned collections.
