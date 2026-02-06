@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - Unscoped List Endpoints
+**Learning:** Found `SheetSession` list endpoint (`get_my_chats`) fetching *all* sessions for *all* users without filtering, leading to massive IDOR and performance issues.
+**Action:** Ensure all "list my items" endpoints strictly filter by `userId` and use `.lean()` for read-only lists.
