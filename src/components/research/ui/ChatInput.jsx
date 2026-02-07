@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
+import { Spinner } from "@/components/ui/spinner";
 import { Send } from "lucide-react";
 import { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -28,6 +30,13 @@ const ChatInput = () => {
   const { isStreaming } = useSelector((state) => state.researchCore);
 
   const { startResearch, cancelResearch } = useResearchStream();
+
+  const isLoading =
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -129,18 +138,12 @@ const ChatInput = () => {
             <div className="flex flex-row-reverse items-center gap-4">
               <Button
                 onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
+                disabled={!inputValue.trim() || isLoading}
+                aria-label={isLoading ? "Researching..." : "Start research"}
                 size="icon"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
               >
-                <Send className="h-5 w-5" />
+                {isLoading ? <Spinner /> : <Send className="h-5 w-5" />}
               </Button>
             </div>
           </div>
