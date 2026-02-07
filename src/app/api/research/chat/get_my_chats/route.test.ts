@@ -12,11 +12,12 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFind, mockSelect, mockSort } = vi.hoisted(() => {
+const { mockFind, mockSelect, mockSort, mockLean } = vi.hoisted(() => {
   return {
     mockFind: vi.fn(),
     mockSelect: vi.fn(),
     mockSort: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -43,7 +44,8 @@ describe('GET /api/research/chat/get_my_chats', () => {
     vi.clearAllMocks();
 
     // Setup generic mock chain
-    mockSort.mockResolvedValue([{ _id: '1', name: 'Chat 1' }]);
+    mockLean.mockResolvedValue([{ _id: '1', name: 'Chat 1' }]);
+    mockSort.mockReturnValue({ lean: mockLean });
     mockSelect.mockReturnValue({ sort: mockSort });
 
     // Default behavior for find: return object with select (and sort for backward compatibility if needed,
@@ -76,5 +78,8 @@ describe('GET /api/research/chat/get_my_chats', () => {
 
     // And ensure sort is called after select
     expect(mockSort).toHaveBeenCalledWith({ updatedAt: -1 });
+
+    // Verify lean is called
+    expect(mockLean).toHaveBeenCalled();
   });
 });
