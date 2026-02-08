@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Massive IDOR and Hardcoded Users in Sheet Chat]
+**Vulnerability:** `get_my_chats` returned ALL sessions (global leak) and `create_conversation` used a hardcoded `temp-user` ID for all users.
+**Learning:** New features ("Sheet Chat") may be implemented with "demo-mode" shortcuts (hardcoded users, unscoped queries) that are extremely dangerous if deployed.
+**Prevention:** Enforce `getAuthenticatedUser()` and `userId` scoping on ALL new endpoints immediately, even for MVP features. Never commit "temp-user" logic.
