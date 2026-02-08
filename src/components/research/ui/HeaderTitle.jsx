@@ -20,8 +20,6 @@ import React, { useEffect, useRef, useState } from "react";
 // you included. If you keep a different shape, adapt the helpers below.
 
 export default function HeaderTitleWithDownload({
-  headerHeight,
-  setHeaderHeight,
   query,
   researchItem,
 }) {
