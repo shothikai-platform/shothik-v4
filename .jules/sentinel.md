@@ -8,7 +8,7 @@
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
 
-## 2025-05-23 - [IDOR in Sheet API routes]
-**Vulnerability:** Sheet session listing and conversation creation endpoints were missing authentication and authorization checks, allowing any user to access all sessions and create sessions for others.
-**Learning:** Forgetting to apply authentication middleware/helpers in new feature routes leads to immediate security gaps.
-**Prevention:** Always verify `getAuthenticatedUser()` returns a valid user and use their ID to filter all database operations (e.g., `findOne({ _id: id, userId: user._id })`).
+## 2025-05-23 - [IDOR and Billing Risks in API Routes]
+**Vulnerability:** Multiple API routes (Sheet, Geolocation, Zoho) lacked authentication and authorization. Specifically, the Geolocation endpoint allowed unauthenticated access to paid Google APIs, posing a significant billing risk.
+**Learning:** Publicly accessible endpoints calling paid external APIs are high-priority targets for abuse and can lead to rapid resource/billing exhaustion.
+**Prevention:** Always verify `getAuthenticatedUser()` returns a valid user before performing expensive or user-specific operations. Enforce ownership checks for all user-owned resources.
