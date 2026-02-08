@@ -53,17 +53,7 @@ export default function ResearchAgentPage({
   const researchConfig = JSON.parse(sessionStorage.getItem("r-config"));
 
 
-  // 
-
-  // const initialQuery = sessionStorage.getItem("activeResearchChatId") || "";
   const initialUserPrompt = sessionStorage.getItem("initialResearchPrompt");
-
-  // useEffect(() => {
-  //   // Create initial chat if none exists
-  //   if (!currentChatId) {
-  //     createNewChat(initialQuery);
-  //   }
-  // }, [currentChatId, createNewChat]);
 
   useEffect(() => {
     if (!researchChat?.currentChatId) {
@@ -212,22 +202,7 @@ export default function ResearchAgentPage({
           ))}
       </div>
 
-      {/* when streaming */}
-      {/* {(researchCore?.isStreaming || researchCore?.isPolling) && (
-          <StreamingIndicator
-            streamEvents={researchCore?.streamEvents}
-            isPolling={researchCore?.isPolling}
-            connectionStatus={researchCore?.connectionStatus}
-            onRetry={manualReconnect}
-          />
-        )} */}
-
       {(researchCore?.isStreaming || researchCore?.isPolling) && (
-        // <ResearchProcessLogs
-        //   streamEvents={researchCore?.streamEvents}
-        //   researches={researchCore?.researches}
-        //   isStreaming={researchCore?.isStreaming || researchCore?.isPolling}
-        // />
         <ResearchStreamingShell
           streamEvents={researchCore?.streamEvents}
           isStreaming={researchCore?.isStreaming || researchCore?.isPolling}
