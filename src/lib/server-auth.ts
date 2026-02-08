@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import AuthService, { AuthResponse } from '@/services/auth.service';
 
 export interface User {
@@ -11,7 +11,15 @@ export interface User {
 
 export async function getAuthenticatedUser(): Promise<User | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('jwt_token')?.value;
+  let token = cookieStore.get('jwt_token')?.value;
+
+  if (!token) {
+    const headersList = await headers();
+    const authHeader = headersList.get('authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
 
   if (!token) {
     return null;
