@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { chat: chatId, query, config } = await request.json();
         await dbConnect();
 
-        // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        // 1. Validate chat exists and belongs to the user
+        const chat = await ResearchChat.findOne({ _id: chatId, userId: user._id || user.id });
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
@@ -19,7 +25,6 @@ export async function POST(request: Request) {
             content: query,
             timestamp: new Date()
         });
-        // Don't save yet, wait for job ID or save now? Save now.
         await chat.save();
 
         // 3. Mock Streaming
@@ -66,21 +71,19 @@ export async function POST(request: Request) {
                     });
 
                     // Update DB with Assistant Message
-                    // We need to re-fetch or use logic to update DB asynchronously
-                    // Since this is a stream, we can't easily wait for DB save inside the controller without keeping connection open.
-                    // In a real app, a background job does this.
-                    // For now, we'll just try to update.
-
-                    await ResearchChat.findByIdAndUpdate(chatId, {
-                        $push: {
-                            messages: {
-                                role: 'assistant',
-                                content: mockResult,
-                                timestamp: new Date(),
-                                metadata: { sources: mockSources }
+                    await ResearchChat.findOneAndUpdate(
+                        { _id: chatId, userId: user._id || user.id },
+                        {
+                            $push: {
+                                messages: {
+                                    role: 'assistant',
+                                    content: mockResult,
+                                    timestamp: new Date(),
+                                    metadata: { sources: mockSources }
+                                }
                             }
                         }
-                    });
+                    );
 
 
                 } catch (e) {
