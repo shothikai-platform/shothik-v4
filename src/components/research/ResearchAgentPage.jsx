@@ -32,6 +32,7 @@ export default function ResearchAgentPage({
   const scrollRef = useRef(null);
   const researchRefs = useRef({}); // Ref to store individual research item DOM elements
   const [isInitializingResearch, setIsInitializingResearch] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(20); // default
   const [isSimulationCompleted, setIsSimulationCompleted] = useState(false);
 
   const dispatch = useDispatch();
