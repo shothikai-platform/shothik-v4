@@ -8,7 +8,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/ui/useMobile";
@@ -73,6 +77,7 @@ const ImageGrid = ({ images, showAll = false }) => {
         <Button
           variant="ghost"
           size="icon"
+          aria-label="Previous image"
           className="absolute top-1/2 left-5 -translate-y-1/2"
           onClick={() =>
             setSelectedImage((prev) =>
@@ -86,6 +91,7 @@ const ImageGrid = ({ images, showAll = false }) => {
         <Button
           variant="ghost"
           size="icon"
+          aria-label="Next image"
           className="absolute top-1/2 right-5 -translate-y-1/2"
           onClick={() =>
             setSelectedImage((prev) =>
@@ -113,8 +119,10 @@ const ImageGrid = ({ images, showAll = false }) => {
       {/* Image Gallery Grid */}
       <div className="grid-rows-auto grid grid-cols-4 gap-2">
         {displayImages.map((image, index) => (
-          <motion.div
+          <motion.button
             key={index}
+            type="button"
+            aria-label={image.description || `View image ${index + 1}`}
             className={cn(
               "relative cursor-pointer overflow-hidden rounded-lg shadow-sm transition-all",
               index === 0 ? "col-span-2 row-span-2 h-[188px]" : "h-[90px]",
@@ -129,11 +137,14 @@ const ImageGrid = ({ images, showAll = false }) => {
           >
             <img
               src={image.url}
-              alt={image.description}
+              alt=""
               className="h-full w-full object-cover"
             />
             {image.description && (
-              <div className="absolute inset-0 flex items-center bg-black/60 p-2 opacity-0 transition-opacity hover:opacity-100">
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 flex items-center bg-black/60 p-2 opacity-0 transition-opacity hover:opacity-100"
+              >
                 <p className="line-clamp-3 text-xs text-white">
                   {image.description}
                 </p>
@@ -146,7 +157,7 @@ const ImageGrid = ({ images, showAll = false }) => {
                 </p>
               </div>
             )}
-          </motion.div>
+          </motion.button>
         ))}
       </div>
 
@@ -154,6 +165,9 @@ const ImageGrid = ({ images, showAll = false }) => {
       {!isMobile && (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent className="max-w-4xl rounded-none p-0 sm:max-w-5xl">
+            <DialogDescription className="sr-only">
+              Detailed view of the selected image
+            </DialogDescription>
             <ImageViewer />
           </DialogContent>
         </Dialog>
