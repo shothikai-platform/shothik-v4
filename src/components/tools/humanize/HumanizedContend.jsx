@@ -140,8 +140,6 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
