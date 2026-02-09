@@ -4,6 +4,7 @@ import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import nextConfig from "eslint-config-next/core-web-vitals";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,10 +15,8 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+  // Next.js specific configuration (Flat Config natively supported in v16)
+  ...nextConfig,
 
   // Apply to JavaScript and JSX files
   {
@@ -41,15 +40,11 @@ export default [
         ...globals.node,
         ...globals.es2021,
       },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
+      // Removed parserOptions to avoid overriding Next.js TypeScript parser settings
       // parserOptions: {
-      //   project: "./tsconfig.json",
-      //   tsconfigRootDir: __dirname,
-      //   ecmaFeatures: { jsx: true },
+      //   ecmaFeatures: {
+      //     jsx: true,
+      //   },
       // },
     },
     rules: {
