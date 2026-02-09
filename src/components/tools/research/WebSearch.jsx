@@ -8,7 +8,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/ui/useMobile";
@@ -161,6 +165,9 @@ const ImageGrid = ({ images, showAll = false }) => {
       {!isMobile && (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent className="max-w-4xl rounded-none p-0 sm:max-w-5xl">
+            <DialogDescription className="sr-only">
+              Detailed view of the selected image
+            </DialogDescription>
             <ImageViewer />
           </DialogContent>
         </Dialog>
