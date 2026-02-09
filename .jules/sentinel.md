@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Hardcoded User ID & IDOR in Sheet Generation]
+**Vulnerability:** The `create_conversation` endpoint for spreadsheet generation used a hardcoded `temp-user` ID and lacked authorization checks, allowing unauthenticated access and potential modification of other users' sessions.
+**Learning:** Placeholder code ("temp-user") in API routes can create critical security holes if deployed without proper review. It bypasses data isolation and can lead to data leakage and corruption.
+**Prevention:** Strictly enforce authentication middleware and user-scoped queries (e.g., `session.userId === currentUser.id`) for all data modification endpoints. Remove placeholder credentials before merging.
