@@ -1,7 +1,9 @@
 "use client";
 
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { ExternalLink } from "lucide-react";
 
 const SourcesGrid = ({ sources, onViewAllSources }) => {
   if (!sources || sources.length === 0) return null;
@@ -39,10 +41,6 @@ const SourcesGrid = ({ sources, onViewAllSources }) => {
     }
   };
 
-  const handleSourceClick = (url) => {
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
   return (
     <div className="mt-2 mb-3">
       <h6 className="text-foreground mb-2 text-lg font-semibold">
@@ -51,32 +49,39 @@ const SourcesGrid = ({ sources, onViewAllSources }) => {
 
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 md:grid-cols-3">
         {sources.slice(0, 6).map((source, index) => (
-          <Card
+          <a
             key={index}
-            className="flex h-full cursor-pointer flex-col transition-all duration-200 ease-in-out hover:-translate-y-px hover:shadow-md"
-            onClick={() => handleSourceClick(source.url)}
+            href={source.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block h-full no-underline"
           >
-            <CardContent className="flex-grow p-2">
-              <div className="flex items-start gap-1.5">
-                <Avatar className="h-6 w-6 shrink-0">
-                  <AvatarImage src={getFaviconUrl(source.url)} />
-                  <AvatarFallback className="bg-muted text-foreground text-[0.7rem]">
-                    {getDomainAbbr(source.url)}
-                  </AvatarFallback>
-                </Avatar>
+            <Card className="flex h-full flex-col transition-all duration-200 ease-in-out hover:-translate-y-px hover:shadow-md">
+              <CardContent className="flex-grow p-2">
+                <div className="flex items-start gap-1.5">
+                  <Avatar className="h-6 w-6 shrink-0">
+                    <AvatarImage src={getFaviconUrl(source.url)} />
+                    <AvatarFallback className="bg-muted text-foreground text-[0.7rem]">
+                      {getDomainAbbr(source.url)}
+                    </AvatarFallback>
+                  </Avatar>
 
-                <div className="min-w-0 flex-1">
-                  <p className="text-foreground mb-0.5 line-clamp-2 text-sm leading-snug font-medium">
-                    {source.title || "Untitled Source"}
-                  </p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-1">
+                      <p className="text-foreground group-hover:text-primary mb-0.5 line-clamp-2 text-sm leading-snug font-medium transition-colors">
+                        {source.title || "Untitled Source"}
+                      </p>
+                      <ExternalLink className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
 
-                  <span className="text-muted-foreground block truncate text-xs">
-                    {getDomain(source.url)}
-                  </span>
+                    <span className="text-muted-foreground block truncate text-xs">
+                      {getDomain(source.url)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </a>
         ))}
       </div>
 
