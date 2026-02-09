@@ -1,14 +1,22 @@
 
 import socketio
 import logging
+import os
+from typing import List
 from services.model_loader import ModelLoader
 from services.paraphrase_engine import ParaphraseEngine
 from services.text_processor import TextProcessor
 
 logger = logging.getLogger(__name__)
 
+# Secure CORS policy by loading allowed origins from an environment variable.
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS: List[str] = [
+    origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
+]
+
 # Create Socket.IO Server (Async)
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=ALLOWED_ORIGINS or "*")
 
 # Wrap in ASGI App
 socket_app = socketio.ASGIApp(sio)
@@ -27,17 +35,24 @@ async def paraphrase(sid, data):
     Handles the 'paraphrase' event from Frontend.
     Data format expected: { "text": "...", "mode": "...", "eventId": "..." }
     """
-    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
-    
     text = data.get("text")
     mode = data.get("mode", "standard")
+
+    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
+
+    if not text:
+        return
+
+    # Security: Input validation to prevent DoS via large text
+    if len(text) > 5000:
+        logger.warning(f"Rejected request from {sid}: text too long ({len(text)} chars)")
+        await sio.emit('error', {'message': 'Text too long. Max 5000 characters.'}, room=sid)
+        return
+
     synonym_level = data.get("synonym", "basic").lower() # basic, intermediate, advanced
     freeze_words = data.get("freeze", "")
     language = data.get("language", "English")
     event_id = data.get("eventId")
-    
-    if not text:
-        return
 
     try:
         # 1. Load Resources (Mock Mode handles missing models)
