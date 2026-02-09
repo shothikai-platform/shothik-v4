@@ -2,8 +2,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { researchChatState } from "@/redux/slices/researchChatSlice";
-import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
@@ -78,19 +76,23 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
   </div>
 );
 
-export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
+export default function ResearchContent({
+  currentResearch,
+  isLastData,
+  onSwitchTab,
+}) {
   const researchResult =
     currentResearch?.result || currentResearch?.answer || "";
 
-  const researchCore = useSelector(researchCoreState);
-  const researchChat = useSelector(researchChatState);
+  // Optimize selectors to prevent re-renders on unrelated state changes
+  const isDataGenerating = useSelector(
+    (state) => state.researchCore?.isStreaming || state.researchCore?.isPolling,
+  );
+  const agentId = useSelector((state) => state.researchChat?.currentChatId);
 
   // Check if we have sources to use the new component with references
   const hasSources =
     currentResearch?.sources && currentResearch.sources.length > 0;
-
-  // Get the current agent ID for sharing functionality
-  const agentId = researchChat?.currentChatId;
 
   return (
     <div className="w-full max-w-full overflow-hidden">
@@ -99,9 +101,7 @@ export default function ResearchContent({ currentResearch, isLastData, onSwitchT
           content={researchResult}
           sources={currentResearch.sources}
           isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
+          isDataGenerating={isDataGenerating}
           agentId={agentId}
           onSwitchToSourcesTab={() => onSwitchTab?.(2)}
         />
@@ -109,9 +109,7 @@ export default function ResearchContent({ currentResearch, isLastData, onSwitchT
         <MessageBubble
           message={researchResult}
           isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
+          isDataGenerating={isDataGenerating}
         />
       )}
     </div>

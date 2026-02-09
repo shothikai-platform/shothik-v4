@@ -19,13 +19,11 @@ import {
 } from "@/redux/slices/researchCoreSlice";
 import { clearResearchUiState } from "@/redux/slices/researchUiSlice";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderTitle from "./ui/HeaderTitle";
-import ResearchDataArea from "./ui/ResearchDataArea";
+import ResearchItem from "./ui/ResearchItem";
 import ResearchPageSkeletonLoader from "./ui/ResearchPageSkeletonLoader";
 import ResearchStreamingShell from "./ui/ResearchStreamingShell";
-import TabsPanel from "./ui/TabPanel";
 
 export default function ResearchAgentPage({
   loadingResearchHistory,
@@ -55,6 +53,25 @@ export default function ResearchAgentPage({
 
   const { checkAndRecoverConnection, manualReconnect } = useResearchStream();
   const { loadChatResearchesWithQueueCheck } = useResearchHistory();
+
+  const handleTabChange = useCallback(
+    (researchId, newValue) => {
+      dispatch(
+        setResearchSelectedTab({
+          researchId,
+          selectedTab: newValue,
+        }),
+      );
+      // Scroll to the research item when its tab is clicked
+      if (researchRefs.current[researchId]) {
+        researchRefs.current[researchId].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    },
+    [dispatch],
+  );
 
   const researchConfig = JSON.parse(sessionStorage.getItem("r-config"));
 
@@ -210,61 +227,13 @@ export default function ResearchAgentPage({
       <div className="flex flex-col gap-2 sm:gap-4">
         {researchCore?.researches.length > 0 &&
           researchCore?.researches?.map((research, idx) => (
-            <div
+            <ResearchItem
               key={research._id}
-              ref={(el) => (researchRefs.current[research._id] = el)} // Assign ref to each research item
-            >
-              <div className="bg-background sticky top-0 z-10">
-                <HeaderTitle
-                  headerHeight={headerHeight}
-                  setHeaderHeight={setHeaderHeight}
-                  query={research.query}
-                  researchItem={research}
-                />
-                <TabsPanel
-                  selectedTab={research.selectedTab}
-                  sources={research.sources}
-                  images={research.images}
-                  onTabChange={(newValue) => {
-                    dispatch(
-                      setResearchSelectedTab({
-                        researchId: research._id,
-                        selectedTab: newValue,
-                      }),
-                    );
-                    // Scroll to the research item when its tab is clicked
-                    if (researchRefs.current[research._id]) {
-                      researchRefs.current[research._id].scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }
-                  }}
-                />
-              </div>
-
-              {/* data area */}
-              <ResearchDataArea
-                selectedTab={research.selectedTab}
-                research={research}
-                isLastData={idx === researchCore?.researches?.length - 1}
-                onSwitchTab={(newTab) => {
-                  dispatch(
-                    setResearchSelectedTab({
-                      researchId: research._id,
-                      selectedTab: newTab,
-                    }),
-                  );
-                  // Scroll to the research item when switching tabs
-                  if (researchRefs.current[research._id]) {
-                    researchRefs.current[research._id].scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }
-                }}
-              />
-            </div>
+              ref={(el) => (researchRefs.current[research._id] = el)}
+              research={research}
+              isLastData={idx === researchCore?.researches?.length - 1}
+              onTabChange={handleTabChange}
+            />
           ))}
       </div>
 
