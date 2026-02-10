@@ -59,7 +59,7 @@ export default function ResearchAgentPage({
   const researchConfig = JSON.parse(sessionStorage.getItem("r-config"));
 
 
-  // 
+  //
 
   // const initialQuery = sessionStorage.getItem("activeResearchChatId") || "";
   const initialUserPrompt = sessionStorage.getItem("initialResearchPrompt");
