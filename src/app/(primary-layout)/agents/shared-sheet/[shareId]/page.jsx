@@ -350,6 +350,7 @@ export default function SharedSheetPage({ params }) {
         : baseUrl;
       const apiUrl = `${cleanBaseUrl}/${process.env.NEXT_PUBLIC_SHEET_REDIRECT_PREFIX}/chat/replicate_chat`;
 
+      console.log(
         "✅ Expected URL:",
         "https://api-qa.shothik.ai/sheet/chat/replicate_chat",
       );

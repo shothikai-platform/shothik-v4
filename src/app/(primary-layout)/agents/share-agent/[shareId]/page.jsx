@@ -48,6 +48,7 @@ const SharedAgentPage = () => {
     useCreateAgentReplicaMutation();
 
   useEffect(() => {
+    console.log({
       accessToken,
       isAuthenticated,
       user,
