@@ -5,6 +5,12 @@ import { POST } from './route';
 // Mock axios
 vi.mock('axios');
 
+vi.mock('@/lib/server-auth', () => ({
+  getAuthenticatedUser: vi.fn(),
+}));
+
+import { getAuthenticatedUser } from '@/lib/server-auth';
+
 describe('Zoho Webhook API', () => {
   const originalEnv = process.env;
 
@@ -12,6 +18,7 @@ describe('Zoho Webhook API', () => {
     vi.resetModules();
     process.env = { ...originalEnv };
     vi.clearAllMocks();
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user123' });
   });
 
   afterEach(() => {
