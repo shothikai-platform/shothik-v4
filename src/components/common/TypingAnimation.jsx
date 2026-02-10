@@ -1,11 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { memo } from "react";
+import React, { memo } from "react";
 
 const TypingAnimation = memo(({ text = "Thinking..." }) => (
-  <div className="flex items-center gap-2 px-2 py-4">
-    <div className="flex gap-1">
+  <div
+    className="flex items-center gap-2 px-2 py-4"
+    role="status"
+    aria-live="polite"
+  >
+    <div className="flex gap-1" aria-hidden="true">
       {[0, 1, 2].map((i) => (
         <div
           key={i}
