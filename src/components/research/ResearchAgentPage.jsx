@@ -14,37 +14,36 @@ import {
   researchCoreState,
   resetResearchCore,
   setIsSimulating,
-  setResearchSelectedTab,
   setSimulationStatus,
 } from "@/redux/slices/researchCoreSlice";
 import { clearResearchUiState } from "@/redux/slices/researchUiSlice";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderTitle from "./ui/HeaderTitle";
-import ResearchDataArea from "./ui/ResearchDataArea";
 import ResearchPageSkeletonLoader from "./ui/ResearchPageSkeletonLoader";
 import ResearchStreamingShell from "./ui/ResearchStreamingShell";
-import TabsPanel from "./ui/TabPanel";
+import ResearchItem from "./ui/ResearchItem";
 
 export default function ResearchAgentPage({
   loadingResearchHistory,
   setLoadingResearchHistory,
 }) {
   const scrollRef = useRef(null);
-  const researchRefs = useRef({}); // Ref to store individual research item DOM elements
   const [isInitializingResearch, setIsInitializingResearch] = useState(true);
-  const [headerHeight, setHeaderHeight] = useState(20); // default
   const [isSimulationCompleted, setIsSimulationCompleted] = useState(false);
 
   const dispatch = useDispatch();
-  //   const { headerHeight } = useSelector((state) => state.ui);
   const { currentChatId } = useChat();
   const { startResearch } = useResearchStream();
   const { startSimulationResearch } = useResearchSimulation();
 
   const researchChat = useSelector(researchChatState);
-  const researchCore = useSelector(researchCoreState);
+
+  // OPTIMIZATION: Split selectors to prevent unnecessary re-renders
+  const researches = useSelector((state) => state.researchCore.researches);
+  const isStreaming = useSelector((state) => state.researchCore.isStreaming);
+  const isPolling = useSelector((state) => state.researchCore.isPolling);
+  const streamEvents = useSelector((state) => state.researchCore.streamEvents);
 
   const searchParams = useSearchParams();
   const chatIdFromUrl = searchParams.get("id");
@@ -53,23 +52,12 @@ export default function ResearchAgentPage({
   const isSimulationMode = Boolean(researchId);
   const actualChatId = researchId || chatIdFromUrl;
 
-  const { checkAndRecoverConnection, manualReconnect } = useResearchStream();
+  const { checkAndRecoverConnection } = useResearchStream();
   const { loadChatResearchesWithQueueCheck } = useResearchHistory();
 
   const researchConfig = JSON.parse(sessionStorage.getItem("r-config"));
 
-
-  // 
-
-  // const initialQuery = sessionStorage.getItem("activeResearchChatId") || "";
   const initialUserPrompt = sessionStorage.getItem("initialResearchPrompt");
-
-  // useEffect(() => {
-  //   // Create initial chat if none exists
-  //   if (!currentChatId) {
-  //     createNewChat(initialQuery);
-  //   }
-  // }, [currentChatId, createNewChat]);
 
   useEffect(() => {
     if (!researchChat?.currentChatId) {
@@ -85,7 +73,7 @@ export default function ResearchAgentPage({
       dispatch(resetResearchCore());
       dispatch(clearResearchUiState());
     };
-  }, [actualChatId, isSimulationMode]);
+  }, [actualChatId, isSimulationMode, dispatch, researchChat?.currentChatId]);
 
   useEffect(() => {
     try {
@@ -111,10 +99,8 @@ export default function ResearchAgentPage({
           await checkAndRecoverConnection();
 
           // Load existing researches and check queue status
-          const { researches, hasActiveQueue } =
+          const { researches: loadedResearches, hasActiveQueue } =
             await loadChatResearchesWithQueueCheck();
-
-          //
 
           // Only start new research if:
           // 1. No existing researches AND
@@ -122,10 +108,10 @@ export default function ResearchAgentPage({
           // 3. We have an initial query AND
           // 4. We're not currently streaming or polling
           if (
-            researches.length === 0 &&
+            loadedResearches.length === 0 &&
             !hasActiveQueue &&
-            !researchCore?.isStreaming &&
-            !researchCore?.isPolling
+            !isStreaming &&
+            !isPolling
           ) {
             const initialQuery = sessionStorage.getItem(
               "initialResearchPrompt",
@@ -179,13 +165,13 @@ export default function ResearchAgentPage({
   }, [currentChatId, isSimulationMode, researchId]);
 
   useEffect(() => {
-    if (scrollRef.current && researchCore?.isStreaming) {
+    if (scrollRef.current && isStreaming) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [
-    researchCore?.isStreaming,
-    researchCore?.researches?.length,
-    researchCore?.streamEvents,
+    isStreaming,
+    researches?.length,
+    streamEvents,
   ]);
 
   if (loadingResearchHistory || isInitializingResearch) {
@@ -208,85 +194,20 @@ export default function ResearchAgentPage({
     >
       {/* research data */}
       <div className="flex flex-col gap-2 sm:gap-4">
-        {researchCore?.researches.length > 0 &&
-          researchCore?.researches?.map((research, idx) => (
-            <div
+        {researches.length > 0 &&
+          researches.map((research, idx) => (
+            <ResearchItem
               key={research._id}
-              ref={(el) => (researchRefs.current[research._id] = el)} // Assign ref to each research item
-            >
-              <div className="bg-background sticky top-0 z-10">
-                <HeaderTitle
-                  headerHeight={headerHeight}
-                  setHeaderHeight={setHeaderHeight}
-                  query={research.query}
-                  researchItem={research}
-                />
-                <TabsPanel
-                  selectedTab={research.selectedTab}
-                  sources={research.sources}
-                  images={research.images}
-                  onTabChange={(newValue) => {
-                    dispatch(
-                      setResearchSelectedTab({
-                        researchId: research._id,
-                        selectedTab: newValue,
-                      }),
-                    );
-                    // Scroll to the research item when its tab is clicked
-                    if (researchRefs.current[research._id]) {
-                      researchRefs.current[research._id].scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }
-                  }}
-                />
-              </div>
-
-              {/* data area */}
-              <ResearchDataArea
-                selectedTab={research.selectedTab}
-                research={research}
-                isLastData={idx === researchCore?.researches?.length - 1}
-                onSwitchTab={(newTab) => {
-                  dispatch(
-                    setResearchSelectedTab({
-                      researchId: research._id,
-                      selectedTab: newTab,
-                    }),
-                  );
-                  // Scroll to the research item when switching tabs
-                  if (researchRefs.current[research._id]) {
-                    researchRefs.current[research._id].scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }
-                }}
-              />
-            </div>
+              research={research}
+              isLastData={idx === researches.length - 1}
+            />
           ))}
       </div>
 
-      {/* when streaming */}
-      {/* {(researchCore?.isStreaming || researchCore?.isPolling) && (
-          <StreamingIndicator
-            streamEvents={researchCore?.streamEvents}
-            isPolling={researchCore?.isPolling}
-            connectionStatus={researchCore?.connectionStatus}
-            onRetry={manualReconnect}
-          />
-        )} */}
-
-      {(researchCore?.isStreaming || researchCore?.isPolling) && (
-        // <ResearchProcessLogs
-        //   streamEvents={researchCore?.streamEvents}
-        //   researches={researchCore?.researches}
-        //   isStreaming={researchCore?.isStreaming || researchCore?.isPolling}
-        // />
+      {(isStreaming || isPolling) && (
         <ResearchStreamingShell
-          streamEvents={researchCore?.streamEvents}
-          isStreaming={researchCore?.isStreaming || researchCore?.isPolling}
+          streamEvents={streamEvents}
+          isStreaming={isStreaming || isPolling}
           userQuery={initialUserPrompt}
         />
       )}
