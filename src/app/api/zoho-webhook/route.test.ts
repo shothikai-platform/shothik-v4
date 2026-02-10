@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 import { POST } from './route';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 // Mock axios
 vi.mock('axios');
+
+// Mock getAuthenticatedUser
+vi.mock('@/lib/server-auth', () => ({
+  getAuthenticatedUser: vi.fn(),
+}));
 
 describe('Zoho Webhook API', () => {
   const originalEnv = process.env;
@@ -18,7 +24,20 @@ describe('Zoho Webhook API', () => {
     process.env = originalEnv;
   });
 
+  it('should return 401 if user is not authenticated', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/zoho-webhook', {
+      method: 'POST',
+      body: JSON.stringify({ event: { some: 'data' } }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(401);
+  });
+
   it('should return 500 if ZOHO_WEBHOOK_URL is not defined', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user123' });
     delete process.env.ZOHO_WEBHOOK_URL;
 
     const request = new Request('http://localhost/api/zoho-webhook', {
@@ -26,18 +45,12 @@ describe('Zoho Webhook API', () => {
       body: JSON.stringify({ event: { some: 'data' } }),
     });
 
-    // We expect the implementation to fail if the env var is missing.
-    // Currently it hardcodes it, so this test serves as a requirement for the fix.
     const response = await POST(request);
-
-    // In the future implementation, this should return 500.
-    // If the current implementation runs, it will likely succeed (200) because of hardcoded URL,
-    // OR fail if I mock axios to fail for the hardcoded URL.
-    // Since I want to verify the FIX, I will assert 500.
     expect(response.status).toBe(500);
   });
 
   it('should post to ZOHO_WEBHOOK_URL and return 200 on success', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user123' });
     const mockUrl = 'https://mock-zoho.com/webhook';
     process.env.ZOHO_WEBHOOK_URL = mockUrl;
 
@@ -50,7 +63,6 @@ describe('Zoho Webhook API', () => {
 
     const response = await POST(request);
 
-    // This assertion ensures we are NOT using the hardcoded URL anymore
     expect(axios.post).toHaveBeenCalledWith(
         mockUrl,
         expect.objectContaining({ event: { some: 'data' } })
