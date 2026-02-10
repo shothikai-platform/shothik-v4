@@ -12,20 +12,32 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindOne, mockSave, mockFindOneAndUpdate } = vi.hoisted(() => {
+const { mockFindOne, mockCreate, mockSave } = vi.hoisted(() => {
   return {
     mockFindOne: vi.fn(),
+    mockCreate: vi.fn(),
     mockSave: vi.fn(),
-    mockFindOneAndUpdate: vi.fn(),
   };
 });
 
-// Mock Mongoose model
-vi.mock('@/models/ResearchChat', () => {
+// Mock Mongoose models
+vi.mock('@/models/SheetSession', () => {
   return {
     default: {
       findOne: mockFindOne,
-      findOneAndUpdate: mockFindOneAndUpdate,
+      create: mockCreate,
+    },
+  };
+});
+
+vi.mock('@/models/SheetConversation', () => {
+  return {
+    default: {
+      create: vi.fn().mockResolvedValue({
+        _id: 'conv123',
+        events: [],
+        save: vi.fn(),
+      }),
     },
   };
 });
@@ -52,7 +64,7 @@ vi.mock('next/server', () => {
 
 import { getAuthenticatedUser } from '@/lib/server-auth';
 
-describe('POST /api/research/research/create_research_queue', () => {
+describe('POST /api/sheet/conversation/create_conversation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -60,47 +72,51 @@ describe('POST /api/research/research/create_research_queue', () => {
   it('should return 401 if user is not authenticated', async () => {
     (getAuthenticatedUser as any).mockResolvedValue(null);
 
-    const response = await POST(new Request('http://localhost/api/research/research/create_research_queue', {
+    const response = await POST(new Request('http://localhost/api/sheet/conversation/create_conversation', {
         method: 'POST',
-        body: JSON.stringify({ chat: '123', query: 'test' })
+        body: JSON.stringify({ prompt: 'test' })
     }));
 
     expect(response.status).toBe(401);
   });
 
-  it('should verify ownership when starting research', async () => {
+  it('should verify ownership when chatId is provided', async () => {
     const mockUser = { _id: 'user123' };
     (getAuthenticatedUser as any).mockResolvedValue(mockUser);
 
-    const mockChat = {
-        _id: '123',
-        messages: [],
+    const mockSession = {
+        _id: 'session123',
+        title: 'Old Title',
         save: mockSave
     };
-    mockFindOne.mockResolvedValue(mockChat);
+    mockFindOne.mockResolvedValue(mockSession);
 
-    const response = await POST(new Request('http://localhost/api/research/research/create_research_queue', {
+    const response = await POST(new Request('http://localhost/api/sheet/conversation/create_conversation', {
         method: 'POST',
-        body: JSON.stringify({ chat: '123', query: 'test' })
+        body: JSON.stringify({ prompt: 'new prompt', chat: 'session123' })
     }));
 
     expect(mockFindOne).toHaveBeenCalledWith({
-        _id: '123',
+        _id: 'session123',
         userId: 'user123'
     });
     expect(response.status).toBe(200);
   });
 
-  it('should return 404 if chat not found or not owned by user', async () => {
+  it('should create a new session with current user ID if no chatId provided', async () => {
     const mockUser = { _id: 'user123' };
     (getAuthenticatedUser as any).mockResolvedValue(mockUser);
-    mockFindOne.mockResolvedValue(null);
 
-    const response = await POST(new Request('http://localhost/api/research/research/create_research_queue', {
+    mockCreate.mockResolvedValue({ _id: 'newSession123', title: 'test', save: mockSave });
+
+    const response = await POST(new Request('http://localhost/api/sheet/conversation/create_conversation', {
         method: 'POST',
-        body: JSON.stringify({ chat: '123', query: 'test' })
+        body: JSON.stringify({ prompt: 'test prompt' })
     }));
 
-    expect(response.status).toBe(404);
+    expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({
+        userId: 'user123'
+    }));
+    expect(response.status).toBe(200);
   });
 });

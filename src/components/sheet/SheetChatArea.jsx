@@ -778,8 +778,7 @@ export default function SheetChatArea({
 
             // Check for validation error first
             if (data?.data?.error) {
-                "Validation error detected, removing user message and showing toast",
-              );
+              console.log("Validation error detected, removing user message and showing toast");
 
               // Remove the user message that couldn't be processed
               setMessages((prev) =>
@@ -1107,8 +1106,7 @@ export default function SheetChatArea({
       if (error.name === "AbortError") {
         // Check if this was a navigation abort (user left the chat but backend is still processing)
         if (isNavigationAbortRef.current) {
-            "SSE aborted due to navigation - backend still processing",
-          );
+          console.log("SSE aborted due to navigation - backend still processing");
           isNavigationAbortRef.current = false; // Reset flag
           // DON'T clear activeStreamingChatId - backend is still processing
           // When user returns, polling will check history and resume if incomplete

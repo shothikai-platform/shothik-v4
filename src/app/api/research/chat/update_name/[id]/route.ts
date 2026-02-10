@@ -19,6 +19,7 @@ export async function PUT(
 
         await dbConnect();
 
+        // Field name is 'name' as per ResearchChat schema
         const chat = await ResearchChat.findOneAndUpdate(
             { _id: id, userId: user._id || user.id },
             { name },
