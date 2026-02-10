@@ -4,6 +4,6 @@
 **Prevention:** Use Pydantic `Field` constraints to enforce strict length and range limits on all user-controlled inputs at the API gateway/routing layer.
 
 ## 2025-02-26 - [IDOR in Research Chat API]
-**Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
-**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
+**Vulnerability:** `get_one_chat`, `delete_chat`, `update_name`, and `create_research_queue` endpoints fetched or modified chats by ID without verifying user ownership.
+**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources. Even secondary updates (like background job completions) should be scoped to the owner if possible.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
