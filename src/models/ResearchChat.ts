@@ -17,4 +17,7 @@ const ResearchChatSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Compound index for optimizing get_my_chats query (filter by userId, sort by updatedAt)
+ResearchChatSchema.index({ userId: 1, updatedAt: -1 });
+
 export default mongoose.models.ResearchChat || mongoose.model('ResearchChat', ResearchChatSchema);
