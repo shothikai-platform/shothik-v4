@@ -71,6 +71,7 @@ export const useStreamingLogs = (
       currentAnimationRef.current.logIndex >= 0 &&
       currentAnimationRef.current.forceComplete
     ) {
+      console.debug(
         "Forcing completion of animation for log:",
         currentAnimationRef.current.logIndex,
       );
@@ -296,6 +297,7 @@ export const useStreamingLogs = (
 
     if (hasNewLogs || hasStatusChange) {
       if (hasNewLogs && isTypingRef.current) {
+        console.debug(
           "New logs detected, forcing completion of current animation",
         );
         forceCompleteCurrentAnimation();
