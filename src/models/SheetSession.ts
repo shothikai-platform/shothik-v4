@@ -9,4 +9,7 @@ const SheetSessionSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Compound index to optimize get_my_chats query (filter by user + sort by update time)
+SheetSessionSchema.index({ userId: 1, updatedAt: -1 });
+
 export default mongoose.models.SheetSession || mongoose.model('SheetSession', SheetSessionSchema);
