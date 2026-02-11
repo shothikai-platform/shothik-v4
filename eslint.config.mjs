@@ -1,6 +1,6 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import prettierConfig from "eslint-config-prettier";
+// import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -15,9 +15,7 @@ const compat = new FlatCompat({
 
 export default [
   // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+  ...compat.extends("next/core-web-vitals"),
 
   // Apply to JavaScript and JSX files
   {
@@ -94,5 +92,5 @@ export default [
   },
 
   // Prettier configuration
-  prettierConfig,
+  // prettierConfig,
 ];
