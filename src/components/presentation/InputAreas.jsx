@@ -74,6 +74,7 @@ export default function InputArea({
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
+    console.debug(
       "Selected files:",
       files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
     );
@@ -115,6 +116,7 @@ export default function InputArea({
       userId: user._id,
     };
 
+    console.debug({
       filesCount: files.length,
       userId: user._id,
       fileNames: files.map((f) => f.name),

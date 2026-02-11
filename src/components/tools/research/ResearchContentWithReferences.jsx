@@ -67,6 +67,7 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
+    console.debug({
       reference,
       sources: sources?.length,
     });
@@ -107,6 +108,7 @@ const ResearchContentWithReferences = ({
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
 
+  console.debug({
     contentStr: contentStr.substring(0, 200),
     sources: sources?.length,
   });

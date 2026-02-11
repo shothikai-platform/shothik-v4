@@ -79,6 +79,7 @@ export function useElementDuplication(
       return false;
     }
 
+    console.debug(
       "useElementDuplication: Attempting to duplicate element with path:",
       elementPath,
     );
@@ -88,6 +89,7 @@ export function useElementDuplication(
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
+      console.debug(
         "useElementDuplication: Element not found by path, trying by ID:",
         elementId,
       );
@@ -96,6 +98,7 @@ export function useElementDuplication(
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
+      console.debug(
         "useElementDuplication: Element not found by ID, trying by selected class",
       );
       const selectedElements = doc.querySelectorAll(".element-selected");
@@ -117,6 +120,7 @@ export function useElementDuplication(
     setIsDuplicating(true);
 
     try {
+      console.debug({
         tagName: element.tagName,
         id: element.id,
         className: element.className,
@@ -144,6 +148,7 @@ export function useElementDuplication(
       if (!element.id) {
         const originalId = generateId("element");
         element.id = originalId;
+        console.debug(
           "useElementDuplication: Original element assigned ID:",
           originalId,
         );
@@ -210,6 +215,7 @@ export function useElementDuplication(
       // Clear selection from original element BEFORE selecting the clone
       // This prevents confusion where the original element still appears selected
       element.classList.remove("element-selected", "element-hovered");
+      console.debug(
         "useElementDuplication: Cleared selection from original element",
       );
 

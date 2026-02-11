@@ -185,6 +185,7 @@ export default function usePresentationOrchestrator(presentationId) {
           throw new Error("Failed to parse history data");
         }
 
+        console.debug({
           logsCount: parsedData.logs.length,
           slidesCount: parsedData.slides.length,
           status: parsedData.status,
@@ -219,6 +220,7 @@ export default function usePresentationOrchestrator(presentationId) {
 
       // Prevent duplicate calls unless explicitly skipped (for follow-up queries)
       if (!skipDuplicateCheck && startPresentationCalledRef.current) {
+        console.debug(
           "[Orchestrator] startPresentation already called, skipping duplicate call",
         );
         return;
@@ -269,6 +271,7 @@ export default function usePresentationOrchestrator(presentationId) {
       await startPresentation(pId, false);
 
       // Socket will automatically connect via usePresentationSocket
+      console.debug(
         "[Orchestrator] Socket connection initiated for queued presentation",
       );
     },
@@ -299,6 +302,7 @@ export default function usePresentationOrchestrator(presentationId) {
       const historyData = await fetchPresentationHistory(pId);
 
       if (historyData) {
+        console.debug({
           logs: historyData.logs.length,
           slides: historyData.slides.length,
         });
@@ -306,6 +310,7 @@ export default function usePresentationOrchestrator(presentationId) {
         // Load history into Redux
         dispatch(setHistoryData(historyData));
 
+        console.debug(
           "[Orchestrator] Step 2: Now establishing socket connection for real-time updates...",
         );
       } else {
@@ -414,6 +419,7 @@ export default function usePresentationOrchestrator(presentationId) {
       const { p_id, status } = statusData;
       currentStatusRef.current = status;
 
+      console.debug(
         `[Orchestrator] 🎯 Routing status: ${status} for presentation: ${p_id}`,
       );
 
@@ -462,6 +468,7 @@ export default function usePresentationOrchestrator(presentationId) {
       hasInitializedRef.current &&
       initializedPresentationIdRef.current === presentationId
     ) {
+      console.debug(
         "[Orchestrator] Already initialized for this presentationId, skipping",
       );
       return;
