@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - Accessible File Inputs
+**Learning:** `input[type="file"]` hidden with `display: none` (e.g., `hidden` class) is inaccessible to keyboards and screen readers.
+**Action:** Use `sr-only` class to visually hide the input while keeping it in the accessibility tree, and wrap it in a `<label>` to handle clicks naturally without JS `onClick` handlers.
