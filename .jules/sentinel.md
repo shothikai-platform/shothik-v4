@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Insecure WebSocket CORS Configuration]
+**Vulnerability:** The Socket.IO server was configured with `cors_allowed_origins='*'`, allowing any website to establish a WebSocket connection and potentially exploit users via Cross-Site WebSocket Hijacking (CSWSH).
+**Learning:** WebSocket libraries often default to insecure or permissive configurations. Secure CORS policies applied to REST endpoints (like in FastAPI) do not automatically apply to WebSocket servers mounted within the same application.
+**Prevention:** Explicitly configure `cors_allowed_origins` in WebSocket servers to match the `ALLOWED_ORIGINS` environment variable used for REST API security.
