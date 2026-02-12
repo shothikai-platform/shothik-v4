@@ -9,4 +9,7 @@ const SheetSessionSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Compound index for efficient user-based queries sorted by update time
+SheetSessionSchema.index({ userId: 1, updatedAt: -1 });
+
 export default mongoose.models.SheetSession || mongoose.model('SheetSession', SheetSessionSchema);
