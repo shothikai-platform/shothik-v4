@@ -1,7 +1,19 @@
 import axios from "axios";
+import { getAuthenticatedUser } from "@/lib/server-auth";
 
 export async function POST(request) {
   try {
+    // Secure this endpoint to prevent abuse of the Zoho webhook URL.
+    // If public access is needed for analytics, consider using a separate endpoint
+    // with rate limiting and/or CAPTCHA, or specific restricted tokens.
+    const user = await getAuthenticatedUser();
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
     const { event } = await request.json();
     const zohoWebhookUrl = process.env.ZOHO_WEBHOOK_URL;
 
