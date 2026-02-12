@@ -20,6 +20,7 @@ const buildFetchResponse = ({
   ok,
   status,
   json: vi.fn().mockResolvedValue(json),
+  text: vi.fn().mockResolvedValue(JSON.stringify(json)),
 });
 
 describe("plagiarismService", () => {
@@ -69,7 +70,11 @@ describe("plagiarismService", () => {
         buildFetchResponse({ ok: true, status: 200, json: rawResponse }),
       );
 
-    const result = await analyzePlagiarism({ text, token });
+    const result = await analyzePlagiarism({
+      text,
+      token,
+      baseUrl: "https://api-qa.shothik.ai/check",
+    });
 
     expect(fetchSpy).toHaveBeenCalledWith(
       "https://api-qa.shothik.ai/check/plagiarism/analyze",
@@ -87,6 +92,11 @@ describe("plagiarismService", () => {
       score: 81,
       riskLevel: "MEDIUM",
       analyzedAt: rawResponse.timestamp,
+      analysisId: undefined,
+      citations: [],
+      exactMatches: [],
+      exactPlagiarismPercentage: 0,
+      language: undefined,
       sections: [
         {
           similarity: 50,
@@ -106,10 +116,12 @@ describe("plagiarismService", () => {
           ],
         },
       ],
+      sources: [],
       summary: {
         paraphrasedCount: 1,
-        paraphrasedPercentage: 81,
+        paraphrasedPercentage: 100,
         exactMatchCount: 0,
+        totalChunks: 1,
       },
       flags: {
         hasPlagiarism: true,
