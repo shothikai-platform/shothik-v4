@@ -34,11 +34,11 @@ async def paraphrase(sid, data):
     Handles the 'paraphrase' event from Frontend.
     Data format expected: { "text": "...", "mode": "...", "eventId": "..." }
     """
-    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
-    
     text = data.get("text")
     mode = data.get("mode", "standard")
     synonym_level = data.get("synonym", "basic").lower() # basic, intermediate, advanced
+
+    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
     freeze_words = data.get("freeze", "")
     language = data.get("language", "English")
     event_id = data.get("eventId")
