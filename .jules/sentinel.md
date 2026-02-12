@@ -1,3 +1,8 @@
+## 2025-06-12 - [Unrestricted WebSocket CORS]
+**Vulnerability:** The NLP inference service's WebSocket endpoint allowed connections from any origin (`*`), enabling potential Cross-Site WebSocket Hijacking (CSWSH).
+**Learning:** Defaulting to `*` for CORS is convenient for development but catastrophic for production security, especially for stateful or authenticated WebSocket connections.
+**Prevention:** Align WebSocket CORS policy with the REST API policy by enforcing `ALLOWED_ORIGINS` from environment variables, defaulting to a deny-all state if undefined.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
