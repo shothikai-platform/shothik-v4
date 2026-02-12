@@ -7,5 +7,6 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    exclude: ['e2e/**', 'node_modules/**'], // Exclude e2e directory from vitest
   },
 })
