@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import React from "react";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
@@ -96,6 +98,7 @@ const ChatInput = () => {
         <div className="mb-4 flex items-center gap-4">
           <Textarea
             placeholder="Enter a new research topic"
+            aria-label="Research topic"
             value={inputValue}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
@@ -129,6 +132,15 @@ const ChatInput = () => {
             <div className="flex flex-row-reverse items-center gap-4">
               <Button
                 onClick={handleSubmit}
+                aria-label={
+                  isStreaming ||
+                  isInitiatingPresentation ||
+                  isInitiatingSheet ||
+                  isUploading ||
+                  isInitiatingResearch
+                    ? "Sending research topic"
+                    : "Send research topic"
+                }
                 disabled={
                   !inputValue.trim() ||
                   isInitiatingPresentation ||
@@ -140,7 +152,15 @@ const ChatInput = () => {
                 size="icon"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
               >
-                <Send className="h-5 w-5" />
+                {isStreaming ||
+                isInitiatingPresentation ||
+                isInitiatingSheet ||
+                isUploading ||
+                isInitiatingResearch ? (
+                  <Spinner className="h-5 w-5" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
