@@ -1,9 +1,17 @@
 import axios from "axios";
 import AuthService from "../auth.service";
-import { jest } from "@jest/globals";
+import {
+  describe,
+  test,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  Mock,
+} from "vitest";
 
 // Mock axios calls
-jest.mock("axios");
+vi.mock("axios");
 
 // Suite of integration tests for AuthService
 
@@ -18,7 +26,7 @@ interface AxiosResponse<T = any> {
 
 // Setup and teardown
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 afterEach(() => {
@@ -34,7 +42,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
     const result = await AuthService.login("validUser", "validPass");
@@ -51,7 +59,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockRejectedValueOnce({ response: mockResponse });
+    (axios.post as Mock).mockRejectedValueOnce({ response: mockResponse });
 
     // Call service function & assert rejection
     await expect(
@@ -67,7 +75,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
     const result = await AuthService.register(
@@ -88,7 +96,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
     const result = await AuthService.googleOAuth("google-auth-code");
@@ -105,7 +113,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
     const result = await AuthService.forgotPassword("user@example.com");
@@ -122,7 +130,7 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
     const result = await AuthService.verifyEmail("verificationToken");

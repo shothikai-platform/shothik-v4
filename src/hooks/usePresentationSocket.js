@@ -54,10 +54,11 @@ export default function usePresentationSocket(pId, token) {
    */
   const processAgentOutputMessage = useCallback(
     (message) => {
-        author: message.author,
-        type: message.type,
-        timestamp: message.timestamp,
-      });
+      // console.log("Processing message:", {
+      //   author: message.author,
+      //   type: message.type,
+      //   timestamp: message.timestamp,
+      // });
 
       try {
         const currentState = presentationStateRef.current;
@@ -65,12 +66,13 @@ export default function usePresentationSocket(pId, token) {
         // Parse the message
         const parsed = parseAgentOutput(message, currentState);
 
-          type: parsed.type,
-          author:
-            parsed.data?.author ||
-            parsed.logEntry?.author ||
-            parsed.slideEntry?.author,
-        });
+        // console.log("Parsed result:", {
+        //   type: parsed.type,
+        //   author:
+        //     parsed.data?.author ||
+        //     parsed.logEntry?.author ||
+        //     parsed.slideEntry?.author,
+        // });
 
         // Validate parsed data exists before processing
         if (!parsed || !parsed.type) {
@@ -80,7 +82,7 @@ export default function usePresentationSocket(pId, token) {
 
         // Check for duplicates before dispatching
         switch (parsed.type) {
-          case "log":
+          case "log": {
             // Validate data exists
             if (!parsed.data) {
               console.error("[Socket] Missing data for log type:", parsed);
@@ -104,12 +106,6 @@ export default function usePresentationSocket(pId, token) {
                 optimisticLogIndex !== undefined &&
                 optimisticLogIndex !== -1
               ) {
-                  "[Socket] 🔄 Replacing optimistic user log with backend log",
-                  {
-                    optimisticIndex: optimisticLogIndex,
-                    message: parsed.data.user_message,
-                  },
-                );
                 dispatch(
                   updateLog({
                     logIndex: optimisticLogIndex,
@@ -120,15 +116,13 @@ export default function usePresentationSocket(pId, token) {
               }
 
               // Check if this exact user message already exists (even if not temp)
-              // This prevents duplicates when backend sends same message multiple times
               const duplicateUserMessage = currentState.logs?.some(
                 (log) =>
                   log.author === "user" &&
-                  !log.temp && // Only check non-temp logs (already processed backend logs)
+                  !log.temp && // Only check non-temp logs
                   (log.user_message === parsed.data.user_message ||
                     log.content === parsed.data.user_message ||
                     log.text === parsed.data.user_message) &&
-                  // Allow some time difference (within 5 seconds) to catch same message from different workers
                   Math.abs(
                     new Date(log.timestamp).getTime() -
                       new Date(parsed.data.timestamp).getTime(),
@@ -136,19 +130,11 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (duplicateUserMessage) {
-                  "[Socket] ⏭️ Skipping duplicate user message (same content):",
-                  parsed.data.user_message?.substring(0, 50),
-                );
                 break; // Exit early, don't add duplicate
               }
             }
 
-            // Skip unknown agent logs during streaming
-            // Unknown logs should not be added to Redux to avoid cluttering the UI
             if (parsed.data.author === "unknown" || !parsed.data.author) {
-                "[Socket] ⏭️ Skipping unknown agent log during streaming:",
-                parsed.data.author,
-              );
               break;
             }
 
@@ -161,16 +147,14 @@ export default function usePresentationSocket(pId, token) {
             );
 
             if (logExists) {
-                "[Socket] ⏭️ Skipping duplicate log:",
-                parsed.data.author,
-              );
               break;
             }
 
             dispatch(addLog(parsed.data));
             break;
+          }
 
-          case "log_with_metadata":
+          case "log_with_metadata": {
             // Validate data exists
             if (!parsed.data) {
               console.error(
@@ -197,13 +181,11 @@ export default function usePresentationSocket(pId, token) {
               dispatch(setMetadata(parsed.metadata));
             }
             break;
+          }
 
-          case "browser_worker":
+          case "browser_worker": {
             // Browser workers always update, so we process them
             if (parsed.updateType === "update") {
-                "[Socket] Updating browser worker log at index:",
-                parsed.logIndex,
-              );
               dispatch(
                 updateLog({
                   logIndex: parsed.logIndex,
@@ -217,10 +199,6 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (workerExists) {
-                  "[Socket] ⏭️ Browser worker already exists from history, will update incrementally:",
-                  parsed.logEntry.author,
-                );
-
                 // Find its index and update instead of creating
                 const existingIndex = currentState.logs.findIndex(
                   (log) => log.author === parsed.logEntry.author,
@@ -235,40 +213,21 @@ export default function usePresentationSocket(pId, token) {
                   );
                 }
               } else {
-                  "[Socket] Creating new browser worker log:",
-                  parsed.logEntry.author,
-                );
                 dispatch(addLog(parsed.logEntry));
               }
             }
-
-            if (parsed.isComplete) {
-                "[Socket] ✅ Browser worker completed:",
-                parsed.logEntry.author,
-              );
-            }
             break;
+          }
 
-          case "slide":
+          case "slide": {
             // Handle insertions (new slide at existing position - requires reordering)
             if (parsed.updateType === "insert") {
-                "[Socket] Inserting slide at index:",
-                parsed.insertIndex,
-                "This will trigger reordering",
-              );
-
               dispatch(
                 insertSlide({
                   insertIndex: parsed.insertIndex,
                   slideEntry: parsed.slideEntry,
                 }),
               );
-
-              if (parsed.slideEntry.isComplete) {
-                  "[Socket] ✅ Slide inserted and completed:",
-                  parsed.slideEntry.slideNumber,
-                );
-              }
               break;
             }
 
@@ -278,19 +237,7 @@ export default function usePresentationSocket(pId, token) {
               (slide) => slide.slideNumber === parsed.slideEntry.slideNumber,
             );
 
-              updateType: parsed.updateType,
-              slideNumber: parsed.slideEntry.slideNumber,
-              hasThinking: !!parsed.slideEntry.thinking,
-              hasHtml: !!parsed.slideEntry.htmlContent,
-              isComplete: parsed.slideEntry.isComplete,
-              existsInHistory: slideExists,
-            });
-
             if (slideExists && parsed.updateType === "create") {
-                "[Socket] ⚠️ Slide exists from history, forcing update instead of create:",
-                parsed.slideEntry.slideNumber,
-              );
-
               // Find the existing slide index
               const existingSlideIndex = currentState.slides.findIndex(
                 (slide) => slide.slideNumber === parsed.slideEntry.slideNumber,
@@ -313,13 +260,8 @@ export default function usePresentationSocket(pId, token) {
                 }),
               );
             }
-
-            if (parsed.slideEntry.isComplete) {
-                "[Socket] ✅ Slide completed:",
-                parsed.slideEntry.slideNumber,
-              );
-            }
             break;
+          }
 
           default:
             console.warn("[Socket] Unknown parsed type:", parsed.type);
@@ -343,8 +285,9 @@ export default function usePresentationSocket(pId, token) {
 
     isProcessingRef.current = true;
 
-      `[Socket] Processing ${messageBufferRef.current.length} buffered messages`,
-    );
+    // console.log(
+    //   `[Socket] Processing ${messageBufferRef.current.length} buffered messages`,
+    // );
 
     while (messageBufferRef.current.length > 0) {
       const message = messageBufferRef.current.shift();
@@ -369,8 +312,9 @@ export default function usePresentationSocket(pId, token) {
     if (!pId || !token) {
       // Only clean up if there's an existing socket
       if (socketRef.current) {
-          "[Socket] 🧹 Cleaning up socket (pId/token missing or component unmounting)",
-        );
+        // console.log(
+        //   "[Socket] 🧹 Cleaning up socket (pId/token missing or component unmounting)",
+        // );
         socketRef.current.removeAllListeners();
         socketRef.current.disconnect();
         socketRef.current = null;
@@ -387,9 +331,10 @@ export default function usePresentationSocket(pId, token) {
       return;
     }
 
-      pId,
-      baseUrl,
-    });
+    // console.log("[Socket] Initializing connection:", {
+    //   pId,
+    //   baseUrl,
+    // });
 
     const socket = io(baseUrl, {
       path: `${process.env.NEXT_PUBLIC_SLIDE_REDIRECT_PREFIX}/socket.io`, // Socket.io path with prefix
@@ -421,11 +366,12 @@ export default function usePresentationSocket(pId, token) {
     });
 
     socket.on("agent_output", (message) => {
-        author: message.author,
-        type: message.type,
-        event: message.event,
-        status: message.status,
-      });
+      // console.log("Received agent_output:", {
+      //   author: message.author,
+      //   type: message.type,
+      //   event: message.event,
+      //   status: message.status,
+      // });
 
       // Check for terminal/completion events
       // Terminal events can have: author === "terminal", type === "terminal", or event === "completed"
@@ -436,8 +382,9 @@ export default function usePresentationSocket(pId, token) {
         (message.status === "completed" && message.author === "terminal");
 
       if (isTerminalEvent) {
-          "[Socket] 🏁 Terminal/completion event detected, closing socket",
-        );
+        // console.log(
+        //   "[Socket] 🏁 Terminal/completion event detected, closing socket",
+        // );
         const terminalData = parseTerminalEvent(message);
         dispatch(
           setStatus({
@@ -476,8 +423,9 @@ export default function usePresentationSocket(pId, token) {
 
       // Process any remaining buffered messages before disconnecting
       if (messageBufferRef.current.length > 0) {
-          `[Socket] Processing ${messageBufferRef.current.length} buffered messages before cleanup`,
-        );
+        // console.log(
+        //   `[Socket] Processing ${messageBufferRef.current.length} buffered messages before cleanup`,
+        // );
         processBuffer();
       }
 
