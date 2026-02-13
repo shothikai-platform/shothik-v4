@@ -11,9 +11,11 @@ import {
 import { cn } from "@/lib/utils";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchProcessLogs from "./ResearchProcessLogs";
+
+const EMPTY_ARRAY = [];
 
 const ResearchStreamingShell = ({
   streamEvents = [],
@@ -43,31 +45,22 @@ const ResearchStreamingShell = ({
   };
 
   // Calculate dynamic counts based on streaming events
-  const getSourceCount = () => {
-    let total = 0;
+  const { sourceCount, imageCount } = useMemo(() => {
+    let sCount = 0;
+    let iCount = 0;
     streamEvents.forEach((event) => {
       if (event.data?.sources_gathered) {
-        total += event.data.sources_gathered.length;
+        sCount += event.data.sources_gathered.length;
       }
       if (event.data?.sources_count) {
-        total = Math.max(total, event.data.sources_count);
+        sCount = Math.max(sCount, event.data.sources_count);
+      }
+      if (event.step === "image_search" && event.data?.images_found > 0) {
+        iCount += event.data.images_found || 0;
       }
     });
-    return total;
-  };
-
-  const getImageCount = () => {
-    const imageEvents = streamEvents.filter(
-      (event) => event.step === "image_search" && event.data?.images_found > 0,
-    );
-    return imageEvents.reduce(
-      (total, event) => total + (event.data?.images_found || 0),
-      0,
-    );
-  };
-
-  const sourceCount = getSourceCount();
-  const imageCount = getImageCount();
+    return { sourceCount: sCount, imageCount: iCount };
+  }, [streamEvents]);
 
   return (
     <div className="my-3 w-full pt-5 relative z-10 bg-background">
@@ -235,7 +228,7 @@ const ResearchStreamingShell = ({
       {streamEvents.length > 0 && (
         <ResearchProcessLogs
           streamEvents={streamEvents}
-          researches={[]}
+          researches={EMPTY_ARRAY}
           isStreaming={isStreaming}
         />
       )}
