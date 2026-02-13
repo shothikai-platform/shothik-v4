@@ -1,7 +1,3 @@
-## 2026-01-22 - API Response Optimization
-**Learning:** Returning full documents (like `ResearchChat` with `messages`) in list endpoints is a major performance bottleneck and unnecessary bandwidth usage.
-**Action:** Always check schema definitions for heavy fields (arrays, embedded objects) and use `.select()` or projection to exclude them in list/index endpoints.
-
-## 2026-01-22 - IDOR Vulnerability Discovery
-**Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
-**Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+## 2024-05-24 - Optimizing List Rendering in React
+**Learning:** React list components (like `SourcesContent`) often re-create helper functions and event handlers on every render. Moving these outside the component and memoizing the list items (`SourceCard`) significantly reduces re-renders, especially when the parent component updates frequently (e.g., during streaming).
+**Action:** When working with lists that receive frequent updates from parent state (like streaming data), always extract the item rendering into a memoized component and ensure callback props are stable using `useCallback`. Also, explicitly import `React` in JSX files to ensure compatibility with all testing environments (Vitest).
