@@ -38,7 +38,12 @@ class Logger {
         case 'warn':
           console.warn(formattedMessage, context || '');
           break;
+        case 'info':
+        case 'debug':
+          console.log(formattedMessage, context || '');
+          break;
         default:
+          console.log(formattedMessage, context || '');
       }
     } else {
       // In production, use structured JSON logging
@@ -52,7 +57,12 @@ class Logger {
         case 'warn':
           console.warn(logLine);
           break;
+        case 'info':
+        case 'debug':
+          console.log(logLine);
+          break;
         default:
+          console.log(logLine);
       }
     }
   }
