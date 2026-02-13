@@ -116,21 +116,21 @@ const settingsSlice = createSlice({
     // features
     toggleParaphraseOption(state, action) {
       const key = action.payload;
-      if (state.paraphraseOptions.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(state.paraphraseOptions, key)) {
         state.paraphraseOptions[key] = !state.paraphraseOptions[key];
         saveState(state);
       }
     },
     toggleHumanizeOption(state, action) {
       const key = action.payload;
-      if (state.humanizeOptions.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(state.humanizeOptions, key)) {
         state.humanizeOptions[key] = !state.humanizeOptions[key];
         saveState(state);
       }
     },
     toggleInterfaceOption(state, action) {
       const key = action.payload;
-      if (state.interfaceOptions.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(state.interfaceOptions, key)) {
         state.interfaceOptions[key] = !state.interfaceOptions[key];
         saveState(state);
       }

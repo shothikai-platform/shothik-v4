@@ -82,7 +82,7 @@ export default function usePresentationSocket(pId, token) {
 
         // Check for duplicates before dispatching
         switch (parsed.type) {
-          case "log":
+          case "log": {
             // Validate data exists
             if (!parsed.data) {
               console.error("[Socket] Missing data for log type:", parsed);
@@ -106,13 +106,6 @@ export default function usePresentationSocket(pId, token) {
                 optimisticLogIndex !== undefined &&
                 optimisticLogIndex !== -1
               ) {
-                // console.log(
-                //   "[Socket] 🔄 Replacing optimistic user log with backend log",
-                //   {
-                //     optimisticIndex: optimisticLogIndex,
-                //     message: parsed.data.user_message,
-                //   },
-                // );
                 dispatch(
                   updateLog({
                     logIndex: optimisticLogIndex,
@@ -123,15 +116,13 @@ export default function usePresentationSocket(pId, token) {
               }
 
               // Check if this exact user message already exists (even if not temp)
-              // This prevents duplicates when backend sends same message multiple times
               const duplicateUserMessage = currentState.logs?.some(
                 (log) =>
                   log.author === "user" &&
-                  !log.temp && // Only check non-temp logs (already processed backend logs)
+                  !log.temp && // Only check non-temp logs
                   (log.user_message === parsed.data.user_message ||
                     log.content === parsed.data.user_message ||
                     log.text === parsed.data.user_message) &&
-                  // Allow some time difference (within 5 seconds) to catch same message from different workers
                   Math.abs(
                     new Date(log.timestamp).getTime() -
                       new Date(parsed.data.timestamp).getTime(),
@@ -139,21 +130,11 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (duplicateUserMessage) {
-                // console.log(
-                //   "[Socket] ⏭️ Skipping duplicate user message (same content):",
-                //   parsed.data.user_message?.substring(0, 50),
-                // );
                 break; // Exit early, don't add duplicate
               }
             }
 
-            // Skip unknown agent logs during streaming
-            // Unknown logs should not be added to Redux to avoid cluttering the UI
             if (parsed.data.author === "unknown" || !parsed.data.author) {
-              // console.log(
-              //   "[Socket] ⏭️ Skipping unknown agent log during streaming:",
-              //   parsed.data.author,
-              // );
               break;
             }
 
@@ -166,17 +147,14 @@ export default function usePresentationSocket(pId, token) {
             );
 
             if (logExists) {
-              // console.log(
-              //   "[Socket] ⏭️ Skipping duplicate log:",
-              //   parsed.data.author,
-              // );
               break;
             }
 
             dispatch(addLog(parsed.data));
             break;
+          }
 
-          case "log_with_metadata":
+          case "log_with_metadata": {
             // Validate data exists
             if (!parsed.data) {
               console.error(
@@ -203,14 +181,11 @@ export default function usePresentationSocket(pId, token) {
               dispatch(setMetadata(parsed.metadata));
             }
             break;
+          }
 
-          case "browser_worker":
+          case "browser_worker": {
             // Browser workers always update, so we process them
             if (parsed.updateType === "update") {
-              // console.log(
-              //   "[Socket] Updating browser worker log at index:",
-              //   parsed.logIndex,
-              // );
               dispatch(
                 updateLog({
                   logIndex: parsed.logIndex,
@@ -224,11 +199,6 @@ export default function usePresentationSocket(pId, token) {
               );
 
               if (workerExists) {
-                // console.log(
-                //   "[Socket] ⏭️ Browser worker already exists from history, will update incrementally:",
-                //   parsed.logEntry.author,
-                // );
-
                 // Find its index and update instead of creating
                 const existingIndex = currentState.logs.findIndex(
                   (log) => log.author === parsed.logEntry.author,
@@ -243,44 +213,21 @@ export default function usePresentationSocket(pId, token) {
                   );
                 }
               } else {
-                // console.log(
-                //   "[Socket] Creating new browser worker log:",
-                //   parsed.logEntry.author,
-                // );
                 dispatch(addLog(parsed.logEntry));
               }
             }
-
-            if (parsed.isComplete) {
-              // console.log(
-              //   "[Socket] ✅ Browser worker completed:",
-              //   parsed.logEntry.author,
-              // );
-            }
             break;
+          }
 
-          case "slide":
+          case "slide": {
             // Handle insertions (new slide at existing position - requires reordering)
             if (parsed.updateType === "insert") {
-              // console.log(
-              //   "[Socket] Inserting slide at index:",
-              //   parsed.insertIndex,
-              //   "This will trigger reordering",
-              // );
-
               dispatch(
                 insertSlide({
                   insertIndex: parsed.insertIndex,
                   slideEntry: parsed.slideEntry,
                 }),
               );
-
-              if (parsed.slideEntry.isComplete) {
-                // console.log(
-                //   "[Socket] ✅ Slide inserted and completed:",
-                //   parsed.slideEntry.slideNumber,
-                // );
-              }
               break;
             }
 
@@ -290,21 +237,7 @@ export default function usePresentationSocket(pId, token) {
               (slide) => slide.slideNumber === parsed.slideEntry.slideNumber,
             );
 
-            // console.log("Processing slide update:", {
-            //   updateType: parsed.updateType,
-            //   slideNumber: parsed.slideEntry.slideNumber,
-            //   hasThinking: !!parsed.slideEntry.thinking,
-            //   hasHtml: !!parsed.slideEntry.htmlContent,
-            //   isComplete: parsed.slideEntry.isComplete,
-            //   existsInHistory: slideExists,
-            // });
-
             if (slideExists && parsed.updateType === "create") {
-              // console.log(
-              //   "[Socket] ⚠️ Slide exists from history, forcing update instead of create:",
-              //   parsed.slideEntry.slideNumber,
-              // );
-
               // Find the existing slide index
               const existingSlideIndex = currentState.slides.findIndex(
                 (slide) => slide.slideNumber === parsed.slideEntry.slideNumber,
@@ -327,14 +260,8 @@ export default function usePresentationSocket(pId, token) {
                 }),
               );
             }
-
-            if (parsed.slideEntry.isComplete) {
-              // console.log(
-              //   "[Socket] ✅ Slide completed:",
-              //   parsed.slideEntry.slideNumber,
-              // );
-            }
             break;
+          }
 
           default:
             console.warn("[Socket] Unknown parsed type:", parsed.type);

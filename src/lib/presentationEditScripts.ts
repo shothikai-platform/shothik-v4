@@ -428,7 +428,7 @@ const createEnhancedIframeContent = (
                   // Split and filter editor classes
                   const classList = current.className
                     .trim()
-                    .split(/\s+/)
+                    .split(/\\s+/)
                     .filter(c => {
                       // Filter out empty strings and editor classes
                       if (!c || c.length === 0) return false;

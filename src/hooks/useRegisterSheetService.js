@@ -50,7 +50,6 @@ const useSheetAIToken = () => {
         localStorage.setItem("sheetai-token", data.token);
         setSheetAIToken(data.token);
         return data.token;
-      } else {
       }
     } catch (err) {
       setError(err.message);

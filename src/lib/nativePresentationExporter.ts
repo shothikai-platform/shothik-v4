@@ -84,7 +84,7 @@ const createRenderIframe = (htmlBody: string): Promise<HTMLIFrameElement> => {
       }
       doc.open();
       // Inject the chart interceptor BEFORE writing the rest of the body
-      doc.write(`<script>${chartInterceptorScript}<\/script>`);
+      doc.write(`<script>${chartInterceptorScript}</script>`);
       doc.write(htmlBody);
       doc.close();
 
