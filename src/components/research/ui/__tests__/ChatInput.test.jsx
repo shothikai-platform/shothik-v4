@@ -63,10 +63,6 @@ describe('ChatInput', () => {
 
   it('renders send button with accessible label', () => {
     render(<ChatInput />);
-    // If multiple buttons are found, this will throw.
-    // Let's assume the previous error was due to some weird re-render or test issue,
-    // or maybe there IS another button.
-    // If it fails again with multiple elements, we'll debug.
     const button = screen.getByRole('button', { name: /send research topic/i });
     expect(button).toBeDefined();
   });
@@ -88,8 +84,6 @@ describe('ChatInput', () => {
 
     // Check if button is disabled
     const button = screen.getByRole('button', { name: /sending research topic/i });
-    // Note: I updated the label to "Sending research topic" in the code when streaming!
-    // So I should look for that.
 
     expect(button.disabled).toBe(true);
   });
