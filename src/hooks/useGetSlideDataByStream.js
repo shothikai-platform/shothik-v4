@@ -21,14 +21,15 @@ export const useGetSlideDataByStream = (config) => {
   const orchestratorRef = useRef(null);
   const updateState = useCallback(
     (updates) => {
-        hasLogs: !!updates.logs,
-        logsCount: updates.logs?.length,
-        hasSlides: !!updates.slides,
-        slidesCount: updates.slides?.length,
-        _replaceArrays: updates._replaceArrays,
-        status: updates.status,
-        title: updates.title,
-      });
+      // console.log("State update received:", {
+      //   hasLogs: !!updates.logs,
+      //   logsCount: updates.logs?.length,
+      //   hasSlides: !!updates.slides,
+      //   slidesCount: updates.slides?.length,
+      //   _replaceArrays: updates._replaceArrays,
+      //   status: updates.status,
+      //   title: updates.title,
+      // });
       setState((prev) => {
         // Check if we should replace arrays (for history loading)
         if (updates._replaceArrays) {
@@ -40,9 +41,10 @@ export const useGetSlideDataByStream = (config) => {
             slides: updates.slides || prev.slides,
           };
 
-            logs: newState.logs.length,
-            slides: newState.slides.length,
-          });
+          // console.log("Replaced arrays, new counts:", {
+          //   logs: newState.logs.length,
+          //   slides: newState.slides.length,
+          // });
 
           return newState;
         }
@@ -63,9 +65,10 @@ export const useGetSlideDataByStream = (config) => {
           slides: newSlides,
         };
 
-          logs: newState.logs.length,
-          slides: newState.slides.length,
-        });
+        // console.log("Appended updates, new counts:", {
+        //   logs: newState.logs.length,
+        //   slides: newState.slides.length,
+        // });
 
         return newState;
       });
