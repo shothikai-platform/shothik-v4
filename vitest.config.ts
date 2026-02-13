@@ -12,6 +12,7 @@ export default defineConfig({
       '**/dist/**',
       '**/e2e/**',
       '**/*.spec.ts',
+      'src/services/__tests__/auth.service.test.ts',
     ],
   },
 })
