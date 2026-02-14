@@ -4,6 +4,7 @@ import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,10 +15,8 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+  // Use typescript-eslint for TypeScript support
+  ...tseslint.configs.recommended,
 
   // Apply to JavaScript and JSX files
   {
@@ -46,27 +45,22 @@ export default [
           jsx: true,
         },
       },
-      // parserOptions: {
-      //   project: "./tsconfig.json",
-      //   tsconfigRootDir: __dirname,
-      //   ecmaFeatures: { jsx: true },
-      // },
     },
     rules: {
       /* Global Rules */
-      all: "off",
+      // all: "off", // removing this as it disables everything including parser
 
       // /* Base Rules */
-      "no-undef": "error",
-      "no-unused-vars": "off",
+      "no-undef": "error", // standard rule
+      "no-unused-vars": "off", // turning off base rule to use TS rule if needed
       "no-console": "warn",
 
       // /* React.js Rules */
       "react/no-unescaped-entities": "off",
 
       // /* TypeScript Rules */
-      // "@typescript-eslint/no-unused-vars": "off",
-      // "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
       // "@typescript-eslint/consistent-type-imports": "warn",
 
       // /* Next.js Rules */
