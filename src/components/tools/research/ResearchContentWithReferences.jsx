@@ -2,10 +2,16 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
+
+// Configure marked options once, outside component
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
 
 const ResearchContentWithReferences = ({
   content,
@@ -31,46 +37,7 @@ const ResearchContentWithReferences = ({
     }
   };
 
-  // Function to process content and make references clickable
-  const processContentWithReferences = (text) => {
-    // Ensure text is a string and clean it
-    if (!text || typeof text !== "string") {
-      if (typeof text === "object" && text !== null) {
-        text = text.text || text.content || text.result || text.answer || "";
-      } else {
-        text = String(text || "");
-      }
-    }
-
-    // Remove any [object Object] strings that might be in the text
-    text = text.replace(/\[object Object\]/g, "");
-
-    // Regular expression to find reference patterns like [1], [2, 9], [12, 13], etc.
-    const referenceRegex = /\[(\d+(?:,\s*\d+)*)\]/g;
-
-    return text.replace(referenceRegex, (match, numbers) => {
-      const refNumbers = numbers.split(",").map((n) => parseInt(n.trim()));
-
-      // Create clickable spans for each reference
-      return refNumbers
-        .map((refNum) => {
-          const sourceExists = sources.some(
-            (source) => source.reference === refNum,
-          );
-          if (sourceExists) {
-            return `<span class="reference-link inline-block relative cursor-pointer rounded px-0.5 py-px font-medium text-primary underline transition-all duration-200 hover:bg-primary/10" data-reference="${refNum}">[${refNum}]</span>`;
-          }
-          return `[${refNum}]`;
-        })
-        .join("");
-    });
-  };
-
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -92,32 +59,54 @@ const ResearchContentWithReferences = ({
     setHoverTimeout(timeout);
   };
 
-  // Handle content - it might be an object with text property or a string
-  let contentStr = "";
-  if (typeof content === "string") {
-    contentStr = content;
-  } else if (typeof content === "object" && content !== null) {
-    // If content is an object, try to extract the text content
-    contentStr =
-      content.text || content.content || content.result || content.answer || "";
-  } else {
-    contentStr = String(content || "");
-  }
+  // Process content string logic
+  const contentStr = useMemo(() => {
+    let text = "";
+    if (typeof content === "string") {
+      text = content;
+    } else if (typeof content === "object" && content !== null) {
+      // If content is an object, try to extract the text content
+      text =
+        content.text || content.content || content.result || content.answer || "";
+    } else {
+      text = String(content || "");
+    }
+    // Clean any [object Object] strings from the content
+    return text.replace(/\[object Object\]/g, "");
+  }, [content]);
 
-  // Clean any [object Object] strings from the content
-  contentStr = contentStr.replace(/\[object Object\]/g, "");
+  // Function to process content and make references clickable
+  // Memoized result to avoid re-calculation on every render
+  const processedContent = useMemo(() => {
+    // Ensure text is a string and clean it
+    let text = contentStr;
+    if (!text) return "";
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
+    // Regular expression to find reference patterns like [1], [2, 9], [12, 13], etc.
+    const referenceRegex = /\[(\d+(?:,\s*\d+)*)\]/g;
 
-  const processedContent = processContentWithReferences(contentStr);
+    return text.replace(referenceRegex, (match, numbers) => {
+      const refNumbers = numbers.split(",").map((n) => parseInt(n.trim()));
 
-  // Configure marked options
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
+      // Create clickable spans for each reference
+      return refNumbers
+        .map((refNum) => {
+          const sourceExists = sources.some(
+            (source) => source.reference === refNum,
+          );
+          if (sourceExists) {
+            return `<span class="reference-link inline-block relative cursor-pointer rounded px-0.5 py-px font-medium text-primary underline transition-all duration-200 hover:bg-primary/10" data-reference="${refNum}">[${refNum}]</span>`;
+          }
+          return `[${refNum}]`;
+        })
+        .join("");
+    });
+  }, [contentStr, sources]);
+
+  // Memoize marked output to avoid expensive re-parsing
+  const htmlContent = useMemo(() => {
+    return marked(processedContent);
+  }, [processedContent]);
 
   // Add hover event listeners after rendering
   const handleContentMouseOver = (event) => {
@@ -188,7 +177,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: htmlContent,
             }}
           />
 

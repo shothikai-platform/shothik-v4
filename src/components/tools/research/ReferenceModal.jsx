@@ -2,16 +2,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 
 const ReferenceModal = ({ open, onClose, reference, sources, anchorEl }) => {
   const modalRef = useRef(null);
-
-    open,
-    reference,
-    sources: sources?.length,
-    anchorEl,
-  });
 
   // Handle click outside to close modal
   useEffect(() => {
@@ -32,9 +26,9 @@ const ReferenceModal = ({ open, onClose, reference, sources, anchorEl }) => {
   if (!reference || !sources) return null;
 
   // Find sources that match this reference number
-  const matchingSources = sources.filter(
+  const matchingSources = useMemo(() => (sources || []).filter(
     (source) => source.reference === reference,
-  );
+  ), [sources, reference]);
 
   const handleOpenUrl = (url) => {
     window.open(url, "_blank", "noopener,noreferrer");
