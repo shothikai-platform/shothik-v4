@@ -1,3 +1,8 @@
+## 2026-02-14 - [Information Disclosure via Update Operations]
+**Vulnerability:** IDOR in update operation could return sensitive data even if the update payload was invalid or broken (e.g., mismatched field names).
+**Learning:** Database update operations often return the document by default, creating an information disclosure risk even if no modification occurs.
+**Prevention:** Always verify authorization (ownership) before performing database operations, even for seemingly harmless or broken updates.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
