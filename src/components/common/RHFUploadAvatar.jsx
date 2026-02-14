@@ -8,32 +8,23 @@ export function RHFUploadAvatar({ name, onDrop, helperText, loading }) {
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => {
-        const errorId = `${name}-error`;
+      render={({ field, fieldState: { error } }) => (
+        <div>
+          <UploadAvatar
+            error={!!error}
+            file={field.value}
+            onDrop={onDrop}
+            helperText={helperText}
+            loading={loading}
+          />
 
-        return (
-          <div>
-            <UploadAvatar
-              error={!!error}
-              file={field.value}
-              onDrop={onDrop}
-              helperText={helperText}
-              loading={loading}
-              aria-describedby={error ? errorId : undefined}
-            />
-
-            {!!error && (
-              <p
-                id={errorId}
-                className="text-destructive px-4 text-center text-sm"
-                role="alert"
-              >
-                {error.message}
-              </p>
-            )}
-          </div>
-        );
-      }}
+          {!!error && (
+            <p className="text-destructive px-4 text-center text-sm">
+              {error.message}
+            </p>
+          )}
+        </div>
+      )}
     />
   );
 }
