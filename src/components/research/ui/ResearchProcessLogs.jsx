@@ -190,7 +190,7 @@ const ProcessTimelineItem = React.memo(({ ev, isLast, isActive }) => {
   );
 });
 
-const ResearchProcessLogs = ({
+const ResearchProcessLogs = React.memo(({
   streamEvents = [],
   researches = [],
   isStreaming = false,
@@ -341,6 +341,8 @@ const ResearchProcessLogs = ({
       </div>
     </div>
   );
-};
+});
+
+ResearchProcessLogs.displayName = "ResearchProcessLogs";
 
 export default ResearchProcessLogs;
