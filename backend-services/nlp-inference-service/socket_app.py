@@ -1,14 +1,22 @@
 
 import socketio
 import logging
+import os
 from services.model_loader import ModelLoader
 from services.paraphrase_engine import ParaphraseEngine
 from services.text_processor import TextProcessor
 
 logger = logging.getLogger(__name__)
 
+# Secure CORS policy by loading allowed origins from an environment variable.
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS = [
+    origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
+]
+
 # Create Socket.IO Server (Async)
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+# We pass the list of allowed origins. If empty, it will block cross-origin requests.
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=ALLOWED_ORIGINS)
 
 # Wrap in ASGI App
 socket_app = socketio.ASGIApp(sio)
@@ -27,10 +35,10 @@ async def paraphrase(sid, data):
     Handles the 'paraphrase' event from Frontend.
     Data format expected: { "text": "...", "mode": "...", "eventId": "..." }
     """
+    mode = data.get("mode", "standard")
     logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
     
     text = data.get("text")
-    mode = data.get("mode", "standard")
     synonym_level = data.get("synonym", "basic").lower() # basic, intermediate, advanced
     freeze_words = data.get("freeze", "")
     language = data.get("language", "English")

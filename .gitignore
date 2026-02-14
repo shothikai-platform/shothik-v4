@@ -33,3 +33,7 @@ ts-debug.log*
 
 # vercel
 .vercel
+
+# python
+__pycache__/
+*.pyc
