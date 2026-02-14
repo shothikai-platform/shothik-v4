@@ -11,7 +11,10 @@ vi.mock("next/image", () => ({
 }));
 
 // Mock child components
-vi.mock("./ResearchProcessLogs", () => ({ default: () => <div>Logs</div> }));
+const { ResearchProcessLogsMock } = vi.hoisted(() => {
+  return { ResearchProcessLogsMock: vi.fn(() => <div>Logs</div>) };
+});
+vi.mock("./ResearchProcessLogs", () => ({ default: ResearchProcessLogsMock }));
 
 // Mock ResizeObserver
 global.ResizeObserver = class {
@@ -40,5 +43,30 @@ describe("ResearchStreamingShell", () => {
     const button = screen.getByRole("button", { name: /Download/i });
     expect(button).not.toBeNull();
     expect(button.disabled).toBe(true);
+  });
+
+  it("passes stable empty array for researches prop", () => {
+    const store = createMockStore();
+    const { rerender } = render(
+      <Provider store={store}>
+        <ResearchStreamingShell streamEvents={[{ step: "queued" }]} />
+      </Provider>,
+    );
+
+    expect(ResearchProcessLogsMock).toHaveBeenCalled();
+    const firstCallProps = ResearchProcessLogsMock.mock.lastCall[0];
+    const firstResearches = firstCallProps.researches;
+
+    // Rerender with same props
+    rerender(
+      <Provider store={store}>
+        <ResearchStreamingShell streamEvents={[{ step: "queued" }]} />
+      </Provider>,
+    );
+
+    const secondCallProps = ResearchProcessLogsMock.mock.lastCall[0];
+    const secondResearches = secondCallProps.researches;
+
+    expect(firstResearches).toBe(secondResearches);
   });
 });
