@@ -185,12 +185,6 @@ export default function usePresentationOrchestrator(presentationId) {
           throw new Error("Failed to parse history data");
         }
 
-          logsCount: parsedData.logs.length,
-          slidesCount: parsedData.slides.length,
-          status: parsedData.status,
-          allData: parsedData,
-        });
-
         return parsedData;
       } catch (error) {
         console.error("[Orchestrator] Error fetching/parsing history:", error);
@@ -299,15 +293,8 @@ export default function usePresentationOrchestrator(presentationId) {
       const historyData = await fetchPresentationHistory(pId);
 
       if (historyData) {
-          logs: historyData.logs.length,
-          slides: historyData.slides.length,
-        });
-
         // Load history into Redux
         dispatch(setHistoryData(historyData));
-
-          "[Orchestrator] Step 2: Now establishing socket connection for real-time updates...",
-        );
       } else {
         console.warn(
           "[Orchestrator] ⚠️ Could not load history, proceeding with socket anyway",
@@ -414,9 +401,6 @@ export default function usePresentationOrchestrator(presentationId) {
       const { p_id, status } = statusData;
       currentStatusRef.current = status;
 
-        `[Orchestrator] 🎯 Routing status: ${status} for presentation: ${p_id}`,
-      );
-
       switch (status) {
         case PRESENTATION_STATUS.QUEUED:
           await handleQueuedStatus(p_id);
@@ -462,14 +446,8 @@ export default function usePresentationOrchestrator(presentationId) {
       hasInitializedRef.current &&
       initializedPresentationIdRef.current === presentationId
     ) {
-        "[Orchestrator] Already initialized for this presentationId, skipping",
-      );
       return;
     }
-
-      "[Orchestrator] 🚀 Initializing orchestrator for:",
-      presentationId,
-    );
 
     hasInitializedRef.current = true;
     initializedPresentationIdRef.current = presentationId;
@@ -512,9 +490,6 @@ export default function usePresentationOrchestrator(presentationId) {
     if (isNewPresentationId) {
       // Reset state when presentationId changes (production-grade approach)
       // This prevents stale data from previous presentations
-        "[Orchestrator] 🔄 Presentation ID changed, resetting state for:",
-        presentationId,
-      );
       dispatch(resetPresentationState());
       hasInitializedRef.current = false; // Allow re-initialization for new ID
       initializedPresentationIdRef.current = null;
@@ -531,10 +506,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
     // Cleanup: Only cleanup intervals/timers, not state (state is presentationId-scoped)
     return () => {
-        "[Orchestrator] 🧹 Cleanup for presentation:",
-        presentationId,
-      );
-
       if (statusCheckIntervalRef.current) {
         clearInterval(statusCheckIntervalRef.current);
       }
@@ -570,10 +541,6 @@ export default function usePresentationOrchestrator(presentationId) {
    */
   const handleFollowUpQueued = useCallback(
     async (pId) => {
-        "[Orchestrator] 🔄 Handling follow-up queued status for:",
-        pId,
-      );
-
       // Update internal status ref
       currentStatusRef.current = PRESENTATION_STATUS.QUEUED;
 
@@ -592,9 +559,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
       // Start the presentation process (skip duplicate check for follow-up queries)
       await startPresentation(pId, true);
-
-        "[Orchestrator] ✅ Follow-up queued status handled, socket will connect",
-      );
     },
     [dispatch, startPresentation],
   );
@@ -610,21 +574,11 @@ export default function usePresentationOrchestrator(presentationId) {
 
     // Skip if we're currently initializing (to prevent duplicate startPresentation calls)
     if (isInitializingRef.current) {
-        "[Orchestrator] Skipping Redux status watcher during initialization",
-      );
       return;
     }
 
     // Handle status changes
     if (reduxStatus && currentStatusRef.current !== reduxStatus) {
-        "[Orchestrator] 🔄 Detected status change in Redux, updating internal state",
-        {
-          reduxStatus,
-          currentStatus: currentStatusRef.current,
-          pId: currentPId,
-        },
-      );
-
       // Update internal state to match Redux
       currentStatusRef.current = reduxStatus;
 
@@ -643,25 +597,18 @@ export default function usePresentationOrchestrator(presentationId) {
           currentPId &&
           !startPresentationCalledRef.current
         ) {
-            "[Orchestrator] Status is queued, ensuring presentation is started",
-          );
           startPresentation(currentPId);
         } else if (
           reduxStatus === PRESENTATION_STATUS.QUEUED &&
           startPresentationCalledRef.current
         ) {
-            "[Orchestrator] startPresentation already called during initialization, skipping",
-          );
+          // already called
         }
       } else if (reduxStatus === PRESENTATION_STATUS.COMPLETED) {
         // For completed status, set to ready mode (socket will disconnect automatically)
-          "[Orchestrator] ✅ Presentation completed, transitioning to ready state",
-        );
         setHookStatus(HOOK_STATUS.READY);
       } else if (reduxStatus === PRESENTATION_STATUS.FAILED) {
         // For failed status, set to error mode
-          "[Orchestrator] ❌ Presentation failed, transitioning to error state",
-        );
         setHookStatus(HOOK_STATUS.ERROR);
       }
     }
