@@ -79,10 +79,6 @@ export function useElementDuplication(
       return false;
     }
 
-      "useElementDuplication: Attempting to duplicate element with path:",
-      elementPath,
-    );
-
     // Try to find element by path
     let element = getElementFromIframe(iframeRef.current, elementPath);
 

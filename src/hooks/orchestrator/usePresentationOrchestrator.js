@@ -299,15 +299,8 @@ export default function usePresentationOrchestrator(presentationId) {
       const historyData = await fetchPresentationHistory(pId);
 
       if (historyData) {
-          logs: historyData.logs.length,
-          slides: historyData.slides.length,
-        });
-
         // Load history into Redux
         dispatch(setHistoryData(historyData));
-
-          "[Orchestrator] Step 2: Now establishing socket connection for real-time updates...",
-        );
       } else {
         console.warn(
           "[Orchestrator] ⚠️ Could not load history, proceeding with socket anyway",

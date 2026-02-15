@@ -231,7 +231,6 @@ const HumanizedContend = () => {
               : "Should have 3-5 variations",
           firstVariationPreview:
             data.output[0]?.text?.substring(0, 100) + "...",
-        });
 
         // Verify multi-paragraph fix: Check if first variation contains multiple paragraphs
         if (inputParagraphs > 1 && data.output[0]?.text) {
