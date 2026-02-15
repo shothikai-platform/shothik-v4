@@ -1,3 +1,8 @@
+## 2025-05-22 - [IDOR in Research Chat DELETE API]
+**Vulnerability:** `delete_chat` endpoint deleted chats by ID without verifying user ownership or authentication, allowing unauthorized deletion of ANY chat.
+**Learning:** `DELETE` operations are critical and often overlooked for ownership checks compared to `GET` operations. Copy-pasting insecure patterns spreads vulnerabilities.
+**Prevention:** Always scope `delete` operations with `userId` (e.g., `findOneAndDelete({ _id: id, userId: currentUser._id })`).
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
