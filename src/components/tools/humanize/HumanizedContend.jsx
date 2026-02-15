@@ -140,8 +140,6 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
@@ -211,13 +209,6 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
-        model: payload.model,
-        modelState: model,
-        level: payload.level,
-        language: payload.language,
-        textLength: text.length,
-      });
-
       const data = await humanizeContend(payload).unwrap();
 
       if (!data.output?.length) {
@@ -240,7 +231,6 @@ const HumanizedContend = () => {
               : "Should have 3-5 variations",
           firstVariationPreview:
             data.output[0]?.text?.substring(0, 100) + "...",
-        });
 
         // Verify multi-paragraph fix: Check if first variation contains multiple paragraphs
         if (inputParagraphs > 1 && data.output[0]?.text) {
