@@ -295,6 +295,7 @@ class SheetAiStreamService {
       const delay =
         this.reconnectInterval * Math.pow(2, this.reconnectAttempts - 1);
 
+      console.log(
         `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
       );
 
