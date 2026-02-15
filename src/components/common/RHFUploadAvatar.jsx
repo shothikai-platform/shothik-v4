@@ -15,14 +15,9 @@ export function RHFUploadAvatar({ name, onDrop, helperText, loading }) {
             file={field.value}
             onDrop={onDrop}
             helperText={helperText}
+            errorMessage={error?.message}
             loading={loading}
           />
-
-          {!!error && (
-            <p className="text-destructive px-4 text-center text-sm">
-              {error.message}
-            </p>
-          )}
         </div>
       )}
     />
