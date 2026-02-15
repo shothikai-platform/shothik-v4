@@ -164,9 +164,10 @@ export const parseKeywordResearchAgent = (message) => {
 };
 
 export const parseMultiSlideModificationOrchestrator = (message) => {
-    "[Parser] Parsing multi slide modification orchestrator:",
-    message,
-  );
+  // console.log(
+  //   "[Parser] Parsing multi slide modification orchestrator:",
+  //   message,
+  // );
 
   const parsedPayload =
     safeParseJson(message.tool_response?.result) ||
@@ -604,10 +605,11 @@ export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
     };
   } else if (isInsertion) {
     // Insertion detected - new slide at existing position
-      "[Parser] Insertion detected at slideNumber:",
-      slideNumber,
-      "Existing slide will be reordered",
-    );
+    // console.log(
+    //   "[Parser] Insertion detected at slideNumber:",
+    //   slideNumber,
+    //   "Existing slide will be reordered",
+    // );
 
     const newSlide = {
       id: generateLogId(slideAuthor, message.timestamp),
@@ -685,9 +687,10 @@ const parseSlideUpdateEvent = (message, existingSlides = []) => {
  * @returns {Object} Parsed data with update instructions
  */
 export const parseAgentOutput = (message, currentState = {}) => {
-    author: message.author || message.agent_name,
-    type: message.type,
-  });
+  // console.log({
+  //   author: message.author || message.agent_name,
+  //   type: message.type,
+  // });
 
   if (
     message.type === "slide_html_update" ||

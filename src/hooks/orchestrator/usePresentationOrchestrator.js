@@ -213,8 +213,6 @@ export default function usePresentationOrchestrator(presentationId) {
 
       // Prevent duplicate calls unless explicitly skipped (for follow-up queries)
       if (!skipDuplicateCheck && startPresentationCalledRef.current) {
-          "[Orchestrator] startPresentation already called, skipping duplicate call",
-        );
         return;
       }
 
@@ -263,8 +261,9 @@ export default function usePresentationOrchestrator(presentationId) {
       await startPresentation(pId, false);
 
       // Socket will automatically connect via usePresentationSocket
-        "[Orchestrator] Socket connection initiated for queued presentation",
-      );
+      // console.log(
+      //   "[Orchestrator] Socket connection initiated for queued presentation",
+      // );
     },
     [dispatch, startPresentation],
   );
@@ -597,18 +596,29 @@ export default function usePresentationOrchestrator(presentationId) {
           currentPId &&
           !startPresentationCalledRef.current
         ) {
+          // console.log(
+          //   "[Orchestrator] Status is queued, ensuring presentation is started",
+          // );
           startPresentation(currentPId);
         } else if (
           reduxStatus === PRESENTATION_STATUS.QUEUED &&
           startPresentationCalledRef.current
         ) {
-          // already called
+          // console.log(
+          //   "[Orchestrator] startPresentation already called during initialization, skipping",
+          // );
         }
       } else if (reduxStatus === PRESENTATION_STATUS.COMPLETED) {
         // For completed status, set to ready mode (socket will disconnect automatically)
+        // console.log(
+        //   "[Orchestrator] ✅ Presentation completed, transitioning to ready state",
+        // );
         setHookStatus(HOOK_STATUS.READY);
       } else if (reduxStatus === PRESENTATION_STATUS.FAILED) {
         // For failed status, set to error mode
+        // console.log(
+        //   "[Orchestrator] ❌ Presentation failed, transitioning to error state",
+        // );
         setHookStatus(HOOK_STATUS.ERROR);
       }
     }

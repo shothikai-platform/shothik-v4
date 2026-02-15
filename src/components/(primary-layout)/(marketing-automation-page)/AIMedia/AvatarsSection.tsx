@@ -159,11 +159,12 @@ export default function AvatarsSection({ onToolClick }: AvatarsSectionProps) {
           `${process.env.NEXT_PUBLIC_MARKETING_REDIRECT_PREFIX}media/avatars?${queryString}`,
         );
 
-        if (result.data && result.data.results) {
-            "Creator object keys:",
-            Object.keys(result.data.results[0] || "No keys"),
-          );
-        }
+        // if (result.data && result.data.results) {
+        //   console.log(
+        //     "Creator object keys:",
+        //     Object.keys(result.data.results[0] || "No keys"),
+        //   );
+        // }
 
         // DEBUG: Check if we have date information in response headers or metadata
 

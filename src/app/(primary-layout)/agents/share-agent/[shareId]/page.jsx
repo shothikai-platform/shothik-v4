@@ -48,10 +48,11 @@ const SharedAgentPage = () => {
     useCreateAgentReplicaMutation();
 
   useEffect(() => {
-      accessToken,
-      isAuthenticated,
-      user,
-    });
+    // console.log({
+    //   accessToken,
+    //   isAuthenticated,
+    //   user,
+    // });
     if (shareId) {
       loadSharedAgent();
     }
@@ -102,21 +103,19 @@ const SharedAgentPage = () => {
   };
 
   const handleSaveAsCopy = async () => {
-      accessToken,
-      isAuthenticated,
-      user,
-      shareId,
-      authState: { accessToken, isAuthenticated, user },
-    });
+    // console.log({
+    //   accessToken,
+    //   isAuthenticated,
+    //   user,
+    //   shareId,
+    //   authState: { accessToken, isAuthenticated, user },
+    // });
 
     if (!isAuthenticated || !user) {
       // Open the login modal instead of redirecting
       dispatch(setShowLoginModal(true));
       return;
     }
-
-      "User authenticated, creating replica and redirecting to research page",
-    );
 
     try {
       // Create replica first
