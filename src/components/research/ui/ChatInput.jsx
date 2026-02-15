@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
-import { Send } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Send } from "lucide-react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -90,11 +90,19 @@ const ChatInput = () => {
 
   const hasFiles = currentFiles.length;
 
+  const isLoading =
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
+
   return (
     <div className="relative z-[11] mx-auto w-full max-w-[1000px] py-2">
       <div className="bg-background border-border mx-auto max-w-[1000px] rounded-2xl border p-6 shadow-md">
         <div className="mb-4 flex items-center gap-4">
           <Textarea
+            aria-label="Research topic input"
             placeholder="Enter a new research topic"
             value={inputValue}
             onChange={handleInputChange}
@@ -129,18 +137,16 @@ const ChatInput = () => {
             <div className="flex flex-row-reverse items-center gap-4">
               <Button
                 onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
+                disabled={!inputValue.trim() || isLoading}
                 size="icon"
+                aria-label="Send research topic"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
               >
-                <Send className="h-5 w-5" />
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
