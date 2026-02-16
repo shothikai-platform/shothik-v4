@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-27 - [Incomplete Security Patching]
+**Vulnerability:** `delete_chat` endpoint remained vulnerable to IDOR despite `get_one_chat` being fixed previously.
+**Learning:** Fixing a vulnerability in one endpoint does not guarantee adjacent endpoints are secure. Developers often copy-paste insecure patterns.
+**Prevention:** When a vulnerability is found (e.g., IDOR), audit ALL similar endpoints (CRUD operations) in the same resource/controller immediately.
