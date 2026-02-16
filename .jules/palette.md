@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - Form Accessibility with React Hook Form Wrappers
+**Learning:** `RHFTextField` and likely other `RHF*` components were missing `aria-invalid` and `aria-describedby` connections, making validation errors invisible to screen readers.
+**Action:** Always generate IDs for helper/error text and link them via `aria-describedby` in custom form wrappers.
