@@ -140,8 +140,10 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
+        console.log(
+          entry.outputs.map((output) => output.aiPercentage),
+          "RESTORED SCORES",
+        );
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
@@ -211,6 +213,7 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
+      console.log({
         model: payload.model,
         modelState: model,
         level: payload.level,
@@ -232,15 +235,16 @@ const HumanizedContend = () => {
         const inputParagraphs = text
           .split(/\n\s*\n/)
           .filter((p) => p.trim().length > 0).length;
-          variationsCount: data.output.length,
-          inputParagraphs: inputParagraphs,
-          expectedBehavior:
-            inputParagraphs > 1
-              ? `Should have 3-5 unified variations (each containing all ${inputParagraphs} paragraphs)`
-              : "Should have 3-5 variations",
-          firstVariationPreview:
-            data.output[0]?.text?.substring(0, 100) + "...",
-        });
+          console.log({
+            variationsCount: data.output.length,
+            inputParagraphs: inputParagraphs,
+            expectedBehavior:
+              inputParagraphs > 1
+                ? `Should have 3-5 unified variations (each containing all ${inputParagraphs} paragraphs)`
+                : "Should have 3-5 variations",
+            firstVariationPreview:
+              data.output[0]?.text?.substring(0, 100) + "...",
+          });
 
         // Verify multi-paragraph fix: Check if first variation contains multiple paragraphs
         if (inputParagraphs > 1 && data.output[0]?.text) {
@@ -248,6 +252,7 @@ const HumanizedContend = () => {
             .split(/\n\s*\n/)
             .filter((p) => p.trim().length > 0).length;
           if (outputParagraphs >= inputParagraphs) {
+            console.log(
               "✅ [Multi-Paragraph Fix] Verified: First variation contains all input paragraphs",
             );
           } else {
@@ -372,6 +377,7 @@ const HumanizedContend = () => {
 
     if (shouldAutoTrigger) {
       // Debug: Log the change
+      console.log({
         previousModel: prevSettingsRef.current.model,
         newModel: model,
         previousLevel: prevSettingsRef.current.currentLength,
@@ -392,6 +398,7 @@ const HumanizedContend = () => {
       }, 100);
     } else if (modelChanged) {
       // Debug: Log when model changes
+      console.log({
         model,
         userPackage: user?.package,
       });

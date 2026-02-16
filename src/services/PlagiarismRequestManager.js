@@ -103,11 +103,7 @@ class PlagiarismRequestManager {
       // Notify subscribers that loading is in progress
       this.notifySubscribers(textHash, { loading: true });
 
-      try {
-        return await existingRequest.promise;
-      } catch (error) {
-        throw error;
-      }
+      return existingRequest.promise;
     }
 
     // Create new request

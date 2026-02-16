@@ -83,7 +83,8 @@ export default class PresentationSSEService {
 
     try {
       while (true) {
-        const { done, value } = await this.reader?.read();
+        if (!this.reader) break;
+        const { done, value } = await this.reader.read();
 
         if (done) {
           // Flush any pending data before closing

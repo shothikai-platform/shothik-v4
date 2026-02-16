@@ -70,6 +70,7 @@ export const authApi = authApiSlice.injectEndpoints({
             dispatch(loggedIn(result?.data?.token));
           }
         } catch (err) {
+          // do nothing
         }
       },
     }),
