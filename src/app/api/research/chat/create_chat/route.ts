@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
 import { getAuthenticatedUser } from '@/lib/server-auth';
+import { Model } from 'mongoose';
 
 export async function POST(request: Request) {
     try {
@@ -15,7 +16,8 @@ export async function POST(request: Request) {
 
         await dbConnect();
 
-        const newChat = await ResearchChat.create({
+        const ResearchChatModel = ResearchChat as Model<any>;
+        const newChat = await ResearchChatModel.create({
             userId: user._id || user.id,
             name: name || 'New Research',
             messages: []

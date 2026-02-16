@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-05-21 - Chat Input Loading State
+**Learning:** Users often double-submit or feel unsure if their request was received in chat interfaces.
+**Action:** Always add a loading spinner inside the submit button and disable it during processing. Ensure `aria-label` updates to reflect the state (e.g., "Send message" vs "Sending...").

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { Model } from 'mongoose';
 
 export async function DELETE(
     request: Request,
@@ -10,7 +11,8 @@ export async function DELETE(
         const { id } = await params;
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndDelete(id);
+        const ResearchChatModel = ResearchChat as Model<any>;
+        const chat = await ResearchChatModel.findByIdAndDelete(id);
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });

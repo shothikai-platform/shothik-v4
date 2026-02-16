@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
 import { getAuthenticatedUser } from '@/lib/server-auth';
+import { Model } from 'mongoose';
 
 export async function GET(request: Request) {
     try {
@@ -11,7 +12,8 @@ export async function GET(request: Request) {
         }
 
         await dbConnect();
-        const chats = await ResearchChat.find({ userId: user._id || user.id })
+        const ResearchChatModel = ResearchChat as Model<any>;
+        const chats = await ResearchChatModel.find({ userId: user._id || user.id })
             .select('-messages') // Optimization: Exclude messages to reduce payload size
             .sort({ updatedAt: -1 })
             .lean(); // Optimization: Return plain JS objects instead of Mongoose documents
