@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, FileText, Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 /**
  * Reusable FileList component for displaying uploaded files
@@ -182,18 +181,16 @@ export default function FileList({
 
               {/* File Info */}
               <div className="min-w-0 flex-1">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <p className="text-foreground mb-1 truncate text-sm leading-tight font-semibold">
-                        {truncatedName}
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
-                      <p className="break-words">{file.filename}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <p className="text-foreground mb-1 truncate text-sm leading-tight font-semibold">
+                      {truncatedName}
+                    </p>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="break-words">{file.filename}</p>
+                  </TooltipContent>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="outline"
@@ -216,21 +213,29 @@ export default function FileList({
 
               {/* Remove Button */}
               {onRemove && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onRemove(actualIndex, file.filename)}
-                  disabled={isUploading}
-                  className={cn(
-                    "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
-                    "group-hover:opacity-100",
-                    "hover:bg-destructive/10 hover:text-destructive",
-                    "text-muted-foreground",
-                    isUploading && "cursor-not-allowed opacity-50",
-                  )}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onRemove(actualIndex, file.filename)}
+                      disabled={isUploading}
+                      aria-label={`Remove ${file.filename}`}
+                      className={cn(
+                        "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
+                        "group-hover:opacity-100 focus-visible:opacity-100",
+                        "hover:bg-destructive/10 hover:text-destructive",
+                        "text-muted-foreground",
+                        isUploading && "cursor-not-allowed opacity-50",
+                      )}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Remove file</p>
+                  </TooltipContent>
+                </Tooltip>
               )}
 
               {/* Uploading Indicator Overlay */}
