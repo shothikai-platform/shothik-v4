@@ -1,3 +1,8 @@
+## 2026-02-16 - [CSWSH Prevention in WebSocket Server]
+**Vulnerability:** Permissive CORS (`cors_allowed_origins='*'`) allowed Cross-Site WebSocket Hijacking.
+**Learning:** WebSocket servers (like Python-SocketIO) often have separate CORS configurations from the main HTTP server (FastAPI) and default to insecure settings (`*` or `[]` depending on version/context).
+**Prevention:** Explicitly mirror the main application's `ALLOWED_ORIGINS` policy in the WebSocket server configuration.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
