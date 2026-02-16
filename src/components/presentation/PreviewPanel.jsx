@@ -82,16 +82,17 @@ export default function PreviewPanel({
   const slidesLoading = externalSlidesLoading ?? isGenerating;
 
   // Debug: Log props relevant to View Slides button
-  if (currentAgentType === "presentation" && !browserWorkerSummary) {
-      presentationId,
-      status,
-      presentationStatus,
-      hasReplay,
-      shouldShowButton:
-        (status === "completed" || status === "saved") && !hasReplay,
-      href: presentationId ? `/slides?project_id=${presentationId}` : "MISSING_ID",
-    });
-  }
+  // if (currentAgentType === "presentation" && !browserWorkerSummary) {
+  //   console.log({
+  //     presentationId,
+  //     status,
+  //     presentationStatus,
+  //     hasReplay,
+  //     shouldShowButton:
+  //       (status === "completed" || status === "saved") && !hasReplay,
+  //     href: presentationId ? `/slides?project_id=${presentationId}` : "MISSING_ID",
+  //   });
+  // }
 
   return (
     <div className="bg-background text-foreground flex h-full max-h-full flex-col overflow-hidden">
@@ -149,12 +150,13 @@ export default function PreviewPanel({
                             <Link
                               href={`/slides?project_id=${presentationId}`}
                               onClick={() => {
-                                  presentationId,
-                                  href: `/slides?project_id=${presentationId}`,
-                                  status,
-                                  presentationStatus,
-                                  hasReplay,
-                                });
+                                // console.log({
+                                //   presentationId,
+                                //   href: `/slides?project_id=${presentationId}`,
+                                //   status,
+                                //   presentationStatus,
+                                //   hasReplay,
+                                // });
                               }}
                             >
                               View Slides

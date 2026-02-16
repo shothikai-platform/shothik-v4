@@ -71,9 +71,10 @@ export const useStreamingLogs = (
       currentAnimationRef.current.logIndex >= 0 &&
       currentAnimationRef.current.forceComplete
     ) {
-        "Forcing completion of animation for log:",
-        currentAnimationRef.current.logIndex,
-      );
+      // console.log(
+      //   "Forcing completion of animation for log:",
+      //   currentAnimationRef.current.logIndex,
+      // );
       currentAnimationRef.current.forceComplete();
       currentAnimationRef.current = { logIndex: -1, forceComplete: null };
     }
@@ -296,8 +297,9 @@ export const useStreamingLogs = (
 
     if (hasNewLogs || hasStatusChange) {
       if (hasNewLogs && isTypingRef.current) {
-          "New logs detected, forcing completion of current animation",
-        );
+        // console.log(
+        //   "New logs detected, forcing completion of current animation",
+        // );
         forceCompleteCurrentAnimation();
       }
 

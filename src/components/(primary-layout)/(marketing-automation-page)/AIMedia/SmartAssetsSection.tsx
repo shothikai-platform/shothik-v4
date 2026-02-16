@@ -65,12 +65,13 @@ export default function SmartAssetsSection({
   );
 
   // Debug: Log assets to check types
-    "Assets data:",
-    assetsData?.data?.map((a: SmartAsset) => ({
-      name: a.name,
-      type: a.type,
-    })),
-  );
+  // console.log(
+  //   "Assets data:",
+  //   assetsData?.data?.map((a: SmartAsset) => ({
+  //     name: a.name,
+  //     type: a.type,
+  //   })),
+  // );
 
   // Mutations
   const uploadToImageKit = useUploadToImageKit();
@@ -226,7 +227,6 @@ export default function SmartAssetsSection({
     }
 
     try {
-
       // Call AI generation API
       const result = await aiGeneration.mutateAsync({
         type: params.type,
@@ -240,7 +240,6 @@ export default function SmartAssetsSection({
         userId,
         projectId,
       });
-
 
       // Refresh assets list
       refetchAssets();

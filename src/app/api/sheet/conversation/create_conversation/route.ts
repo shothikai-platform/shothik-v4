@@ -2,23 +2,39 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { Model } from 'mongoose';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
+
+        const SheetSessionModel = SheetSession as Model<any>;
+        const SheetConversationModel = SheetConversation as Model<any>;
 
         // 1. Identify or Create Session
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                // Ensure the session belongs to the user
+                session = await SheetSessionModel.findOne({ _id: chatId, userId: user.id || user._id });
             } catch (e) { }
         }
 
         if (!session) {
-            session = await SheetSession.create({
-                userId: 'temp-user',
+            // If chatId was provided but not found (or not owned), create new one?
+            // Or if no chatId provided, create new one.
+            // If chatId provided but invalid/unauthorized, we probably shouldn't just create a new one silently?
+            // But to keep it simple and match original logic structure:
+
+            session = await SheetSessionModel.create({
+                userId: user.id || user._id,
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
@@ -28,7 +44,7 @@ export async function POST(request: Request) {
         }
 
         // 2. Create Conversation Turn
-        const conversation = await SheetConversation.create({
+        const conversation = await SheetConversationModel.create({
             sessionId: session._id,
             prompt,
             events: [{ step: 'init', message: 'Request received', timestamp: new Date() }],

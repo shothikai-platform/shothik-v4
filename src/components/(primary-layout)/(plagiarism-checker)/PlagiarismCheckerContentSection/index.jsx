@@ -58,17 +58,18 @@ const PlagiarismCheckerContentSection = () => {
   
   // Debug logging - track report changes
   useEffect(() => {
-      hasReport: hasReport,
-      reportExists: !!report,
-      reportType: report ? typeof report : 'null',
-      analysisId: report?.analysisId,
-      sectionsCount: report?.sections?.length,
-      exactMatchesCount: report?.exactMatches?.length,
-      hasSummary: !!report?.summary,
-      loading,
-      fromCache,
-      error: error || null,
-    });
+    // console.log({
+    //   hasReport: hasReport,
+    //   reportExists: !!report,
+    //   reportType: report ? typeof report : 'null',
+    //   analysisId: report?.analysisId,
+    //   sectionsCount: report?.sections?.length,
+    //   exactMatchesCount: report?.exactMatches?.length,
+    //   hasSummary: !!report?.summary,
+    //   loading,
+    //   fromCache,
+    //   error: error || null,
+    // });
   }, [report, loading, hasReport, fromCache, error]);
   
   // Force re-render when report changes from null to object (catches state updates)
@@ -82,12 +83,13 @@ const PlagiarismCheckerContentSection = () => {
     }
     
     // Log the full report structure for debugging
-      report,
-      sections: report.sections,
-      exactMatches: report.exactMatches,
-      inputTextLength: inputText.length,
-      inputTextPreview: inputText.substring(0, 100),
-    });
+    // console.log({
+    //   report,
+    //   sections: report.sections,
+    //   exactMatches: report.exactMatches,
+    //   inputTextLength: inputText.length,
+    //   inputTextPreview: inputText.substring(0, 100),
+    // });
     
     const ranges = [];
     const usedPositions = new Set(); // Track used positions to avoid duplicates
@@ -177,11 +179,12 @@ const PlagiarismCheckerContentSection = () => {
     if (report.exactMatches?.length) {
       
       report.exactMatches.forEach((match, matchIndex) => {
-          excerpt: match.excerpt,
-          span: match.span,
-          sourcesCount: match.sources?.length ?? 0,
-          sources: match.sources,
-        });
+        // console.log(`Processing exact match ${matchIndex + 1}:`, {
+        //   excerpt: match.excerpt,
+        //   span: match.span,
+        //   sourcesCount: match.sources?.length ?? 0,
+        //   sources: match.sources,
+        // });
         
         // For exact matches, use source snippets to find matches in input
         if (match.sources && match.sources.length > 0) {
@@ -193,9 +196,10 @@ const PlagiarismCheckerContentSection = () => {
               return;
             }
             
-              snippet: sourceSnippet,
-              sourceTitle: source.title,
-            });
+            // console.log(`Exact match ${matchIndex + 1}, source ${sourceIndex + 1} snippet:`, {
+            //   snippet: sourceSnippet,
+            //   sourceTitle: source.title,
+            // });
             
             const found = findSnippetInInput(sourceSnippet);
             
@@ -208,12 +212,13 @@ const PlagiarismCheckerContentSection = () => {
                 
                 // Verify the match makes sense
                 const matchedText = inputText.substring(found.start, found.end);
-                  sourceSnippet: sourceSnippet.substring(0, 50),
-                  matchedText: matchedText.substring(0, 50),
-                  start: found.start,
-                  end: found.end,
-                  sourceTitle: source.title,
-                });
+                // console.log(`[Plagiarism] ✓ Found exact match in input:`, {
+                //   sourceSnippet: sourceSnippet.substring(0, 50),
+                //   matchedText: matchedText.substring(0, 50),
+                //   start: found.start,
+                //   end: found.end,
+                //   sourceTitle: source.title,
+                // });
                 
                 ranges.push({
                   start: found.start,
@@ -239,12 +244,13 @@ const PlagiarismCheckerContentSection = () => {
     if (report.sections?.length) {
       
       report.sections.forEach((section, sectionIndex) => {
-          excerpt: section.excerpt,
-          span: section.span,
-          similarity: section.similarity,
-          sourcesCount: section.sources?.length ?? 0,
-          sources: section.sources,
-        });
+        // console.log(`Processing section ${sectionIndex + 1}:`, {
+        //   excerpt: section.excerpt,
+        //   span: section.span,
+        //   similarity: section.similarity,
+        //   sourcesCount: section.sources?.length ?? 0,
+        //   sources: section.sources,
+        // });
         
         // Use source snippets to find matches in input
         if (section.sources && section.sources.length > 0) {
@@ -256,9 +262,10 @@ const PlagiarismCheckerContentSection = () => {
               return;
             }
             
-              snippet: sourceSnippet,
-              sourceTitle: source.title,
-            });
+            // console.log(`Section ${sectionIndex + 1}, source ${sourceIndex + 1} snippet:`, {
+            //   snippet: sourceSnippet,
+            //   sourceTitle: source.title,
+            // });
             
             const found = findSnippetInInput(sourceSnippet);
             
@@ -270,13 +277,14 @@ const PlagiarismCheckerContentSection = () => {
                 usedPositions.add(positionKey);
                 
                 const matchedText = inputText.substring(found.start, found.end);
-                  sourceSnippet: sourceSnippet.substring(0, 50),
-                  matchedText: matchedText.substring(0, 50),
-                  start: found.start,
-                  end: found.end,
-                  similarity: section.similarity,
-                  sourceTitle: source.title,
-                });
+                // console.log(`[Plagiarism] ✓ Found section match in input:`, {
+                //   sourceSnippet: sourceSnippet.substring(0, 50),
+                //   matchedText: matchedText.substring(0, 50),
+                //   start: found.start,
+                //   end: found.end,
+                //   similarity: section.similarity,
+                //   sourceTitle: source.title,
+                // });
                 
                 ranges.push({
                   start: found.start,
@@ -301,10 +309,11 @@ const PlagiarismCheckerContentSection = () => {
     // Sort ranges by start position
     ranges.sort((a, b) => a.start - b.start);
     
-      totalRanges: ranges.length,
-      inputTextLength: inputText.length,
-      ranges: ranges.slice(0, 10), // First 10 for debugging
-    });
+    // console.log(`[Plagiarism] Total highlight ranges:`, {
+    //   totalRanges: ranges.length,
+    //   inputTextLength: inputText.length,
+    //   ranges: ranges.slice(0, 10), // First 10 for debugging
+    // });
     
     return ranges;
   }, [report, inputText]);
@@ -380,11 +389,6 @@ const PlagiarismCheckerContentSection = () => {
     // Check report directly (not hasReport from closure) to avoid stale values
     const currentHasReport = Boolean(report);
     if (currentHasReport && previousText.trim() !== nextValue.trim()) {
-        previousLength: previousText.length,
-        nextLength: nextValue.length,
-        previousTrimmed: previousText.trim().length,
-        nextTrimmed: nextValue.trim().length,
-      });
       reset();
     }
   };
@@ -407,11 +411,6 @@ const PlagiarismCheckerContentSection = () => {
       return;
     }
 
-      hasReport: hasReport,
-      reportId: report?.analysisId,
-      inputLength: inputText.length,
-      currentLoading: loading,
-    });
     trackEvent("click", "ai-detector", "ai-detector_click", 1);
 
     // Disable scan button immediately to prevent double clicks
@@ -423,20 +422,6 @@ const PlagiarismCheckerContentSection = () => {
       // Always force a fresh scan on button click to ensure latest results
       // This eliminates cache-related issues
       const scanResult = await triggerCheck(true);
-      
-        hasResult: !!scanResult,
-        resultId: scanResult?.analysisId,
-        resultSections: scanResult?.sections?.length,
-        resultExactMatches: scanResult?.exactMatches?.length,
-      });
-      
-      // After triggerCheck completes, the state should be updated via flushSync
-      // Log the current state to verify
-        currentReport: !!report,
-        currentReportId: report?.analysisId,
-        currentLoading: loading,
-        currentHasReport: hasReport,
-      });
       
       // Note: isScanningRef will be cleared when loading becomes false (handled in useEffect)
       

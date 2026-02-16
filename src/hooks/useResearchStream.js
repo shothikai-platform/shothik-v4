@@ -175,7 +175,6 @@ export const useResearchStream = () => {
             const jobStatus =
               await QueueStatusService.getJobStatus(targetJobId);
 
-
             // Reset reconnect attempts on successful response
             reconnectAttemptsRef.current = 0;
 
@@ -316,7 +315,6 @@ export const useResearchStream = () => {
   );
 
   const cancelResearch = useCallback(() => {
-
     // Stop polling
     isPollingActiveRef.current = false;
     handlingCompletionRef.current = false;
@@ -382,7 +380,7 @@ export const useResearchStream = () => {
         return;
       }
 
-      // 
+      //
 
       // Check if there's already an active research
       const hasActive = await QueueStatusService.hasActiveResearch();
@@ -533,6 +531,7 @@ export const useResearchStream = () => {
           dispatch(setConnectionStatus("failed"));
 
           // Don't clear metadata on error - might need for recovery
+          console.warn(
             "Stream error, metadata preserved for potential recovery",
           );
         }
@@ -559,7 +558,6 @@ export const useResearchStream = () => {
   // Cleanup effect
   useEffect(() => {
     return () => {
-
       isPollingActiveRef.current = false;
       handlingCompletionRef.current = false;
 

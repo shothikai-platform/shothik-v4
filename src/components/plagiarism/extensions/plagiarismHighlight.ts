@@ -24,10 +24,10 @@ const buildDecorationSet = (
     return DecorationSet.empty;
   }
 
-    highlightsCount: highlights.length,
-    docSize: doc.content.size,
-    highlights: highlights.slice(0, 3),
-  });
+    // highlightsCount: highlights.length,
+    // docSize: doc.content.size,
+    // highlights: highlights.slice(0, 3),
+  // });
 
   const decorations = highlights
     .filter(
@@ -72,15 +72,15 @@ const buildDecorationSet = (
       });
     });
 
-    decorationsCount: decorations.length,
-    validRanges: highlights.filter(r => 
-      typeof r?.from === "number" && 
-      typeof r?.to === "number" && 
-      r.to > r.from &&
-      r.from >= 0 &&
-      r.to <= doc.content.size
-    ).length,
-  });
+    // decorationsCount: decorations.length,
+    // validRanges: highlights.filter(r =>
+    //   typeof r?.from === "number" &&
+    //   typeof r?.to === "number" &&
+    //   r.to > r.from &&
+    //   r.from >= 0 &&
+    //   r.to <= doc.content.size
+    // ).length,
+  // });
 
   return DecorationSet.create(doc, decorations);
 };
@@ -128,16 +128,18 @@ export const PlagiarismHighlightExtension = Extension.create({
       state: {
         init: (_, state) => {
           const decorations = buildDecorationSet(state.doc, extension.storage.highlights);
-            storageHighlights: extension.storage.highlights.length,
-            hasDecorations: decorations !== DecorationSet.empty,
-          });
+          // console.log("[Plagiarism Plugin] Init:", {
+          //   storageHighlights: extension.storage.highlights.length,
+          //   hasDecorations: decorations !== DecorationSet.empty,
+          // });
           return decorations;
         },
         apply(tr, old, oldState, newState) {
           const meta = tr.getMeta(pluginKey);
           if (meta && Array.isArray(meta.highlights)) {
-              highlightsCount: meta.highlights.length,
-            });
+            // console.log("[Plagiarism Plugin] Apply highlights:", {
+            //   highlightsCount: meta.highlights.length,
+            // });
             extension.storage.highlights = meta.highlights;
             return buildDecorationSet(
               newState.doc,

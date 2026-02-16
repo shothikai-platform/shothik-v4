@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { Model } from 'mongoose';
 
 export async function POST(request: Request) {
     try {
         const { chat: chatId, query, config } = await request.json();
         await dbConnect();
 
+        const ResearchChatModel = ResearchChat as Model<any>;
+
         // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        const chat = await ResearchChatModel.findById(chatId);
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
@@ -71,7 +74,7 @@ export async function POST(request: Request) {
                     // In a real app, a background job does this.
                     // For now, we'll just try to update.
 
-                    await ResearchChat.findByIdAndUpdate(chatId, {
+                    await ResearchChatModel.findByIdAndUpdate(chatId, {
                         $push: {
                             messages: {
                                 role: 'assistant',
