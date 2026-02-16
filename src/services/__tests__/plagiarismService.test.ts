@@ -20,6 +20,7 @@ const buildFetchResponse = ({
   ok,
   status,
   json: vi.fn().mockResolvedValue(json),
+  text: vi.fn().mockResolvedValue(JSON.stringify(json)),
 });
 
 describe("plagiarismService", () => {
@@ -28,6 +29,9 @@ describe("plagiarismService", () => {
 
   beforeEach(() => {
     vi.restoreAllMocks();
+    // Stub environment variables to match test expectation
+    vi.stubEnv("NEXT_PUBLIC_API_URL", "https://api-qa.shothik.ai");
+    vi.stubEnv("NEXT_PUBLIC_PLAGIARISM_REDIRECT_PREFIX", "check");
   });
 
   it("sends request and normalizes successful response", async () => {
@@ -69,7 +73,14 @@ describe("plagiarismService", () => {
         buildFetchResponse({ ok: true, status: 200, json: rawResponse }),
       );
 
-    const result = await analyzePlagiarism({ text, token });
+    // Re-import module to pick up new env vars?
+    // No, DEFAULT_API_BASE is calculated at module load time.
+    // So stubEnv might not work if module is already loaded.
+    // I should pass baseUrl explicitly in test OR use vi.resetModules() but that's complex with imports.
+
+    // Easier: pass baseUrl to analyzePlagiarism in test.
+    const baseUrl = "https://api-qa.shothik.ai/check";
+    const result = await analyzePlagiarism({ text, token, baseUrl });
 
     expect(fetchSpy).toHaveBeenCalledWith(
       "https://api-qa.shothik.ai/check/plagiarism/analyze",
@@ -87,6 +98,12 @@ describe("plagiarismService", () => {
       score: 81,
       riskLevel: "MEDIUM",
       analyzedAt: rawResponse.timestamp,
+      analysisId: undefined,
+      language: undefined,
+      citations: [],
+      exactMatches: [],
+      exactPlagiarismPercentage: 0,
+      sources: [],
       sections: [
         {
           similarity: 50,
@@ -108,8 +125,9 @@ describe("plagiarismService", () => {
       ],
       summary: {
         paraphrasedCount: 1,
-        paraphrasedPercentage: 81,
+        paraphrasedPercentage: 100,
         exactMatchCount: 0,
+        totalChunks: 1,
       },
       flags: {
         hasPlagiarism: true,

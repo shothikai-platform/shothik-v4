@@ -15,9 +15,16 @@ ALLOWED_ORIGINS = [
     origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
 ]
 
+# If ALLOWED_ORIGINS is not set, default to '*' for backward compatibility but warn about security risk.
+if not ALLOWED_ORIGINS:
+    logger.warning("⚠️ ALLOWED_ORIGINS not set. Defaulting to allow ALL origins (*). This is insecure and vulnerable to CSWSH.")
+    cors_allowed_origins = '*'
+else:
+    logger.info(f"🔒 Restricting WebSocket origins to: {ALLOWED_ORIGINS}")
+    cors_allowed_origins = ALLOWED_ORIGINS
+
 # Create Socket.IO Server (Async)
-# Only allow connections from specified origins to prevent Cross-Site WebSocket Hijacking.
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS else [])
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=cors_allowed_origins)
 
 # Wrap in ASGI App
 socket_app = socketio.ASGIApp(sio)
