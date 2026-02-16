@@ -67,6 +67,7 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
+    console.log({
       reference,
       sources: sources?.length,
     });

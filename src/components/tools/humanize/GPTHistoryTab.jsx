@@ -25,6 +25,7 @@ export default function GPTHistoryTab({
   refetchHistory,
   handleHistorySelect,
 }) {
+  console.log(
     "GPTHistoryTab received handleHistorySelect:",
     typeof handleHistorySelect,
   );

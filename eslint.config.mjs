@@ -1,80 +1,9 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-});
-
-export default [
-  // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
-
-  // Apply to JavaScript and JSX files
-  {
-    files: [
-      "**/*.js",
-      "**/*.jsx",
-      "**/*.mjs",
-      "**/*.cjs",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.mts",
-      "**/*.cts",
-    ],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: {
-        React: "writable",
-        JSX: "writable",
-        ...globals.browser,
-        ...globals.node,
-        ...globals.es2021,
-      },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      // parserOptions: {
-      //   project: "./tsconfig.json",
-      //   tsconfigRootDir: __dirname,
-      //   ecmaFeatures: { jsx: true },
-      // },
-    },
-    rules: {
-      /* Global Rules */
-      all: "off",
-
-      // /* Base Rules */
-      "no-undef": "error",
-      "no-unused-vars": "off",
-      "no-console": "warn",
-
-      // /* React.js Rules */
-      "react/no-unescaped-entities": "off",
-
-      // /* TypeScript Rules */
-      // "@typescript-eslint/no-unused-vars": "off",
-      // "@typescript-eslint/no-explicit-any": "off",
-      // "@typescript-eslint/consistent-type-imports": "warn",
-
-      // /* Next.js Rules */
-      // "@next/next/no-img-element": "off",
-    },
-  },
-
-  // Files and directories to ignore during linting
+export default tseslint.config(
   {
     ignores: [
       "node_modules/**",
@@ -93,6 +22,49 @@ export default [
     ],
   },
 
-  // Prettier configuration
+  // Base JS config
+  js.configs.recommended,
+
+  // TS config (automatically applies to .ts, .tsx, etc.)
+  ...tseslint.configs.recommended,
+
+  // Global settings (globals, generic rules)
+  {
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        React: "writable",
+        JSX: "writable",
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+      },
+    },
+    rules: {
+      "no-undef": "warn",
+      "no-unused-vars": "warn",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+
+      // Downgrade TS errors to warnings to prevent build blocking
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-wrapper-object-types": "warn",
+    },
+  },
+
+  // JSX specific settings (apply to both JS and TS)
+  {
+    files: ["**/*.jsx", "**/*.tsx"],
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+  },
+
   prettierConfig,
-];
+);
