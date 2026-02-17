@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [IDOR in Research Queue API]
+**Vulnerability:** `create_research_queue` endpoint allowed unauthenticated users to inject messages into any chat by ID, and did not verify chat ownership.
+**Learning:** Even "mock" or "queue" endpoints can be exposed and must be secured. Frontend sending Bearer tokens was ignored by backend auth utility.
+**Prevention:** Always use `getAuthenticatedUser()` and scoped queries (`findOne({ _id, userId })`) in API routes. Ensure auth utilities support all expected authentication methods (Cookies + Bearer).
