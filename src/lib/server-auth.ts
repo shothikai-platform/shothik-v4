@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers';
-import AuthService, { AuthResponse } from '@/services/auth.service';
+import { cookies, headers } from "next/headers";
+import AuthService, { AuthResponse } from "@/services/auth.service";
 
 export interface User {
   _id: string;
@@ -11,7 +11,19 @@ export interface User {
 
 export async function getAuthenticatedUser(): Promise<User | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('jwt_token')?.value;
+  let token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    try {
+      const headersList = await headers();
+      const authHeader = headersList.get("authorization");
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    } catch (error) {
+      // Ignore header errors (e.g. if called outside request context)
+    }
+  }
 
   if (!token) {
     return null;
@@ -23,7 +35,7 @@ export async function getAuthenticatedUser(): Promise<User | null> {
 
     // Check if response is successful and has data
     if (response.data && response.data.data) {
-        return response.data.data as User;
+      return response.data.data as User;
     }
     return null;
   } catch (error) {
