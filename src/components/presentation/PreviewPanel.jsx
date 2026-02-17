@@ -83,6 +83,7 @@ export default function PreviewPanel({
 
   // Debug: Log props relevant to View Slides button
   if (currentAgentType === "presentation" && !browserWorkerSummary) {
+    console.log({
       presentationId,
       status,
       presentationStatus,
