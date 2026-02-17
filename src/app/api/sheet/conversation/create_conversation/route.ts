@@ -2,9 +2,15 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
 
@@ -12,13 +18,23 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
-            } catch (e) { }
+                // Security Fix: Verify ownership (IDOR prevention)
+                session = await SheetSession.findOne({ _id: chatId, userId: user._id || user.id });
+                if (!session) {
+                    // If ID provided but not found/owned, return 404 or 403.
+                    // Returning 404 to avoid leaking existence of other users' chats
+                    return NextResponse.json({ error: 'Chat session not found' }, { status: 404 });
+                }
+            } catch (e) {
+                console.error("Error finding session", e);
+                return NextResponse.json({ error: 'Invalid Chat ID' }, { status: 400 });
+            }
         }
 
         if (!session) {
+            // Security Fix: Associate with authenticated user instead of 'temp-user'
             session = await SheetSession.create({
-                userId: 'temp-user',
+                userId: user._id || user.id,
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
