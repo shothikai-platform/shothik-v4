@@ -1,14 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { useAnalyticsActions } from "./useAnalytics";
+import { useAnalytics } from "./useAnalytics";
 
 export const useComponentTracking = (componentName, trackingConfig = {}) => {
-  const { trackEvent } = useAnalyticsActions();
-  const isLoaded = useSelector((state) => state.analytics.isLoaded);
-  const consent = useSelector((state) => state.analytics.consent);
-
+  const { trackEvent, isLoaded, consent } = useAnalytics();
   const componentRef = useRef(null);
   const viewedRef = useRef(false);
 

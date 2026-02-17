@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAnalyticsActions } from "./useAnalytics";
+import { useAnalytics } from "./useAnalytics";
 
 export const useABTest = (testName, variants = ["A", "B"]) => {
-  const { trackEvent } = useAnalyticsActions();
+  const { trackEvent } = useAnalytics();
   const [variant, setVariant] = useState(null);
 
   useEffect(() => {

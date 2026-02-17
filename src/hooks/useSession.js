@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useAnalyticsActions } from "./useAnalytics";
+import { useAnalytics } from "./useAnalytics";
 
 export const useSession = () => {
-  const { trackEvent } = useAnalyticsActions();
+  const { trackEvent } = useAnalytics();
   const sessionStart = useRef(Date.now());
   const heartbeatInterval = useRef(null);
 

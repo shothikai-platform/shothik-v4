@@ -7,11 +7,11 @@ import {
   initializeAnalytics,
   setConsent,
   trackEvent as trackEventAction,
-  setABTestVariant,
 } from "@/redux/slices/analyticsSlice";
 
-export const useAnalyticsActions = () => {
+export const useAnalytics = () => {
   const dispatch = useDispatch();
+  const analytics = useSelector((state) => state.analytics);
 
   const trackEvent = useCallback(
     (eventName, parameters = {}) => {
@@ -51,19 +51,10 @@ export const useAnalyticsActions = () => {
   );
 
   return {
+    ...analytics,
     trackEvent,
     trackPageView,
     initializeWithConsent,
     setABTest,
-  };
-};
-
-export const useAnalytics = () => {
-  const analytics = useSelector((state) => state.analytics);
-  const actions = useAnalyticsActions();
-
-  return {
-    ...analytics,
-    ...actions,
   };
 };

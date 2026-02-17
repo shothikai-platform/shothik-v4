@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useAnalyticsActions } from "./useAnalytics";
+import { useAnalytics } from "./useAnalytics";
 
 export const useExitIntent = (onExitIntent) => {
-  const { trackEvent } = useAnalyticsActions();
+  const { trackEvent } = useAnalytics();
   const hasTriggered = useRef(false);
 
   const navigationEntry = performance.getEntriesByType("navigation")[0];
