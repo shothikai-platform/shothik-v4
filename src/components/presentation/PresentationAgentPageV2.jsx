@@ -91,6 +91,7 @@ export default function PresentationAgentPageV2({ presentationId }) {
   const { hookStatus, error, retry, currentStatus, socketConnected } =
     usePresentationOrchestrator(presentationId);
 
+  console.log({
     hookStatus,
     currentStatus,
     socketConnected,

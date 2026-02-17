@@ -778,6 +778,7 @@ export default function SheetChatArea({
 
             // Check for validation error first
             if (data?.data?.error) {
+              console.log(
                 "Validation error detected, removing user message and showing toast",
               );
 

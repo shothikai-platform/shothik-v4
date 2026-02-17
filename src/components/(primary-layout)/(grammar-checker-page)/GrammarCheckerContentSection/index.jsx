@@ -420,6 +420,7 @@ const GrammarCheckerContentSection = () => {
         // If text exists and we're past the initial mount, user is typing
         if (newText && newText.trim() && !hasClearedOnMountRef.current) {
           // User is typing after initial mount - reset skipCheckRef to allow checking
+          console.log(
             "[Editor Update] User typing detected, resetting skipCheckRef",
           );
           skipCheckRef.current = false;
