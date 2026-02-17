@@ -7,20 +7,25 @@ export async function POST(request: Request) {
         const { chat: chatId, query, config } = await request.json();
         await dbConnect();
 
-        // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
-        if (!chat) {
+        // 1. Add User Message (and validate implicitly)
+        // Optimization: Use findByIdAndUpdate with $push to avoid loading full document
+        // This is significantly faster as it avoids:
+        // 1. Fetching the potentially large document
+        // 2. Hydrating the Mongoose object
+        // 3. Sending the entire document back for saving
+        const updatedChat = await ResearchChat.findByIdAndUpdate(chatId, {
+            $push: {
+                messages: {
+                    role: 'user',
+                    content: query,
+                    timestamp: new Date()
+                }
+            }
+        }, { runValidators: true });
+
+        if (!updatedChat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
-
-        // 2. Add User Message
-        chat.messages.push({
-            role: 'user',
-            content: query,
-            timestamp: new Date()
-        });
-        // Don't save yet, wait for job ID or save now? Save now.
-        await chat.save();
 
         // 3. Mock Streaming
         const encoder = new TextEncoder();
