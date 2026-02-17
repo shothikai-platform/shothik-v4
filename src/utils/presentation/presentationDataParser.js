@@ -164,6 +164,7 @@ export const parseKeywordResearchAgent = (message) => {
 };
 
 export const parseMultiSlideModificationOrchestrator = (message) => {
+  console.log(
     "[Parser] Parsing multi slide modification orchestrator:",
     message,
   );
@@ -604,6 +605,7 @@ export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
     };
   } else if (isInsertion) {
     // Insertion detected - new slide at existing position
+    console.log(
       "[Parser] Insertion detected at slideNumber:",
       slideNumber,
       "Existing slide will be reordered",
@@ -685,6 +687,7 @@ const parseSlideUpdateEvent = (message, existingSlides = []) => {
  * @returns {Object} Parsed data with update instructions
  */
 export const parseAgentOutput = (message, currentState = {}) => {
+  console.log({
     author: message.author || message.agent_name,
     type: message.type,
   });

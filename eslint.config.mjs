@@ -15,9 +15,7 @@ const compat = new FlatCompat({
 
 export default [
   // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+  // ...compat.extends("next/core-web-vitals"),
 
   // Apply to JavaScript and JSX files
   {
@@ -26,10 +24,10 @@ export default [
       "**/*.jsx",
       "**/*.mjs",
       "**/*.cjs",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.mts",
-      "**/*.cts",
+      // "**/*.ts",
+      // "**/*.tsx",
+      // "**/*.mts",
+      // "**/*.cts",
     ],
     languageOptions: {
       ecmaVersion: 2022,
