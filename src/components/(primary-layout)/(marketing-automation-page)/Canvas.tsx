@@ -108,6 +108,7 @@ export default function Canvas() {
     // If we have existing campaign data but no suggestions, reconstruct from campaign data
     if (hasCampaignData && existingCampaignData?.data) {
       const data = existingCampaignData.data;
+      console.log(
         "Reconstructing suggestions from existing campaign data:",
         data,
       );

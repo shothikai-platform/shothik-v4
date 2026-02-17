@@ -705,6 +705,7 @@ export const parseHistoryData = (historyResponse) => {
       parsedState.totalSlides = extractedMetadata.totalSlides;
     }
 
+    console.log({
       logsCount: parsedLogs.length,
       slidesCount: parsedSlides.length,
       status: parsedState.status,

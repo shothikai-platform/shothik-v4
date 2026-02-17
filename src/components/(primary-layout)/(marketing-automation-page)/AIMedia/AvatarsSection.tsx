@@ -160,6 +160,7 @@ export default function AvatarsSection({ onToolClick }: AvatarsSectionProps) {
         );
 
         if (result.data && result.data.results) {
+          console.log(
             "Creator object keys:",
             Object.keys(result.data.results[0] || "No keys"),
           );

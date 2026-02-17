@@ -533,6 +533,7 @@ export const useResearchStream = () => {
           dispatch(setConnectionStatus("failed"));
 
           // Don't clear metadata on error - might need for recovery
+          console.log(
             "Stream error, metadata preserved for potential recovery",
           );
         }

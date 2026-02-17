@@ -65,6 +65,7 @@ export default function SmartAssetsSection({
   );
 
   // Debug: Log assets to check types
+  console.log(
     "Assets data:",
     assetsData?.data?.map((a: SmartAsset) => ({
       name: a.name,
