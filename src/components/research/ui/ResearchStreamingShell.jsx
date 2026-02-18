@@ -15,6 +15,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchProcessLogs from "./ResearchProcessLogs";
 
+const EMPTY_ARRAY = [];
+
 const ResearchStreamingShell = ({
   streamEvents = [],
   isStreaming = false,
@@ -235,7 +237,7 @@ const ResearchStreamingShell = ({
       {streamEvents.length > 0 && (
         <ResearchProcessLogs
           streamEvents={streamEvents}
-          researches={[]}
+          researches={EMPTY_ARRAY}
           isStreaming={isStreaming}
         />
       )}
