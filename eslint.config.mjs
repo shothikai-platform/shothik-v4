@@ -4,6 +4,7 @@ import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,13 +14,14 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 });
 
-export default [
-  // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+export default tseslint.config(
+  // Base JS recommended
+  js.configs.recommended,
 
-  // Apply to JavaScript and JSX files
+  // TypeScript recommended
+  ...tseslint.configs.recommended,
+
+  // Apply to JavaScript and JSX/TSX files
   {
     files: [
       "**/*.js",
@@ -46,27 +48,22 @@ export default [
           jsx: true,
         },
       },
-      // parserOptions: {
-      //   project: "./tsconfig.json",
-      //   tsconfigRootDir: __dirname,
-      //   ecmaFeatures: { jsx: true },
-      // },
     },
     rules: {
       /* Global Rules */
-      all: "off",
+      // all: "off", // Using recommended sets as base instead of "all: off"
 
       // /* Base Rules */
-      "no-undef": "error",
-      "no-unused-vars": "off",
+      // "no-undef": "error", // Handled by recommended
+      "no-unused-vars": "off", // Turn off base rule for TS compatibility
       "no-console": "warn",
 
       // /* React.js Rules */
-      "react/no-unescaped-entities": "off",
+      // "react/no-unescaped-entities": "off", // Plugin not loaded yet, might warn if rule not found
 
       // /* TypeScript Rules */
-      // "@typescript-eslint/no-unused-vars": "off",
-      // "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
       // "@typescript-eslint/consistent-type-imports": "warn",
 
       // /* Next.js Rules */
@@ -95,4 +92,4 @@ export default [
 
   // Prettier configuration
   prettierConfig,
-];
+);

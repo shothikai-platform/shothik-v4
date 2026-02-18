@@ -101,12 +101,6 @@ export default class PresentationOrchestrator {
         totalSlides: metadata.totalSlides,
         _replaceArrays: true, // Signal to replace, not append
       });
-
-        logsCount: parsedHistory.logs.length,
-        slidesCount: parsedHistory.slides.length,
-        title: metadata.title,
-        totalSlides: metadata.totalSlides,
-      });
     } catch (error) {
       console.error("History load error:", error);
       onUpdate({
