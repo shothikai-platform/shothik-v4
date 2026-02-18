@@ -1,3 +1,4 @@
+import React, { useId } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -19,6 +20,7 @@ export function RHFSelect({
   ...other
 }) {
   const { control } = useFormContext();
+  const helperTextId = useId();
 
   return (
     <Controller
@@ -35,6 +37,8 @@ export function RHFSelect({
             <select
               {...field}
               id={name}
+              aria-describedby={error || helperText ? helperTextId : undefined}
+              aria-invalid={!!error}
               className={cn(
                 "border-input bg-background ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
                 error && "border-destructive focus-visible:ring-destructive",
@@ -52,6 +56,10 @@ export function RHFSelect({
             >
               <SelectTrigger
                 id={name}
+                aria-describedby={
+                  error || helperText ? helperTextId : undefined
+                }
+                aria-invalid={!!error}
                 className={cn(
                   error && "border-destructive focus:ring-destructive",
                   className,
@@ -66,6 +74,7 @@ export function RHFSelect({
           )}
           {(error || helperText) && (
             <p
+              id={helperTextId}
               className={cn(
                 "text-sm",
                 error ? "text-destructive" : "text-muted-foreground",
