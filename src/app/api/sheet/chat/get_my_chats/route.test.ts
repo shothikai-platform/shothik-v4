@@ -1,0 +1,91 @@
+
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { GET } from './route';
+import { NextResponse } from 'next/server';
+
+// Mock dependencies
+vi.mock('@/lib/dbConnect', () => ({
+  default: vi.fn(),
+}));
+
+vi.mock('@/lib/server-auth', () => ({
+  getAuthenticatedUser: vi.fn(),
+}));
+
+const { mockFind, mockSelect, mockSort, mockLean } = vi.hoisted(() => {
+  return {
+    mockFind: vi.fn(),
+    mockSelect: vi.fn(),
+    mockSort: vi.fn(),
+    mockLean: vi.fn(),
+  };
+});
+
+// Mock Mongoose model
+vi.mock('@/models/SheetSession', () => {
+  return {
+    default: {
+      find: mockFind,
+    },
+  };
+});
+
+// Mock NextResponse
+vi.mock('next/server', () => ({
+  NextResponse: {
+    json: vi.fn((data, options) => ({ data, options, status: options?.status || 200 })),
+  },
+}));
+
+import { getAuthenticatedUser } from '@/lib/server-auth';
+
+describe('GET /api/sheet/chat/get_my_chats', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    // Setup generic mock chain
+    mockLean.mockResolvedValue([{ _id: '1', title: 'Chat 1' }]);
+    mockSort.mockReturnValue({ lean: mockLean });
+    // Default behavior for find: return object with select (and sort for backward compatibility if needed,
+    // but the test will enforce select usage)
+    mockFind.mockReturnValue({
+        select: mockSelect,
+        sort: mockSort // We include this so the UNOPTIMIZED code doesn't crash, allowing us to assert lack of select call
+    });
+    mockSelect.mockReturnValue({ sort: mockSort });
+  });
+
+  it('should return 401 if user is not authenticated', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue(null);
+
+    const response = await GET(new Request('http://localhost/api/sheet/chat/get_my_chats'));
+
+    expect(response.status).toBe(401);
+  });
+
+  it('should fetch chats for the authenticated user only', async () => {
+    const mockUser = { _id: 'user123' };
+    (getAuthenticatedUser as any).mockResolvedValue(mockUser);
+
+    await GET(new Request('http://localhost/api/sheet/chat/get_my_chats'));
+
+    // Security/Privacy Check
+    expect(mockFind).toHaveBeenCalledWith({ userId: 'user123' });
+  });
+
+  it('should optimize the query with select and lean', async () => {
+    const mockUser = { _id: 'user123' };
+    (getAuthenticatedUser as any).mockResolvedValue(mockUser);
+
+    await GET(new Request('http://localhost/api/sheet/chat/get_my_chats'));
+
+    // Performance/Bandwidth Check
+    // We expect specific fields to be selected. The exact string might vary but verify usage.
+    // Ideally select('title status updatedAt createdAt')
+    expect(mockSelect).toHaveBeenCalledWith(expect.stringContaining('title'));
+    expect(mockSelect).toHaveBeenCalledWith(expect.stringContaining('createdAt'));
+
+    // Performance Check
+    expect(mockLean).toHaveBeenCalled();
+  });
+});
