@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-27 - [IDOR in Research Chat Name Update]
+**Vulnerability:** The `update_name` endpoint allowed updating a chat's name without checking user ownership, enabling unauthorized users to rename any chat.
+**Learning:** Even if read endpoints are secured, write endpoints must also be explicitly secured. Schema field names (e.g., `name`) must match the update payload (e.g., code was using `title`).
+**Prevention:** Use `findOneAndUpdate({ _id: id, userId: user._id })` instead of `findByIdAndUpdate` to enforcing ownership atomically in the database query.
