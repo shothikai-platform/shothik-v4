@@ -5,7 +5,3 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
-
-## 2025-02-19 - Programmatic Association of Form Errors
-**Learning:** React Hook Form inputs in this codebase often display error messages visually but lack programmatic association via `aria-describedby` and `aria-invalid`.
-**Action:** When creating reusable form components, use `React.useId()` to generate a unique ID for the error/helper text and link it to the input using `aria-describedby`.
