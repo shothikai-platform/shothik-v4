@@ -45,6 +45,14 @@ const shortText = (text, n = 220) => {
   return s.length > n ? s.slice(0, n) + "…" : s;
 };
 
+const getDomainFromUrl = (url) => {
+  try {
+    return url ? new URL(url).hostname.replace("www.", "") : "";
+  } catch {
+    return "";
+  }
+};
+
 const aggregateFromEvents = (events = []) => {
   const summary = { totalSources: 0, totalQueries: 0, researchLoops: 0 };
   const aggregatedSources = [];
@@ -190,7 +198,7 @@ const ProcessTimelineItem = React.memo(({ ev, isLast, isActive }) => {
   );
 });
 
-const ResearchProcessLogs = ({
+const ResearchProcessLogs = React.memo(({
   streamEvents = [],
   researches = [],
   isStreaming = false,
@@ -280,15 +288,7 @@ const ResearchProcessLogs = ({
                 {uniqueSources.slice(0, 8).map((s, i) => {
                   const title =
                     s.title || s.name || s.label || s.url || "Untitled";
-                  const domain = (() => {
-                    try {
-                      return s.url
-                        ? new URL(s.url).hostname.replace("www.", "")
-                        : "";
-                    } catch {
-                      return "";
-                    }
-                  })();
+                  const domain = getDomainFromUrl(s.url);
 
                   return (
                     <div
@@ -341,6 +341,6 @@ const ResearchProcessLogs = ({
       </div>
     </div>
   );
-};
+});
 
 export default ResearchProcessLogs;
