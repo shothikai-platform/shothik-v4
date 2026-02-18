@@ -14,7 +14,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Next.js specific configuration
+  // Next.js specific configuration - DISABLED to fix circular dependency crash
   // ...compat.config({
   //   extends: ["next/core-web-vitals"],
   // }),
@@ -46,15 +46,10 @@ export default [
           jsx: true,
         },
       },
-      // parserOptions: {
-      //   project: "./tsconfig.json",
-      //   tsconfigRootDir: __dirname,
-      //   ecmaFeatures: { jsx: true },
-      // },
     },
     rules: {
       /* Global Rules */
-      all: "off",
+      // all: "off",
 
       // /* Base Rules */
       "no-undef": "error",
@@ -63,14 +58,6 @@ export default [
 
       // /* React.js Rules */
       "react/no-unescaped-entities": "off",
-
-      // /* TypeScript Rules */
-      // "@typescript-eslint/no-unused-vars": "off",
-      // "@typescript-eslint/no-explicit-any": "off",
-      // "@typescript-eslint/consistent-type-imports": "warn",
-
-      // /* Next.js Rules */
-      // "@next/next/no-img-element": "off",
     },
   },
 
