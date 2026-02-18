@@ -47,8 +47,8 @@ describe('PUT /api/research/chat/update_name/[id]', () => {
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    // Current behavior: user is not checked, so this returns 200 if chat found
-    // Desired behavior: 401
+    // Current behavior (vulnerable): user is not checked, so this returns 200 if chat found
+    // Desired behavior (secure): 401
     (getAuthenticatedUser as any).mockResolvedValue(null);
     mockFindByIdAndUpdate.mockResolvedValue({ _id: 'chat1', name: 'New Name' });
 
@@ -66,8 +66,8 @@ describe('PUT /api/research/chat/update_name/[id]', () => {
   });
 
   it('should return 404 if chat belongs to another user (IDOR prevention)', async () => {
-    // Current behavior: findByIdAndUpdate finds the chat regardless of owner -> 200
-    // Desired behavior: findOneAndUpdate({_id, userId}) returns null -> 404
+    // Current behavior (vulnerable): findByIdAndUpdate finds the chat regardless of owner -> 200
+    // Desired behavior (secure): findOneAndUpdate({_id, userId}) returns null -> 404
     (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user1' });
 
     // Simulate chat existing but owned by someone else

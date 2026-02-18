@@ -15,7 +15,9 @@ const compat = new FlatCompat({
 
 export default [
   // Next.js specific configuration
-  ...compat.extends("next/core-web-vitals"),
+  // ...compat.config({
+  //   extends: ["next/core-web-vitals"],
+  // }),
 
   // Apply to JavaScript and JSX files
   {
@@ -37,17 +39,22 @@ export default [
         JSX: "writable",
         ...globals.browser,
         ...globals.node,
-        // ...globals.es2021, // globals.es2021 is not a thing in recent globals package, usually included in others or specific envs
+        ...globals.es2021,
       },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
+      // parserOptions: {
+      //   project: "./tsconfig.json",
+      //   tsconfigRootDir: __dirname,
+      //   ecmaFeatures: { jsx: true },
+      // },
     },
     rules: {
       /* Global Rules */
-      // all: "off", // This might be too aggressive
+      all: "off",
 
       // /* Base Rules */
       "no-undef": "error",
@@ -56,6 +63,14 @@ export default [
 
       // /* React.js Rules */
       "react/no-unescaped-entities": "off",
+
+      // /* TypeScript Rules */
+      // "@typescript-eslint/no-unused-vars": "off",
+      // "@typescript-eslint/no-explicit-any": "off",
+      // "@typescript-eslint/consistent-type-imports": "warn",
+
+      // /* Next.js Rules */
+      // "@next/next/no-img-element": "off",
     },
   },
 
