@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { useAnalytics } from "./useAnalytics";
+import { useAnalyticsActions } from "./useAnalytics";
 
 const throttle = (func, limit) => {
   let inThrottle;
@@ -18,12 +17,8 @@ const throttle = (func, limit) => {
 };
 
 export const useScrollTracking = () => {
-  const { trackEvent } = useAnalytics();
+  const { trackEvent } = useAnalyticsActions();
   const milestones = useRef(new Set());
-
-  // ============== Testing purpose
-  const analytics = useSelector((state) => state.analytics);
-  // ==============
 
   useEffect(() => {
     const handleScroll = () => {
