@@ -190,7 +190,8 @@ const ProcessTimelineItem = React.memo(({ ev, isLast, isActive }) => {
   );
 });
 
-const ResearchProcessLogs = ({
+// Memoized to prevent unnecessary re-renders when parent state changes but props remain the same
+const ResearchProcessLogs = React.memo(({
   streamEvents = [],
   researches = [],
   isStreaming = false,
@@ -341,6 +342,6 @@ const ResearchProcessLogs = ({
       </div>
     </div>
   );
-};
+});
 
 export default ResearchProcessLogs;
