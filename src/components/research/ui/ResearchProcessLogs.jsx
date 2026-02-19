@@ -343,4 +343,4 @@ const ResearchProcessLogs = ({
   );
 };
 
-export default ResearchProcessLogs;
+export default React.memo(ResearchProcessLogs);
