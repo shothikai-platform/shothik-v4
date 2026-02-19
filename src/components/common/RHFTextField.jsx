@@ -1,3 +1,4 @@
+import React, { useId } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ export default function RHFTextField({
   ...other
 }) {
   const { control } = useFormContext();
+  const generatedId = useId();
 
   return (
     <Controller
@@ -36,6 +38,10 @@ export default function RHFTextField({
       render={({ field, fieldState: { error } }) => {
         // Normalize value so Input never gets undefined
         const valueForInput = field.value ?? "";
+
+        // Priority: other.id > inputProps.id > generatedId
+        const inputId = other.id || inputProps.id || generatedId;
+        const helperTextId = `${inputId}-helper-text`;
 
         const callerOnChange = inputProps.onChange;
 
@@ -67,7 +73,7 @@ export default function RHFTextField({
         return (
           <div className="space-y-2">
             {label && (
-              <Label htmlFor={name} className={cn(error && "text-destructive")}>
+              <Label htmlFor={inputId} className={cn(error && "text-destructive")}>
                 {label}
               </Label>
             )}
@@ -79,7 +85,9 @@ export default function RHFTextField({
               )}
               <Input
                 {...field}
-                id={name}
+                id={inputId}
+                aria-invalid={!!error}
+                aria-describedby={(error || helperText) ? helperTextId : undefined}
                 value={valueForInput}
                 onChange={handleChange}
                 type={type}
@@ -103,6 +111,8 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={helperTextId}
+                role={error ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
