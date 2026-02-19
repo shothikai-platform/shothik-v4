@@ -43,6 +43,7 @@ describe('DELETE /api/research/chat/delete_chat/[id]', () => {
     vi.clearAllMocks();
   });
 
+  // Security Check: Authentication
   it('should return 401 if user is not authenticated', async () => {
     (getAuthenticatedUser as any).mockResolvedValue(null);
     mockFindByIdAndDelete.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
@@ -55,6 +56,7 @@ describe('DELETE /api/research/chat/delete_chat/[id]', () => {
     expect(response.status).toBe(401);
   });
 
+  // Security Check: IDOR (Insecure Direct Object Reference)
   it('should return 404 if chat belongs to another user', async () => {
     (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user2' });
 
@@ -72,6 +74,7 @@ describe('DELETE /api/research/chat/delete_chat/[id]', () => {
     expect(response.status).toBe(404);
   });
 
+  // Functional Check: Successful Deletion
   it('should delete chat if user owns it', async () => {
       (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user1' });
 
