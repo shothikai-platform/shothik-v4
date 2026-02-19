@@ -15,7 +15,9 @@ const compat = new FlatCompat({
 
 export default [
   // Next.js specific configuration
-  ...compat.extends("next/core-web-vitals"),
+  ...compat.config({
+    extends: ["next/core-web-vitals"],
+  }),
 
   // Apply to JavaScript and JSX files
   {
