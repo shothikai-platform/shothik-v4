@@ -1,17 +1,42 @@
 
 import socketio
 import logging
+import os
+import json
+from pydantic import BaseModel, Field, ValidationError
+from typing import List, Optional
 from services.model_loader import ModelLoader
 from services.paraphrase_engine import ParaphraseEngine
 from services.text_processor import TextProcessor
 
 logger = logging.getLogger(__name__)
 
-# Create Socket.IO Server (Async)
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+# --- Configuration ---
+# Secure CORS policy by loading allowed origins from an environment variable.
+ALLOWED_ORIGINS_STR = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS: List[str] = [
+    origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
+]
+
+# If ALLOWED_ORIGINS is not set, default to '*' but log a warning (Non-breaking change)
+if not ALLOWED_ORIGINS:
+    logger.warning("⚠️ ALLOWED_ORIGINS not set. Defaulting to '*' (Insecure). Set ALLOWED_ORIGINS env var for production.")
+    ALLOWED_ORIGINS = "*"
+
+# Create Socket.IO Server (Async) with Secure CORS
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=ALLOWED_ORIGINS)
 
 # Wrap in ASGI App
 socket_app = socketio.ASGIApp(sio)
+
+# --- Validation Schemas ---
+class SocketParaphraseRequest(BaseModel):
+    text: str = Field(..., max_length=5000, description="Text to paraphrase")
+    mode: str = "standard"
+    synonym: str = "basic"  # Maps to synonym_level
+    freeze: str = ""       # Maps to freeze_words
+    language: str = "English"
+    eventId: str = Field(..., min_length=1, description="Event ID for tracking")
 
 @sio.event
 async def connect(sid, environ):
@@ -27,19 +52,19 @@ async def paraphrase(sid, data):
     Handles the 'paraphrase' event from Frontend.
     Data format expected: { "text": "...", "mode": "...", "eventId": "..." }
     """
-    logger.info(f"Received Paraphrase Request: {data.keys()} Mode={mode}")
-    
-    text = data.get("text")
-    mode = data.get("mode", "standard")
-    synonym_level = data.get("synonym", "basic").lower() # basic, intermediate, advanced
-    freeze_words = data.get("freeze", "")
-    language = data.get("language", "English")
-    event_id = data.get("eventId")
-    
-    if not text:
-        return
-
     try:
+        # Validate Input
+        request = SocketParaphraseRequest(**data)
+
+        text = request.text
+        mode = request.mode
+        synonym_level = request.synonym.lower()
+        freeze_words = request.freeze
+        language = request.language
+        event_id = request.eventId
+
+        logger.info(f"Received Paraphrase Request: Mode={mode} Len={len(text)}")
+
         # 1. Load Resources (Mock Mode handles missing models)
         para_model = ModelLoader.load_ctranslate2_model("/models/paraphrase")
         trans_model = ModelLoader.load_ctranslate2_model("/models/translation")
@@ -105,10 +130,12 @@ async def paraphrase(sid, data):
         await sio.emit('paraphrase-synonyms', import_json_dumps(synonyms_payload), room=sid)
         await sio.emit('paraphrase-synonyms', ":end:", room=sid)
 
+    except ValidationError as e:
+        logger.warning(f"Invalid Paraphrase Request: {e}")
+        await sio.emit('paraphrase-error', {"message": "Invalid input", "details": e.errors()}, room=sid)
     except Exception as e:
         logger.error(f"Error processing paraphrase: {e}")
-        # Optionally emit an error event
+        await sio.emit('paraphrase-error', {"message": "Internal processing error"}, room=sid)
 
-import json
 def import_json_dumps(obj):
     return json.dumps(obj)
