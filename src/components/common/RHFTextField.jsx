@@ -1,3 +1,4 @@
+import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -64,6 +65,8 @@ export default function RHFTextField({
           }
         };
 
+        const descriptionId = `${name}-description`;
+
         return (
           <div className="space-y-2">
             {label && (
@@ -80,6 +83,8 @@ export default function RHFTextField({
               <Input
                 {...field}
                 id={name}
+                aria-invalid={!!error}
+                aria-describedby={error || helperText ? descriptionId : undefined}
                 value={valueForInput}
                 onChange={handleChange}
                 type={type}
@@ -103,6 +108,8 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={descriptionId}
+                role={error ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
