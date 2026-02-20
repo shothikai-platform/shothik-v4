@@ -1,23 +1,15 @@
-import { FlatCompat } from "@eslint/eslintrc";
+
 import js from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-});
+import nextConfig from "eslint-config-next";
 
 export default [
-  // Next.js specific configuration
-  ...compat.config({
-    extends: ["next/core-web-vitals"],
-  }),
+  // JS Recommended config
+  js.configs.recommended,
+
+  // Next.js config (as imported from eslint-config-next v16)
+  ...(Array.isArray(nextConfig) ? nextConfig : [nextConfig]),
 
   // Apply to JavaScript and JSX files
   {
