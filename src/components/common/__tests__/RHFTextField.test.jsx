@@ -43,7 +43,6 @@ describe('RHFTextField Accessibility', () => {
     const input = screen.getByLabelText('Email Address');
 
     // Check for aria-invalid attribute
-    // This should fail currently
     expect(input.getAttribute('aria-invalid')).toBe('true');
   });
 
