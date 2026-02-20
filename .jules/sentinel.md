@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Authentication Bypass in New Feature APIs]
+**Vulnerability:** New API routes for the "Sheet" feature were implemented without any authentication or ownership checks, using hardcoded placeholder users.
+**Learning:** Development speed for new features often leads to skipping security boilerplate (auth/IDOR checks).
+**Prevention:** Audit all routes in newly created feature directories (e.g., `src/app/api/sheet`) specifically for missing `getAuthenticatedUser` calls and unparameterized database queries.
