@@ -24,11 +24,6 @@ const buildDecorationSet = (
     return DecorationSet.empty;
   }
 
-    highlightsCount: highlights.length,
-    docSize: doc.content.size,
-    highlights: highlights.slice(0, 3),
-  });
-
   const decorations = highlights
     .filter(
       (range) => {
@@ -39,16 +34,6 @@ const buildDecorationSet = (
           range.to <= doc.content.size;
         
         if (!isValid) {
-          console.warn("[Plagiarism Extension] Invalid range filtered:", {
-            range,
-            docSize: doc.content.size,
-            reason: !range ? "null/undefined" :
-              typeof range.from !== "number" ? "invalid from" :
-              typeof range.to !== "number" ? "invalid to" :
-              range.to <= range.from ? "to <= from" :
-              range.from < 0 ? "from < 0" :
-              range.to > doc.content.size ? "to > docSize" : "unknown"
-          });
         }
         
         return isValid;
@@ -71,16 +56,6 @@ const buildDecorationSet = (
         "data-highlight-level": level,
       });
     });
-
-    decorationsCount: decorations.length,
-    validRanges: highlights.filter(r => 
-      typeof r?.from === "number" && 
-      typeof r?.to === "number" && 
-      r.to > r.from &&
-      r.from >= 0 &&
-      r.to <= doc.content.size
-    ).length,
-  });
 
   return DecorationSet.create(doc, decorations);
 };
@@ -128,16 +103,11 @@ export const PlagiarismHighlightExtension = Extension.create({
       state: {
         init: (_, state) => {
           const decorations = buildDecorationSet(state.doc, extension.storage.highlights);
-            storageHighlights: extension.storage.highlights.length,
-            hasDecorations: decorations !== DecorationSet.empty,
-          });
           return decorations;
         },
         apply(tr, old, oldState, newState) {
           const meta = tr.getMeta(pluginKey);
           if (meta && Array.isArray(meta.highlights)) {
-              highlightsCount: meta.highlights.length,
-            });
             extension.storage.highlights = meta.highlights;
             return buildDecorationSet(
               newState.doc,
@@ -158,8 +128,6 @@ export const PlagiarismHighlightExtension = Extension.create({
       props: {
         decorations(state) {
           const decorations = plugin.getState(state) ?? null;
-          if (decorations && decorations !== DecorationSet.empty) {
-          }
           return decorations;
         },
       },

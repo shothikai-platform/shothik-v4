@@ -420,8 +420,6 @@ const GrammarCheckerContentSection = () => {
         // If text exists and we're past the initial mount, user is typing
         if (newText && newText.trim() && !hasClearedOnMountRef.current) {
           // User is typing after initial mount - reset skipCheckRef to allow checking
-            "[Editor Update] User typing detected, resetting skipCheckRef",
-          );
           skipCheckRef.current = false;
           isFromEditorUpdateRef.current = true;
           hasUserInputRef.current = true;
@@ -495,9 +493,6 @@ const GrammarCheckerContentSection = () => {
         return;
       }
 
-        "[Text Sync] Syncing Redux text to editor:",
-        stateText.substring(0, 50),
-      );
       skipCheckRef.current = true;
       isClearingEditorRef.current = true;
       // Use setContent with emitUpdate: false to prevent triggering onUpdate during sync
@@ -514,8 +509,6 @@ const GrammarCheckerContentSection = () => {
     } else if (!stateText.trim() && editorText.trim()) {
       // If Redux text is empty but editor has text, clear editor
       // Also clear issues if text is empty
-        "[Text Sync] Clearing editor and issues - Redux text is empty",
-      );
       isClearingEditorRef.current = true;
       editor.commands.clearContent();
       lastDispatchedTextRef.current = "";
@@ -551,9 +544,6 @@ const GrammarCheckerContentSection = () => {
           // Retry the mount logic
           hasClearedOnMountRef.current = true;
           isInitialMountRef.current = false;
-
-            "[Initial Mount] Clearing all state on mount/reload (delayed)",
-          );
 
           dispatch(setText(""));
           dispatch(setIssues([]));
@@ -638,8 +628,6 @@ const GrammarCheckerContentSection = () => {
       "section",
     );
     if (currentSectionId) {
-        "[Initial Mount] Removing sectionId from URL to prevent auto-load",
-      );
       setTimeout(() => {
         try {
           const params = new URLSearchParams(window.location.search);
@@ -657,15 +645,6 @@ const GrammarCheckerContentSection = () => {
   // Grammar check with position-based errors
   useEffect(() => {
     const preparedText = debouncedText?.trim() || "";
-
-      debouncedText: debouncedText?.substring(0, 50) || "(empty)",
-      debouncedTextLength: debouncedText?.length || 0,
-      preparedTextLength: preparedText.length,
-      hasUserInput: hasUserInputRef.current,
-      isFromEditor: isFromEditorUpdateRef.current,
-      skipCheck: skipCheckRef.current,
-      isInitialMount: isInitialMountRef.current,
-    });
 
     // CRITICAL: First check - if no text at all, clear everything
     if (!debouncedText || !debouncedText.trim()) {
@@ -688,15 +667,10 @@ const GrammarCheckerContentSection = () => {
     // 2. User has actually typed/pasted (hasUserInputRef is true)
     // 3. Text change came from editor update (isFromEditorUpdateRef is true)
     if (skipCheckRef.current) {
-        "[Grammar Check] Skipped - skipCheckRef is true (programmatic update/section load)",
-      );
       return;
     }
 
     if (!hasUserInputRef.current || !isFromEditorUpdateRef.current) {
-        hasUserInput: hasUserInputRef.current,
-        isFromEditor: isFromEditorUpdateRef.current,
-      });
       return;
     }
 
@@ -708,9 +682,6 @@ const GrammarCheckerContentSection = () => {
     }
 
     if (!hasUserInputRef.current || !isFromEditorUpdateRef.current) {
-        hasUserInput: hasUserInputRef.current,
-        isFromEditor: isFromEditorUpdateRef.current,
-      });
       return;
     }
 
@@ -797,8 +768,6 @@ const GrammarCheckerContentSection = () => {
     if (previousTextRef.current === stateText) {
       // But still check if issues exist without text (safety check)
       if (!stateText.trim() && !editorText.trim() && issues?.length > 0) {
-          "[Text Empty] Safety check: Clearing issues - text is empty but issues exist",
-        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;
@@ -812,8 +781,6 @@ const GrammarCheckerContentSection = () => {
       // Only dispatch if there are actually issues to clear (check count, not array reference)
       const currentIssuesCount = issues?.length || 0;
       if (currentIssuesCount > 0) {
-          "[Text Empty] Clearing issues - editor or state text is empty",
-        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;
@@ -825,8 +792,6 @@ const GrammarCheckerContentSection = () => {
     if (editorText.trim() !== stateText.trim() && !editorText.trim()) {
       const currentIssuesCount = issues?.length || 0;
       if (currentIssuesCount > 0 && previousIssuesCountRef.current !== 0) {
-          "[Mismatch] Editor empty but state has text, clearing issues",
-        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;

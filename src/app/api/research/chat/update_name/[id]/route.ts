@@ -23,9 +23,9 @@ export async function PUT(
 
         // 2. Authorization Check (IDOR Prevention) & 3. Correct Field Update
         const chat = await ResearchChat.findOneAndUpdate(
-            { _id: id, userId: user._id },
+            { _id: id, userId: user._id } as any,
             { name: name }, // Corrected from 'title' to 'name'
-            { new: true }
+            { new: true } as any
         );
 
         if (!chat) {

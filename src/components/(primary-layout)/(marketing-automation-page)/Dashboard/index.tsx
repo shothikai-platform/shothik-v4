@@ -117,8 +117,6 @@ export default function Dashboard() {
         const publishedCampaigns =
           campaignData.campaigns
             ?.filter((c: Campaign) => {
-                `Campaign: ${c.name}, Status: ${c.status}, MetaID: ${c.metaCampaignId}`,
-              );
               return c.metaCampaignId && c.status === "published";
             })
             .map((campaign: Campaign) => {

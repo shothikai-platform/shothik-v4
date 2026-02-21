@@ -350,10 +350,6 @@ export default function SharedSheetPage({ params }) {
         : baseUrl;
       const apiUrl = `${cleanBaseUrl}/${process.env.NEXT_PUBLIC_SHEET_REDIRECT_PREFIX}/chat/replicate_chat`;
 
-        "✅ Expected URL:",
-        "https://api-qa.shothik.ai/sheet/chat/replicate_chat",
-      );
-
       // Prepare the request payload
       const requestPayload = {
         chat: chatId,
@@ -367,20 +363,7 @@ export default function SharedSheetPage({ params }) {
       };
 
       Object.entries(headers).forEach(([key, value]) => {
-        if (key === "Authorization") {
-            `   ${key}: Bearer ${value.split(" ")[1]?.substring(0, 30)}...`,
-          );
-        } else {
-        }
       });
-        "   chat ID is valid ObjectId:",
-        /^[0-9a-fA-F]{24}$/.test(chatId),
-      );
-        "   replicate_to ID is valid ObjectId:",
-        /^[0-9a-fA-F]{24}$/.test(userId),
-      );
-        `  -H 'Authorization: Bearer ${accessToken?.substring(0, 30)}...' \\`,
-      );
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -409,9 +392,6 @@ export default function SharedSheetPage({ params }) {
       }
 
       const result = await response.json();
-        "🆔 Replicated Chat ID:",
-        result.data?.replicatedChatId || result.replicatedChatId || chatId,
-      );
 
       // Show success message
       showSnackbar(
@@ -582,11 +562,6 @@ export default function SharedSheetPage({ params }) {
     sheetData = sharedData.rows;
     dataSource = "sharedData.rows";
   }
-
-  // Debug logging
-    "🔍 sharedData.agent?.response?.data:",
-    sharedData?.agent?.response?.data,
-  );
 
   // If no data found, show message instead of mock data
   if (sheetData.length === 0) {

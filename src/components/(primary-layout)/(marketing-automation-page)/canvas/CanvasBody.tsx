@@ -130,11 +130,6 @@ export default function CanvasBody({
           setAdSets(response.data.adSets || []);
           setAds(response.data.ads || []);
           setPersonas(response.data.personas || []);
-            campaigns: response.data.campaigns?.length,
-            adSets: response.data.adSets?.length,
-            ads: response.data.ads?.length,
-            personas: response.data.personas?.length,
-          });
         }
         setDataLoaded(true);
       } catch (error) {
