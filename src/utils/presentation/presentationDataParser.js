@@ -605,10 +605,11 @@ export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
     };
   } else if (isInsertion) {
     // Insertion detected - new slide at existing position
+    /* console.log(
       "[Parser] Insertion detected at slideNumber:",
       slideNumber,
       "Existing slide will be reordered",
-    );
+    ); */
 
     const newSlide = {
       id: generateLogId(slideAuthor, message.timestamp),

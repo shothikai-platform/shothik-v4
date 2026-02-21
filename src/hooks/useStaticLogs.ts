@@ -5,7 +5,7 @@ import type { AgentLog, LogHookResult, SessionStatus } from "@/types/logs";
 export const useStaticLogs = (
   realLogs: AgentLog[],
   isLoading: boolean,
-  status: string,
+  status: SessionStatus,
 ): LogHookResult => {
   const [visibleLogs, setVisibleLogs] = useState<AgentLog[]>([]);
   const sessionStatusRef = useRef<SessionStatus>("processing");
