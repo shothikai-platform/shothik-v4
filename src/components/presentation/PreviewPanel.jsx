@@ -83,6 +83,7 @@ export default function PreviewPanel({
 
   // Debug: Log props relevant to View Slides button
   if (currentAgentType === "presentation" && !browserWorkerSummary) {
+    /* console.log({
       presentationId,
       status,
       presentationStatus,
@@ -90,7 +91,7 @@ export default function PreviewPanel({
       shouldShowButton:
         (status === "completed" || status === "saved") && !hasReplay,
       href: presentationId ? `/slides?project_id=${presentationId}` : "MISSING_ID",
-    });
+    }); */
   }
 
   return (
@@ -149,12 +150,13 @@ export default function PreviewPanel({
                             <Link
                               href={`/slides?project_id=${presentationId}`}
                               onClick={() => {
+                                /* console.log({
                                   presentationId,
                                   href: `/slides?project_id=${presentationId}`,
                                   status,
                                   presentationStatus,
                                   hasReplay,
-                                });
+                                }); */
                               }}
                             >
                               View Slides

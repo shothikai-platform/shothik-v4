@@ -140,8 +140,7 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
+        // console.log(entry.outputs.map((output) => output.aiPercentage), "RESTORED SCORES");
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
@@ -211,12 +210,13 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
+      /* console.log({
         model: payload.model,
         modelState: model,
         level: payload.level,
         language: payload.language,
         textLength: text.length,
-      });
+      }); */
 
       const data = await humanizeContend(payload).unwrap();
 
@@ -232,6 +232,7 @@ const HumanizedContend = () => {
         const inputParagraphs = text
           .split(/\n\s*\n/)
           .filter((p) => p.trim().length > 0).length;
+        /* console.log({
           variationsCount: data.output.length,
           inputParagraphs: inputParagraphs,
           expectedBehavior:
@@ -240,7 +241,7 @@ const HumanizedContend = () => {
               : "Should have 3-5 variations",
           firstVariationPreview:
             data.output[0]?.text?.substring(0, 100) + "...",
-        });
+        }); */
 
         // Verify multi-paragraph fix: Check if first variation contains multiple paragraphs
         if (inputParagraphs > 1 && data.output[0]?.text) {
@@ -248,8 +249,7 @@ const HumanizedContend = () => {
             .split(/\n\s*\n/)
             .filter((p) => p.trim().length > 0).length;
           if (outputParagraphs >= inputParagraphs) {
-              "✅ [Multi-Paragraph Fix] Verified: First variation contains all input paragraphs",
-            );
+              // console.log("✅ [Multi-Paragraph Fix] Verified: First variation contains all input paragraphs");
           } else {
             console.warn(
               "⚠️ [Multi-Paragraph Fix] Warning: First variation may be missing paragraphs",
@@ -372,6 +372,7 @@ const HumanizedContend = () => {
 
     if (shouldAutoTrigger) {
       // Debug: Log the change
+      /* console.log({
         previousModel: prevSettingsRef.current.model,
         newModel: model,
         previousLevel: prevSettingsRef.current.currentLength,
@@ -380,7 +381,7 @@ const HumanizedContend = () => {
         levelChanged,
         hasInput: !!userInput?.trim(),
         userPackage: user?.package,
-      });
+      }); */
 
       // Use a small delay to ensure state updates are complete
       modelChangeTriggeredRef.current = true;
@@ -392,9 +393,10 @@ const HumanizedContend = () => {
       }, 100);
     } else if (modelChanged) {
       // Debug: Log when model changes
+      /* console.log({
         model,
         userPackage: user?.package,
-      });
+      }); */
     }
 
     // Update ref for next comparison
