@@ -1,10 +1,8 @@
 name: Playwright Tests
 
+# TEMPORARY: Disabled automatic triggers due to GitHub account billing lock
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   test:
