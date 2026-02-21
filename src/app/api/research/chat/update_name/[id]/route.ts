@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function PUT(
     request: Request,
@@ -8,15 +9,23 @@ export async function PUT(
 ) {
     try {
         const { id } = await params;
+
+        // 1. Authentication Check
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const body = await request.json();
         const { name } = body;
 
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndUpdate(
-            id,
-            { title: name }, // Assuming 'name' maps to 'title' or 'name' in your schema
-            { new: true }
+        // 2. Authorization Check (IDOR Prevention) & 3. Correct Field Update
+        const chat = await ResearchChat.findOneAndUpdate(
+            { _id: id, userId: user._id } as any,
+            { name: name }, // Corrected from 'title' to 'name'
+            { new: true } as any
         );
 
         if (!chat) {

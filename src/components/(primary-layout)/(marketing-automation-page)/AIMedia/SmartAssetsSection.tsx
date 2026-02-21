@@ -65,12 +65,6 @@ export default function SmartAssetsSection({
   );
 
   // Debug: Log assets to check types
-    "Assets data:",
-    assetsData?.data?.map((a: SmartAsset) => ({
-      name: a.name,
-      type: a.type,
-    })),
-  );
 
   // Mutations
   const uploadToImageKit = useUploadToImageKit();

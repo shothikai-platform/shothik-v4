@@ -11,7 +11,7 @@ export const useStaticLogs = (
   const sessionStatusRef = useRef<SessionStatus>("processing");
 
   useEffect(() => {
-    sessionStatusRef.current = status;
+    sessionStatusRef.current = status as SessionStatus;
   }, [status]);
 
   useEffect(() => {

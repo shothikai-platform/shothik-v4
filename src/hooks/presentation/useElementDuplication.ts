@@ -79,25 +79,16 @@ export function useElementDuplication(
       return false;
     }
 
-      "useElementDuplication: Attempting to duplicate element with path:",
-      elementPath,
-    );
-
     // Try to find element by path
     let element = getElementFromIframe(iframeRef.current, elementPath);
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
-        "useElementDuplication: Element not found by path, trying by ID:",
-        elementId,
-      );
       element = doc.getElementById(elementId);
     }
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
-        "useElementDuplication: Element not found by ID, trying by selected class",
-      );
       const selectedElements = doc.querySelectorAll(".element-selected");
       if (selectedElements.length === 1) {
         element = selectedElements[0] as HTMLElement;
@@ -117,11 +108,6 @@ export function useElementDuplication(
     setIsDuplicating(true);
 
     try {
-        tagName: element.tagName,
-        id: element.id,
-        className: element.className,
-      });
-
       // Clone element (deep clone)
       const cloned = element.cloneNode(true) as HTMLElement;
 
@@ -144,9 +130,6 @@ export function useElementDuplication(
       if (!element.id) {
         const originalId = generateId("element");
         element.id = originalId;
-          "useElementDuplication: Original element assigned ID:",
-          originalId,
-        );
       }
 
       // Remove selection classes from clone
@@ -210,8 +193,6 @@ export function useElementDuplication(
       // Clear selection from original element BEFORE selecting the clone
       // This prevents confusion where the original element still appears selected
       element.classList.remove("element-selected", "element-hovered");
-        "useElementDuplication: Cleared selection from original element",
-      );
 
       // Track change in Redux
       dispatch(
@@ -239,10 +220,6 @@ export function useElementDuplication(
         // Use ID-based selector for reliable selection
         const clonedPath = cloned.id ? `#${cloned.id}` : getElementPath(cloned);
 
-          "useElementDuplication: Selecting cloned element with path:",
-          clonedPath,
-        );
-
         // First, add selection class directly to the element
         cloned.classList.add("element-selected");
 
@@ -255,8 +232,6 @@ export function useElementDuplication(
                 elementPath: clonedPath,
               },
               "*",
-            );
-              "useElementDuplication: Selection message sent to iframe",
             );
           }
         }, 50); // Increased timeout to ensure DOM is ready

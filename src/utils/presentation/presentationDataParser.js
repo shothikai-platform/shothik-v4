@@ -77,7 +77,6 @@ const safeParseJson = (value) => {
  * @returns {Object} Parsed session data
  */
 export const parseConnectedEvent = (payload) => {
-
   return {
     sessionId: payload.session_id || null,
     pId: payload.p_id || null,
@@ -93,7 +92,6 @@ export const parseConnectedEvent = (payload) => {
  * @returns {Object} Formatted log entry
  */
 export const parseUserMessage = (message) => {
-
   // Preserve user_message field for matching with optimistic logs
   const userMessageText = message.user_message || message.content || "";
 
@@ -123,7 +121,6 @@ export const parseUserMessage = (message) => {
  * @returns {Object} Contains both log entry and extracted metadata
  */
 export const parsePresentationSpecExtractor = (message) => {
-
   const logEntry = {
     id: generateLogId("presentation_spec_extractor_agent", message.timestamp),
     author: "presentation_spec_extractor_agent",
@@ -151,7 +148,6 @@ export const parsePresentationSpecExtractor = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseKeywordResearchAgent = (message) => {
-
   const logEntry = {
     id: generateLogId("KeywordResearchAgent", message.timestamp),
     author: "KeywordResearchAgent",
@@ -164,10 +160,6 @@ export const parseKeywordResearchAgent = (message) => {
 };
 
 export const parseMultiSlideModificationOrchestrator = (message) => {
-    "[Parser] Parsing multi slide modification orchestrator:",
-    message,
-  );
-
   const parsedPayload =
     safeParseJson(message.tool_response?.result) ||
     safeParseJson(message.html_content) ||
@@ -220,7 +212,6 @@ export const parseMultiSlideModificationOrchestrator = (message) => {
 };
 
 export const parseSingleSlideModifier = (message) => {
-
   const logEntry = {
     id: generateLogId("single_slide_modifier", message.timestamp),
     author: "single_slide_modifier",
@@ -245,7 +236,6 @@ export const parseSingleSlideModifier = (message) => {
  * @returns {Object} Contains updated/new log entry and update type
  */
 export const parseBrowserWorker = (message, existingLogs = []) => {
-
   const workerNumber = extractBrowserWorkerNumber(message.author);
   const workerAuthor = `browser_worker_${workerNumber}`;
 
@@ -326,7 +316,6 @@ export const parseBrowserWorker = (message, existingLogs = []) => {
  * @returns {Object} Formatted log entry
  */
 export const parseLightweightPlanningAgent = (message) => {
-
   const logEntry = {
     id: generateLogId("lightweight_planning_agent", message.timestamp),
     author: "lightweight_planning_agent",
@@ -344,7 +333,6 @@ export const parseLightweightPlanningAgent = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseLightweightSlideGeneration = (message) => {
-
   const logEntry = {
     id: generateLogId("LightweightSlideGeneration", message.timestamp),
     author: "LightweightSlideGeneration",
@@ -395,7 +383,6 @@ const containsMarkdown = (text) => {
  * @returns {Object} Formatted log entry
  */
 export const parseToolCall = (message) => {
-
   // Normalize agent_name to author for consistency
   const agentName = message.agent_name || message.author || "unknown_agent";
   // Real-time uses 'text' field
@@ -424,7 +411,6 @@ export const parseToolCall = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseSlideInsertionOrchestrator = (message) => {
-
   // From streaming: text field contains the message
   // Normalize to text/content for consistent display
   const textContent = message.text || message.content || "";
@@ -454,7 +440,6 @@ export const parseSlideInsertionOrchestrator = (message) => {
  * @returns {Object} Formatted log entry
  */
 export const parseSlideOrchestrationAgent = (message) => {
-
   // From streaming: text field contains the message
   // Normalize to text/content for consistent display
   const textContent = message.text || message.content || "";
@@ -543,7 +528,6 @@ const normalizeToolResponseMessage = (message) => {
  * @returns {Object} Contains updated/new slide entry and update type
  */
 export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
-
   // Try slide_index first, then extract from author
   const slideNumber =
     message.slide_index !== undefined
@@ -604,11 +588,6 @@ export const parseEnhancedSlideGenerator = (message, existingSlides = []) => {
     };
   } else if (isInsertion) {
     // Insertion detected - new slide at existing position
-      "[Parser] Insertion detected at slideNumber:",
-      slideNumber,
-      "Existing slide will be reordered",
-    );
-
     const newSlide = {
       id: generateLogId(slideAuthor, message.timestamp),
       slideNumber,
@@ -685,10 +664,6 @@ const parseSlideUpdateEvent = (message, existingSlides = []) => {
  * @returns {Object} Parsed data with update instructions
  */
 export const parseAgentOutput = (message, currentState = {}) => {
-    author: message.author || message.agent_name,
-    type: message.type,
-  });
-
   if (
     message.type === "slide_html_update" ||
     message.type === "slide_thinking_update" ||
@@ -845,7 +820,6 @@ export const parseAgentOutput = (message, currentState = {}) => {
  * @returns {Object} Status update
  */
 export const parseTerminalEvent = (message) => {
-
   return {
     status: message.status || "completed",
     event: message.event,

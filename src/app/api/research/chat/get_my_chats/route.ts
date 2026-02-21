@@ -11,7 +11,7 @@ export async function GET(request: Request) {
         }
 
         await dbConnect();
-        const chats = await ResearchChat.find({ userId: user._id || user.id })
+        const chats = await ResearchChat.find({ userId: user._id || user.id } as any)
             .select('-messages') // Optimization: Exclude messages to reduce payload size
             .sort({ updatedAt: -1 })
             .lean(); // Optimization: Return plain JS objects instead of Mongoose documents
