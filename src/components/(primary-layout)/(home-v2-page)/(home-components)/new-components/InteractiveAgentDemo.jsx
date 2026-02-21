@@ -145,8 +145,11 @@ const mockApiRequest = async (method, endpoint, data) => {
 // Mock analytics functions
 const mockAnalytics = {
   trackAgentInteraction: (id, action, length) =>
+    console.log("trackAgentInteraction", id, action, length),
   trackFeatureClick: (feature, context) =>
+    console.log("trackFeatureClick", feature, context),
   trackError: (type, message, context) =>
+    console.log("trackError", type, message, context),
 };
 
 export default function InteractiveAgentDemo() {

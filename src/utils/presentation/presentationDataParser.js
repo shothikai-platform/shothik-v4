@@ -164,9 +164,10 @@ export const parseKeywordResearchAgent = (message) => {
 };
 
 export const parseMultiSlideModificationOrchestrator = (message) => {
+  /* console.log(
     "[Parser] Parsing multi slide modification orchestrator:",
     message,
-  );
+  ); */
 
   const parsedPayload =
     safeParseJson(message.tool_response?.result) ||
@@ -685,9 +686,10 @@ const parseSlideUpdateEvent = (message, existingSlides = []) => {
  * @returns {Object} Parsed data with update instructions
  */
 export const parseAgentOutput = (message, currentState = {}) => {
+  /* console.log({
     author: message.author || message.agent_name,
     type: message.type,
-  });
+  }); */
 
   if (
     message.type === "slide_html_update" ||
