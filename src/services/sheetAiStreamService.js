@@ -295,9 +295,6 @@ class SheetAiStreamService {
       const delay =
         this.reconnectInterval * Math.pow(2, this.reconnectAttempts - 1);
 
-        `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`,
-      );
-
       setTimeout(() => {
         if (!this.isManuallyDisconnected) {
           this.callbacks.onReconnecting?.();
