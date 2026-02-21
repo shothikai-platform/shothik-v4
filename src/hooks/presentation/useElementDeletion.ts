@@ -80,25 +80,26 @@ export function useElementDeletion(
       return false;
     }
 
+    /* console.log(
       "useElementDeletion: Attempting to delete element with path:",
       elementPath,
-    );
+    ); */
 
     // Try to find element by path
     let element = getElementFromIframe(iframeRef.current, elementPath);
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
+      /* console.log(
         "useElementDeletion: Element not found by path, trying by ID:",
         elementId,
-      );
+      ); */
       element = doc.getElementById(elementId);
     }
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
-        "useElementDeletion: Element not found by ID, trying by selected class",
-      );
+      // console.log("useElementDeletion: Element not found by ID, trying by selected class");
       const selectedElements = doc.querySelectorAll(".element-selected");
       if (selectedElements.length === 1) {
         element = selectedElements[0] as HTMLElement;
@@ -124,10 +125,11 @@ export function useElementDeletion(
     setIsDeleting(true);
 
     try {
+      /* console.log({
         tagName: element.tagName,
         id: element.id,
         className: element.className,
-      });
+      }); */
 
       // Store element data for undo
       const parentElement = element.parentElement;
@@ -162,8 +164,7 @@ export function useElementDeletion(
       const parent = element.parentElement;
       if (parent) {
         parent.removeChild(element);
-          "useElementDeletion: Element successfully removed from DOM",
-        );
+        // console.log("useElementDeletion: Element successfully removed from DOM");
       } else {
         console.warn(
           "useElementDeletion: Element has no parent, cannot remove",

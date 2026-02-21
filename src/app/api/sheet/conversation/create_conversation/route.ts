@@ -12,7 +12,7 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                session = await (SheetSession as any).findById(chatId);
             } catch (e) { }
         }
 

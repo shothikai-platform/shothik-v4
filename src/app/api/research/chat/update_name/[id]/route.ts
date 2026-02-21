@@ -13,7 +13,7 @@ export async function PUT(
 
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndUpdate(
+        const chat = await (ResearchChat as any).findByIdAndUpdate(
             id,
             { title: name }, // Assuming 'name' maps to 'title' or 'name' in your schema
             { new: true }

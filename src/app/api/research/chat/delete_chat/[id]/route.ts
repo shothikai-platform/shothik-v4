@@ -10,7 +10,7 @@ export async function DELETE(
         const { id } = await params;
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndDelete(id);
+        const chat = await (ResearchChat as any).findByIdAndDelete(id);
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });

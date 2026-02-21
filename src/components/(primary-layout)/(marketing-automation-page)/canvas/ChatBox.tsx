@@ -54,10 +54,11 @@ export default function ChatBox({
       try {
         const response = await campaignAPI.getChatHistory(projectId);
         if (response.success && response.data.messages?.length > 0) {
+          /* console.log(
             "✅ Loading chat history:",
             response.data.messages.length,
             "messages",
-          );
+          ); */
           // Load all messages from history
           response.data.messages.forEach((msg: Message) => {
             onSendMessage({
