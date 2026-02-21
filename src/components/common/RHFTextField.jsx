@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -64,6 +65,10 @@ export default function RHFTextField({
           }
         };
 
+        const helperTextId = `${name}-description`;
+        const hasError = !!error;
+        const hasHelperText = !!(error || helperText);
+
         return (
           <div className="space-y-2">
             {label && (
@@ -84,6 +89,8 @@ export default function RHFTextField({
                 onChange={handleChange}
                 type={type}
                 readOnly={readOnly}
+                aria-invalid={hasError}
+                aria-describedby={hasHelperText ? helperTextId : undefined}
                 className={cn(
                   error && "border-destructive focus-visible:ring-destructive",
                   !border && "border-none",
@@ -101,8 +108,10 @@ export default function RHFTextField({
                 </div>
               )}
             </div>
-            {(error || helperText) && (
+            {hasHelperText && (
               <p
+                id={helperTextId}
+                role={hasError ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
