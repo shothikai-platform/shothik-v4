@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -91,7 +92,11 @@ export default function RHFTextField({
                   endAdornment && "pr-10",
                   className,
                 )}
-                style={startAdornment ? { paddingLeft: '56px' } : undefined}
+                style={startAdornment ? { paddingLeft: "56px" } : undefined}
+                aria-invalid={!!error}
+                aria-describedby={
+                  error || helperText ? `${name}-description` : undefined
+                }
                 {...inputProps}
                 {...other}
               />
@@ -103,6 +108,8 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={`${name}-description`}
+                role={error ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
