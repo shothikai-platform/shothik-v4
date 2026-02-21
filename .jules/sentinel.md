@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Middleware Auth Gap for API Routes]
+**Vulnerability:** Information disclosure and IDOR in Sheet API routes due to missing authentication and ownership checks.
+**Learning:** The project's global middleware (`src/middleware.ts`) only protects UI routes (`/dashboard`, `/auth`), leaving `/api` routes publicly accessible unless explicitly secured within the route handler.
+**Prevention:** Each API route must independently call `getAuthenticatedUser()` and use the result to scope database queries.
