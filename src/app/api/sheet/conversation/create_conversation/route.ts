@@ -2,15 +2,9 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
-import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
-        const user = await getAuthenticatedUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
 
@@ -18,18 +12,13 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findOne({ _id: chatId, userId: user._id || user.id });
-                if (!session) {
-                    return NextResponse.json({ error: 'Chat not found or unauthorized' }, { status: 404 });
-                }
-            } catch (e) {
-                return NextResponse.json({ error: 'Invalid chat ID' }, { status: 400 });
-            }
+                session = await SheetSession.findById(chatId);
+            } catch (e) { }
         }
 
         if (!session) {
             session = await SheetSession.create({
-                userId: user._id || user.id,
+                userId: 'temp-user',
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
