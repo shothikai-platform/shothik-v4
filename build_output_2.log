@@ -11,7 +11,7 @@
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
 
 > Build error occurred
-Error: Turbopack build failed with 21 errors:
+Error: Turbopack build failed with 18 errors:
 ./src/app/(primary-layout)/agents/share-agent/[shareId]/page.jsx:54:5
 Parsing ecmascript source code failed
 [0m [90m 52 |[39m       isAuthenticated[33m,[39m
@@ -321,38 +321,75 @@ Import traces:
     ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
 
 
-./src/components/tools/humanize/HumanizedContend.jsx:143:11
+./src/components/tools/humanize/GPTHistoryTab.jsx:30:3
 Parsing ecmascript source code failed
-[0m [90m 141 |[39m           entry[33m.[39moutputs[33m.[39mmap((output) [33m=>[39m output[33m.[39maiPercentage [33m||[39m output[33m.[39mscore)[33m,[39m
- [90m 142 |[39m         )[33m;[39m
-[31m[1m>[22m[39m[90m 143 |[39m         ( [33m=>[39m output[33m.[39maiPercentage))[33m,[39m
- [90m     |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 144 |[39m           [32m"RESTORED SCORES"[39m)[33m;[39m
- [90m 145 |[39m         setShowIndex([35m0[39m)[33m;[39m
- [90m 146 |[39m         setIsRestoredFromHistory([36mtrue[39m)[33m;[39m[0m
+[0m [90m 28 |[39m     [32m"GPTHistoryTab received handleHistorySelect:"[39m[33m,[39m
+ [90m 29 |[39m     [36mtypeof[39m handleHistorySelect[33m,[39m
+[31m[1m>[22m[39m[90m 30 |[39m   )[33m;[39m
+ [90m    |[39m   [31m[1m^[22m[39m
+ [90m 31 |[39m   [36mconst[39m [expandedEntries[33m,[39m setExpandedEntries] [33m=[39m useState({})[33m;[39m
+ [90m 32 |[39m   [36mconst[39m [expandedGroups[33m,[39m setExpandedGroups] [33m=[39m useState({})[33m;[39m
+ [90m 33 |[39m   [36mconst[39m [deleteDialogOpen[33m,[39m setDeleteDialogOpen] [33m=[39m useState([36mfalse[39m)[33m;[39m[0m
 
 Expression expected
 
-Import trace:
-  Server Component:
-    ./src/components/tools/humanize/HumanizedContend.jsx
-    ./src/app/(primary-layout)/humanize-gpt/page.jsx
+Import traces:
+  Client Component Browser:
+    ./src/components/tools/humanize/GPTHistoryTab.jsx [Client Component Browser]
+    ./src/components/tools/humanize/GPTsettingSidebar.jsx [Client Component Browser]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Client Component Browser]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Server Component]
+    ./src/app/(primary-layout)/humanize-gpt/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/tools/humanize/GPTHistoryTab.jsx [Client Component SSR]
+    ./src/components/tools/humanize/GPTsettingSidebar.jsx [Client Component SSR]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Client Component SSR]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Server Component]
+    ./src/app/(primary-layout)/humanize-gpt/page.jsx [Server Component]
 
 
-./src/components/tools/research/ResearchContentWithReferences.jsx:71:14
+./src/components/tools/humanize/TopNavigation.jsx:37:15
 Parsing ecmascript source code failed
-[0m [90m 69 |[39m   [36mconst[39m handleReferenceHover [33m=[39m (reference[33m,[39m event) [33m=>[39m {
- [90m 70 |[39m       reference[33m,[39m
-[31m[1m>[22m[39m[90m 71 |[39m       sources[33m:[39m sources[33m?[39m[33m.[39mlength[33m,[39m
- [90m    |[39m              [31m[1m^[22m[39m
- [90m 72 |[39m     })[33m;[39m
- [90m 73 |[39m
- [90m 74 |[39m     [90m// Clear any existing timeout[39m[0m
+[0m [90m 35 |[39m     [90m// Raven is now available to all users (lock removed)[39m
+ [90m 36 |[39m       previousModel[33m:[39m model[33m,[39m
+[31m[1m>[22m[39m[90m 37 |[39m       newModel[33m:[39m tab[33m,[39m
+ [90m    |[39m               [31m[1m^[22m[39m
+ [90m 38 |[39m       userPackage[33m,[39m
+ [90m 39 |[39m     })[33m;[39m
+ [90m 40 |[39m     setShalowAlert([36mfalse[39m)[33m;[39m[0m
 
 Expected ';', '}' or <eof>
 
 Import traces:
   Client Component Browser:
+    ./src/components/tools/humanize/TopNavigation.jsx [Client Component Browser]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Client Component Browser]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Server Component]
+    ./src/app/(primary-layout)/humanize-gpt/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/tools/humanize/TopNavigation.jsx [Client Component SSR]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Client Component SSR]
+    ./src/components/tools/humanize/HumanizedContend.jsx [Server Component]
+    ./src/app/(primary-layout)/humanize-gpt/page.jsx [Server Component]
+
+
+./src/components/tools/research/ReferenceModal.jsx:12:12
+Parsing ecmascript source code failed
+[0m [90m 10 |[39m     open[33m,[39m
+ [90m 11 |[39m     reference[33m,[39m
+[31m[1m>[22m[39m[90m 12 |[39m     sources[33m:[39m sources[33m?[39m[33m.[39mlength[33m,[39m
+ [90m    |[39m            [31m[1m^[22m[39m
+ [90m 13 |[39m     anchorEl[33m,[39m
+ [90m 14 |[39m   })[33m;[39m
+ [90m 15 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component Browser]
     ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component Browser]
     ./src/components/tools/research/RenderPart.jsx [Client Component Browser]
     ./src/components/tools/research/ResearchContend.jsx [Client Component Browser]
@@ -360,113 +397,12 @@ Import traces:
     ./src/app/(primary-layout)/research/page.jsx [Server Component]
 
   Client Component SSR:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component SSR]
     ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component SSR]
     ./src/components/tools/research/RenderPart.jsx [Client Component SSR]
     ./src/components/tools/research/ResearchContend.jsx [Client Component SSR]
     ./src/components/tools/research/ResearchContend.jsx [Server Component]
     ./src/app/(primary-layout)/research/page.jsx [Server Component]
-
-
-./src/hooks/useResearchStream.js:537:11
-Parsing ecmascript source code failed
-[0m [90m 535 |[39m           [90m// Don't clear metadata on error - might need for recovery[39m
- [90m 536 |[39m             [32m"Stream error, metadata preserved for potential recovery"[39m[33m,[39m
-[31m[1m>[22m[39m[90m 537 |[39m           )[33m;[39m
- [90m     |[39m           [31m[1m^[22m[39m
- [90m 538 |[39m         }
- [90m 539 |[39m       }
- [90m 540 |[39m     }[33m,[39m[0m
-
-Expression expected
-
-Import traces:
-  Client Component Browser:
-    ./src/hooks/useResearchStream.js [Client Component Browser]
-    ./src/components/research/ui/ChatInput.jsx [Client Component Browser]
-    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component Browser]
-    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
-
-  Client Component SSR:
-    ./src/hooks/useResearchStream.js [Client Component SSR]
-    ./src/components/research/ui/ChatInput.jsx [Client Component SSR]
-    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component SSR]
-    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
-
-
-./src/hooks/useStreamingLogs.ts:76:7
-Parsing ecmascript source code failed
-[0m [90m 74 |[39m         [32m"Forcing completion of animation for log:"[39m[33m,[39m
- [90m 75 |[39m         currentAnimationRef[33m.[39mcurrent[33m.[39mlogIndex[33m,[39m
-[31m[1m>[22m[39m[90m 76 |[39m       )[33m;[39m
- [90m    |[39m       [31m[1m^[22m[39m
- [90m 77 |[39m       currentAnimationRef[33m.[39mcurrent[33m.[39mforceComplete()[33m;[39m
- [90m 78 |[39m       currentAnimationRef[33m.[39mcurrent [33m=[39m { logIndex[33m:[39m [33m-[39m[35m1[39m[33m,[39m forceComplete[33m:[39m [36mnull[39m }[33m;[39m
- [90m 79 |[39m     }[0m
-
-Expression expected
-
-Import traces:
-  Client Component Browser:
-    ./src/hooks/useStreamingLogs.ts [Client Component Browser]
-    ./src/components/presentation/ChatArea.jsx [Client Component Browser]
-    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component Browser]
-    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
-
-  Client Component SSR:
-    ./src/hooks/useStreamingLogs.ts [Client Component SSR]
-    ./src/components/presentation/ChatArea.jsx [Client Component SSR]
-    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component SSR]
-    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
-
-
-./src/lib/nativePresentationExporter.ts:228:7
-Parsing ecmascript source code failed
-[0m [90m 226 |[39m         [32m"Native Chart Export: Found chart config, attempting to render."[39m[33m,[39m
- [90m 227 |[39m         chartConfig[33m,[39m
-[31m[1m>[22m[39m[90m 228 |[39m       )[33m;[39m
- [90m     |[39m       [31m[1m^[22m[39m
- [90m 229 |[39m       [36mtry[39m {
- [90m 230 |[39m         [36mconst[39m chartData [33m=[39m chartConfig[33m.[39mdata[33m.[39mdatasets[33m.[39mmap((ds[33m:[39m any) [33m=>[39m ({
- [90m 231 |[39m           name[33m:[39m ds[33m.[39mlabel[33m,[39m[0m
-
-Expression expected
-
-Import traces:
-  Client Component Browser:
-    ./src/lib/nativePresentationExporter.ts [Client Component Browser]
-    ./src/components/slide/SlidePreviewNavbar.jsx [Client Component Browser]
-    ./src/app/(slide-layout)/slide-share/[shareLink]/page.jsx [Client Component Browser]
-    ./src/app/(slide-layout)/slide-share/[shareLink]/page.jsx [Server Component]
-
-  Client Component SSR:
-    ./src/lib/nativePresentationExporter.ts [Client Component SSR]
-    ./src/components/slide/SlidePreviewNavbar.jsx [Client Component SSR]
-    ./src/app/(slide-layout)/slide-share/[shareLink]/page.jsx [Client Component SSR]
-    ./src/app/(slide-layout)/slide-share/[shareLink]/page.jsx [Server Component]
-
-
-./src/utils/presentation/presentationHistoryDataParser.js:709:18
-Parsing ecmascript source code failed
-[0m [90m 707 |[39m
- [90m 708 |[39m       logsCount[33m:[39m parsedLogs[33m.[39mlength[33m,[39m
-[31m[1m>[22m[39m[90m 709 |[39m       slidesCount[33m:[39m parsedSlides[33m.[39mlength[33m,[39m
- [90m     |[39m                  [31m[1m^[22m[39m
- [90m 710 |[39m       status[33m:[39m parsedState[33m.[39mstatus[33m,[39m
- [90m 711 |[39m       title[33m:[39m parsedState[33m.[39mtitle[33m,[39m
- [90m 712 |[39m     })[33m;[39m[0m
-
-Expected ';', '}' or <eof>
-
-Import traces:
-  Client Component Browser:
-    ./src/utils/presentation/presentationHistoryDataParser.js [Client Component Browser]
-    ./src/app/(slide-layout)/slides/page.jsx [Client Component Browser]
-    ./src/app/(slide-layout)/slides/page.jsx [Server Component]
-
-  Client Component SSR:
-    ./src/utils/presentation/presentationHistoryDataParser.js [Client Component SSR]
-    ./src/app/(slide-layout)/slides/page.jsx [Client Component SSR]
-    ./src/app/(slide-layout)/slides/page.jsx [Server Component]
 
 
     at <unknown> (./src/app/(primary-layout)/agents/share-agent/[shareId]/page.jsx:54:5)
@@ -484,10 +420,7 @@ Import traces:
     at <unknown> (./src/components/presentation/PresentationAgentPageV2.jsx:97:14)
     at <unknown> (./src/components/presentation/PreviewPanel.jsx:90:23)
     at <unknown> (./src/components/sheet/SheetChatArea.jsx:782:15)
-    at <unknown> (./src/components/tools/humanize/HumanizedContend.jsx:143:11)
-    at <unknown> (./src/components/tools/research/ResearchContentWithReferences.jsx:71:14)
-    at <unknown> (./src/hooks/useResearchStream.js:537:11)
-    at <unknown> (./src/hooks/useStreamingLogs.ts:76:7)
-    at <unknown> (./src/lib/nativePresentationExporter.ts:228:7)
-    at <unknown> (./src/utils/presentation/presentationHistoryDataParser.js:709:18)
+    at <unknown> (./src/components/tools/humanize/GPTHistoryTab.jsx:30:3)
+    at <unknown> (./src/components/tools/humanize/TopNavigation.jsx:37:15)
+    at <unknown> (./src/components/tools/research/ReferenceModal.jsx:12:12)
  ELIFECYCLE  Command failed with exit code 1.
