@@ -1,15 +1,16 @@
 "use client";
 
+import React, { memo } from "react";
 import ImagesContent from "./ImagesContent";
 import ResearchContent from "./ResearchContent";
 import SourcesContent from "./SourcesContent";
 
-export default function ResearchDataArea({
+const ResearchDataArea = memo(({
   selectedTab,
   research,
   isLastData,
   onSwitchTab,
-}) {
+}) => {
 
   const renderContent = () => {
     switch (selectedTab) {
@@ -31,4 +32,17 @@ export default function ResearchDataArea({
   };
 
   return <div>{renderContent()}</div>;
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison function to optimize performance
+  // We ignore onSwitchTab because it's a new function on every render from parent
+  // but its behavior is stable.
+  return (
+    prevProps.selectedTab === nextProps.selectedTab &&
+    prevProps.isLastData === nextProps.isLastData &&
+    prevProps.research === nextProps.research
+  );
+});
+
+ResearchDataArea.displayName = "ResearchDataArea";
+
+export default ResearchDataArea;
