@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2026-02-22 - [Secure Geolocation without API Keys]
+**Vulnerability:** Exposed `NEXT_PUBLIC_GOOGLE_GEOLOCATION_KEY` allowed unauthorized API usage.
+**Learning:** Client-side Google API keys are difficult to secure without domain restrictions, which are often overlooked.
+**Prevention:** Use free, keyless IP geolocation services (like `ipwho.is` or `ipapi.co`) for non-critical location needs (country level), avoiding the need to manage and expose keys in the client bundle.
