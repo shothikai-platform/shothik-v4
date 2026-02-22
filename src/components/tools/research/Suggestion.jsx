@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { AlignLeft } from "lucide-react";
 import * as motion from "motion/react-client";
+import React from "react";
 
 const Suggestion = ({ handleSuggestedQuestionClick, suggestedQuestions }) => {
   return (
@@ -19,19 +20,21 @@ const Suggestion = ({ handleSuggestedQuestionClick, suggestedQuestions }) => {
 
       <div className="flex flex-col gap-1">
         {suggestedQuestions?.map((question, index) => (
-          <span
+          <button
             key={index}
+            type="button"
             className={cn(
               "rounded-3xl px-4 py-2 font-medium",
               "bg-card text-muted-foreground",
-              "w-fit cursor-pointer",
+              "w-fit cursor-pointer text-left",
               "hover:bg-accent hover:text-accent-foreground",
+              "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
               "transition-colors",
             )}
             onClick={() => handleSuggestedQuestionClick(question)}
           >
             {question}
-          </span>
+          </button>
         ))}
       </div>
     </motion.div>
