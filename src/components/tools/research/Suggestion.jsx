@@ -19,6 +19,7 @@ const Suggestion = ({ handleSuggestedQuestionClick, suggestedQuestions }) => {
       </div>
 
       <div className="flex flex-col gap-1">
+        {/* Using button with type="button" for accessibility (keyboard navigation + screen readers) */}
         {suggestedQuestions?.map((question, index) => (
           <button
             key={index}
