@@ -778,9 +778,6 @@ export default function SheetChatArea({
 
             // Check for validation error first
             if (data?.data?.error) {
-                "Validation error detected, removing user message and showing toast",
-              );
-
               // Remove the user message that couldn't be processed
               setMessages((prev) =>
                 prev.filter((msg) => msg.id !== userMessageId),
