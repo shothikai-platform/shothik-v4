@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-23 - Form Validation Accessibility
+**Learning:** Screen readers do not automatically associate helper text or error messages with input fields unless linked via `aria-describedby`.
+**Action:** Always link input fields to their helper/error text using `aria-describedby` and indicate error state with `aria-invalid`. Add `role="alert"` to error messages for immediate feedback.
