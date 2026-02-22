@@ -1,9 +1,9 @@
 import axios from "axios";
-import AuthService from "../auth.service";
-import { jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, test, vi, type Mock } from "vitest";
+import { AuthService } from "../auth.service";
 
 // Mock axios calls
-jest.mock("axios");
+vi.mock("axios");
 
 // Suite of integration tests for AuthService
 
@@ -18,14 +18,16 @@ interface AxiosResponse<T = any> {
 
 // Setup and teardown
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 afterEach(() => {
   // For future cleanup tasks, if needed
 });
 
-describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
+describe("AuthService Integration Tests", () => {
+  const authService = new AuthService();
+
   test("Successful login with valid credentials", async () => {
     const mockResponse: AxiosResponse = {
       data: { token: "mock-token" },
@@ -34,13 +36,13 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
-    const result = await AuthService.login("validUser", "validPass");
+    const result = await authService.login("validUser", "validPass", "manual");
 
     // Assert result
-    expect(result.token).toBe("mock-token");
+    expect(result.data.token).toBe("mock-token");
   });
 
   test("Failed login with invalid credentials", async () => {
@@ -51,11 +53,11 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockRejectedValueOnce({ response: mockResponse });
+    (axios.post as Mock).mockRejectedValueOnce({ response: mockResponse });
 
     // Call service function & assert rejection
     await expect(
-      AuthService.login("invalidUser", "invalidPass"),
+      authService.login("invalidUser", "invalidPass", "manual"),
     ).rejects.toHaveProperty("response.data.error", "Invalid credentials");
   });
 
@@ -67,20 +69,22 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
-    const result = await AuthService.register(
+    const result = await authService.register(
       "newUser",
-      "newPass",
       "newUser@example.com",
+      "newPass",
+      "Bangladesh",
+      "manual"
     );
 
     // Assert result
-    expect(result.message).toBe("User registered successfully");
+    expect(result.data.message).toBe("User registered successfully");
   });
 
-  test("Google OAuth login", async () => {
+  test("Google login", async () => {
     const mockResponse: AxiosResponse = {
       data: { token: "google-mock-token" },
       status: 200,
@@ -88,13 +92,13 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
-    const result = await AuthService.googleOAuth("google-auth-code");
+    const result = await authService.googleLogin("google-auth-code", "US");
 
     // Assert result
-    expect(result.token).toBe("google-mock-token");
+    expect(result.data.token).toBe("google-mock-token");
   });
 
   test("Forgot password functionality", async () => {
@@ -105,13 +109,13 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
-    const result = await AuthService.forgotPassword("user@example.com");
+    const result = await authService.forgotPassword("user@example.com");
 
     // Assert result
-    expect(result.message).toBe("Password reset link sent");
+    expect(result.data.message).toBe("Password reset link sent");
   });
 
   test("Email verification", async () => {
@@ -122,12 +126,12 @@ describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
       headers: {},
       config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as Mock).mockResolvedValueOnce(mockResponse);
 
     // Call service function
-    const result = await AuthService.verifyEmail("verificationToken");
+    const result = await authService.verifyEmail("verificationToken");
 
     // Assert result
-    expect(result.message).toBe("Email verified successfully");
+    expect(result.data.message).toBe("Email verified successfully");
   });
 });
