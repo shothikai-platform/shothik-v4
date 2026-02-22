@@ -18,8 +18,8 @@ class Logger {
       ...context,
     };
 
-    // In development, use colorful console output with proper log levels
     if (this.isDevelopment) {
+      // In development, use colorful console output with proper log levels
       const colors = {
         debug: '\x1b[36m', // Cyan
         info: '\x1b[32m',  // Green
@@ -30,7 +30,6 @@ class Logger {
 
       const formattedMessage = `${colors[level]}[${level.toUpperCase()}]${reset} ${timestamp} - ${message}`;
 
-      // Use appropriate console method for each level
       switch (level) {
         case 'error':
           console.error(formattedMessage, context || '');
@@ -39,10 +38,10 @@ class Logger {
           console.warn(formattedMessage, context || '');
           break;
         default:
+          console.log(formattedMessage, context || '');
       }
     } else {
       // In production, use structured JSON logging
-      // This can be parsed by log aggregation tools like Datadog, CloudWatch, etc.
       const logLine = JSON.stringify(logData);
 
       switch (level) {
@@ -53,6 +52,7 @@ class Logger {
           console.warn(logLine);
           break;
         default:
+          console.log(logLine);
       }
     }
   }
