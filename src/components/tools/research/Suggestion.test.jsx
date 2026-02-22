@@ -15,18 +15,14 @@ describe('Suggestion Component', () => {
       />
     );
 
-    // screen.debug();
-
-    // Use getAllByText to handle potential duplication from motion/animation in test env
-    // and check that at least one exists.
     const titleElements = screen.getAllByText('Suggested questions');
     expect(titleElements.length).toBeGreaterThan(0);
     expect(titleElements[0]).toBeTruthy();
 
-    const q1Elements = screen.getAllByText('What is AI?');
+    const q1Elements = screen.getAllByRole('button', { name: 'What is AI?' });
     expect(q1Elements.length).toBeGreaterThan(0);
 
-    const q2Elements = screen.getAllByText('How does LLM work?');
+    const q2Elements = screen.getAllByRole('button', { name: 'How does LLM work?' });
     expect(q2Elements.length).toBeGreaterThan(0);
   });
 
@@ -38,8 +34,8 @@ describe('Suggestion Component', () => {
       />
     );
 
-    const questions = screen.getAllByText('What is AI?');
-    // Click the first one found
+    // This query now verifies both the element text AND its role as a button
+    const questions = screen.getAllByRole('button', { name: 'What is AI?' });
     fireEvent.click(questions[0]);
 
     expect(mockHandleClick).toHaveBeenCalledWith('What is AI?');
@@ -54,17 +50,10 @@ describe('Suggestion Component', () => {
     );
 
     const buttons = screen.getAllByRole('button');
-    // In strict mode or with motion, we might get duplicates.
-    // We just want to ensure that whatever "What is AI?" elements exist, they are buttons.
+    // Ensure all question buttons have the correct type attribute
 
-    // Filter buttons that have the text content
     const q1Buttons = buttons.filter(b => b.textContent === 'What is AI?');
-    const q2Buttons = buttons.filter(b => b.textContent === 'How does LLM work?');
-
     expect(q1Buttons.length).toBeGreaterThan(0);
-    expect(q2Buttons.length).toBeGreaterThan(0);
-
-    // Check type attribute on the first one
     expect(q1Buttons[0].getAttribute('type')).toBe('button');
   });
 });
