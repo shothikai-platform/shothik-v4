@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig, configDefaults } from 'vitest/config'
 import path from 'path'
 
 export default defineConfig({
@@ -7,5 +7,6 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    exclude: [...configDefaults.exclude, 'e2e/**/*'],
   },
 })
