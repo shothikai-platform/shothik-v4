@@ -6,17 +6,20 @@ describe('Logger', () => {
   let consoleLogSpy: any;
   let consoleErrorSpy: any;
   let consoleWarnSpy: any;
+  let consoleDebugSpy: any;
 
   beforeEach(() => {
     consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    consoleDebugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
   });
 
   afterEach(() => {
     consoleLogSpy.mockRestore();
     consoleErrorSpy.mockRestore();
     consoleWarnSpy.mockRestore();
+    consoleDebugSpy.mockRestore();
     vi.stubEnv('NODE_ENV', originalEnv || 'test');
   });
 
@@ -67,15 +70,15 @@ describe('Logger', () => {
     it('should log debug messages in development', () => {
       vi.stubEnv('NODE_ENV', 'development');
       logger.debug('Debug message');
-      expect(consoleLogSpy).toHaveBeenCalled();
+      expect(consoleDebugSpy).toHaveBeenCalled();
     });
 
     it('should not log debug messages in production/test mode', () => {
       vi.stubEnv('NODE_ENV', 'production');
-      consoleLogSpy.mockClear();
+      consoleDebugSpy.mockClear();
       logger.debug('Debug message');
       // In production/test mode, debug messages should not be logged
-      expect(consoleLogSpy).not.toHaveBeenCalled();
+      expect(consoleDebugSpy).not.toHaveBeenCalled();
     });
   });
 
