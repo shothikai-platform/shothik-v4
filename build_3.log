@@ -1,0 +1,382 @@
+
+> shothik-v3@0.1.0 build /app
+> next build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+
+> Build error occurred
+Error: Turbopack build failed with 17 errors:
+./src/app/(primary-layout)/agents/share-agent/[shareId]/page.jsx:54:5
+Parsing ecmascript source code failed
+[0m [90m 52 |[39m       isAuthenticated[33m,[39m
+ [90m 53 |[39m       user[33m,[39m
+[31m[1m>[22m[39m[90m 54 |[39m     })[33m;[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 55 |[39m     [36mif[39m (shareId) {
+ [90m 56 |[39m       loadSharedAgent()[33m;[39m
+ [90m 57 |[39m     }[0m
+
+Expression expected
+
+
+./src/app/(primary-layout)/agents/shared-sheet/[shareId]/page.jsx:355:7
+Parsing ecmascript source code failed
+[0m [90m 353 |[39m         [32m"✅ Expected URL:"[39m[33m,[39m
+ [90m 354 |[39m         [32m"https://api-qa.shothik.ai/sheet/chat/replicate_chat"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 355 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 356 |[39m
+ [90m 357 |[39m       [90m// Prepare the request payload[39m
+ [90m 358 |[39m       [36mconst[39m requestPayload [33m=[39m {[0m
+
+Expression expected
+
+
+./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:424:11
+Parsing ecmascript source code failed
+[0m [90m 422 |[39m           [90m// User is typing after initial mount - reset skipCheckRef to allow checking[39m
+ [90m 423 |[39m             [32m"[Editor Update] User typing detected, resetting skipCheckRef"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 424 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 425 |[39m           skipCheckRef[33m.[39mcurrent [33m=[39m [36mfalse[39m[33m;[39m
+ [90m 426 |[39m           isFromEditorUpdateRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 427 |[39m           hasUserInputRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+./src/components/(primary-layout)/(home-v2-page)/(home-components)/new-components/InteractiveAgentDemo.jsx:148:20
+Parsing ecmascript source code failed
+[0m [90m 146 |[39m [36mconst[39m mockAnalytics [33m=[39m {
+ [90m 147 |[39m   trackAgentInteraction[33m:[39m (id[33m,[39m action[33m,[39m length) [33m=>[39m
+[31m[1m>[22m[39m[90m 148 |[39m   trackFeatureClick[33m:[39m (feature[33m,[39m context) [33m=>[39m
+ [90m     |[39m                    [31m[1m^[22m[39m
+ [90m 149 |[39m   trackError[33m:[39m (type[33m,[39m message[33m,[39m context) [33m=>[39m
+ [90m 150 |[39m }[33m;[39m
+ [90m 151 |[39m[0m
+
+Expected ',', got ':'
+
+Import trace:
+  Client Component Browser:
+    ./src/components/(primary-layout)/(home-v2-page)/(home-components)/new-components/InteractiveAgentDemo.jsx [Client Component Browser]
+    ./src/components/(primary-layout)/(home-v2-page)/HomeContentSection/index.jsx [Client Component Browser]
+    ./src/components/(primary-layout)/(home-v2-page)/HomeContentSection/index.jsx [Server Component]
+    ./src/app/(primary-layout)/home-v2/page.jsx [Server Component]
+
+
+./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/AvatarsSection.tsx:165:11
+Parsing ecmascript source code failed
+[0m [90m 163 |[39m             [32m"Creator object keys:"[39m[33m,[39m
+ [90m 164 |[39m             [33mObject[39m[33m.[39mkeys(result[33m.[39mdata[33m.[39mresults[[35m0[39m] [33m||[39m [32m"No keys"[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 165 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 166 |[39m         }
+ [90m 167 |[39m
+ [90m 168 |[39m         [90m// DEBUG: Check if we have date information in response headers or metadata[39m[0m
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/AvatarsSection.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/media/[projectId]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/AvatarsSection.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/media/[projectId]/page.tsx [Server Component]
+
+
+./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/SmartAssetsSection.tsx:73:3
+Parsing ecmascript source code failed
+[0m [90m 71 |[39m       type[33m:[39m a[33m.[39mtype[33m,[39m
+ [90m 72 |[39m     }))[33m,[39m
+[31m[1m>[22m[39m[90m 73 |[39m   )[33m;[39m
+ [90m    |[39m   [31m[1m^[22m[39m
+ [90m 74 |[39m
+ [90m 75 |[39m   [90m// Mutations[39m
+ [90m 76 |[39m   [36mconst[39m uploadToImageKit [33m=[39m useUploadToImageKit()[33m;[39m[0m
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/SmartAssetsSection.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/media/[projectId]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/SmartAssetsSection.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/AIMedia.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/media/[projectId]/page.tsx [Server Component]
+
+
+./src/components/(primary-layout)/(marketing-automation-page)/Canvas.tsx:113:7
+Parsing ecmascript source code failed
+[0m [90m 111 |[39m         [32m"Reconstructing suggestions from existing campaign data:"[39m[33m,[39m
+ [90m 112 |[39m         data[33m,[39m
+[31m[1m>[22m[39m[90m 113 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 114 |[39m
+ [90m 115 |[39m       [36mconst[39m firstCampaign [33m=[39m data[33m.[39mcampaigns[33m?[39m[33m.[39m[[35m0[39m][33m;[39m
+ [90m 116 |[39m       [36mif[39m ([33m![39mfirstCampaign) [36mreturn[39m [36mnull[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(marketing-automation-page)/Canvas.tsx
+    ./src/app/(primary-layout)/marketing-automation/canvas/[projectId]/page.tsx
+
+
+./src/components/(primary-layout)/(marketing-automation-page)/Dashboard/index.tsx:121:15
+Parsing ecmascript source code failed
+[0m [90m 119 |[39m             [33m?[39m[33m.[39mfilter((c[33m:[39m [33mCampaign[39m) [33m=>[39m {
+ [90m 120 |[39m                 [32m`Campaign: ${c.name}, Status: ${c.status}, MetaID: ${c.metaCampaignId}`[39m[33m,[39m
+[31m[1m>[22m[39m[90m 121 |[39m               )[33m;[39m
+ [90m     |[39m               [31m[1m^[22m[39m
+ [90m 122 |[39m               [36mreturn[39m c[33m.[39mmetaCampaignId [33m&&[39m c[33m.[39mstatus [33m===[39m [32m"published"[39m[33m;[39m
+ [90m 123 |[39m             })
+ [90m 124 |[39m             [33m.[39mmap((campaign[33m:[39m [33mCampaign[39m) [33m=>[39m {[0m
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard/index.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard.tsx [Client Component Browser]
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/dashboard/[projectId]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard/index.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard.tsx [Client Component SSR]
+    ./src/components/(primary-layout)/(marketing-automation-page)/Dashboard.tsx [Server Component]
+    ./src/app/(primary-layout)/marketing-automation/dashboard/[projectId]/page.tsx [Server Component]
+
+
+./src/components/(primary-layout)/(marketing-automation-page)/FacebookAccountSelectionScreen.tsx:301:11
+Parsing ecmascript source code failed
+[0m [90m 299 |[39m [32m              response.data?.length || 0[39m
+ [90m 300 |[39m [32m            } pixels for business account`[39m[33m,[39m
+[31m[1m>[22m[39m[90m 301 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 302 |[39m         } [36melse[39m {
+ [90m 303 |[39m           console[33m.[39merror([32m"Failed to fetch pixels:"[39m[33m,[39m response[33m.[39merror)[33m;[39m
+ [90m 304 |[39m           setPixels([])[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(marketing-automation-page)/FacebookAccountSelectionScreen.tsx
+    ./src/app/(primary-layout)/marketing-automation/canvas/[projectId]/publish/select-accounts/page.tsx
+
+
+./src/components/(primary-layout)/(plagiarism-checker)/PlagiarismCheckerContentSection/index.jsx:62:19
+Parsing ecmascript source code failed
+[0m [90m 60 |[39m   useEffect(() [33m=>[39m {
+ [90m 61 |[39m       hasReport[33m:[39m hasReport[33m,[39m
+[31m[1m>[22m[39m[90m 62 |[39m       reportExists[33m:[39m [33m![39m[33m![39mreport[33m,[39m
+ [90m    |[39m                   [31m[1m^[22m[39m
+ [90m 63 |[39m       reportType[33m:[39m report [33m?[39m [36mtypeof[39m report [33m:[39m [32m'null'[39m[33m,[39m
+ [90m 64 |[39m       analysisId[33m:[39m report[33m?[39m[33m.[39manalysisId[33m,[39m
+ [90m 65 |[39m       sectionsCount[33m:[39m report[33m?[39m[33m.[39msections[33m?[39m[33m.[39mlength[33m,[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(plagiarism-checker)/PlagiarismCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/plagiarism-checker/page.jsx
+
+
+./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx:495:17
+Parsing ecmascript source code failed
+[0m [90m 493 |[39m                   [32m":"[39m[33m,[39m
+ [90m 494 |[39m                   result[33m,[39m
+[31m[1m>[22m[39m[90m 495 |[39m                 )[33m;[39m
+ [90m     |[39m                 [31m[1m^[22m[39m
+ [90m 496 |[39m
+ [90m 497 |[39m                 [90m// Handle different response structures[39m
+ [90m 498 |[39m                 [36mlet[39m keywordsData [33m=[39m [][33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx
+    ./src/app/(primary-layout)/summarize/page.jsx
+
+
+./src/components/presentation/InputAreas.jsx:79:5
+Parsing ecmascript source code failed
+[0m [90m 77 |[39m       [32m"Selected files:"[39m[33m,[39m
+ [90m 78 |[39m       files[33m.[39mmap((f) [33m=>[39m ({ name[33m:[39m f[33m.[39mname[33m,[39m type[33m:[39m f[33m.[39mtype[33m,[39m size[33m:[39m f[33m.[39msize }))[33m,[39m
+[31m[1m>[22m[39m[90m 79 |[39m     )[33m;[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 80 |[39m
+ [90m 81 |[39m     [90m// Check file type and size[39m
+ [90m 82 |[39m     [36mconst[39m allowedTypes [33m=[39m [[0m
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./src/components/presentation/InputAreas.jsx [Client Component Browser]
+    ./src/components/presentation/ChatArea.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/presentation/InputAreas.jsx [Client Component SSR]
+    ./src/components/presentation/ChatArea.jsx [Client Component SSR]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component SSR]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
+
+
+./src/components/presentation/v2/PresentationLogsUi.jsx:61:5
+Parsing ecmascript source code failed
+[0m [90m 59 |[39m   [36mconst[39m handleNewChat [33m=[39m () [33m=>[39m {
+ [90m 60 |[39m       [32m"[PresentationLogsUi] New Chat button clicked - redirecting to agents page"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 61 |[39m     )[33m;[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 62 |[39m     router[33m.[39mpush([32m"/agents?tab=slides"[39m)[33m;[39m
+ [90m 63 |[39m   }[33m;[39m
+ [90m 64 |[39m[0m
+
+Expression expected
+
+Import trace:
+  Client Component Browser:
+    ./src/components/presentation/v2/PresentationLogsUi.jsx [Client Component Browser]
+    ./src/components/presentation/PresentationAgentPageV2.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
+
+
+./src/components/sheet/SheetChatArea.jsx:1112:11
+Parsing ecmascript source code failed
+[0m [90m 1110 |[39m         [36mif[39m (isNavigationAbortRef[33m.[39mcurrent) {
+ [90m 1111 |[39m             [32m"SSE aborted due to navigation - backend still processing"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 1112 |[39m           )[33m;[39m
+ [90m      |[39m           [31m[1m^[22m[39m
+ [90m 1113 |[39m           isNavigationAbortRef[33m.[39mcurrent [33m=[39m [36mfalse[39m[33m;[39m [90m// Reset flag[39m
+ [90m 1114 |[39m           [90m// DON'T clear activeStreamingChatId - backend is still processing[39m
+ [90m 1115 |[39m           [90m// When user returns, polling will check history and resume if incomplete[39m[0m
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./src/components/sheet/SheetChatArea.jsx [Client Component Browser]
+    ./src/components/sheet/SheetAgentPage.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/sheet/SheetChatArea.jsx [Client Component SSR]
+    ./src/components/sheet/SheetAgentPage.jsx [Client Component SSR]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component SSR]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
+
+
+./src/hooks/orchestrator/usePresentationOrchestrator.js:189:22
+Parsing ecmascript source code failed
+[0m [90m 187 |[39m
+ [90m 188 |[39m           logsCount[33m:[39m parsedData[33m.[39mlogs[33m.[39mlength[33m,[39m
+[31m[1m>[22m[39m[90m 189 |[39m           slidesCount[33m:[39m parsedData[33m.[39mslides[33m.[39mlength[33m,[39m
+ [90m     |[39m                      [31m[1m^[22m[39m
+ [90m 190 |[39m           status[33m:[39m parsedData[33m.[39mstatus[33m,[39m
+ [90m 191 |[39m           allData[33m:[39m parsedData[33m,[39m
+ [90m 192 |[39m         })[33m;[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import trace:
+  Client Component Browser:
+    ./src/hooks/orchestrator/usePresentationOrchestrator.js [Client Component Browser]
+    ./src/components/presentation/PresentationAgentPageV2.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/agents/[agentType]/page.jsx [Server Component]
+
+
+./src/hooks/presentation/useElementDeletion.ts:85:5
+Parsing ecmascript source code failed
+[0m [90m 83 |[39m       [32m"useElementDeletion: Attempting to delete element with path:"[39m[33m,[39m
+ [90m 84 |[39m       elementPath[33m,[39m
+[31m[1m>[22m[39m[90m 85 |[39m     )[33m;[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 86 |[39m
+ [90m 87 |[39m     [90m// Try to find element by path[39m
+ [90m 88 |[39m     [36mlet[39m element [33m=[39m getElementFromIframe(iframeRef[33m.[39mcurrent[33m,[39m elementPath)[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Client Component Browser:
+    ./src/hooks/presentation/useElementDeletion.ts [Client Component Browser]
+    ./src/components/presentation/editing/EditingToolbar.tsx [Client Component Browser]
+    ./src/components/presentation/SlidePreview.jsx [Client Component Browser]
+    ./src/components/presentation/PreviewPanel.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
+
+
+./src/hooks/presentation/useElementDuplication.ts:84:5
+Parsing ecmascript source code failed
+[0m [90m 82 |[39m       [32m"useElementDuplication: Attempting to duplicate element with path:"[39m[33m,[39m
+ [90m 83 |[39m       elementPath[33m,[39m
+[31m[1m>[22m[39m[90m 84 |[39m     )[33m;[39m
+ [90m    |[39m     [31m[1m^[22m[39m
+ [90m 85 |[39m
+ [90m 86 |[39m     [90m// Try to find element by path[39m
+ [90m 87 |[39m     [36mlet[39m element [33m=[39m getElementFromIframe(iframeRef[33m.[39mcurrent[33m,[39m elementPath)[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Client Component Browser:
+    ./src/hooks/presentation/useElementDuplication.ts [Client Component Browser]
+    ./src/components/presentation/editing/EditingToolbar.tsx [Client Component Browser]
+    ./src/components/presentation/SlidePreview.jsx [Client Component Browser]
+    ./src/components/presentation/PreviewPanel.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Client Component Browser]
+    ./src/app/(primary-layout)/slide/replay/page.jsx [Server Component]
+
+
+    at <unknown> (./src/app/(primary-layout)/agents/share-agent/[shareId]/page.jsx:54:5)
+    at <unknown> (./src/app/(primary-layout)/agents/shared-sheet/[shareId]/page.jsx:355:7)
+    at <unknown> (./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:424:11)
+    at <unknown> (./src/components/(primary-layout)/(home-v2-page)/(home-components)/new-components/InteractiveAgentDemo.jsx:148:20)
+    at <unknown> (./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/AvatarsSection.tsx:165:11)
+    at <unknown> (./src/components/(primary-layout)/(marketing-automation-page)/AIMedia/SmartAssetsSection.tsx:73:3)
+    at <unknown> (./src/components/(primary-layout)/(marketing-automation-page)/Canvas.tsx:113:7)
+    at <unknown> (./src/components/(primary-layout)/(marketing-automation-page)/Dashboard/index.tsx:121:15)
+    at <unknown> (./src/components/(primary-layout)/(marketing-automation-page)/FacebookAccountSelectionScreen.tsx:301:11)
+    at <unknown> (./src/components/(primary-layout)/(plagiarism-checker)/PlagiarismCheckerContentSection/index.jsx:62:19)
+    at <unknown> (./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx:495:17)
+    at <unknown> (./src/components/presentation/InputAreas.jsx:79:5)
+    at <unknown> (./src/components/presentation/v2/PresentationLogsUi.jsx:61:5)
+    at <unknown> (./src/components/sheet/SheetChatArea.jsx:1112:11)
+    at <unknown> (./src/hooks/orchestrator/usePresentationOrchestrator.js:189:22)
+    at <unknown> (./src/hooks/presentation/useElementDeletion.ts:85:5)
+    at <unknown> (./src/hooks/presentation/useElementDuplication.ts:84:5)
+ ELIFECYCLE  Command failed with exit code 1.

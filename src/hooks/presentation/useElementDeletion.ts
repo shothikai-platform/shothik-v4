@@ -80,6 +80,7 @@ export function useElementDeletion(
       return false;
     }
 
+    console.log(
       "useElementDeletion: Attempting to delete element with path:",
       elementPath,
     );
@@ -89,6 +90,7 @@ export function useElementDeletion(
 
     // If element not found by path, try to find by ID if available
     if (!element && elementId) {
+      console.log(
         "useElementDeletion: Element not found by path, trying by ID:",
         elementId,
       );
@@ -97,6 +99,7 @@ export function useElementDeletion(
 
     // If still not found, try to find by class name with element-selected
     if (!element) {
+      console.log(
         "useElementDeletion: Element not found by ID, trying by selected class",
       );
       const selectedElements = doc.querySelectorAll(".element-selected");
@@ -124,6 +127,7 @@ export function useElementDeletion(
     setIsDeleting(true);
 
     try {
+      console.log({
         tagName: element.tagName,
         id: element.id,
         className: element.className,
@@ -162,6 +166,7 @@ export function useElementDeletion(
       const parent = element.parentElement;
       if (parent) {
         parent.removeChild(element);
+        console.log(
           "useElementDeletion: Element successfully removed from DOM",
         );
       } else {
