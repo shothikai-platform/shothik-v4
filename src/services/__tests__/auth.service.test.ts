@@ -1,133 +1,112 @@
-import axios from "axios";
-import AuthService from "../auth.service";
-import { jest } from "@jest/globals";
+import { vi, describe, it, expect, beforeEach } from 'vitest';
+import axios from 'axios';
+import AuthService from '../auth.service';
 
-// Mock axios calls
-jest.mock("axios");
+// Mock axios
+vi.mock('axios');
 
-// Suite of integration tests for AuthService
+describe('AuthService Integration Tests', () => {
+  let authService: AuthService;
 
-// Generic types for Axios Response
-interface AxiosResponse<T = any> {
-  data: T;
-  status: number;
-  statusText: string;
-  headers: any;
-  config: any;
-}
+  beforeEach(() => {
+    vi.clearAllMocks();
+    authService = new AuthService();
+  });
 
-// Setup and teardown
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
-afterEach(() => {
-  // For future cleanup tasks, if needed
-});
-
-describe("AuthService Integration Tests with prod-api.shothik.ai", () => {
-  test("Successful login with valid credentials", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { token: "mock-token" },
+  it('Successful login with valid credentials', async () => {
+    const mockResponse = {
+      data: { token: 'mock-token', success: true, message: 'Login successful' },
       status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as any).mockResolvedValueOnce(mockResponse);
 
-    // Call service function
-    const result = await AuthService.login("validUser", "validPass");
+    const result = await authService.login('validUser', 'validPass', 'email');
 
-    // Assert result
-    expect(result.token).toBe("mock-token");
+    expect(result.data.token).toBe('mock-token');
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining('/api/auth/login'),
+      { email: 'validUser', password: 'validPass', authtype: 'email' }
+    );
   });
 
-  test("Failed login with invalid credentials", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { error: "Invalid credentials" },
-      status: 401,
-      statusText: "Unauthorized",
-      headers: {},
-      config: {},
+  it('Failed login with invalid credentials', async () => {
+    const mockError = {
+      response: {
+        data: { error: 'Invalid credentials' },
+        status: 401,
+      },
     };
-    (axios.post as jest.Mock).mockRejectedValueOnce({ response: mockResponse });
+    (axios.post as any).mockRejectedValueOnce(mockError);
 
-    // Call service function & assert rejection
-    await expect(
-      AuthService.login("invalidUser", "invalidPass"),
-    ).rejects.toHaveProperty("response.data.error", "Invalid credentials");
+    await expect(authService.login('invalidUser', 'invalidPass', 'email')).rejects.toEqual(mockError);
   });
 
-  test("User registration", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { message: "User registered successfully" },
+  it('User registration', async () => {
+    const mockResponse = {
+      data: { message: 'User registered successfully', success: true },
       status: 201,
-      statusText: "Created",
-      headers: {},
-      config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as any).mockResolvedValueOnce(mockResponse);
 
-    // Call service function
-    const result = await AuthService.register(
-      "newUser",
-      "newPass",
-      "newUser@example.com",
+    const result = await authService.register(
+      'newUser',
+      'newUser@example.com',
+      'newPass',
+      'US',
+      'email'
     );
 
-    // Assert result
-    expect(result.message).toBe("User registered successfully");
+    expect(result.data.message).toBe('User registered successfully');
+    expect(axios.post).toHaveBeenCalledWith(
+        expect.stringContaining('/api/auth/register'),
+        { name: 'newUser', email: 'newUser@example.com', password: 'newPass', country: 'US', auth_type: 'email' }
+    );
   });
 
-  test("Google OAuth login", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { token: "google-mock-token" },
+  it('Google Login', async () => {
+    const mockResponse = {
+      data: { token: 'google-mock-token', success: true, message: 'Login successful' },
       status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as any).mockResolvedValueOnce(mockResponse);
 
-    // Call service function
-    const result = await AuthService.googleOAuth("google-auth-code");
+    const result = await authService.googleLogin('google-auth-code', 'US');
 
-    // Assert result
-    expect(result.token).toBe("google-mock-token");
+    expect(result.data.token).toBe('google-mock-token');
+    expect(axios.post).toHaveBeenCalledWith(
+        expect.stringContaining('/api/auth/google-login'),
+        { code: 'google-auth-code', country: 'US' }
+    );
   });
 
-  test("Forgot password functionality", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { message: "Password reset link sent" },
+  it('Forgot password functionality', async () => {
+    const mockResponse = {
+      data: { message: 'Password reset link sent', success: true },
       status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as any).mockResolvedValueOnce(mockResponse);
 
-    // Call service function
-    const result = await AuthService.forgotPassword("user@example.com");
+    const result = await authService.forgotPassword('user@example.com');
 
-    // Assert result
-    expect(result.message).toBe("Password reset link sent");
+    expect(result.data.message).toBe('Password reset link sent');
+    expect(axios.post).toHaveBeenCalledWith(
+        expect.stringContaining('/api/auth/forgot-password'),
+        { email: 'user@example.com' }
+    );
   });
 
-  test("Email verification", async () => {
-    const mockResponse: AxiosResponse = {
-      data: { message: "Email verified successfully" },
+  it('Email verification', async () => {
+    const mockResponse = {
+      data: { message: 'Email verified successfully', success: true },
       status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
     };
-    (axios.post as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axios.post as any).mockResolvedValueOnce(mockResponse);
 
-    // Call service function
-    const result = await AuthService.verifyEmail("verificationToken");
+    const result = await authService.verifyEmail('verificationToken');
 
-    // Assert result
-    expect(result.message).toBe("Email verified successfully");
+    expect(result.data.message).toBe('Email verified successfully');
+    expect(axios.post).toHaveBeenCalledWith(
+        expect.stringContaining('/api/auth/verify-email/verificationToken')
+    );
   });
 });
