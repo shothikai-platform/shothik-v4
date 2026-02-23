@@ -11,9 +11,11 @@ import {
 import { cn } from "@/lib/utils";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchProcessLogs from "./ResearchProcessLogs";
+
+const EMPTY_RESEARCHES = [];
 
 const ResearchStreamingShell = ({
   streamEvents = [],
@@ -43,7 +45,8 @@ const ResearchStreamingShell = ({
   };
 
   // Calculate dynamic counts based on streaming events
-  const getSourceCount = () => {
+  // Memoized to avoid O(N) iteration on every render (e.g. tab switch)
+  const sourceCount = useMemo(() => {
     let total = 0;
     streamEvents.forEach((event) => {
       if (event.data?.sources_gathered) {
@@ -54,9 +57,9 @@ const ResearchStreamingShell = ({
       }
     });
     return total;
-  };
+  }, [streamEvents]);
 
-  const getImageCount = () => {
+  const imageCount = useMemo(() => {
     const imageEvents = streamEvents.filter(
       (event) => event.step === "image_search" && event.data?.images_found > 0,
     );
@@ -64,10 +67,7 @@ const ResearchStreamingShell = ({
       (total, event) => total + (event.data?.images_found || 0),
       0,
     );
-  };
-
-  const sourceCount = getSourceCount();
-  const imageCount = getImageCount();
+  }, [streamEvents]);
 
   return (
     <div className="my-3 w-full pt-5 relative z-10 bg-background">
@@ -235,7 +235,7 @@ const ResearchStreamingShell = ({
       {streamEvents.length > 0 && (
         <ResearchProcessLogs
           streamEvents={streamEvents}
-          researches={[]}
+          researches={EMPTY_RESEARCHES}
           isStreaming={isStreaming}
         />
       )}
