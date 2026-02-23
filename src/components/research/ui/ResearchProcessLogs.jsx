@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -117,7 +118,7 @@ const ProcessTimelineItem = React.memo(({ ev, isLast, isActive }) => {
     badges.push(`${ev.data.images_found} images`);
 
   return (
-    <div className="relative flex gap-3 pb-4">
+    <li className="relative flex gap-3 pb-4">
       {/* Timeline Line */}
       <div className="flex flex-col items-center">
         <div
@@ -186,7 +187,7 @@ const ProcessTimelineItem = React.memo(({ ev, isLast, isActive }) => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </li>
   );
 });
 
@@ -222,7 +223,7 @@ const ResearchProcessLogs = ({
     "Research Process";
 
   return (
-    <div className="mb-3">
+    <div className="mb-3" aria-live="polite">
       {/* Header */}
       <Card className="mb-2 rounded border">
         <CardContent className="p-2">
@@ -270,11 +271,11 @@ const ResearchProcessLogs = ({
             </p>
 
             <div className="border-border max-h-40 overflow-auto rounded border p-1">
-              <div className="space-y-1">
+              <ul className="space-y-1 list-none p-0 m-0">
                 {uniqueSources.length === 0 && (
-                  <span className="text-muted-foreground text-xs">
+                  <li className="text-muted-foreground text-xs">
                     No sources found yet.
-                  </span>
+                  </li>
                 )}
 
                 {uniqueSources.slice(0, 8).map((s, i) => {
@@ -291,7 +292,7 @@ const ResearchProcessLogs = ({
                   })();
 
                   return (
-                    <div
+                    <li
                       key={i}
                       className="flex items-center justify-between gap-1"
                     >
@@ -300,9 +301,11 @@ const ResearchProcessLogs = ({
                           href={s.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[13px] font-medium no-underline hover:underline"
+                          className="text-[13px] font-medium no-underline hover:underline flex items-center gap-1"
+                          aria-label={`${title} (opens in a new tab)`}
                         >
                           {shortText(title, 60)}
+                          <ExternalLink className="size-3 opacity-50" aria-hidden="true" />
                         </a>
                       ) : (
                         <span className="text-[13px] font-medium">
@@ -313,23 +316,23 @@ const ResearchProcessLogs = ({
                       <span className="text-muted-foreground text-xs">
                         {domain}
                       </span>
-                    </div>
+                    </li>
                   );
                 })}
 
                 {uniqueSources.length > 8 && (
-                  <span className="text-muted-foreground text-xs">
+                  <li className="text-muted-foreground text-xs">
                     +{uniqueSources.length - 8} more...
-                  </span>
+                  </li>
                 )}
-              </div>
+              </ul>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Timeline */}
-      <div>
+      <ol className="list-none m-0 p-0" aria-label="Research progress">
         {streamEvents.map((ev, idx) => (
           <ProcessTimelineItem
             key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
@@ -338,7 +341,7 @@ const ResearchProcessLogs = ({
             isActive={idx === activeIndex}
           />
         ))}
-      </div>
+      </ol>
     </div>
   );
 };
