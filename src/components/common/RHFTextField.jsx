@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -64,10 +65,17 @@ export default function RHFTextField({
           }
         };
 
+        const descriptionId = `${name}-description`;
+        const hasError = !!error;
+        const hasDescription = !!(error || helperText);
+
         return (
           <div className="space-y-2">
             {label && (
-              <Label htmlFor={name} className={cn(error && "text-destructive")}>
+              <Label
+                htmlFor={name}
+                className={cn(hasError && "text-destructive")}
+              >
                 {label}
               </Label>
             )}
@@ -84,14 +92,17 @@ export default function RHFTextField({
                 onChange={handleChange}
                 type={type}
                 readOnly={readOnly}
+                aria-invalid={hasError}
+                aria-describedby={hasDescription ? descriptionId : undefined}
                 className={cn(
-                  error && "border-destructive focus-visible:ring-destructive",
+                  hasError &&
+                    "border-destructive focus-visible:ring-destructive",
                   !border && "border-none",
                   startAdornment && "!pl-[56px]",
                   endAdornment && "pr-10",
                   className,
                 )}
-                style={startAdornment ? { paddingLeft: '56px' } : undefined}
+                style={startAdornment ? { paddingLeft: "56px" } : undefined}
                 {...inputProps}
                 {...other}
               />
@@ -103,9 +114,11 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={descriptionId}
+                role={hasError ? "alert" : undefined}
                 className={cn(
                   "text-sm",
-                  error ? "text-destructive" : "text-muted-foreground",
+                  hasError ? "text-destructive" : "text-muted-foreground",
                 )}
               >
                 {error ? error.message : helperText}
