@@ -165,10 +165,12 @@ export default function URLAnalysis() {
             try {
               const update: StreamUpdate = JSON.parse(line);
               setCurrentStep(update.step);
-              setStatusMessage(update.data?.message || "Processing...");
+              setStatusMessage(
+                (update.data?.message as string) || "Processing...",
+              );
 
               if (update.step === "analysis_complete" && update.data?.data) {
-                setAnalysis(update.data.data);
+                setAnalysis(update.data.data as ProductAnalysis);
                 setUrl("");
                 setSearchQueries([]);
                 setCurrentStep("");
@@ -183,13 +185,15 @@ export default function URLAnalysis() {
 
               if (
                 update.step === "web_search_performed" &&
-                update.data?.data?.searches
+                (update.data?.data as any)?.searches
               ) {
-                setSearchQueries(update.data.data.searches);
+                setSearchQueries((update.data?.data as any).searches);
               }
 
               if (update.step.includes("error")) {
-                setError(update.data?.message || "An error occurred");
+                setError(
+                  (update.data?.message as string) || "An error occurred",
+                );
               }
             } catch (parseError) {
               console.error("Failed to parse stream data:", parseError);

@@ -92,12 +92,13 @@ const findSnippetInText = (
     const apiText = inputText.substring(apiStart, apiEnd);
     const similarity = calculateTextSimilarity(apiText, snippet);
     
-      apiStart,
-      apiEnd,
-      apiText: apiText.substring(0, 50),
-      snippet: snippet.substring(0, 50),
-      similarity,
-    });
+    // console.log({
+    //   apiStart,
+    //   apiEnd,
+    //   apiText: apiText.substring(0, 50),
+    //   snippet: snippet.substring(0, 50),
+    //   similarity,
+    // });
     
     // If similarity is reasonable (at least 60%), use API positions
     if (similarity >= 0.6) {
@@ -176,10 +177,11 @@ const findSnippetInText = (
     }
     
     if (bestMatch && bestMatch.similarity >= 0.7) {
-        similarity: bestMatch.similarity,
-        start: bestMatch.start,
-        end: bestMatch.end,
-      });
+      // console.log({
+      //   similarity: bestMatch.similarity,
+      //   start: bestMatch.start,
+      //   end: bestMatch.end,
+      // });
       return { start: bestMatch.start, end: bestMatch.end };
     }
   }
@@ -350,13 +352,14 @@ const PlagiarismInputEditor = ({
         const doc = editor.state.doc;
         const decorations = computeDocDecorations(doc, value, highlights);
         
-          highlightsCount: highlights.length,
-          decorationsCount: decorations.length,
-          valueLength: value.length,
-          docSize: doc.content.size,
-          highlights: highlights.slice(0, 3), // First 3 for debugging
-          decorations: decorations.slice(0, 3), // First 3 for debugging
-        });
+        // console.log({
+        //   highlightsCount: highlights.length,
+        //   decorationsCount: decorations.length,
+        //   valueLength: value.length,
+        //   docSize: doc.content.size,
+        //   highlights: highlights.slice(0, 3), // First 3 for debugging
+        //   decorations: decorations.slice(0, 3), // First 3 for debugging
+        // });
         
         // Set highlights
         editor.commands.setPlagiarismHighlights(decorations);

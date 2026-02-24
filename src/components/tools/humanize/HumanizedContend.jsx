@@ -140,8 +140,7 @@ const HumanizedContend = () => {
         setScores(
           entry.outputs.map((output) => output.aiPercentage || output.score),
         );
-        ( => output.aiPercentage)),
-          "RESTORED SCORES");
+        // console.log("RESTORED SCORES", scores);
         setShowIndex(0);
         setIsRestoredFromHistory(true);
 
@@ -211,6 +210,7 @@ const HumanizedContend = () => {
       };
 
       // Debug: Log the payload to verify model is correct
+      console.log({
         model: payload.model,
         modelState: model,
         level: payload.level,
@@ -232,6 +232,7 @@ const HumanizedContend = () => {
         const inputParagraphs = text
           .split(/\n\s*\n/)
           .filter((p) => p.trim().length > 0).length;
+        console.log({
           variationsCount: data.output.length,
           inputParagraphs: inputParagraphs,
           expectedBehavior:
@@ -248,6 +249,7 @@ const HumanizedContend = () => {
             .split(/\n\s*\n/)
             .filter((p) => p.trim().length > 0).length;
           if (outputParagraphs >= inputParagraphs) {
+            console.log(
               "✅ [Multi-Paragraph Fix] Verified: First variation contains all input paragraphs",
             );
           } else {
@@ -372,6 +374,7 @@ const HumanizedContend = () => {
 
     if (shouldAutoTrigger) {
       // Debug: Log the change
+      console.log({
         previousModel: prevSettingsRef.current.model,
         newModel: model,
         previousLevel: prevSettingsRef.current.currentLength,
@@ -392,6 +395,7 @@ const HumanizedContend = () => {
       }, 100);
     } else if (modelChanged) {
       // Debug: Log when model changes
+      console.log({
         model,
         userPackage: user?.package,
       });
