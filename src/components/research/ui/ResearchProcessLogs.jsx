@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
 
 /**
  * Timeline UI with clickable sources and a "shine" animation on the last message title.
@@ -300,9 +301,11 @@ const ResearchProcessLogs = ({
                           href={s.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[13px] font-medium no-underline hover:underline"
+                          className="flex items-center gap-1 text-[13px] font-medium no-underline hover:underline"
+                          aria-label={`${title} (opens in new tab)`}
                         >
                           {shortText(title, 60)}
+                          <ExternalLink className="h-3 w-3" />
                         </a>
                       ) : (
                         <span className="text-[13px] font-medium">
@@ -329,16 +332,17 @@ const ResearchProcessLogs = ({
       </Card>
 
       {/* Timeline */}
-      <div>
+      <ol className="list-none p-0 m-0">
         {streamEvents.map((ev, idx) => (
-          <ProcessTimelineItem
-            key={`${ev.step}-${ev.timestamp || idx}-${idx}`}
-            ev={ev}
-            isLast={idx === streamEvents.length - 1}
-            isActive={idx === activeIndex}
-          />
+          <li key={`${ev.step}-${ev.timestamp || idx}-${idx}`}>
+            <ProcessTimelineItem
+              ev={ev}
+              isLast={idx === streamEvents.length - 1}
+              isActive={idx === activeIndex}
+            />
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   );
 };
