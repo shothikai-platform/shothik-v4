@@ -1,3 +1,4 @@
+import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ export default function RHFTextField({
       render={({ field, fieldState: { error } }) => {
         // Normalize value so Input never gets undefined
         const valueForInput = field.value ?? "";
+        const descriptionId = `${name}-description`;
 
         const callerOnChange = inputProps.onChange;
 
@@ -84,6 +86,8 @@ export default function RHFTextField({
                 onChange={handleChange}
                 type={type}
                 readOnly={readOnly}
+                aria-describedby={descriptionId}
+                aria-invalid={!!error}
                 className={cn(
                   error && "border-destructive focus-visible:ring-destructive",
                   !border && "border-none",
@@ -103,6 +107,8 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={descriptionId}
+                role={error ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
