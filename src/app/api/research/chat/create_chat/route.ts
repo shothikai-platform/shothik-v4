@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
         await dbConnect();
 
-        const newChat = await ResearchChat.create({
+        const newChat = await (ResearchChat as any).create({
             userId: user._id || user.id,
             name: name || 'New Research',
             messages: []

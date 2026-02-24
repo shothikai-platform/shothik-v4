@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         await dbConnect();
 
         // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        const chat = await (ResearchChat as any).findById(chatId);
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
                     // In a real app, a background job does this.
                     // For now, we'll just try to update.
 
-                    await ResearchChat.findByIdAndUpdate(chatId, {
+                    await (ResearchChat as any).findByIdAndUpdate(chatId, {
                         $push: {
                             messages: {
                                 role: 'assistant',

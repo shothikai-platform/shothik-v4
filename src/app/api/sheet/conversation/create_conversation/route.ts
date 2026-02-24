@@ -12,12 +12,12 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                session = await (SheetSession as any).findById(chatId);
             } catch (e) { }
         }
 
         if (!session) {
-            session = await SheetSession.create({
+            session = await (SheetSession as any).create({
                 userId: 'temp-user',
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
