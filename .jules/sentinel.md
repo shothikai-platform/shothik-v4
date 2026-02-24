@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Recurring IDOR Pattern in API Routes]
+**Vulnerability:** Insecure Direct Object Reference (IDOR) in multiple Research API endpoints allowing unauthorized access/modification of other users' data.
+**Learning:** The application lacks a centralized authorization middleware for the `/api` directory, leading to developers frequently forgetting to implement manual ownership checks in new route handlers.
+**Prevention:** Every API route handling user-specific data must explicitly verify authentication via `getAuthenticatedUser()` and scope all database operations using the user's ID.
