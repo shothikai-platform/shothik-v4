@@ -778,6 +778,7 @@ export default function SheetChatArea({
 
             // Check for validation error first
             if (data?.data?.error) {
+              console.log(
                 "Validation error detected, removing user message and showing toast",
               );
 
@@ -1107,6 +1108,7 @@ export default function SheetChatArea({
       if (error.name === "AbortError") {
         // Check if this was a navigation abort (user left the chat but backend is still processing)
         if (isNavigationAbortRef.current) {
+          console.log(
             "SSE aborted due to navigation - backend still processing",
           );
           isNavigationAbortRef.current = false; // Reset flag

@@ -33,10 +33,11 @@ const TopNavigation = ({
 
   const handleTabClick = (tab) => {
     // Raven is now available to all users (lock removed)
-      previousModel: model,
-      newModel: tab,
-      userPackage,
-    });
+    // console.log({
+    //   previousModel: model,
+    //   newModel: tab,
+    //   userPackage,
+    // });
     setShalowAlert(false);
     setModel(tab);
   };

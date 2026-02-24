@@ -25,9 +25,10 @@ export default function GPTHistoryTab({
   refetchHistory,
   handleHistorySelect,
 }) {
-    "GPTHistoryTab received handleHistorySelect:",
-    typeof handleHistorySelect,
-  );
+  // console.log(
+  //   "GPTHistoryTab received handleHistorySelect:",
+  //   typeof handleHistorySelect,
+  // );
   const [expandedEntries, setExpandedEntries] = useState({});
   const [expandedGroups, setExpandedGroups] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
