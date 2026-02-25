@@ -1,3 +1,4 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,8 @@ export default function RHFTextField({
         const valueForInput = field.value ?? "";
 
         const callerOnChange = inputProps.onChange;
+        const descriptionId =
+          error || helperText ? `${name}-description` : undefined;
 
         const handleChange = (e) => {
           let raw = e?.target?.value;
@@ -80,6 +83,8 @@ export default function RHFTextField({
               <Input
                 {...field}
                 id={name}
+                aria-describedby={descriptionId}
+                aria-invalid={!!error}
                 value={valueForInput}
                 onChange={handleChange}
                 type={type}
@@ -91,7 +96,7 @@ export default function RHFTextField({
                   endAdornment && "pr-10",
                   className,
                 )}
-                style={startAdornment ? { paddingLeft: '56px' } : undefined}
+                style={startAdornment ? { paddingLeft: "56px" } : undefined}
                 {...inputProps}
                 {...other}
               />
@@ -103,6 +108,8 @@ export default function RHFTextField({
             </div>
             {(error || helperText) && (
               <p
+                id={descriptionId}
+                role={error ? "alert" : undefined}
                 className={cn(
                   "text-sm",
                   error ? "text-destructive" : "text-muted-foreground",
