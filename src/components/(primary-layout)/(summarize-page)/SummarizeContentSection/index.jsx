@@ -488,6 +488,7 @@ const SummarizeContentSection = () => {
 
               if (response.ok) {
                 const result = await response.json();
+                console.log(
                   "✅ Keyword API response from",
                   endpoint,
                   ":",
@@ -548,9 +549,11 @@ const SummarizeContentSection = () => {
 
   // Fetch keywords when text changes
   useEffect(() => {
+    console.log(
       "📄 debouncedPlainText:",
       debouncedPlainText?.substring(0, 50) + "...",
     );
+    console.log(
       "📏 debouncedPlainText length:",
       debouncedPlainText?.length || 0,
     );
@@ -558,11 +561,13 @@ const SummarizeContentSection = () => {
     const trimmedText = debouncedPlainText?.trim() || "";
 
     if (trimmedText.length > 10) {
+      console.log(
         "✅ Triggering keyword fetch for text length:",
         trimmedText.length,
       );
       fetchKeywords({ text: trimmedText });
     } else {
+      console.log(
         "⚠️ Text too short for keywords, clearing. Length:",
         trimmedText.length,
       );
