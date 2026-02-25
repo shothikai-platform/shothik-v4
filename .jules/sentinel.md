@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Middleware Limitations and Explicit API Protection]
+**Vulnerability:** Missing authentication and IDOR in Sheet API routes (`get_my_chats`, `create_conversation`).
+**Learning:** `middleware.ts` in Next.js projects often only protects page routes (UI). API routes require explicit authentication (`getAuthenticatedUser`) and authorization (ownership checks) within each handler. Hardcoded user IDs (e.g., `'temp-user'`) should be eliminated during security hardening.
+**Prevention:** Implement a standard "check-auth-then-verify-ownership" pattern at the start of every API route handler that accesses user-specific data.
