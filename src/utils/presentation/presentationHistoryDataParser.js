@@ -705,11 +705,12 @@ export const parseHistoryData = (historyResponse) => {
       parsedState.totalSlides = extractedMetadata.totalSlides;
     }
 
-      logsCount: parsedLogs.length,
-      slidesCount: parsedSlides.length,
-      status: parsedState.status,
-      title: parsedState.title,
-    });
+    // console.log({
+    //   logsCount: parsedLogs.length,
+    //   slidesCount: parsedSlides.length,
+    //   status: parsedState.status,
+    //   title: parsedState.title,
+    // });
 
     return parsedState;
   } catch (error) {
