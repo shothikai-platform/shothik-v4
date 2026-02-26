@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - File Input Accessibility
+**Learning:** Hidden file inputs inside labels are keyboard accessible (tab stops) but invisible (opacity-0).
+**Action:** Always add `focus-within` styles (e.g., `focus-within:ring-2`) to the wrapping label so the focus ring appears when the hidden input receives focus.
