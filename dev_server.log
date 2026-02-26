@@ -1,0 +1,78 @@
+
+> shothik-v3@0.1.0 dev
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1614ms
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ○ Compiling /summarize ...
+ ⨯ ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx:495:17
+Parsing ecmascript source code failed
+[0m [90m 493 |[39m                   [32m":"[39m[33m,[39m
+ [90m 494 |[39m                   result[33m,[39m
+[31m[1m>[22m[39m[90m 495 |[39m                 )[33m;[39m
+ [90m     |[39m                 [31m[1m^[22m[39m
+ [90m 496 |[39m
+ [90m 497 |[39m                 [90m// Handle different response structures[39m
+ [90m 498 |[39m                 [36mlet[39m keywordsData [33m=[39m [][33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx
+    ./src/app/(primary-layout)/summarize/page.jsx
+
+
+ GET /summarize 500 in 18.9s (compile: 18.6s, render: 354ms)
+ ⨯ ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx:495:17
+Parsing ecmascript source code failed
+[0m [90m 493 |[39m                   [32m":"[39m[33m,[39m
+ [90m 494 |[39m                   result[33m,[39m
+[31m[1m>[22m[39m[90m 495 |[39m                 )[33m;[39m
+ [90m     |[39m                 [31m[1m^[22m[39m
+ [90m 496 |[39m
+ [90m 497 |[39m                 [90m// Handle different response structures[39m
+ [90m 498 |[39m                 [36mlet[39m keywordsData [33m=[39m [][33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx
+    ./src/app/(primary-layout)/summarize/page.jsx
+
+
+ GET /summarize 500 in 76ms (compile: 50ms, render: 26ms)
+ ⨯ ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx:495:17
+Parsing ecmascript source code failed
+[0m [90m 493 |[39m                   [32m":"[39m[33m,[39m
+ [90m 494 |[39m                   result[33m,[39m
+[31m[1m>[22m[39m[90m 495 |[39m                 )[33m;[39m
+ [90m     |[39m                 [31m[1m^[22m[39m
+ [90m 496 |[39m
+ [90m 497 |[39m                 [90m// Handle different response structures[39m
+ [90m 498 |[39m                 [36mlet[39m keywordsData [33m=[39m [][33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(summarize-page)/SummarizeContentSection/index.jsx
+    ./src/app/(primary-layout)/summarize/page.jsx
+
+
+ GET /summarize 500 in 28ms (compile: 17ms, render: 11ms)
+ ✓ Compiled in 7s
+ GET /summarize 200 in 5.7s (compile: 2.6s, render: 3.1s)
