@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-26 - [Mocking NextResponse in Vitest]
+**Vulnerability:** N/A (Testing challenge)
+**Learning:** When an API route uses both `NextResponse.json()` and `new NextResponse(stream)`, mocking `NextResponse` requires a hybrid approach. A simple `vi.fn()` or object mock will fail either the constructor call or the static method call.
+**Prevention:** Use a function as the mock and manually attach the static `json` method to it. This ensures it can be used both as a constructor and as a utility class.
