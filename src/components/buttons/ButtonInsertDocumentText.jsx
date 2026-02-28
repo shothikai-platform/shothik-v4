@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -104,7 +103,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
         <label
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
-            "relative shrink-0 cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+            "relative shrink-0 cursor-pointer",
             isProcessing && "pointer-events-none opacity-50",
             className,
           )}
