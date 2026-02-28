@@ -1,0 +1,185 @@
+
+> shothik-v3@0.1.0 dev
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1536ms
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ○ Compiling /grammar-checker ...
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:424:11
+Parsing ecmascript source code failed
+[0m [90m 422 |[39m           [90m// User is typing after initial mount - reset skipCheckRef to allow checking[39m
+ [90m 423 |[39m             [32m"[Editor Update] User typing detected, resetting skipCheckRef"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 424 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 425 |[39m           skipCheckRef[33m.[39mcurrent [33m=[39m [36mfalse[39m[33m;[39m
+ [90m 426 |[39m           isFromEditorUpdateRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 427 |[39m           hasUserInputRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 14.1s (compile: 14.0s, render: 184ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:499:7
+Parsing ecmascript source code failed
+[0m [90m 497 |[39m         [32m"[Text Sync] Syncing Redux text to editor:"[39m[33m,[39m
+ [90m 498 |[39m         stateText[33m.[39msubstring([35m0[39m[33m,[39m [35m50[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 499 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 500 |[39m       skipCheckRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 501 |[39m       isClearingEditorRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 502 |[39m       [90m// Use setContent with emitUpdate: false to prevent triggering onUpdate during sync[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 47ms (compile: 34ms, render: 13ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:515:7
+Parsing ecmascript source code failed
+[0m [90m 513 |[39m       [90m// Also clear issues if text is empty[39m
+ [90m 514 |[39m         [32m"[Text Sync] Clearing editor and issues - Redux text is empty"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 515 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 516 |[39m       isClearingEditorRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 517 |[39m       editor[33m.[39mcommands[33m.[39mclearContent()[33m;[39m
+ [90m 518 |[39m       lastDispatchedTextRef[33m.[39mcurrent [33m=[39m [32m""[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 45ms (compile: 32ms, render: 13ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:552:11
+Parsing ecmascript source code failed
+[0m [90m 550 |[39m
+ [90m 551 |[39m             [32m"[Initial Mount] Clearing all state on mount/reload (delayed)"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 552 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 553 |[39m
+ [90m 554 |[39m           dispatch(setText([32m""[39m))[33m;[39m
+ [90m 555 |[39m           dispatch(setIssues([]))[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 44ms (compile: 33ms, render: 11ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:638:7
+Parsing ecmascript source code failed
+[0m [90m 636 |[39m     [36mif[39m (currentSectionId) {
+ [90m 637 |[39m         [32m"[Initial Mount] Removing sectionId from URL to prevent auto-load"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 638 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 639 |[39m       setTimeout(() [33m=>[39m {
+ [90m 640 |[39m         [36mtry[39m {
+ [90m 641 |[39m           [36mconst[39m params [33m=[39m [36mnew[39m [33mURLSearchParams[39m(window[33m.[39mlocation[33m.[39msearch)[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 42ms (compile: 32ms, render: 11ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:658:26
+Parsing ecmascript source code failed
+[0m [90m 656 |[39m
+ [90m 657 |[39m       debouncedText[33m:[39m debouncedText[33m?[39m[33m.[39msubstring([35m0[39m[33m,[39m [35m50[39m) [33m||[39m [32m"(empty)"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 658 |[39m       debouncedTextLength[33m:[39m debouncedText[33m?[39m[33m.[39mlength [33m||[39m [35m0[39m[33m,[39m
+ [90m     |[39m                          [31m[1m^[22m[39m
+ [90m 659 |[39m       preparedTextLength[33m:[39m preparedText[33m.[39mlength[33m,[39m
+ [90m 660 |[39m       hasUserInput[33m:[39m hasUserInputRef[33m.[39mcurrent[33m,[39m
+ [90m 661 |[39m       isFromEditor[33m:[39m isFromEditorUpdateRef[33m.[39mcurrent[33m,[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 43ms (compile: 33ms, render: 9ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:658:26
+Parsing ecmascript source code failed
+[0m [90m 656 |[39m
+ [90m 657 |[39m       debouncedText[33m:[39m debouncedText[33m?[39m[33m.[39msubstring([35m0[39m[33m,[39m [35m50[39m) [33m||[39m [32m"(empty)"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 658 |[39m       debouncedTextLength[33m:[39m debouncedText[33m?[39m[33m.[39mlength [33m||[39m [35m0[39m[33m,[39m
+ [90m     |[39m                          [31m[1m^[22m[39m
+ [90m 659 |[39m       preparedTextLength[33m:[39m preparedText[33m.[39mlength[33m,[39m
+ [90m 660 |[39m       hasUserInput[33m:[39m hasUserInputRef[33m.[39mcurrent[33m,[39m
+ [90m 661 |[39m       isFromEditor[33m:[39m isFromEditorUpdateRef[33m.[39mcurrent[33m,[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 39ms (compile: 29ms, render: 10ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:688:7
+Parsing ecmascript source code failed
+[0m [90m 686 |[39m     [36mif[39m (skipCheckRef[33m.[39mcurrent) {
+ [90m 687 |[39m         [32m"[Grammar Check] Skipped - skipCheckRef is true (programmatic update/section load)"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 688 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 689 |[39m       [36mreturn[39m[33m;[39m
+ [90m 690 |[39m     }
+ [90m 691 |[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 43ms (compile: 33ms, render: 10ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:424:11
+Parsing ecmascript source code failed
+[0m [90m 422 |[39m           [90m// User is typing after initial mount - reset skipCheckRef to allow checking[39m
+ [90m 423 |[39m             [32m"[Editor Update] User typing detected, resetting skipCheckRef"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 424 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 425 |[39m           skipCheckRef[33m.[39mcurrent [33m=[39m [36mfalse[39m[33m;[39m
+ [90m 426 |[39m           isFromEditorUpdateRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 427 |[39m           hasUserInputRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 44ms (compile: 32ms, render: 12ms)

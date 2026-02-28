@@ -688,8 +688,8 @@ const GrammarCheckerContentSection = () => {
     // 2. User has actually typed/pasted (hasUserInputRef is true)
     // 3. Text change came from editor update (isFromEditorUpdateRef is true)
     if (skipCheckRef.current) {
-        "[Grammar Check] Skipped - skipCheckRef is true (programmatic update/section load)",
-      );
+      console.log("[Grammar Check] Skipped - skipCheckRef is true (programmatic update/section load)");
+;
       return;
     }
 

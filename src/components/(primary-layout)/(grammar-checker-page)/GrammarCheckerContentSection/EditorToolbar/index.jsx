@@ -61,6 +61,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("bold"),
         })}
         title="Bold"
+        aria-label="Bold"
       >
         <Bold className="size-4" />
       </button>
@@ -75,6 +76,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("italic"),
         })}
         title="Italic"
+        aria-label="Italic"
       >
         <Italic className="size-4" />
       </button>
@@ -89,6 +91,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("strike"),
         })}
         title="Strike"
+        aria-label="Strike"
       >
         <Underline className="size-4" />
       </button>
@@ -110,6 +113,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: isBulletListActive,
         })}
         title="Bullet List"
+        aria-label="Bullet List"
       >
         <List className="size-4" />
       </button>
@@ -129,6 +133,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: isOrderedListActive,
         })}
         title="Numbered List"
+        aria-label="Numbered List"
       >
         <List className="size-4" />
       </button>
@@ -170,6 +175,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           "cursor-not-allowed opacity-50": !editor || !canUndo,
         })}
         title="Undo"
+        aria-label="Undo"
       >
         <Undo2 className="size-4" />
       </button>
@@ -214,6 +220,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           "cursor-not-allowed opacity-50": !editor || !canRedo,
         })}
         title="Redo"
+        aria-label="Redo"
       >
         <Redo2 className="size-4" />
       </button>
