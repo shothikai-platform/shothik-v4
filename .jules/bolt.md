@@ -5,3 +5,6 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+## 2026-01-23 - Performance Optimization with .lean()
+**Learning:** Missing `.lean()` in Mongoose list endpoints fetches unnecessary full Mongoose documents, which wastes memory and slows down JSON serialization.
+**Action:** Audit all `find()` queries in list endpoints to ensure they use `.lean()` if only read operations are performed.
