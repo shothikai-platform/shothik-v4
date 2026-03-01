@@ -1,9 +1,4 @@
-## 2025-05-22 - [DoS Prevention via Input Validation]
-**Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
-**Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
-**Prevention:** Use Pydantic `Field` constraints to enforce strict length and range limits on all user-controlled inputs at the API gateway/routing layer.
-
-## 2025-02-26 - [IDOR in Research Chat API]
-**Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
-**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
-**Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2025-03-01 - Prevent IDOR in SheetSession get_my_chats
+**Vulnerability:** The `get_my_chats` endpoint in `src/app/api/sheet/chat/get_my_chats/route.ts` suffered from a severe Broken Access Control (IDOR) data leak, exposing all sheet sessions across the entire database to any unauthenticated user via a simple `SheetSession.find({})` call.
+**Learning:** Endpoints returning collections of user data frequently lack basic ownership boundary checks when developers omit the `userId` filter condition. Mongoose `find({})` is often a strong indicator of this.
+**Prevention:** Every API handler fetching records MUST verify user identity using `getAuthenticatedUser()` and securely apply that ID to the query parameters (e.g., `find({ userId: user._id })`) to strictly bound data access.
