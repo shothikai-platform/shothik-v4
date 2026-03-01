@@ -1,7 +1,3 @@
-## 2025-02-18 - Tooltip & ARIA on Icon-Only Buttons
-**Learning:** Icon-only buttons (like Copy/Download) are inaccessible without `aria-label` and confusing without Tooltips. Adding them is a high-impact, low-risk win.
-**Action:** Always wrap icon-only buttons in `Tooltip` and sync `aria-label` with the tooltip text (including state changes like "Copied!").
-
-## 2025-02-18 - Tooltips on Disabled Buttons
-**Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
-**Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2024-05-14 - Add ARIA Labels and Focus Rings to ActionToolbar Buttons
+**Learning:** Icon-only buttons used throughout the editor features, specifically in the grammar checker's `ActionToolbar` component, were relying on just the `title` attribute for screen reader description and lacked clear focus indicators. Adding explicit `aria-label` attributes improves assistive technology support, while `focus-visible:ring-2` provides the necessary visual feedback for keyboard users navigating through actions without confusing mouse users. Test files for React components must also include `import React from 'react';` to run successfully in the vitest environment.
+**Action:** When creating or modifying toolbars with icon-only actions, ensure both `title` and `aria-label` are present for complete accessibility coverage, and utilize `focus-visible` utility classes to style keyboard focus states. Remember to import React explicitly in new vitest tests.

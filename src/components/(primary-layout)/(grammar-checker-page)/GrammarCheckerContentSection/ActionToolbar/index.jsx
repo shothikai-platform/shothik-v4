@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Copy, Trash2 } from "lucide-react";
 
 // Utility to count words and sentences
@@ -23,16 +24,18 @@ const ActionToolbar = ({ text, handleCopy, handleClear }) => {
 
       <button
         onClick={handleClear}
-        className="hover:bg-muted flex size-8 items-center justify-center rounded"
+        className="hover:bg-muted focus-visible:ring-ring flex size-8 items-center justify-center rounded focus-visible:outline-none focus-visible:ring-2"
         title="Delete"
+        aria-label="Delete"
       >
         <Trash2 className="size-4" />
       </button>
 
       <button
         onClick={handleCopy}
-        className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
+        className="hover:bg-muted focus-visible:ring-ring hidden size-8 items-center justify-center rounded focus-visible:outline-none focus-visible:ring-2 lg:flex"
         title="Copy"
+        aria-label="Copy"
       >
         <Copy className="size-4" />
       </button>
