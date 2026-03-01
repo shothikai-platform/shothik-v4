@@ -19,7 +19,13 @@ const CopyButton = ({ text }) => {
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={handleCopy}>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleCopy}
+      aria-label={showCopy ? "Copy URL to clipboard" : "Copied"}
+      title={showCopy ? "Copy URL" : "Copied"}
+    >
       {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
     </Button>
   );
