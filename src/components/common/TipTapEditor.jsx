@@ -10,7 +10,6 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import React from "react";
 import {
   Bold as BoldIcon,
   Italic as ItalicIcon,
@@ -58,8 +57,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBold()}
           className="h-8 w-8"
-          aria-label="Bold"
-          title="Bold"
         >
           <BoldIcon className="h-4 w-4" />
         </Button>
@@ -71,8 +68,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleItalic()}
           className="h-8 w-8"
-          aria-label="Italic"
-          title="Italic"
         >
           <ItalicIcon className="h-4 w-4" />
         </Button>
@@ -84,8 +79,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleUnderline()}
           className="h-8 w-8"
-          aria-label="Underline"
-          title="Underline"
         >
           <UnderlineIcon className="h-4 w-4" />
         </Button>
@@ -97,8 +90,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setParagraph({ level: 1 })}
           className="h-8 w-8 text-xs font-semibold"
-          aria-label="Paragraph"
-          title="Paragraph"
         >
           P
         </Button>
@@ -110,8 +101,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 2 })}
           className="h-8 w-8 text-xs font-semibold"
-          aria-label="Heading 2"
-          title="Heading 2"
         >
           H2
         </Button>
@@ -123,8 +112,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 3 })}
           className="h-8 w-8 text-xs font-semibold"
-          aria-label="Heading 3"
-          title="Heading 3"
         >
           H3
         </Button>
@@ -136,8 +123,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 4 })}
           className="h-8 w-8 text-xs font-semibold"
-          aria-label="Heading 4"
-          title="Heading 4"
         >
           H4
         </Button>
@@ -149,8 +134,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleOrderedList()}
           className="h-8 w-8"
-          aria-label="Ordered List"
-          title="Ordered List"
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
@@ -162,8 +145,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBulletList()}
           className="h-8 w-8"
-          aria-label="Bullet List"
-          title="Bullet List"
         >
           <List className="h-4 w-4" />
         </Button>
@@ -175,8 +156,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBlockquote()}
           className="h-8 w-8"
-          aria-label="Blockquote"
-          title="Blockquote"
         >
           <Quote className="h-4 w-4" />
         </Button>
@@ -188,8 +167,6 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHorizontalRule()}
           className="h-8 w-8"
-          aria-label="Horizontal Rule"
-          title="Horizontal Rule"
         >
           <Minus className="h-4 w-4" />
         </Button>
