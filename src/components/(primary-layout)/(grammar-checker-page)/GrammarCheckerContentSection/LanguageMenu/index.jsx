@@ -18,9 +18,10 @@ const LanguageMenu = ({ language, setLanguage, isLoading }) => {
   return (
     <div className="flex items-center">
       <button
-        className="flex items-center gap-2 px-4 py-2"
+        className="flex items-center gap-2 px-4 py-2 focus-visible:ring-2"
         onClick={handleOpen}
         disabled={isLoading}
+        aria-label="Select language"
       >
         <span>{language}</span>
         {showMenu ? (

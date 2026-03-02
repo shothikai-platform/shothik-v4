@@ -49,7 +49,9 @@ const GrammarIssueCard = ({
                 e.stopPropagation();
                 handleAccept(issue);
               }}
-              className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
+              className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10 focus-visible:ring-2"
+              aria-label="Accept issue"
+              title="Accept issue"
             >
               <Check className="size-4" />
             </button>
@@ -58,7 +60,9 @@ const GrammarIssueCard = ({
                 e.stopPropagation();
                 handleIgnore(issue);
               }}
-              className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
+              className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors focus-visible:ring-2"
+              aria-label="Ignore issue"
+              title="Ignore issue"
             >
               <Trash2 className="size-4" />
             </button>
