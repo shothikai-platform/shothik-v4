@@ -80,6 +80,6 @@ describe('GET /api/research/chat/get_my_chats', () => {
     expect(mockSort).toHaveBeenCalledWith({ updatedAt: -1 });
 
     // Verify lean is called
-    expect(mockLean).toHaveBeenCalled();
+    expect(mockLean).toHaveBeenCalledWith({ virtuals: true });
   });
 });
