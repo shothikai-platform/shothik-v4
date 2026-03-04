@@ -24,7 +24,9 @@ vi.mock('@/models/ResearchChat', () => {
   return {
     default: {
       findById: mockFindById,
-      findOne: mockFindOne,
+      findOne: vi.fn(() => ({
+        lean: mockFindOne
+      })),
     },
   };
 });
