@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { cn } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
 
@@ -50,6 +51,8 @@ const GrammarIssueCard = ({
                 handleAccept(issue);
               }}
               className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
+              title="Accept suggestion"
+              aria-label="Accept suggestion"
             >
               <Check className="size-4" />
             </button>
@@ -59,6 +62,8 @@ const GrammarIssueCard = ({
                 handleIgnore(issue);
               }}
               className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
+              title="Ignore suggestion"
+              aria-label="Ignore suggestion"
             >
               <Trash2 className="size-4" />
             </button>
