@@ -16,7 +16,9 @@ export async function GET(
         const { id } = await params;
         await dbConnect();
 
-        const chat = await ResearchChat.findOne({ _id: id, userId: user._id || user.id });
+        // Optimization: Use .lean({ virtuals: true }) to return plain JS objects instead of Mongoose documents
+        // Using virtuals: true ensures we don't break frontend relying on 'id' instead of '_id'
+        const chat = await ResearchChat.findOne({ _id: id, userId: user._id || user.id }).lean({ virtuals: true });
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
