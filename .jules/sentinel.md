@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-26 - [Missing Tenant Isolation in Sheet Session API]
+**Vulnerability:** `get_my_chats` endpoint for SheetSession returned all chats for all users because it used `SheetSession.find({})` and lacked authentication checks.
+**Learning:** List endpoints must be authenticated and queries must be scoped to the authenticated user's ID to prevent cross-tenant data leakage.
+**Prevention:** Always verify `getAuthenticatedUser()` and enforce query scopes like `find({ userId: user._id })` for resource listing endpoints.
