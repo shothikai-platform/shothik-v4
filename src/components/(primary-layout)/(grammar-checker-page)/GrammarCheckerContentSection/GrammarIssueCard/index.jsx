@@ -50,6 +50,7 @@ const GrammarIssueCard = ({
                 handleAccept(issue);
               }}
               className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
+              aria-label="Accept suggestion"
             >
               <Check className="size-4" />
             </button>
@@ -59,6 +60,7 @@ const GrammarIssueCard = ({
                 handleIgnore(issue);
               }}
               className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
+              aria-label="Ignore suggestion"
             >
               <Trash2 className="size-4" />
             </button>
@@ -94,6 +96,7 @@ const GrammarIssueCard = ({
               e.stopPropagation();
               handleAccept(issue);
             }}
+            aria-label={`Accept suggestion to use ${correct}`}
           >
             <Check className="size-4" />
             <span>Accept</span>
@@ -104,6 +107,7 @@ const GrammarIssueCard = ({
               e.stopPropagation();
               handleIgnore(issue);
             }}
+            aria-label="Ignore suggestion"
           >
             <Trash2 className="size-4" />
             <span>Ignore</span>

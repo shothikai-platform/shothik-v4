@@ -1,0 +1,133 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1674ms
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ○ Compiling /grammar-checker ...
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:424:11
+Parsing ecmascript source code failed
+[0m [90m 422 |[39m           [90m// User is typing after initial mount - reset skipCheckRef to allow checking[39m
+ [90m 423 |[39m             [32m"[Editor Update] User typing detected, resetting skipCheckRef"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 424 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 425 |[39m           skipCheckRef[33m.[39mcurrent [33m=[39m [36mfalse[39m[33m;[39m
+ [90m 426 |[39m           isFromEditorUpdateRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 427 |[39m           hasUserInputRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET / 200 in 14.7s (compile: 12.8s, render: 1906ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:500:7
+Parsing ecmascript source code failed
+[0m [90m 498 |[39m         [32m"[Text Sync] Syncing Redux text to editor:"[39m[33m,[39m
+ [90m 499 |[39m         stateText[33m.[39msubstring([35m0[39m[33m,[39m [35m50[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 500 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 501 |[39m       skipCheckRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 502 |[39m       isClearingEditorRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 503 |[39m       [90m// Use setContent with emitUpdate: false to prevent triggering onUpdate during sync[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 44ms (compile: 29ms, render: 15ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:500:7
+Parsing ecmascript source code failed
+[0m [90m 498 |[39m         [32m"[Text Sync] Syncing Redux text to editor:"[39m[33m,[39m
+ [90m 499 |[39m         stateText[33m.[39msubstring([35m0[39m[33m,[39m [35m50[39m)[33m,[39m
+[31m[1m>[22m[39m[90m 500 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 501 |[39m       skipCheckRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 502 |[39m       isClearingEditorRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 503 |[39m       [90m// Use setContent with emitUpdate: false to prevent triggering onUpdate during sync[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 41ms (compile: 28ms, render: 13ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:518:7
+Parsing ecmascript source code failed
+[0m [90m 516 |[39m       [90m// Also clear issues if text is empty[39m
+ [90m 517 |[39m         [32m"[Text Sync] Clearing editor and issues - Redux text is empty"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 518 |[39m       )[33m;[39m
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 519 |[39m       isClearingEditorRef[33m.[39mcurrent [33m=[39m [36mtrue[39m[33m;[39m
+ [90m 520 |[39m       editor[33m.[39mcommands[33m.[39mclearContent()[33m;[39m
+ [90m 521 |[39m       lastDispatchedTextRef[33m.[39mcurrent [33m=[39m [32m""[39m[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 65ms (compile: 51ms, render: 14ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:556:11
+Parsing ecmascript source code failed
+[0m [90m 554 |[39m
+ [90m 555 |[39m             [32m"[Initial Mount] Clearing all state on mount/reload (delayed)"[39m[33m,[39m
+[31m[1m>[22m[39m[90m 556 |[39m           )[33m;[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 557 |[39m
+ [90m 558 |[39m           dispatch(setText([32m""[39m))[33m;[39m
+ [90m 559 |[39m           dispatch(setIssues([]))[33m;[39m[0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 46ms (compile: 33ms, render: 13ms)
+ ⨯ ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx:290:3
+Parsing ecmascript source code failed
+[0m [90m 288 |[39m [90m//   );[39m
+ [90m 289 |[39m
+[31m[1m>[22m[39m[90m 290 |[39m   [36mconst[39m sectionId [33m=[39m searchParams[33m.[39m[36mget[39m([32m"section"[39m)[33m;[39m
+ [90m     |[39m   [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 291 |[39m
+ [90m 292 |[39m   [90m// URL parameter management[39m
+ [90m 293 |[39m   [36mconst[39m setSectionId [33m=[39m useCallback([0m
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./src/components/(primary-layout)/(grammar-checker-page)/GrammarCheckerContentSection/index.jsx
+    ./src/app/(primary-layout)/grammar-checker/page.jsx
+
+
+ GET /grammar-checker 500 in 47ms (compile: 34ms, render: 13ms)

@@ -25,6 +25,7 @@ const ActionToolbar = ({ text, handleCopy, handleClear }) => {
         onClick={handleClear}
         className="hover:bg-muted flex size-8 items-center justify-center rounded"
         title="Delete"
+        aria-label="Delete text"
       >
         <Trash2 className="size-4" />
       </button>
@@ -33,6 +34,7 @@ const ActionToolbar = ({ text, handleCopy, handleClear }) => {
         onClick={handleCopy}
         className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
         title="Copy"
+        aria-label="Copy text"
       >
         <Copy className="size-4" />
       </button>
