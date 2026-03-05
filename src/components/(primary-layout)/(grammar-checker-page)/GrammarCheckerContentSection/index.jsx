@@ -285,7 +285,7 @@ const GrammarCheckerContentSection = () => {
     () =>
       trySamples.grammar[language.startsWith("English") ? "English" : language],
     [language],
-//   );
+  );
 
   const sectionId = searchParams.get("section");
 
@@ -298,7 +298,7 @@ const GrammarCheckerContentSection = () => {
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
-//   );
+  );
 
   const removeSectionId = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -358,7 +358,7 @@ const GrammarCheckerContentSection = () => {
               type,
               errorId,
             }),
-//           );
+          );
           setAnchorEl(target);
           return true;
         }
@@ -420,8 +420,8 @@ const GrammarCheckerContentSection = () => {
         // If text exists and we're past the initial mount, user is typing
         if (newText && newText.trim() && !hasClearedOnMountRef.current) {
           // User is typing after initial mount - reset skipCheckRef to allow checking
-          //   "[Editor Update] User typing detected, resetting skipCheckRef",
-          // );
+            "[Editor Update] User typing detected, resetting skipCheckRef",
+          );
           skipCheckRef.current = false;
           isFromEditorUpdateRef.current = true;
           hasUserInputRef.current = true;
@@ -495,9 +495,9 @@ const GrammarCheckerContentSection = () => {
         return;
       }
 
-      //   "[Text Sync] Syncing Redux text to editor:",
-      //   stateText.substring(0, 50),
-      // );
+        "[Text Sync] Syncing Redux text to editor:",
+        stateText.substring(0, 50),
+      );
       skipCheckRef.current = true;
       isClearingEditorRef.current = true;
       // Use setContent with emitUpdate: false to prevent triggering onUpdate during sync
@@ -514,8 +514,8 @@ const GrammarCheckerContentSection = () => {
     } else if (!stateText.trim() && editorText.trim()) {
       // If Redux text is empty but editor has text, clear editor
       // Also clear issues if text is empty
-      //   "[Text Sync] Clearing editor and issues - Redux text is empty",
-      // );
+        "[Text Sync] Clearing editor and issues - Redux text is empty",
+      );
       isClearingEditorRef.current = true;
       editor.commands.clearContent();
       lastDispatchedTextRef.current = "";
@@ -552,8 +552,8 @@ const GrammarCheckerContentSection = () => {
           hasClearedOnMountRef.current = true;
           isInitialMountRef.current = false;
 
-//             "[Initial Mount] Clearing all state on mount/reload (delayed)",
-//           );
+            "[Initial Mount] Clearing all state on mount/reload (delayed)",
+          );
 
           dispatch(setText(""));
           dispatch(setIssues([]));
@@ -636,10 +636,10 @@ const GrammarCheckerContentSection = () => {
     // Use a longer timeout to ensure it happens after all state updates
     const currentSectionId = new URLSearchParams(window.location.search).get(
       "section",
-//     );
+    );
     if (currentSectionId) {
         "[Initial Mount] Removing sectionId from URL to prevent auto-load",
-//       );
+      );
       setTimeout(() => {
         try {
           const params = new URLSearchParams(window.location.search);
@@ -689,7 +689,7 @@ const GrammarCheckerContentSection = () => {
     // 3. Text change came from editor update (isFromEditorUpdateRef is true)
     if (skipCheckRef.current) {
         "[Grammar Check] Skipped - skipCheckRef is true (programmatic update/section load)",
-//       );
+      );
       return;
     }
 
@@ -741,7 +741,7 @@ const GrammarCheckerContentSection = () => {
             ...(sectionId ? { section: sectionId } : {}),
           },
           controller.signal,
-//         );
+        );
 
         const { result, section, history } = data || {};
 
@@ -770,7 +770,7 @@ const GrammarCheckerContentSection = () => {
           error?.response?.data?.message ||
             error?.message ||
             "Failed to check grammar. Please try again.",
-//         );
+        );
       } finally {
         dispatch(setIsCheckLoading(false));
       }
@@ -798,7 +798,7 @@ const GrammarCheckerContentSection = () => {
       // But still check if issues exist without text (safety check)
       if (!stateText.trim() && !editorText.trim() && issues?.length > 0) {
           "[Text Empty] Safety check: Clearing issues - text is empty but issues exist",
-//         );
+        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;
@@ -813,7 +813,7 @@ const GrammarCheckerContentSection = () => {
       const currentIssuesCount = issues?.length || 0;
       if (currentIssuesCount > 0) {
           "[Text Empty] Clearing issues - editor or state text is empty",
-//         );
+        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;
@@ -826,7 +826,7 @@ const GrammarCheckerContentSection = () => {
       const currentIssuesCount = issues?.length || 0;
       if (currentIssuesCount > 0 && previousIssuesCountRef.current !== 0) {
           "[Mismatch] Editor empty but state has text, clearing issues",
-//         );
+        );
         dispatch(setIssues([]));
         dispatch(setSelectedIssue({}));
         previousIssuesCountRef.current = 0;
@@ -877,7 +877,7 @@ const GrammarCheckerContentSection = () => {
           context,
           error,
           pos,
-//         );
+        );
         if (!position) return;
 
         const { start, end } = position;
@@ -894,7 +894,7 @@ const GrammarCheckerContentSection = () => {
             type,
             errorId,
           }),
-//         );
+        );
       });
     });
 
@@ -924,7 +924,7 @@ const GrammarCheckerContentSection = () => {
 
       const marks = node.marks?.filter(
         (mark) => mark.type?.name === "errorMark",
-//       );
+      );
 
       marks.forEach((mark) => {
         const { errorId, error, correct, sentence, context } = mark.attrs;
@@ -942,7 +942,7 @@ const GrammarCheckerContentSection = () => {
           context,
           error,
           pos,
-//         );
+        );
         if (!position) return;
 
         const { start, end } = position;
@@ -1036,7 +1036,7 @@ const GrammarCheckerContentSection = () => {
           context,
           error,
           pos,
-//         );
+        );
         if (!position) return;
 
         const { start, end } = position;
@@ -1048,7 +1048,7 @@ const GrammarCheckerContentSection = () => {
           start,
           start + correct.length,
           state.schema.marks.errorMark,
-//         );
+        );
         corrected = true;
       });
 
@@ -1081,7 +1081,7 @@ const GrammarCheckerContentSection = () => {
       }
     },
     [editor, issues, dispatch],
-//   );
+  );
 
   const handleIgnoreError = useCallback(
     (issue) => {
@@ -1119,7 +1119,7 @@ const GrammarCheckerContentSection = () => {
           context,
           error,
           pos,
-//         );
+        );
         if (!position) return;
 
         const { start, end } = position;
@@ -1150,7 +1150,7 @@ const GrammarCheckerContentSection = () => {
       }, 2000); // Longer than debounce time (1500ms)
     },
     [editor, issues, dispatch],
-//   );
+  );
 
   // Clear function
   const handleClear = useCallback(() => {
@@ -1246,7 +1246,7 @@ const GrammarCheckerContentSection = () => {
             0,
             state.doc.content.size,
             state.schema.marks.errorMark,
-//           );
+          );
 
           // Apply marks for each issue
           sectionIssues.forEach((errorObj) => {
@@ -1266,7 +1266,7 @@ const GrammarCheckerContentSection = () => {
                 context,
                 error,
                 pos,
-//               );
+              );
               if (!position) return;
 
               const { start, end } = position;
@@ -1283,7 +1283,7 @@ const GrammarCheckerContentSection = () => {
                   type,
                   errorId,
                 }),
-//               );
+              );
             });
           });
 
@@ -1304,7 +1304,7 @@ const GrammarCheckerContentSection = () => {
       }
     },
     [dispatch, setSectionId, editor, sectionId, handleClear],
-//   );
+  );
 
   // Store latest handleSelectSection in ref to avoid infinite loops
   handleSelectSectionRef.current = handleSelectSection;
@@ -1337,7 +1337,7 @@ const GrammarCheckerContentSection = () => {
       }
     },
     [dispatch], // Removed sections from deps to prevent infinite loop
-//   );
+  );
 
   // Load section by ID from URL - ONLY when user explicitly selects it (not from URL on reload)
   useEffect(() => {
@@ -1885,7 +1885,7 @@ const GrammarCheckerContentSection = () => {
         setLoginDialogOpen={setLoginDialogOpen}
       />
     </>
-//   );
+  );
 };
 
 const LoginDialog = ({ loginDialogOpen, setLoginDialogOpen }) => {
@@ -1915,7 +1915,7 @@ const LoginDialog = ({ loginDialogOpen, setLoginDialogOpen }) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-//   );
+  );
 };
 
 export default GrammarCheckerContentSection;

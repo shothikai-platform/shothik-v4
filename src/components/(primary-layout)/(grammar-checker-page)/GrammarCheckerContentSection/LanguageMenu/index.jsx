@@ -21,8 +21,6 @@ const LanguageMenu = ({ language, setLanguage, isLoading }) => {
         className="flex items-center gap-2 px-4 py-2"
         onClick={handleOpen}
         disabled={isLoading}
-        aria-label="Select language"
-        aria-expanded={showMenu}
       >
         <span>{language}</span>
         {showMenu ? (
