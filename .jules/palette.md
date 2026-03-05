@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2026-03-05 - Missing Title Tooltips and Aria Labels on Grammar Checker Toolbar Buttons
+**Learning:** Found multiple icon-only buttons in Grammar Checker's Editor Toolbar without `aria-label` attributes and some without `title` tooltips.
+**Action:** Always include `aria-label` for screen readers and `title` for visual hover tooltips on icon-only buttons to ensure they are accessible to all users.

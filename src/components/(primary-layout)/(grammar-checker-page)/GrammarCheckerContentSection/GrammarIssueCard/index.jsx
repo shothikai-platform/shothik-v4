@@ -50,6 +50,8 @@ const GrammarIssueCard = ({
                 handleAccept(issue);
               }}
               className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
+              title="Accept Correction"
+              aria-label="Accept Correction"
             >
               <Check className="size-4" />
             </button>
@@ -59,6 +61,8 @@ const GrammarIssueCard = ({
                 handleIgnore(issue);
               }}
               className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
+              title="Ignore Issue"
+              aria-label="Ignore Issue"
             >
               <Trash2 className="size-4" />
             </button>
