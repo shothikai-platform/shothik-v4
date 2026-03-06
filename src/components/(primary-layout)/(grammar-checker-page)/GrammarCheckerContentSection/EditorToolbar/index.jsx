@@ -17,10 +17,10 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
     const updateActiveStates = () => {
       const bulletActive = editor.isActive("bulletList");
       const orderedActive = editor.isActive("orderedList");
-      
+
       setIsBulletListActive(bulletActive);
       setIsOrderedListActive(orderedActive);
-      
+
       // Update undo/redo states
       setCanUndo(editor.can().undo());
       setCanRedo(editor.can().redo());
@@ -31,7 +31,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
     editor.on("update", updateActiveStates);
     editor.on("transaction", updateActiveStates);
     editor.on("create", updateActiveStates);
-    
+
     // Initial update
     updateActiveStates();
 
@@ -61,6 +61,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("bold"),
         })}
         title="Bold"
+        aria-label="Bold"
       >
         <Bold className="size-4" />
       </button>
@@ -75,6 +76,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("italic"),
         })}
         title="Italic"
+        aria-label="Italic"
       >
         <Italic className="size-4" />
       </button>
@@ -89,6 +91,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: editor.isActive("strike"),
         })}
         title="Strike"
+        aria-label="Strike"
       >
         <Underline className="size-4" />
       </button>
@@ -110,6 +113,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: isBulletListActive,
         })}
         title="Bullet List"
+        aria-label="Bullet List"
       >
         <List className="size-4" />
       </button>
@@ -129,6 +133,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           [activeClass]: isOrderedListActive,
         })}
         title="Numbered List"
+        aria-label="Numbered List"
       >
         <List className="size-4" />
       </button>
@@ -140,20 +145,20 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          
+
           if (!editor || !canUndo) {
             return;
           }
-          
+
           // Set flag synchronously BEFORE executing to prevent Redux sync
           if (onHistoryOperation) {
             onHistoryOperation();
           }
-          
+
           // Execute undo command - ensure editor is focused first
           try {
             const success = editor.chain().focus().undo().run();
-            
+
             if (success) {
               // Force state update after undo to refresh redo availability
               setTimeout(() => {
@@ -170,6 +175,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           "cursor-not-allowed opacity-50": !editor || !canUndo,
         })}
         title="Undo"
+        aria-label="Undo"
       >
         <Undo2 className="size-4" />
       </button>
@@ -179,23 +185,23 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          
+
           if (!editor || !canRedo) {
             return;
           }
-          
+
           // Set flag synchronously BEFORE executing to prevent Redux sync
           // This is critical - must be set before any editor operation
           if (onHistoryOperation) {
             onHistoryOperation();
           }
-          
+
           // Execute redo command - use chain() for proper command execution
           // The chain ensures the command is properly queued and executed
           try {
             // Execute redo - ensure editor is focused
             const success = editor.chain().focus().redo().run();
-            
+
             if (success) {
               // Force state update after redo to refresh undo/redo availability
               setTimeout(() => {
@@ -214,6 +220,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           "cursor-not-allowed opacity-50": !editor || !canRedo,
         })}
         title="Redo"
+        aria-label="Redo"
       >
         <Redo2 className="size-4" />
       </button>
