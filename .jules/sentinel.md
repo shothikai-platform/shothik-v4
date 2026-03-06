@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-17 - Missing Authentication and IDOR in SheetSession get_my_chats
+**Vulnerability:** The `get_my_chats` endpoint for SheetSessions lacked authentication and fetched all sessions unconditionally (`SheetSession.find({})`), exposing all user sessions to any caller (IDOR + unauthenticated access).
+**Learning:** Developers may sometimes copy-paste standard boilerplate for reading data without checking if `userId` filtering and authentication is applied to the Mongoose query.
+**Prevention:** Always enforce `getAuthenticatedUser()` at the start of any route fetching personal data and use `Model.find({ userId: user._id || user.id })` to scope the query. Additionally, always append `.lean()` to Mongoose read queries for performance.
