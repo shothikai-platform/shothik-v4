@@ -32,6 +32,8 @@ const GrammarSidebar = ({ handleAccept, handleIgnore, handleAcceptAll }) => {
         <div className="flex items-center justify-between gap-2 p-4">
           <div className="flex items-center gap-2">
             <button
+              aria-label="Close sidebar"
+              title="Close sidebar"
               onClick={() => dispatch(setIsSidebarOpen(false))}
               className="flex aspect-square h-8 items-center justify-center rounded-md border"
             >
