@@ -45,6 +45,8 @@ const GrammarIssueCard = ({
             })}
           >
             <button
+              aria-label="Accept issue"
+              title="Accept"
               onClick={(e) => {
                 e.stopPropagation();
                 handleAccept(issue);
@@ -54,6 +56,8 @@ const GrammarIssueCard = ({
               <Check className="size-4" />
             </button>
             <button
+              aria-label="Ignore issue"
+              title="Ignore"
               onClick={(e) => {
                 e.stopPropagation();
                 handleIgnore(issue);
