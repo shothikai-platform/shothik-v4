@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - API Single Document Optimization
+**Learning:** Returning full documents via `findOne()` or `findById()` without `.lean()` in read-only endpoints (like `get_one_chat`) also creates unnecessary memory overhead.
+**Action:** Always append `.lean()` to single document fetch queries (`findOne`, `findById`) in GET endpoints where the document will only be read and serialized.
