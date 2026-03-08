@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2026-03-08 - [IDOR & Data Leak in Sheet Sessions]
+**Vulnerability:** Unauthenticated access allowed reading all global sheet sessions via `get_my_chats` and modifying other users' sessions via `create_conversation` using an Insecure Direct Object Reference (IDOR).
+**Learning:** Relying on a blind `.find({})` query leaks data. Also, relying on a provided `chatId` without validating ownership allows IDOR. Hardcoding `userId` like `'temp-user'` circumvents the entire authorization model.
+**Prevention:** Endpoints dealing with user data MUST invoke `getAuthenticatedUser()`, use `userId` as a mandatory filter in `.find`/`.findOne`, and explicitly abort on 401 when the user isn't authenticated.
