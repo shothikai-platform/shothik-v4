@@ -12,10 +12,11 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindById, mockFindOne } = vi.hoisted(() => {
+const { mockFindById, mockFindOne, mockLean } = vi.hoisted(() => {
   return {
     mockFindById: vi.fn(),
     mockFindOne: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -79,7 +80,8 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     // No, if the code calls findById, it returns the chat. Status 200.
     // If the code calls findOne, we should make findOne return null (simulation of not found for that user).
 
-    mockFindOne.mockResolvedValue(null);
+    mockLean.mockResolvedValue(null);
+    mockFindOne.mockReturnValue({ lean: mockLean });
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
