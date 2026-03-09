@@ -2,6 +2,12 @@
 
 import { cn } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const GrammarIssueCard = ({
   issue,
@@ -44,24 +50,45 @@ const GrammarIssueCard = ({
               hidden: isCollapsed,
             })}
           >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAccept(issue);
-              }}
-              className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
-            >
-              <Check className="size-4" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleIgnore(issue);
-              }}
-              className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
-            >
-              <Trash2 className="size-4" />
-            </button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAccept(issue);
+                    }}
+                    className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
+                    aria-label="Accept suggestion"
+                  >
+                    <Check className="size-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Accept suggestion</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleIgnore(issue);
+                    }}
+                    className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
+                    aria-label="Ignore suggestion"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ignore suggestion</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </div>
