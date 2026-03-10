@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Upload } from "lucide-react";
 import mammoth from "mammoth";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 const pdfToText = async (file) => {
   const { pdfjs } = await import("react-pdf");
@@ -101,6 +101,14 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
     <Tooltip>
       <TooltipTrigger asChild>
         <label
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
             "relative shrink-0 cursor-pointer",
@@ -118,6 +126,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
           </div>
           <input
             ref={inputRef}
+            tabIndex={-1}
             onChange={(e) => {
               handleFileChange(e);
               onChange?.(e);
