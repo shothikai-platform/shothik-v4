@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2024-05-30 - [IDOR in create_research_queue endpoint]
+**Vulnerability:** The API endpoint `src/app/api/research/research/create_research_queue/route.ts` processed chat requests utilizing `findById(chatId)` based exclusively on client-provided IDs without any user validation or checking if the chat actually belonged to the requester.
+**Learning:** This existed because of missing authentication implementation. When endpoints interact with specific document IDs, assuming the user ID from context is handled upstream isn't enough; the database query must explicitly join or verify the ownership.
+**Prevention:** Always authenticate the incoming request first, and use `findOne({ _id: documentId, userId: user._id || user.id })` rather than `findById(documentId)` when modifying or accessing private user resources.
