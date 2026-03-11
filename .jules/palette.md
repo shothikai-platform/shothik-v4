@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - Input Area Accessibility
+**Learning:** Core application components like `InputArea` often lack tooltips and ARIA attributes on action buttons (Send, Back, Attach), which makes screen reader navigation and general usability difficult.
+**Action:** Always verify form actions and key interactive regions have full ARIA labels and accompanying tooltips, especially icon-only buttons. Apply the disabled button tooltip wrapper pattern consistently.
