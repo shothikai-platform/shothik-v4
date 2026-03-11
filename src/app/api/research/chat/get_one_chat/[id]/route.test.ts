@@ -12,10 +12,11 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindById, mockFindOne } = vi.hoisted(() => {
+const { mockFindById, mockFindOne, mockLean } = vi.hoisted(() => {
   return {
     mockFindById: vi.fn(),
     mockFindOne: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -71,15 +72,10 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     mockFindById.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
 
     // In the secure implementation, findOne({ _id: id, userId: user._id }) will be called.
-    // We need to mock findOne behavior if the code changes to use findOne.
-    // But initially, it uses findById.
-
-    // If the code is fixed to use findOne, findById won't be called.
-    // So for the reproduction to fail (and pass later), we should mock findOne too?
-    // No, if the code calls findById, it returns the chat. Status 200.
-    // If the code calls findOne, we should make findOne return null (simulation of not found for that user).
-
-    mockFindOne.mockResolvedValue(null);
+    // We mock findOne to return an object with lean() returning null for a non-matching user
+    mockFindOne.mockReturnValue({
+      lean: mockLean.mockResolvedValue(null)
+    });
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
