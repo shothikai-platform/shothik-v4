@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
         if (!session) {
             session = await SheetSession.create({
-                userId,
+                userId: 'temp-user',
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
                 // Frontend might expect events.
 
                 try {
-                    // Send initial session ID if the client might need it? 
+                    // Send initial session ID if the client might need it?
                     // Usually client waits for the full response or updates URL based on something.
                     // But strict SSE usually sends events.
 
