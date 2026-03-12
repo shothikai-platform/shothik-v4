@@ -60,13 +60,14 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           </h3>
           <div className="flex items-center gap-2">
             {ai_agent_list.map((agent, index) => (
-              <div
-                className="border-primary bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer rounded-lg border px-4 py-1 transition-colors"
+              <button
+                type="button"
+                className="border-primary bg-primary/10 text-primary hover:bg-primary/20 focus-visible:ring-primary cursor-pointer rounded-lg border px-4 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
                 onClick={() => setSelectedAgent(agent)}
                 key={index}
               >
                 <span className="text-sm font-medium">{agent.title}</span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -83,6 +84,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
+            aria-label="Go back to agent selection"
           >
             <ArrowLeft className="size-4" />
           </Button>
@@ -140,6 +142,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
+                aria-label="Attach files"
               >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
@@ -158,7 +161,12 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
+          <Button
+            disabled={loading}
+            type="submit"
+            size="icon"
+            aria-label={loading ? "Sending message" : "Send message"}
+          >
             {loading ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
