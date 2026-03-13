@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2026-03-13 - Fix IDOR and Auth Bypass in SheetSession get_my_chats
+**Vulnerability:** The `get_my_chats` API endpoint for `SheetSession` lacked authentication and queried all sessions in the database globally without scoping by the current user. This exposed all users' sessions (an Insecure Direct Object Reference / Auth Bypass vulnerability).
+**Learning:** Endpoints returning user-specific collections must uniformly enforce `getAuthenticatedUser()` and directly map the `userId` parameter in database queries (e.g., `{ userId: user._id || user.id }`). Consistency across feature domains (like Research vs. Sheet) is critical.
+**Prevention:** Always verify auth constraints are mirrored when implementing parallel APIs, and ensure robust unit tests are explicitly written to assert scoping and 401 returns.
