@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2024-03-24 - Unauthenticated IDOR Vulnerability in API Route
+**Vulnerability:** The API route for deleting research chats (`delete_chat/[id]`) allowed unauthenticated deletion of any chat by simply knowing its ID.
+**Learning:** This existed because the endpoint lacked `getAuthenticatedUser()` verification and Mongoose's `findOneAndDelete` was not scoped to the `userId` of the currently authenticated user.
+**Prevention:** Always verify authentication using `getAuthenticatedUser()` and enforce authorization on destructive queries by scoping them with `userId` (e.g. `findOneAndDelete({ _id: id, userId: user._id || user.id })`) to prevent IDOR vulnerabilities.
