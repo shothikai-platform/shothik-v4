@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -6,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "react-toastify";
-import { ChevronLeft, ChevronRight, Copy, Download } from "lucide-react";
+import { ChevronLeft, ChevronRight, Copy, Check, Download } from "lucide-react";
 import { downloadFile } from "../common/downloadfile";
 
 const OutputNavigation = ({
@@ -18,9 +19,13 @@ const OutputNavigation = ({
   handleAiDetectors = () => {},
   loadingAi,
 }) => {
+  const [copied, setCopied] = useState(false);
+
   async function handleCopy() {
     await navigator.clipboard.writeText(selectedContend);
     toast.success("Copied to clipboard");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const handleDownload = () => {
@@ -37,6 +42,7 @@ const OutputNavigation = ({
             size={isMobile ? "icon" : "default"}
             disabled={!showIndex}
             onClick={() => setShowIndex((prev) => prev - 1)}
+            aria-label="Previous draft"
           >
             {isMobile ? <ChevronLeft className="h-4 w-4" /> : "Previous"}
           </Button>
@@ -50,6 +56,7 @@ const OutputNavigation = ({
             size={isMobile ? "icon" : "default"}
             disabled={showIndex === outputs - 1}
             onClick={() => setShowIndex((prev) => prev + 1)}
+            aria-label="Next draft"
           >
             {isMobile ? <ChevronRight className="h-4 w-4" /> : "Next"}
           </Button>
@@ -71,11 +78,28 @@ const OutputNavigation = ({
               <span>Export</span>
             </TooltipContent>
           </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                onClick={handleCopy}
+                className="min-w-0"
+                aria-label={copied ? "Copied!" : "Copy to clipboard"}
+              >
+                {copied ? (
+                  <Check className="mr-1 h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="mr-1 h-4 w-4" />
+                )}
+                {!isMobile && <span>{copied ? "Copied!" : "Copy"}</span>}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span>{copied ? "Copied!" : "Copy to clipboard"}</span>
+            </TooltipContent>
+          </Tooltip>
         </TooltipProvider>
-        <Button variant="ghost" onClick={handleCopy} className="min-w-0">
-          <Copy className="mr-1 h-4 w-4" />
-          {!isMobile && <span>Copy</span>}
-        </Button>
       </div>
 
       <Button
