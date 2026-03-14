@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 const pdfToText = async (file) => {
   const { pdfjs } = await import("react-pdf");
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs?.version}/build/pdf.worker.min.mjs`;
-  
+
   const blobUrl = URL.createObjectURL(file);
   const loadingTask = pdfjs.getDocument(blobUrl);
   let extractedText = "";
@@ -101,6 +101,14 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
     <Tooltip>
       <TooltipTrigger asChild>
         <label
+          role="button"
+          tabIndex={isProcessing ? -1 : 0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
             "relative shrink-0 cursor-pointer",
@@ -126,6 +134,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
             accept="application/pdf, .docx"
             className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             disabled={isProcessing}
+            tabIndex={-1}
           />
         </label>
       </TooltipTrigger>
