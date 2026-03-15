@@ -16,11 +16,23 @@ export default function UploadAvatar({
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (loading) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      document.getElementById("avatarInput").click();
+    }
+  };
+
   return (
     <>
-      <div
+      <label
+        htmlFor="avatarInput"
+        role="button"
+        tabIndex={loading ? -1 : 0}
+        onKeyDown={handleKeyDown}
         className={cn(
-          "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed",
+          "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           loading ? "cursor-not-allowed" : "cursor-pointer",
           error
             ? "border-destructive bg-destructive/10"
@@ -37,6 +49,7 @@ export default function UploadAvatar({
           className="hidden"
           onChange={handleFileChange}
           disabled={loading}
+          tabIndex={-1}
         />
 
         {file ? (
@@ -53,7 +66,7 @@ export default function UploadAvatar({
             <span className="text-muted-foreground text-xs">Upload Photo</span>
           </div>
         )}
-      </div>
+      </label>
 
       {helperText && (
         <p className="text-destructive mt-2 text-center text-xs">
