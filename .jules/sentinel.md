@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2026-03-15 - Prevent IDOR in ResearchChat mutation endpoints
+**Vulnerability:** The `delete_chat` and `update_name` endpoints in the Research feature used `findByIdAndDelete` and `findByIdAndUpdate` respectively, allowing any authenticated user to modify or delete resources belonging to other users if they knew or guessed the document ID (Insecure Direct Object Reference).
+**Learning:** In Next.js App Router API routes, authentication is not implicitly coupled with database queries by default. When endpoints modify state, the authorization check must be explicitly encoded into the query itself.
+**Prevention:** When creating endpoints that mutate state (update, delete), explicitly use `findOneAndUpdate({ _id, userId })` and `findOneAndDelete` over `findByIdAndUpdate` / `findByIdAndDelete` to guarantee the user owns the resource being manipulated.
