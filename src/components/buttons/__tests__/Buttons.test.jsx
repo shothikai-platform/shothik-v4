@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import ButtonCopyText from '../ButtonCopyText';
 import ButtonDownloadText from '../ButtonDownloadText';
+import ButtonInsertDocumentText from '../ButtonInsertDocumentText';
 
 afterEach(() => {
   cleanup();
@@ -39,6 +40,7 @@ vi.mock('lucide-react', () => ({
   Check: () => <span data-testid="icon-check" />,
   Copy: () => <span data-testid="icon-copy" />,
   Download: () => <span data-testid="icon-download" />,
+  Upload: () => <span data-testid="icon-upload" />,
 }));
 
 describe('ButtonCopyText', () => {
@@ -84,5 +86,24 @@ describe('ButtonDownloadText', () => {
     render(<ButtonDownloadText text="Hello World" name="test.txt" />);
     const tooltip = screen.getByTestId('tooltip-content');
     expect(tooltip.textContent).toBe('Download text');
+  });
+});
+
+describe('ButtonInsertDocumentText', () => {
+  it('renders correctly and uses native file input for accessibility', () => {
+    render(<ButtonInsertDocumentText />);
+
+    // It should not use an artificial button role
+    const label = screen.queryByRole('button');
+    expect(label).toBeNull();
+
+    // It should have the native file input which handles focus
+    const input = document.querySelector('input[type="file"]');
+    expect(input).toBeTruthy();
+    expect(input.getAttribute('tabIndex')).toBeNull(); // It should not have a negative tab index
+
+    // The label wrapper should have focus-within classes
+    const wrapper = input.parentElement;
+    expect(wrapper.className).toContain('focus-within:ring-2');
   });
 });
