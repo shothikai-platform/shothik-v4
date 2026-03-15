@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2024-05-18 - [Missing Auth and IDOR in Mutating API Endpoints]
+**Vulnerability:** The `/api/research/research/create_research_queue` endpoint was missing authentication completely, allowing anyone to start research queues. It also used `findById()` and `findByIdAndUpdate()` without verifying the `userId`, allowing any user to add messages to another user's research chat via IDOR.
+**Learning:** API routes that perform state mutations (like creating a queue or updating a chat) require strict authentication and authorization checks, especially ensuring that the queried or updated document belongs to the authenticated user.
+**Prevention:** Always verify authentication at the beginning of API routes using `getAuthenticatedUser()`. Replace simple ID-based queries (e.g., `findById(id)`) with explicit ownership checks (e.g., `findOne({ _id: id, userId: user._id || user.id })`) to prevent IDOR vulnerabilities.
