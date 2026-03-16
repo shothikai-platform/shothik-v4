@@ -60,13 +60,14 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           </h3>
           <div className="flex items-center gap-2">
             {ai_agent_list.map((agent, index) => (
-              <div
-                className="border-primary bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer rounded-lg border px-4 py-1 transition-colors"
+              <button
+                type="button"
+                className="border-primary bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer rounded-lg border px-4 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 onClick={() => setSelectedAgent(agent)}
                 key={index}
               >
                 <span className="text-sm font-medium">{agent.title}</span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -81,6 +82,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Back to agent selection"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
           >
@@ -138,6 +140,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 variant="ghost"
                 size="icon"
                 type="button"
+                aria-label="Attach files"
                 onClick={handleFileInputClick}
                 className="group relative"
               >
@@ -158,13 +161,27 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span tabIndex={loading ? 0 : -1}>
+                <Button
+                  disabled={loading}
+                  type="submit"
+                  size="icon"
+                  aria-label={loading ? "Sending message" : "Send message"}
+                >
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{loading ? "Sending..." : "Send message"}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>
