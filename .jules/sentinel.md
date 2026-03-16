@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Missing Authorization on Bulk Fetch API]
+**Vulnerability:** `get_my_chats` endpoint in SheetSession fetched all chats unconditionally, exposing all users' data.
+**Learning:** Endpoints intended to return a user's own items often lack the critical `userId` filter query, exposing all database records.
+**Prevention:** Always verify authentication using `getAuthenticatedUser()` and explicitly pass `{ userId: currentUser._id }` in bulk fetch queries (like `find()`) to restrict data to the user.
