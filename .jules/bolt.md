@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - Vitest Mocking Mongoose .lean() Chains
+**Learning:** When mocking multiple Mongoose methods (like `findById` and `findOne`) that both chain `.lean()`, sharing a single `mockLean` hoisted function causes test cases to overwrite each other's expected values.
+**Action:** Assign independent `.lean()` mock functions to each query mock in Vitest.

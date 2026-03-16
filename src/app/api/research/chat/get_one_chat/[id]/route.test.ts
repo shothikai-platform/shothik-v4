@@ -12,10 +12,11 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindById, mockFindOne } = vi.hoisted(() => {
+const { mockFindById, mockFindOne, mockLean } = vi.hoisted(() => {
   return {
     mockFindById: vi.fn(),
     mockFindOne: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -42,6 +43,8 @@ import ResearchChat from '@/models/ResearchChat';
 describe('GET /api/research/chat/get_one_chat/[id]', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockFindOne.mockReturnValue({ lean: mockLean });
+    mockFindById.mockReturnValue({ lean: mockLean });
   });
 
   it('should return 401 if user is not authenticated', async () => {
@@ -51,7 +54,7 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     // BUT, the plan says "Create a reproduction test case... Assert that the response status is 404 or 403 (this test is expected to fail initially)".
 
     (getAuthenticatedUser as any).mockResolvedValue(null);
-    mockFindById.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
+    mockLean.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
@@ -68,7 +71,7 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
 
     // The db returns a chat belonging to user1
     // In the insecure implementation, findById returns it regardless of user.
-    mockFindById.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
+    mockLean.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
 
     // In the secure implementation, findOne({ _id: id, userId: user._id }) will be called.
     // We need to mock findOne behavior if the code changes to use findOne.
@@ -79,7 +82,7 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     // No, if the code calls findById, it returns the chat. Status 200.
     // If the code calls findOne, we should make findOne return null (simulation of not found for that user).
 
-    mockFindOne.mockResolvedValue(null);
+    mockLean.mockResolvedValue(null);
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
