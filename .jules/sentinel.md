@@ -7,8 +7,3 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
-
-## 2025-05-23 - [Unauthenticated Access to Paid API Proxy]
-**Vulnerability:** The geolocation API route was accessible without authentication, allowing anyone to trigger server-side calls to Google's Geolocation and Geocoding APIs using the application's API key.
-**Learning:** Utility endpoints that proxy to paid third-party services are often overlooked during security audits because they don't handle sensitive user data directly.
-**Prevention:** Enforce authentication on all API endpoints by default, especially those that consume external credits or rate-limited resources.
