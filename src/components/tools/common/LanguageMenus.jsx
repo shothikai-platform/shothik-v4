@@ -45,20 +45,21 @@ const RenderLanguages = ({
           {filtered.map((lang, index) => {
             const isSelected = lang.name === selectedLanguage;
             return (
-              <div
+              <button
+                type="button"
                 key={`${lang.name}-${index}`}
                 onClick={() => {
                   handleLanguageMenu(lang.name);
                   handleClose();
                 }}
                 className={cn(
-                  "flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors",
+                  "flex w-full cursor-pointer items-center justify-between rounded-md p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   isSelected ? "bg-primary/10" : "hover:bg-accent",
                 )}
               >
                 <span className="text-sm">{lang.name}</span>
                 {isSelected && <Check className="text-primary h-4 w-4" />}
-              </div>
+              </button>
             );
           })}
         </div>
@@ -86,7 +87,12 @@ const LanguageMenus = ({
           >
             <div className="flex items-center justify-between px-4 pt-4">
               <h3 className="text-base font-semibold">Select language</h3>
-              <button onClick={handleClose} className="text-muted-foreground">
+              <button
+                type="button"
+                aria-label="Close menu"
+                onClick={handleClose}
+                className="text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
