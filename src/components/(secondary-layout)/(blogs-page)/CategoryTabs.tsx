@@ -7,6 +7,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface CategoryTabsProps {
   categories: string[];
@@ -33,8 +39,9 @@ export const CategoryTabs = ({
         {categories.map((category) => (
           <button
             key={category}
+            type="button"
             onClick={() => onCategoryChange(category)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            className={`focus-visible:ring-ring rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none ${
               activeCategory === category
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -80,19 +87,33 @@ export const CategoryTabs = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() =>
-            onViewModeChange(viewMode === "grid" ? "list" : "grid")
-          }
-        >
-          {viewMode === "grid" ? (
-            <List className="h-4 w-4" />
-          ) : (
-            <LayoutGrid className="h-4 w-4" />
-          )}
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={
+                  viewMode === "grid"
+                    ? "Switch to list view"
+                    : "Switch to grid view"
+                }
+                onClick={() =>
+                  onViewModeChange(viewMode === "grid" ? "list" : "grid")
+                }
+              >
+                {viewMode === "grid" ? (
+                  <List className="h-4 w-4" />
+                ) : (
+                  <LayoutGrid className="h-4 w-4" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{viewMode === "grid" ? "List view" : "Grid view"}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
