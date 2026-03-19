@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 const pdfToText = async (file) => {
   const { pdfjs } = await import("react-pdf");
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs?.version}/build/pdf.worker.min.mjs`;
-  
+
   const blobUrl = URL.createObjectURL(file);
   const loadingTask = pdfjs.getDocument(blobUrl);
   let extractedText = "";
@@ -103,7 +103,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
         <label
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
-            "relative shrink-0 cursor-pointer",
+            "relative shrink-0 cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
             isProcessing && "pointer-events-none opacity-50",
             className,
           )}
