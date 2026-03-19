@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2025-02-23 - Critical Authorization Bypass in `get_my_chats`
+**Vulnerability:** The `GET /api/sheet/chat/get_my_chats` endpoint was completely unauthenticated and returned every single chat session in the database globally (`SheetSession.find({})`).
+**Learning:** This repo frequently features unprotected Mongoose lookup queries in endpoints named `get_my_*`, leading to severe Broken Object Level Authorization (BOLA) or global data leakage vulnerabilities.
+**Prevention:** Always wrap `get_my_*` lookups with `getAuthenticatedUser()` and securely namespace the search query to `{ userId: user._id || user.id }`. Ensure all endpoints fetching sensitive lists are protected with automated tests verifying `401 Unauthorized` behavior.
