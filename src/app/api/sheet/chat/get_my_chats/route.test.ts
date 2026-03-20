@@ -60,7 +60,6 @@ describe('GET /api/sheet/chat/get_my_chats', () => {
 
     const response = await GET(new Request('http://localhost/api/sheet/chat/get_my_chats'));
 
-    // If this fails, it means the security fix is NOT yet implemented
     expect(response.status).toBe(401);
   });
 
@@ -70,7 +69,6 @@ describe('GET /api/sheet/chat/get_my_chats', () => {
 
     await GET(new Request('http://localhost/api/sheet/chat/get_my_chats'));
 
-    // If this fails, it means the security fix is NOT yet implemented
     expect(mockFind).toHaveBeenCalledWith({ userId: 'user123' });
     expect(mockSort).toHaveBeenCalledWith({ updatedAt: -1 });
   });
