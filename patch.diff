@@ -1,0 +1,41 @@
+--- src/components/tools/common/LanguageMenus.jsx
++++ src/components/tools/common/LanguageMenus.jsx
+@@ -47,7 +47,7 @@
+           {filtered.map((lang, index) => {
+             const isSelected = lang.name === selectedLanguage;
+             return (
+-              <div
++              <button
+                 key={`${lang.name}-${index}`}
+                 onClick={() => {
+                   handleLanguageMenu(lang.name);
+@@ -55,11 +55,12 @@
+                 }}
+                 className={cn(
+                   "flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors",
+-                  isSelected ? "bg-primary/10" : "hover:bg-accent",
++                  "w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
++                  isSelected ? "bg-primary/10" : "hover:bg-accent"
+                 )}
+               >
+                 <span className="text-sm">{lang.name}</span>
+                 {isSelected && <Check className="text-primary h-4 w-4" />}
+-              </div>
++              </button>
+             );
+           })}
+         </div>
+@@ -86,7 +87,12 @@
+           >
+             <div className="flex items-center justify-between px-4 pt-4">
+               <h3 className="text-base font-semibold">Select language</h3>
+-              <button onClick={handleClose} className="text-muted-foreground">
++              <button
++                type="button"
++                onClick={handleClose}
++                className="text-muted-foreground hover:text-foreground rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
++                aria-label="Close"
++              >
+                 <X className="h-5 w-5" />
+               </button>
+             </div>
