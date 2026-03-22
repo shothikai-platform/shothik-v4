@@ -12,10 +12,11 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindById, mockFindOne } = vi.hoisted(() => {
+const { mockFindById, mockFindOne, mockLean } = vi.hoisted(() => {
   return {
     mockFindById: vi.fn(),
     mockFindOne: vi.fn(),
+    mockLean: vi.fn(),
   };
 });
 
@@ -32,7 +33,10 @@ vi.mock('@/models/ResearchChat', () => {
 // Mock NextResponse
 vi.mock('next/server', () => ({
   NextResponse: {
-    json: vi.fn((data, options) => ({ data, options, status: options?.status || 200 })),
+    json: vi.fn((data, options) => ({
+      json: async () => data,
+      status: options?.status || 200
+    })),
   },
 }));
 
@@ -52,6 +56,8 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
 
     (getAuthenticatedUser as any).mockResolvedValue(null);
     mockFindById.mockResolvedValue({ _id: 'chat1', userId: 'user1', name: 'Chat 1' });
+    mockFindOne.mockReturnValue({ lean: mockLean });
+    mockLean.mockResolvedValue({ _id: { toString: () => 'chat1' }, userId: 'user1', name: 'Chat 1' });
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
@@ -79,7 +85,8 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     // No, if the code calls findById, it returns the chat. Status 200.
     // If the code calls findOne, we should make findOne return null (simulation of not found for that user).
 
-    mockFindOne.mockResolvedValue(null);
+    mockFindOne.mockReturnValue({ lean: mockLean });
+    mockLean.mockResolvedValue(null);
 
     const response = await GET(
         new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
@@ -89,5 +96,22 @@ describe('GET /api/research/chat/get_one_chat/[id]', () => {
     // Current behavior: 200 (returns chat found by findById)
     // Desired behavior: 404 (Not Found via findOne)
     expect(response.status).toBe(404);
+  });
+
+  it('should return 200 and the formatted chat if chat is found', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user1' });
+
+    mockFindOne.mockReturnValue({ lean: mockLean });
+    mockLean.mockResolvedValue({ _id: { toString: () => 'chat1' }, userId: 'user1', name: 'Chat 1' });
+
+    const response = await GET(
+        new Request('http://localhost/api/research/chat/get_one_chat/chat1'),
+        { params: Promise.resolve({ id: 'chat1' }) }
+    ) as any;
+
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data.id).toBe('chat1');
+    expect(data.name).toBe('Chat 1');
   });
 });
