@@ -123,6 +123,7 @@ const SettingsTab = () => {
                       <Button
                         variant="ghost"
                         size="icon"
+                        aria-label={`Info about ${label}`}
                         className="h-8 w-8 bg-transparent hover:bg-transparent"
                       >
                         <Info className="text-muted-foreground h-4 w-4" />
@@ -178,7 +179,12 @@ const SettingsTab = () => {
                 </label>
               </div>
               {info && (
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={`Info about ${label}`}
+                  className="h-8 w-8"
+                >
                   <Info className="text-muted-foreground h-4 w-4" />
                 </Button>
               )}

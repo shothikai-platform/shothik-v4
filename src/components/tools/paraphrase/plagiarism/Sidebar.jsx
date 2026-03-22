@@ -31,7 +31,12 @@ const PlagiarismSidebar = ({
           <Scale className="text-muted-foreground h-4 w-4" />
           <History className="text-muted-foreground h-4 w-4" />
         </div>
-        <Button onClick={onClose} variant="ghost" size="icon-sm">
+        <Button
+          aria-label="Close plagiarism sidebar"
+          onClick={onClose}
+          variant="ghost"
+          size="icon-sm"
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -56,7 +61,11 @@ const PlagiarismSidebar = ({
           >
             <span className="w-[20%] text-sm">{r.percent}%</span>
             <span className="ml-2 flex-1 text-center text-sm">{r.source}</span>
-            <Button variant="ghost" size="icon-sm">
+            <Button
+              aria-label={`Toggle details for ${r.source}`}
+              variant="ghost"
+              size="icon-sm"
+            >
               <ChevronDown className="h-4 w-4" />
             </Button>
           </div>
