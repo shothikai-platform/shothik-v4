@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-24 - [IDOR in Mutation Endpoints (Update/Delete)]
+**Vulnerability:** Update and delete endpoints (`update_name` and `delete_chat`) used `findByIdAndUpdate` and `findByIdAndDelete` respectively, allowing any user to modify or delete other users' chats if the `id` was known.
+**Learning:** Endpoints that mutate state are equally or more dangerous than read endpoints when missing authorization. The `id` in the URL parameter is inherently untrusted.
+**Prevention:** Replace `findByIdAndUpdate` / `findByIdAndDelete` with `findOneAndUpdate` / `findOneAndDelete` and include the user's ID in the query filter (`{ _id: id, userId: user._id }`).
