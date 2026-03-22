@@ -16,13 +16,20 @@ export async function GET(
         const { id } = await params;
         await dbConnect();
 
-        const chat = await ResearchChat.findOne({ _id: id, userId: user._id || user.id });
+        // Optimization: Return plain JS object instead of Mongoose document
+        const chat = await ResearchChat.findOne({ _id: id, userId: user._id || user.id }).lean();
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
 
-        return NextResponse.json(chat);
+        // Map to ensure 'id' virtual property is preserved for API contract
+        const formattedChat = {
+            ...chat,
+            id: chat._id.toString()
+        };
+
+        return NextResponse.json(formattedChat);
     } catch (error) {
         console.error('Error fetching one research chat:', error);
         return NextResponse.json({ error: 'Failed to fetch chat' }, { status: 500 });
