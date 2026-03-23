@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-22 - [IDOR in Research Queue Creation]
+**Vulnerability:** `create_research_queue` endpoint created items into chat queues without verifying user authentication or ownership of the target `chatId`, allowing unauthorized operations and data pollution.
+**Learning:** Endpoints that modify state inside nested resources (like chat queues) are often overlooked for authorization checks if they don't directly manipulate the parent document's core fields.
+**Prevention:** Always require authentication and authorization (via `findOne` and `findOneAndUpdate` scoped by `userId`) for any endpoints modifying queues, subdocuments, or related resources, just as you would for parent resource endpoints.
