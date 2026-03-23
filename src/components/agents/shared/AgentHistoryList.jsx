@@ -53,30 +53,37 @@ const AgentHistoryList = ({ history = [], onSelect }) => {
         };
         return (
           <React.Fragment key={item.id || idx}>
-            <div
-              className={cn(
-                "flex items-start gap-3 p-4 transition-colors",
-                onSelect && "hover:bg-accent cursor-pointer",
-              )}
-              onClick={onSelect ? () => onSelect(item) : undefined}
-            >
-              <IconComponent
-                className={cn("mt-0.5 h-5 w-5 shrink-0", getIconColor())}
-              />
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="truncate text-sm font-medium">
-                    {item.query || "No query"}
-                  </span>
-                  <Badge variant={getBadgeVariant()} className="shrink-0">
-                    {STATUS_LABELS[status] || STATUS_LABELS.default}
-                  </Badge>
-                </div>
-                <span className="text-muted-foreground text-xs">
-                  {formatTimestamp(item.timestamp)}
-                </span>
-              </div>
-            </div>
+            {(() => {
+              const Wrapper = onSelect ? "button" : "div";
+              return (
+                <Wrapper
+                  type={onSelect ? "button" : undefined}
+                  className={cn(
+                    "flex w-full items-start gap-3 p-4 text-left transition-colors",
+                    onSelect &&
+                      "hover:bg-accent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  )}
+                  onClick={onSelect ? () => onSelect(item) : undefined}
+                >
+                  <IconComponent
+                    className={cn("mt-0.5 h-5 w-5 shrink-0", getIconColor())}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate text-sm font-medium">
+                        {item.query || "No query"}
+                      </span>
+                      <Badge variant={getBadgeVariant()} className="shrink-0">
+                        {STATUS_LABELS[status] || STATUS_LABELS.default}
+                      </Badge>
+                    </div>
+                    <span className="text-muted-foreground text-xs">
+                      {formatTimestamp(item.timestamp)}
+                    </span>
+                  </div>
+                </Wrapper>
+              );
+            })()}
             {idx < history.length - 1 && (
               <div className="border-border mx-4 border-b" />
             )}
