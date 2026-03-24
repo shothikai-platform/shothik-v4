@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Unprotected API Endpoints and Field Mapping Errors]
+**Vulnerability:** `update_name` research chat endpoint lacked authentication and ownership checks (IDOR), and used incorrect field mapping (`title` instead of `name`).
+**Learning:** Legacy or quickly implemented API routes may bypass standard security patterns. Always verify field names against the Mongoose schema.
+**Prevention:** Implement `getAuthenticatedUser()` checks in every API route and use `findOneAndUpdate` with a `userId` filter for all update operations.
