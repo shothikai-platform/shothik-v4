@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-22 - [IDOR in ResearchChat Mutation API Endpoints]
+**Vulnerability:** `update_name` and `delete_chat` endpoints fetched chats by ID and mutated them without verifying user ownership, allowing unauthorized users to rename or delete other users' chats.
+**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for mutating user-specific resources. Mutative endpoints are often overlooked when fixing read-only endpoints.
+**Prevention:** Always scope database mutation queries with `userId` (e.g., `findOneAndUpdate({ _id: id, userId: currentUser._id }, ...)`) instead of just `findByIdAndUpdate(id, ...)`.
