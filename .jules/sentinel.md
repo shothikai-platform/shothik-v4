@@ -1,9 +1,4 @@
-## 2025-05-22 - [DoS Prevention via Input Validation]
-**Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
-**Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
-**Prevention:** Use Pydantic `Field` constraints to enforce strict length and range limits on all user-controlled inputs at the API gateway/routing layer.
-
-## 2025-02-26 - [IDOR in Research Chat API]
-**Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
-**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
-**Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2025-02-28 - Insecure Direct Object Reference in Research Chat Endpoints
+**Vulnerability:** IDOR and authorization bypass in `delete_chat`, `update_name`, and `create_research_queue` API endpoints for Research Chats. The endpoints relied solely on the provided chat `id` to update or delete records using `findByIdAndDelete` and `findByIdAndUpdate`.
+**Learning:** Endpoints lacked basic resource ownership validation, allowing any authenticated user (or unauthenticated, if no middleware protected it) to perform destructive or mutating actions on data belonging to other users if they could guess or discover the `id`.
+**Prevention:** Always verify that the requested resource belongs to the authenticated user attempting the action. Use methods like `findOneAndDelete({ _id: id, userId: user._id })` instead of `findByIdAndDelete` to enforce ownership constraints at the database query level.
