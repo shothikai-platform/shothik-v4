@@ -199,17 +199,18 @@ export default function AccountGeneral({ user }) {
                     type="file"
                     accept=".jpeg,.jpg,.png,.gif"
                     onChange={handleFileSelect}
-                    className="hidden"
+                    className="peer sr-only"
                     id="avatar-upload"
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() =>
-                      document.getElementById("avatar-upload").click()
-                    }
+                    asChild
+                    className="peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2"
                   >
-                    Change Avatar
+                    <label htmlFor="avatar-upload" className="cursor-pointer">
+                      Change Avatar
+                    </label>
                   </Button>
                   <p className="text-muted-foreground mt-2 text-xs">
                     Allowed *.jpeg, *.jpg, *.png, *.gif
