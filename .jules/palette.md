@@ -1,7 +1,7 @@
-## 2025-02-18 - Tooltip & ARIA on Icon-Only Buttons
-**Learning:** Icon-only buttons (like Copy/Download) are inaccessible without `aria-label` and confusing without Tooltips. Adding them is a high-impact, low-risk win.
-**Action:** Always wrap icon-only buttons in `Tooltip` and sync `aria-label` with the tooltip text (including state changes like "Copied!").
+## 2024-03-26 - Accessible Expand/Collapse Interaction
+**Learning:** Found icon-only buttons (like expand/collapse using Chevron icons) lacking `aria-label` and focus visibility (`focus-visible:ring-2`) in Shothik AI agent's task progress. Adding these and an `aria-expanded` state significantly improves keyboard navigation and screen reader comprehension.
+**Action:** When adding icon-only buttons to new components or features, ensure they have an explicit `aria-label`, visible keyboard focus via tailwind utilities like `focus-visible:ring-2`, and contextually appropriate aria-attributes (like `aria-expanded` for toggles).
 
-## 2025-02-18 - Tooltips on Disabled Buttons
-**Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
-**Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2024-03-26 - Accessible Expand/Collapse Interaction
+**Learning:** Found icon-only buttons (like expand/collapse using Chevron icons) lacking `aria-label` and focus visibility (`focus-visible:ring-2`) in Shothik AI agent's task progress. Adding these and an `aria-expanded` state significantly improves keyboard navigation and screen reader comprehension.
+**Action:** When adding icon-only buttons to new components or features, ensure they have an explicit `aria-label`, visible keyboard focus via tailwind utilities like `focus-visible:ring-2`, and contextually appropriate aria-attributes (like `aria-expanded` for toggles).

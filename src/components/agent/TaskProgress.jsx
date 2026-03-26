@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function TaskProgress({ taskProgress }) {
   const [expanded, setExpanded] = useState(false);
@@ -42,8 +42,10 @@ export default function TaskProgress({ taskProgress }) {
             </div>
 
             <button
-              className="hover:bg-accent absolute right-2 bottom-2 inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
+              className="hover:bg-accent focus-visible:ring-ring absolute right-2 bottom-2 inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none focus-visible:ring-2 focus-visible:outline-none"
               onClick={toggleExpanded}
+              aria-label="Collapse task progress"
+              aria-expanded={expanded}
             >
               {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
@@ -58,8 +60,10 @@ export default function TaskProgress({ taskProgress }) {
                 {taskDone.length}/{taskProgress.length}
               </span>
               <button
-                className="hover:bg-accent inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
+                className="hover:bg-accent focus-visible:ring-ring inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none focus-visible:ring-2 focus-visible:outline-none"
                 onClick={toggleExpanded}
+                aria-label="Expand task progress"
+                aria-expanded={expanded}
               >
                 {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </button>
