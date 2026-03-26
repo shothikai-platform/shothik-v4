@@ -317,13 +317,14 @@ export default function AccountGeneral({ user }) {
                         </AvatarFallback>
                       </Avatar>
                     )}
-                    <label className="bg-primary text-primary-foreground hover:bg-primary/90 absolute right-0 bottom-0 cursor-pointer rounded-full p-2 transition-colors">
+                    <label className="bg-primary text-primary-foreground hover:bg-primary/90 absolute right-0 bottom-0 cursor-pointer rounded-full p-2 transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                       <Camera className="h-4 w-4" />
+                      <span className="sr-only">Change profile picture</span>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleFileSelect}
-                        className="hidden"
+                        className="sr-only"
                       />
                     </label>
                   </div>
