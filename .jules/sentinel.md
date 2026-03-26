@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [IDOR in Sheet Chat API]
+**Vulnerability:** `get_my_chats` and `create_conversation` in Sheet API were either fetching all sessions regardless of owner or allowing anyone to post to any session ID.
+**Learning:** Monorepos with multiple feature teams often replicate common vulnerability patterns (like IDOR) across different modules (Research vs. Sheet) if security reviews aren't centralized.
+**Prevention:** Audit all endpoints that take a resource ID or fetch "my" resources to ensure they use `getAuthenticatedUser()` and filter by `userId`.
