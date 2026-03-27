@@ -1,16 +1,16 @@
 "use client";
 
+import { memo } from "react";
 import ImagesContent from "./ImagesContent";
 import ResearchContent from "./ResearchContent";
 import SourcesContent from "./SourcesContent";
 
-export default function ResearchDataArea({
+const ResearchDataArea = ({
   selectedTab,
   research,
   isLastData,
   onSwitchTab,
-}) {
-
+}) => {
   const renderContent = () => {
     switch (selectedTab) {
       case 0: // Research
@@ -31,4 +31,17 @@ export default function ResearchDataArea({
   };
 
   return <div>{renderContent()}</div>;
+};
+
+// Custom comparison function for memo
+// We ignore onSwitchTab because it's an inline function in the parent (ResearchAgentPage)
+// that is recreated on every render, but its logic is stable for a given research ID.
+function arePropsEqual(prevProps, nextProps) {
+  return (
+    prevProps.selectedTab === nextProps.selectedTab &&
+    prevProps.isLastData === nextProps.isLastData &&
+    prevProps.research === nextProps.research
+  );
 }
+
+export default memo(ResearchDataArea, arePropsEqual);
