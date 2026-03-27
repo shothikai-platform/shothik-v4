@@ -2,10 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
+
+// Configure marked options
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
 
 const ResearchContentWithReferences = ({
   content,
@@ -20,6 +27,7 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [safeHtml, setSafeHtml] = useState("");
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -67,10 +75,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -107,17 +111,21 @@ const ResearchContentWithReferences = ({
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
-
   const processedContent = processContentWithReferences(contentStr);
 
-  // Configure marked options
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
+  useEffect(() => {
+    // Parse markdown
+    const rawHtml = marked(processedContent);
+
+    // Sanitize HTML to prevent XSS
+    // Note: DOMPurify.sanitize works in browser environment
+    // We explicitly allow data-reference attribute for tooltips
+    const sanitized = DOMPurify.sanitize(rawHtml, {
+      ADD_ATTR: ['data-reference', 'target'], // Ensure data-reference is kept for hover logic
+    });
+
+    setSafeHtml(sanitized);
+  }, [processedContent]);
 
   // Add hover event listeners after rendering
   const handleContentMouseOver = (event) => {
@@ -188,7 +196,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: safeHtml,
             }}
           />
 
