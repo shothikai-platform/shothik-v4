@@ -12,6 +12,7 @@ const AlertDialogMessage = ({ onClose }) => {
       <div className="relative w-[90%] max-w-sm rounded-lg bg-card p-5 text-center text-card-foreground shadow">
         <button
           onClick={onClose}
+          aria-label="Close"
           className="absolute right-3 top-3 cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100"
         >
           <X className="h-4 w-4" />
