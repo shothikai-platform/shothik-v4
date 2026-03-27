@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - API Response Payload Optimization
+**Learning:** Using `.lean()` on Mongoose queries is a major performance win for read-only endpoints, skipping document instantiation. However, it explicitly drops Mongoose virtuals. This can break API clients expecting virtual fields like `id`.
+**Action:** When adding `.lean()` to list endpoints, explicitly map over the results to retain critical virtuals like `id` by calling `_id.toString()`.
