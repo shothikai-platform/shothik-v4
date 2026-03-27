@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - Unscoped Data Fetching
+**Learning:** Found `get_my_chats` for SheetSession was fetching ALL sessions from the database without filtering by `userId`, causing severe performance degradation and IDOR.
+**Action:** When working on "get all" or "list" endpoints, primarily verify that the query is scoped to the authenticated user (e.g., `{ userId: user._id }`).
