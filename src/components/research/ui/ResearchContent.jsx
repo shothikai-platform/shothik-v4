@@ -2,13 +2,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { researchChatState } from "@/redux/slices/researchChatSlice";
-import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
+import React from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
+const MessageBubble = React.memo(({ message, isLastData, isDataGenerating }) => (
   <div className="flex w-full items-start">
     <div
       className={cn(
@@ -76,44 +75,53 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       </span>
     </div>
   </div>
+));
+
+MessageBubble.displayName = "MessageBubble";
+
+const ResearchContent = React.memo(
+  ({ currentResearch, isLastData, onSwitchTab }) => {
+    const researchResult =
+      currentResearch?.result || currentResearch?.answer || "";
+
+    const isDataGenerating = useSelector(
+      (state) =>
+        state.researchCore?.isStreaming || state.researchCore?.isPolling,
+    );
+    const currentChatId = useSelector(
+      (state) => state.researchChat?.currentChatId,
+    );
+
+    // Check if we have sources to use the new component with references
+    const hasSources =
+      currentResearch?.sources && currentResearch.sources.length > 0;
+
+    // Get the current agent ID for sharing functionality
+    const agentId = currentChatId;
+
+    return (
+      <div className="w-full max-w-full overflow-hidden">
+        {hasSources ? (
+          <ResearchContentWithReferences
+            content={researchResult}
+            sources={currentResearch.sources}
+            isLastData={isLastData}
+            isDataGenerating={isDataGenerating}
+            agentId={agentId}
+            onSwitchToSourcesTab={() => onSwitchTab?.(2)}
+          />
+        ) : (
+          <MessageBubble
+            message={researchResult}
+            isLastData={isLastData}
+            isDataGenerating={isDataGenerating}
+          />
+        )}
+      </div>
+    );
+  },
 );
 
-export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
-  const researchResult =
-    currentResearch?.result || currentResearch?.answer || "";
+ResearchContent.displayName = "ResearchContent";
 
-  const researchCore = useSelector(researchCoreState);
-  const researchChat = useSelector(researchChatState);
-
-  // Check if we have sources to use the new component with references
-  const hasSources =
-    currentResearch?.sources && currentResearch.sources.length > 0;
-
-  // Get the current agent ID for sharing functionality
-  const agentId = researchChat?.currentChatId;
-
-  return (
-    <div className="w-full max-w-full overflow-hidden">
-      {hasSources ? (
-        <ResearchContentWithReferences
-          content={researchResult}
-          sources={currentResearch.sources}
-          isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
-          agentId={agentId}
-          onSwitchToSourcesTab={() => onSwitchTab?.(2)}
-        />
-      ) : (
-        <MessageBubble
-          message={researchResult}
-          isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
-        />
-      )}
-    </div>
-  );
-}
+export default ResearchContent;
