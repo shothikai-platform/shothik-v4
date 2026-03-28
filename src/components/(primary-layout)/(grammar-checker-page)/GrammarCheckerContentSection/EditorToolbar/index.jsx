@@ -3,6 +3,60 @@
 import { cn } from "@/lib/utils";
 import { Bold, Italic, List, Redo2, Underline, Undo2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const ToolbarButton = ({ onClick, isActive, disabled, label, children }) => {
+  const buttonClass =
+    "flex items-center justify-center w-8 h-8 rounded cursor-pointer transition-colors hover:bg-accent hover:text-foreground";
+  const activeClass = "bg-muted";
+
+  const button = (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(buttonClass, {
+        [activeClass]: isActive,
+        "cursor-not-allowed opacity-50": disabled,
+        "pointer-events-none": disabled,
+      })}
+      aria-label={label}
+    >
+      {children}
+    </button>
+  );
+
+  if (disabled) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span
+            tabIndex={0}
+            className="inline-block rounded focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          >
+            {button}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent>
+        <p>{label}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
 
 const EditorToolbar = ({ editor, onHistoryOperation }) => {
   const [isBulletListActive, setIsBulletListActive] = useState(false);
@@ -17,10 +71,10 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
     const updateActiveStates = () => {
       const bulletActive = editor.isActive("bulletList");
       const orderedActive = editor.isActive("orderedList");
-      
+
       setIsBulletListActive(bulletActive);
       setIsOrderedListActive(orderedActive);
-      
+
       // Update undo/redo states
       setCanUndo(editor.can().undo());
       setCanRedo(editor.can().redo());
@@ -31,7 +85,7 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
     editor.on("update", updateActiveStates);
     editor.on("transaction", updateActiveStates);
     editor.on("create", updateActiveStates);
-    
+
     // Initial update
     updateActiveStates();
 
@@ -45,117 +99,86 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
 
   if (!editor) return null;
 
-  const buttonClass =
-    "flex items-center justify-center w-8 h-8 rounded cursor-pointer transition-colors hover:bg-accent hover:text-foreground";
-  const activeClass = "bg-muted";
-
   return (
     <>
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleBold().run();
         }}
-        className={cn(buttonClass, {
-          [activeClass]: editor.isActive("bold"),
-        })}
-        title="Bold"
+        isActive={editor.isActive("bold")}
+        label="Bold"
       >
         <Bold className="size-4" />
-      </button>
+      </ToolbarButton>
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus()?.toggleItalic()?.run();
         }}
-        className={cn(buttonClass, {
-          [activeClass]: editor.isActive("italic"),
-        })}
-        title="Italic"
+        isActive={editor.isActive("italic")}
+        label="Italic"
       >
         <Italic className="size-4" />
-      </button>
+      </ToolbarButton>
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus()?.toggleUnderline()?.run();
         }}
-        className={cn(buttonClass, {
-          [activeClass]: editor.isActive("strike"),
-        })}
-        title="Strike"
+        isActive={editor.isActive("strike")}
+        label="Underline"
       >
         <Underline className="size-4" />
-      </button>
+      </ToolbarButton>
 
       <div className="bg-muted mx-1 h-6 w-px" />
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleBulletList().run();
-          // Force immediate state update
           requestAnimationFrame(() => {
             setIsBulletListActive(editor.isActive("bulletList"));
             setIsOrderedListActive(editor.isActive("orderedList"));
           });
         }}
-        className={cn(buttonClass, {
-          [activeClass]: isBulletListActive,
-        })}
-        title="Bullet List"
+        isActive={isBulletListActive}
+        label="Bullet List"
       >
         <List className="size-4" />
-      </button>
+      </ToolbarButton>
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleOrderedList().run();
-          // Force immediate state update
           requestAnimationFrame(() => {
             setIsBulletListActive(editor.isActive("bulletList"));
             setIsOrderedListActive(editor.isActive("orderedList"));
           });
         }}
-        className={cn(buttonClass, {
-          [activeClass]: isOrderedListActive,
-        })}
-        title="Numbered List"
+        isActive={isOrderedListActive}
+        label="Numbered List"
       >
         <List className="size-4" />
-      </button>
+      </ToolbarButton>
 
       <div className="bg-muted mx-1 h-6 w-px" />
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          
-          if (!editor || !canUndo) {
-            return;
-          }
-          
-          // Set flag synchronously BEFORE executing to prevent Redux sync
-          if (onHistoryOperation) {
-            onHistoryOperation();
-          }
-          
-          // Execute undo command - ensure editor is focused first
+
+          if (!editor || !canUndo) return;
+          if (onHistoryOperation) onHistoryOperation();
+
           try {
             const success = editor.chain().focus().undo().run();
-            
             if (success) {
-              // Force state update after undo to refresh redo availability
               setTimeout(() => {
                 setCanRedo(editor.can().redo());
                 setCanUndo(editor.can().undo());
@@ -166,38 +189,22 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           }
         }}
         disabled={!editor || !canUndo}
-        className={cn(buttonClass, {
-          "cursor-not-allowed opacity-50": !editor || !canUndo,
-        })}
-        title="Undo"
+        label="Undo"
       >
         <Undo2 className="size-4" />
-      </button>
+      </ToolbarButton>
 
-      <button
-        type="button"
+      <ToolbarButton
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          
-          if (!editor || !canRedo) {
-            return;
-          }
-          
-          // Set flag synchronously BEFORE executing to prevent Redux sync
-          // This is critical - must be set before any editor operation
-          if (onHistoryOperation) {
-            onHistoryOperation();
-          }
-          
-          // Execute redo command - use chain() for proper command execution
-          // The chain ensures the command is properly queued and executed
+
+          if (!editor || !canRedo) return;
+          if (onHistoryOperation) onHistoryOperation();
+
           try {
-            // Execute redo - ensure editor is focused
             const success = editor.chain().focus().redo().run();
-            
             if (success) {
-              // Force state update after redo to refresh undo/redo availability
               setTimeout(() => {
                 setCanRedo(editor.can().redo());
                 setCanUndo(editor.can().undo());
@@ -210,13 +217,10 @@ const EditorToolbar = ({ editor, onHistoryOperation }) => {
           }
         }}
         disabled={!editor || !canRedo}
-        className={cn(buttonClass, {
-          "cursor-not-allowed opacity-50": !editor || !canRedo,
-        })}
-        title="Redo"
+        label="Redo"
       >
         <Redo2 className="size-4" />
-      </button>
+      </ToolbarButton>
     </>
   );
 };
