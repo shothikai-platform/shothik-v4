@@ -7,3 +7,7 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2025-05-22 - [IDOR in Research Chat API]
+**Vulnerability:** `delete_chat` and `update_name` endpoints fetched/updated chats by ID without verifying user ownership, allowing unauthorized access/modification to other users' chats.
+**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources. The Mongoose schema uses `name` field, but the API was mapping it to `title`. However, to not introduce functional regressions, we should maintain the existing mapping unless we are explicitly refactoring the schema.
+**Prevention:** Always scope database queries with `userId` (e.g., `findOneAndDelete({ _id: id, userId: currentUser._id })`) instead of just `findByIdAndDelete(id)`.
