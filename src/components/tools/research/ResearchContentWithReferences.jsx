@@ -67,9 +67,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
 
     // Clear any existing timeout
     if (hoverTimeout) {
@@ -106,10 +103,6 @@ const ResearchContentWithReferences = ({
 
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
-
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
 
   const processedContent = processContentWithReferences(contentStr);
 
