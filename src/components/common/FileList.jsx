@@ -216,21 +216,31 @@ export default function FileList({
 
               {/* Remove Button */}
               {onRemove && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onRemove(actualIndex, file.filename)}
-                  disabled={isUploading}
-                  className={cn(
-                    "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
-                    "group-hover:opacity-100",
-                    "hover:bg-destructive/10 hover:text-destructive",
-                    "text-muted-foreground",
-                    isUploading && "cursor-not-allowed opacity-50",
-                  )}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onRemove(actualIndex, file.filename)}
+                        disabled={isUploading}
+                        aria-label={`Remove ${file.filename}`}
+                        className={cn(
+                          "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
+                          "group-hover:opacity-100 focus:opacity-100",
+                          "hover:bg-destructive/10 hover:text-destructive",
+                          "text-muted-foreground",
+                          isUploading && "cursor-not-allowed opacity-50",
+                        )}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Remove file</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
 
               {/* Uploading Indicator Overlay */}
