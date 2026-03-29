@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -96,6 +96,7 @@ const ChatInput = () => {
         <div className="mb-4 flex items-center gap-4">
           <Textarea
             placeholder="Enter a new research topic"
+            aria-label="Research topic"
             value={inputValue}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
@@ -137,6 +138,7 @@ const ChatInput = () => {
                   isInitiatingResearch ||
                   isStreaming
                 }
+                aria-label="Start research"
                 size="icon"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
               >

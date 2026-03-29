@@ -43,6 +43,7 @@ const ImageCard = ({ image, onClick }) => (
           variant="ghost"
           size="icon"
           className="h-6 w-6"
+          aria-label="View original image context"
           onClick={(e) => {
             e.stopPropagation();
             window.open(image.context_url, "_blank");
