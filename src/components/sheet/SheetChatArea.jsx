@@ -130,7 +130,7 @@ export default function SheetChatArea({
   const currentChatId = searchParams.get("id");
   const router = useRouter();
 
-  const [inputValue, setInputValue] = useState("");
+  // const [inputValue, setInputValue] = useState(""); // Removed state
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -614,9 +614,10 @@ export default function SheetChatArea({
     return response;
   };
 
-  const handleMessage = async (messageText = inputValue) => {
+  const handleMessage = async (messageText) => { // Updated to accept argument
+    // const messageText = messageText || inputValue; // Removed inputValue fallback
     if (
-      !messageText.trim() ||
+      !messageText?.trim() ||
       isLoading ||
       (!isSimulationMode && !sheetAiToken)
     ) {
@@ -642,7 +643,7 @@ export default function SheetChatArea({
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue("");
+    // setInputValue(""); // Handled in InputArea
 
     try {
       await handleSheetGeneration(messageText, actualChatId, userMessageId);
@@ -1122,7 +1123,7 @@ export default function SheetChatArea({
           ...prev,
           {
             id: `cancelled-${Date.now()}`,
-            message: "Generation was cancelled.",
+            message: "Generation cancelled by user.",
             isUser: false,
             timestamp: new Date().toISOString(),
             type: "info",
@@ -1402,8 +1403,8 @@ export default function SheetChatArea({
             <div className="border-border bg-background w-full shrink-0 border-t">
               <InputArea
                 currentAgentType={currentAgentType}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
+                // inputValue={inputValue} // Removed
+                // setInputValue={setInputValue} // Removed
                 onSend={handleMessage}
                 onNewChat={handleNewChat}
                 isLoading={isLoading || sheetState.status === "generating"}

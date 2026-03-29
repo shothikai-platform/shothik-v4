@@ -20,26 +20,23 @@ export default function PresentationLogsUi({
   const scrollContainerRef = useRef(null);
   const router = useRouter();
 
-  const [inputValue, setInputValue] = useState("");
+  // const [inputValue, setInputValue] = useState(""); // Removed state
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileUrls, setFileUrls] = useState([]);
 
   // Handle send action
-  const handleSend = async () => {
-    if (!inputValue.trim() || externalIsLoading) return;
+  const handleSend = async (messageText) => { // Updated to accept argument
+    const message = messageText?.trim(); // Use argument
+    if (!message || externalIsLoading) return;
 
     // Extract file URLs from uploaded files
     const urls = fileUrls.length > 0 ? fileUrls : null;
-    const message = inputValue.trim();
 
-    // Clear input and files immediately for better UX
-    // The optimistic log will be added, so user sees their message right away
-    setInputValue("");
+    // Clear files immediately for better UX
     setUploadedFiles([]);
     setFileUrls([]);
 
-    // Scroll to bottom immediately after clearing input (optimistic UI)
-    // This ensures scroll happens before the optimistic log is added
+    // Scroll to bottom immediately
     setTimeout(() => {
       const el = scrollContainerRef.current;
       if (el) {
@@ -50,8 +47,6 @@ export default function PresentationLogsUi({
     // Call the parent's onSend handler
     if (onSend) {
       await onSend(message, urls);
-      // Note: Input is already cleared above for immediate feedback
-      // If send fails, the optimistic log will still be there
     }
   };
 
@@ -188,8 +183,8 @@ export default function PresentationLogsUi({
       <div className="border-border bg-card shrink-0 border-t">
         <InputArea
           currentAgentType={"presentation"}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
+          // inputValue={inputValue} // Removed
+          // setInputValue={setInputValue} // Removed
           onSend={handleSend}
           onNewChat={handleNewChat}
           isLoading={externalIsLoading}

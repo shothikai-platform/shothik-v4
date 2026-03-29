@@ -62,7 +62,7 @@ export default function PresentationAgentPage({ specificAgent }) {
   const [currentPresentationId, setCurrentPresentationId] =
     useState(urlPresentationId);
   const [chatHistory, setChatHistory] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  // const [inputValue, setInputValue] = useState(""); // Removed state
   const [isLoading, setIsLoading] = useState(false);
   const [selectedNavItem, setSelectedNavItem] = useState("chat");
   const [socket, setSocket] = useState(null);
@@ -96,12 +96,12 @@ export default function PresentationAgentPage({ specificAgent }) {
     totalSlides = 0,
   } = presentationState || {};
 
-
   useEffect(() => {
-      "[PresentationAgentPage] Initializing socket connection",
-      "presentaton id ->",
-      currentPresentationId,
-    );
+    // console.log(
+    //   "[PresentationAgentPage] Initializing socket connection",
+    //   "presentaton id ->",
+    //   currentPresentationId,
+    // );
 
     const token = localStorage.getItem("accessToken");
     const socketInstance = io(
@@ -121,15 +121,17 @@ export default function PresentationAgentPage({ specificAgent }) {
 
       // RECONNECTION LOGIC: If we have a presentation ID, rejoin the room
       if (currentPresentationId) {
-          "[SOCKET] Reconnecting to presentation:",
-          currentPresentationId,
-        );
+        // console.log(
+        //   "[SOCKET] Reconnecting to presentation:",
+        //   currentPresentationId,
+        // );
         socketInstance.emit("joinPresentation", currentPresentationId);
 
         // If we don't have data or we're in a loading state, fetch current state
         if (!dataFetched || isLoading) {
-            "[SOCKET] Fetching current presentation state after reconnection",
-          );
+          // console.log(
+          //   "[SOCKET] Fetching current presentation state after reconnection",
+          // );
           setIsLoading(true); // Starting the data polling again to start the streaming
           fetchPresentationData();
         }
@@ -160,10 +162,11 @@ export default function PresentationAgentPage({ specificAgent }) {
           //   slides,
           //   status
           // );
-            status,
-            presentationId,
-            "status from presentation update",
-          );
+          // console.log(
+          //   status,
+          //   presentationId,
+          //   "status from presentation update",
+          // );
           // server is responding => allow polling now
           setAwaitingAck(false);
           dispatch(
@@ -196,15 +199,15 @@ export default function PresentationAgentPage({ specificAgent }) {
             }
           }
         } else {
-            "[SOCKET] Ignoring update for different presentation:",
-            presentationId,
-          );
+          // console.log(
+          //   "[SOCKET] Ignoring update for different presentation:",
+          //   presentationId,
+          // );
         }
       },
     );
 
-    socketInstance.on("joinedPresentation", (data) => {
-    });
+    socketInstance.on("joinedPresentation", (data) => {});
 
     socketInstance.on("connect_error", (error) => {
       console.error("[SOCKET] Connection error:", error);
@@ -239,9 +242,10 @@ export default function PresentationAgentPage({ specificAgent }) {
 
   useEffect(() => {
     if (urlPresentationId && urlPresentationId !== currentPresentationId) {
-        "[PresentationAgentPage] New presentation ID detected:",
-        urlPresentationId,
-      );
+      // console.log(
+      //   "[PresentationAgentPage] New presentation ID detected:",
+      //   urlPresentationId,
+      // );
 
       dispatch(
         setPresentationState({
@@ -260,18 +264,20 @@ export default function PresentationAgentPage({ specificAgent }) {
       setIsLoading(true);
 
       if (socket && isSocketConnected && currentPresentationId) {
-          "[SOCKET] Leaving previous presentation room:",
-          currentPresentationId,
-        );
+        // console.log(
+        //   "[SOCKET] Leaving previous presentation room:",
+        //   currentPresentationId,
+        // );
         socket.emit("leavePresentation", currentPresentationId);
       }
 
       setCurrentPresentationId(urlPresentationId);
 
       if (socket && isSocketConnected) {
-          "[SOCKET] Joining new presentation room:",
-          urlPresentationId,
-        );
+        // console.log(
+        //   "[SOCKET] Joining new presentation room:",
+        //   urlPresentationId,
+        // );
         socket.emit("joinPresentation", urlPresentationId);
       }
     }
@@ -318,9 +324,10 @@ export default function PresentationAgentPage({ specificAgent }) {
 
   useEffect(() => {
     if (currentPresentationId && !dataFetched) {
-        "[PresentationAgentPage] Fetching initial data for:",
-        currentPresentationId,
-      );
+      // console.log(
+      //   "[PresentationAgentPage] Fetching initial data for:",
+      //   currentPresentationId,
+      // );
       fetchPresentationData();
     }
   }, [currentPresentationId, dataFetched]);
@@ -350,7 +357,7 @@ export default function PresentationAgentPage({ specificAgent }) {
     // Start polling if we're loading OR status is processing
     // const shouldStartPolling = isLoading || status === "processing";
 
-    // 
+    //
 
     const shouldStartPolling = !awaitingAck && status === "processing";
 
@@ -358,14 +365,16 @@ export default function PresentationAgentPage({ specificAgent }) {
       // Prevent starting a new poller if one is already running
       if (pollingIntervalRef.current) return;
 
-        "[PresentationAgentPage] Starting polling for:",
-        currentPresentationId,
-      );
+      // console.log(
+      //   "[PresentationAgentPage] Starting polling for:",
+      //   currentPresentationId,
+      // );
 
       pollingIntervalRef.current = setInterval(() => {
-          "[PresentationAgentPage] Polling for updates:",
-          currentPresentationId,
-        );
+        // console.log(
+        //   "[PresentationAgentPage] Polling for updates:",
+        //   currentPresentationId,
+        // );
         fetchPresentationData();
       }, 3000);
     } else {
@@ -391,7 +400,7 @@ export default function PresentationAgentPage({ specificAgent }) {
   ]); //these dependencies shouldn't be changed frequently
 
   // (isLoading || status === "processing") && !isSocketConnected;
-  // 
+  //
 
   const fetchPresentationData = async () => {
     if (!currentPresentationId) return;
@@ -511,8 +520,10 @@ export default function PresentationAgentPage({ specificAgent }) {
   };
 
   const handleSend = async (promptText) => {
-    const prompt = promptText || inputValue;
-    if (!prompt.trim() || isLoading) return;
+    // const prompt = promptText || inputValue; // Removed inputValue fallback
+    const prompt = promptText;
+
+    if (!prompt?.trim() || isLoading) return;
 
     const optimisticMessage = {
       id: `temp-${Date.now()}`,
@@ -526,7 +537,7 @@ export default function PresentationAgentPage({ specificAgent }) {
     setChatHistory((prev) => [...prev, optimisticMessage]);
     // Add to local state immediately
     setOptimisticMessages((prev) => [...prev, optimisticMessage]);
-    setInputValue("");
+    // setInputValue(""); // Handled locally in InputArea
 
     setIsLoading(true);
 
@@ -615,16 +626,14 @@ export default function PresentationAgentPage({ specificAgent }) {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const handleApplyAutoFixes = () => {
-  };
+  const handleApplyAutoFixes = () => {};
 
-  const handleRegenerateWithFeedback = () => {
-  };
+  const handleRegenerateWithFeedback = () => {};
 
   const handlePreviewOpen = () => setPreviewOpen(true);
   const handlePreviewClose = (open) => setPreviewOpen(open);
 
-  // 
+  //
 
   useEffect(() => {
     if (status === "failed") {
@@ -686,8 +695,8 @@ export default function PresentationAgentPage({ specificAgent }) {
                 completedPhases={completedPhases}
                 logsData={{ data: logs, status: currentPhase }}
                 chatEndRef={chatEndRef}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
+                // inputValue={inputValue} // Removed
+                // setInputValue={setInputValue} // Removed
                 onSend={handleSend}
                 status={status}
                 presentationId={urlPresentationId}
@@ -747,8 +756,8 @@ export default function PresentationAgentPage({ specificAgent }) {
                 completedPhases={completedPhases}
                 logsData={{ data: logs, status: currentPhase }}
                 chatEndRef={chatEndRef}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
+                // inputValue={inputValue} // Removed
+                // setInputValue={setInputValue} // Removed
                 onSend={handleSend}
                 status={status}
                 presentationId={urlPresentationId}

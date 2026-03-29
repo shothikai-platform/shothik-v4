@@ -851,7 +851,7 @@ const mergeMessagesWithDeduplication = (realLogs, optimisticMessages) => {
     }
   });
 
-  // 
+  //
 
   return merged.sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
@@ -867,8 +867,8 @@ export default function ChatArea({
   completedPhases,
   logsData,
   chatEndRef,
-  inputValue,
-  setInputValue,
+  // inputValue, // Removing prop usage
+  // setInputValue, // Removing prop usage
   onSend,
   status,
   presentationId,
@@ -1080,8 +1080,8 @@ export default function ChatArea({
             {!hideInputField && (
               <InputArea
                 currentAgentType={currentAgentType}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
+                // inputValue={inputValue} // Removed
+                // setInputValue={setInputValue} // Removed
                 onSend={onSend}
                 isLoading={isLoading}
                 setUploadedFiles={setUploadedFiles}
