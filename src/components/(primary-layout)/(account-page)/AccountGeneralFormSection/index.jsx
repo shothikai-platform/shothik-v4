@@ -33,7 +33,6 @@ import {
   CheckCircle,
   Edit,
   Info,
-  Loader2,
   Mail,
   MapPin,
   Save,
@@ -402,10 +401,7 @@ export default function AccountGeneral({ user }) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
+                  <Button type="submit" isLoading={isSubmitting}>
                     <Save className="mr-2 h-4 w-4" />
                     Save Changes
                   </Button>
@@ -605,10 +601,7 @@ export default function AccountGeneral({ user }) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
+                  <Button type="submit" isLoading={isSubmitting}>
                     <Save className="mr-2 h-4 w-4" />
                     Save Changes
                   </Button>
