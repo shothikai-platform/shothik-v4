@@ -64,6 +64,14 @@ ALLOWED_ORIGINS: List[str] = [
     origin.strip() for origin in ALLOWED_ORIGINS_STR.split(",") if origin.strip()
 ]
 
+if not ALLOWED_ORIGINS:
+    logger.warning(
+        "ALLOWED_ORIGINS is not set. All cross-origin requests will be blocked. "
+        "Set this environment variable to a comma-separated list of allowed domains. "
+        "Example: ALLOWED_ORIGINS='http://localhost:3000,https://your-frontend.com'"
+    )
+
+
 # In development, you might want to uncomment the following for easier local testing:
 # if not ALLOWED_ORIGINS and os.getenv("PYTHON_ENV") == "development":
 #     ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
