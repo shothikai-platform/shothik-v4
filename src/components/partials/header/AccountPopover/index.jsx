@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -106,6 +107,7 @@ export default function AccountPopover() {
                 "hover:bg-primary/10 w-full px-4 py-3 text-left",
                 "flex items-center gap-3",
               )}
+              aria-label="View my profile"
             >
               <User className="h-5 w-5" />
               <div className="flex-1">
@@ -131,6 +133,7 @@ export default function AccountPopover() {
                 dispatch(setShowLoginModal(true));
               }}
               className="hover:bg-primary/10 flex w-full items-center gap-3 px-3 py-2 text-sm"
+              aria-label="Login or Sign up"
             >
               <LogIn className="h-5 w-5" />
               <span>Login / Sign up</span>
@@ -174,6 +177,7 @@ export default function AccountPopover() {
             <button
               onClick={handleLogout}
               className="hover:bg-primary/10 flex w-full items-center gap-3 px-3 py-3 text-sm"
+              aria-label="Log out"
             >
               <LogIn className="h-5 w-5" />
               <span>Log out</span>
