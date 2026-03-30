@@ -22,9 +22,9 @@ import {
 } from "@/redux/api/shareAgent/shareAgentApi";
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { ArrowLeft, Eye, Save, User } from "lucide-react";
-import { marked } from "marked";
+import { marked } from "@/lib/marked-config";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const SharedAgentPage = () => {
@@ -48,10 +48,6 @@ const SharedAgentPage = () => {
     useCreateAgentReplicaMutation();
 
   useEffect(() => {
-      accessToken,
-      isAuthenticated,
-      user,
-    });
     if (shareId) {
       loadSharedAgent();
     }
@@ -102,21 +98,11 @@ const SharedAgentPage = () => {
   };
 
   const handleSaveAsCopy = async () => {
-      accessToken,
-      isAuthenticated,
-      user,
-      shareId,
-      authState: { accessToken, isAuthenticated, user },
-    });
-
     if (!isAuthenticated || !user) {
       // Open the login modal instead of redirecting
       dispatch(setShowLoginModal(true));
       return;
     }
-
-      "User authenticated, creating replica and redirecting to research page",
-    );
 
     try {
       // Create replica first
@@ -150,14 +136,9 @@ const SharedAgentPage = () => {
     }
   };
 
-  // Configure marked options
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
-
   // Function to process markdown content to HTML with proper reference styling
-  const processMarkdownContent = (content) => {
+  const processedHtmlContent = useMemo(() => {
+    const content = sharedData?.agent?.content;
     if (!content) return "";
 
     // Ensure content is a string
@@ -184,7 +165,7 @@ const SharedAgentPage = () => {
 
     // Use marked to process the markdown
     return marked(processedContent);
-  };
+  }, [sharedData]);
 
   if (isLoading) {
     return (
@@ -330,7 +311,7 @@ const SharedAgentPage = () => {
                   "prose-th:p-2 prose-th:text-left prose-td:p-2",
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: processMarkdownContent(sharedData.agent.content),
+                  __html: processedHtmlContent,
                 }}
               />
 
