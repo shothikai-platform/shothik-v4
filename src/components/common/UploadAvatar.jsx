@@ -1,3 +1,4 @@
+import React, { useId } from "react";
 import { cn } from "@/lib/utils";
 import { Camera } from "lucide-react";
 import Image from "next/image";
@@ -9,6 +10,8 @@ export default function UploadAvatar({
   helperText,
   loading,
 }) {
+  const inputId = useId();
+
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -18,25 +21,25 @@ export default function UploadAvatar({
 
   return (
     <>
-      <div
+      <label
+        htmlFor={inputId}
         className={cn(
           "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed",
-          loading ? "cursor-not-allowed" : "cursor-pointer",
+          "focus-within:outline-none focus-within:ring-2 focus-within:ring-ring",
+          loading ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:opacity-80 transition-opacity",
           error
             ? "border-destructive bg-destructive/10"
             : "border-border bg-muted",
         )}
-        onClick={() =>
-          !loading && document.getElementById("avatarInput").click()
-        }
       >
         <input
-          id="avatarInput"
+          id={inputId}
           type="file"
           accept="image/*"
-          className="hidden"
+          className="sr-only"
           onChange={handleFileChange}
           disabled={loading}
+          aria-label="Upload photo"
         />
 
         {file ? (
@@ -53,7 +56,7 @@ export default function UploadAvatar({
             <span className="text-muted-foreground text-xs">Upload Photo</span>
           </div>
         )}
-      </div>
+      </label>
 
       {helperText && (
         <p className="text-destructive mt-2 text-center text-xs">
