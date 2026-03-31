@@ -3,8 +3,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ChatInput = () => {
   const [inputValue, setInputValue] = useState("");
@@ -127,21 +132,29 @@ const ChatInput = () => {
             </div>
 
             <div className="flex flex-row-reverse items-center gap-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
-                size="icon"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={
+                      !inputValue.trim() ||
+                      isInitiatingPresentation ||
+                      isInitiatingSheet ||
+                      isUploading ||
+                      isInitiatingResearch ||
+                      isStreaming
+                    }
+                    size="icon"
+                    aria-label="Start Research"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
+                  >
+                    <Send className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Start Research</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
