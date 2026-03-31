@@ -1,14 +1,15 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { Check, Download } from "lucide-react";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { downloadFile } from "../tools/common/downloadfile";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { Check, Download } from "lucide-react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { downloadFile } from "../tools/common/downloadfile";
 
 const ButtonDownloadText = ({
   className,
@@ -36,16 +37,14 @@ const ButtonDownloadText = ({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={(e) => {
-            handleDownload(e);
+            handleDownload();
             onClick?.(e);
           }}
-          className={cn(
-            "flex size-8 cursor-pointer items-center justify-center rounded",
-            className,
-          )}
+          className={className}
           aria-label={showDownload ? "Download text" : "Downloaded"}
           {...props}
         >
@@ -55,7 +54,7 @@ const ButtonDownloadText = ({
             ) : (
               <Check className="size-5" />
             ))}
-        </button>
+        </Button>
       </TooltipTrigger>
       <TooltipContent>
         <p>{showDownload ? "Download text" : "Downloaded!"}</p>
