@@ -1,4 +1,10 @@
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
@@ -127,21 +133,31 @@ const ChatInput = () => {
             </div>
 
             <div className="flex flex-row-reverse items-center gap-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
-                size="icon"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={
+                        !inputValue.trim() ||
+                        isInitiatingPresentation ||
+                        isInitiatingSheet ||
+                        isUploading ||
+                        isInitiatingResearch ||
+                        isStreaming
+                      }
+                      size="icon"
+                      aria-label="Start research"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full disabled:pointer-events-auto"
+                    >
+                      <Send className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start research</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>
