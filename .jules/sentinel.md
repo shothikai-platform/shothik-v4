@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Information Disclosure in Sheet Chat API]
+**Vulnerability:** `get_my_chats` endpoint for sheets returned all sessions from the database to any requester, regardless of authentication or ownership.
+**Learning:** API endpoints listing collections are often overlooked during security audits compared to single-resource endpoints.
+**Prevention:** Ensure all collection-listing endpoints implement both authentication and user-based filtering (`find({ userId })`) from the start.
