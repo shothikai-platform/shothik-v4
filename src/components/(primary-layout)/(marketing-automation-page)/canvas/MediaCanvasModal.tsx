@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { mediaAPI } from "@/services/marketing-automation.service";
 import type { Ad } from "@/types/campaign";
 import {
   Download,
@@ -22,6 +23,7 @@ import {
   Wand2,
   Zap,
 } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 interface MediaCanvasModalProps {
@@ -33,6 +35,8 @@ export default function MediaCanvasModal({
   ad,
   onClose,
 }: MediaCanvasModalProps) {
+  const params = useParams();
+  const projectId = params?.projectId as string;
   const [generatedMedia, setGeneratedMedia] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [editPrompt, setEditPrompt] = useState("");
@@ -68,19 +72,31 @@ export default function MediaCanvasModal({
   };
 
   const handleEditMedia = async () => {
-    if (!editPrompt.trim() || !generatedMedia) return;
+    if (!editPrompt.trim() || !generatedMedia || !projectId) return;
 
     setIsGenerating(true);
 
-    // TODO: Replace with actual API call
-    setTimeout(() => {
-      const editedImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
-      setGeneratedMedia(editedImage);
-      setMediaHistory((prev) => [...prev, editedImage]);
-      setEditPrompt("");
-      setSelectedRegion(null);
+    try {
+      const result = await mediaAPI.regenerateMedia(
+        projectId,
+        ad.id,
+        editPrompt,
+        selectedRegion ? [selectedRegion] : undefined,
+      );
+
+      if (result.success && result.mediaUrl) {
+        setGeneratedMedia(result.mediaUrl);
+        setMediaHistory((prev) => [...prev, result.mediaUrl]);
+        setEditPrompt("");
+        setSelectedRegion(null);
+      } else {
+        console.error("Media regeneration failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Media regeneration error:", error);
+    } finally {
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   const handleRegionSelect = (e: React.MouseEvent<HTMLDivElement>) => {
