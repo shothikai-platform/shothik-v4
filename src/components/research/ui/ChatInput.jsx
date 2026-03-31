@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useResearchStream } from "@/hooks/useResearchStream";
 import { setUserPrompt } from "@/redux/slices/researchCoreSlice";
 import { Send } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
@@ -90,6 +97,13 @@ const ChatInput = () => {
 
   const hasFiles = currentFiles.length;
 
+  const isProcessing =
+    isInitiatingPresentation ||
+    isInitiatingSheet ||
+    isUploading ||
+    isInitiatingResearch ||
+    isStreaming;
+
   return (
     <div className="relative z-[11] mx-auto w-full max-w-[1000px] py-2">
       <div className="bg-background border-border mx-auto max-w-[1000px] rounded-2xl border p-6 shadow-md">
@@ -127,21 +141,32 @@ const ChatInput = () => {
             </div>
 
             <div className="flex flex-row-reverse items-center gap-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={
-                  !inputValue.trim() ||
-                  isInitiatingPresentation ||
-                  isInitiatingSheet ||
-                  isUploading ||
-                  isInitiatingResearch ||
-                  isStreaming
-                }
-                size="icon"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!inputValue.trim() || isProcessing}
+                      size="icon"
+                      aria-label={
+                        isProcessing
+                          ? "Processing research"
+                          : "Send research topic"
+                      }
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground h-10 w-10 rounded-full"
+                    >
+                      {isProcessing ? (
+                        <Spinner className="h-5 w-5" />
+                      ) : (
+                        <Send className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Send (Enter)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>
