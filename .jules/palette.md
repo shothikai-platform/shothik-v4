@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - Tab Stops on Disabled Button Tooltip Wrappers
+**Learning:** When wrapping a disabled Radix/Shadcn button in a `span` to enable Tooltip hover events, hardcoding `tabIndex={0}` unconditionally creates an inaccessible double tab-stop when the button becomes active again.
+**Action:** Conditionally apply `tabIndex={0}` only when the button is disabled (e.g., `tabIndex={isDisabled ? 0 : -1}`).
