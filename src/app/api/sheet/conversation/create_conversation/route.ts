@@ -2,9 +2,15 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
 
@@ -12,13 +18,19 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                // Securely fetch session ensuring it belongs to user
+                session = await SheetSession.findOne({ _id: chatId, userId: user._id || user.id });
             } catch (e) { }
         }
 
         if (!session) {
+            // If chatID was provided but not found/owned, we create a new one?
+            // Or if no chatID provided, create new one.
+            // If chatID was provided but invalid, we probably shouldn't just create a new one silently if they intended to append.
+            // But following existing logic pattern:
+
             session = await SheetSession.create({
-                userId: 'temp-user',
+                userId: user._id || user.id, // Use actual user ID
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
