@@ -1,0 +1,85 @@
+
+> shothik-v3@0.1.0 dev /app
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 2.2s
+ ○ Compiling /verification-research ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ⨯ ./src/components/tools/research/ResearchContentWithReferences.jsx:71:14
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m   [36mconst[39m handleReferenceHover [33m=[39m (reference[33m,[39m event) [33m=>[39m {
+ [90m 70 |[39m       reference[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m       sources[33m:[39m sources[33m?[39m[33m.[39mlength[33m,[39m
+ [90m    |[39m              [31m[1m^[22m[39m
+ [90m 72 |[39m     })[33m;[39m
+ [90m 73 |[39m
+ [90m 74 |[39m     [90m// Clear any existing timeout[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchContent.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchDataArea.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchItem.jsx [Client Component Browser]
+    ./src/app/verification-research/page.jsx [Client Component Browser]
+    ./src/app/verification-research/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchContent.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchDataArea.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchItem.jsx [Client Component SSR]
+    ./src/app/verification-research/page.jsx [Client Component SSR]
+    ./src/app/verification-research/page.jsx [Server Component]
+
+
+ GET /verification-research 500 in 28.9s (compile: 28.5s, render: 366ms)
+ ⨯ ./src/components/tools/research/ReferenceModal.jsx:12:12
+Parsing ecmascript source code failed
+[0m [90m 10 |[39m     open[33m,[39m
+ [90m 11 |[39m     reference[33m,[39m
+[31m[1m>[22m[39m[90m 12 |[39m     sources[33m:[39m sources[33m?[39m[33m.[39mlength[33m,[39m
+ [90m    |[39m            [31m[1m^[22m[39m
+ [90m 13 |[39m     anchorEl[33m,[39m
+ [90m 14 |[39m   })[33m;[39m
+ [90m 15 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component Browser]
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchContent.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchDataArea.jsx [Client Component Browser]
+    ./src/components/research/ui/ResearchItem.jsx [Client Component Browser]
+    ./src/app/verification-research/page.jsx [Client Component Browser]
+    ./src/app/verification-research/page.jsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/tools/research/ReferenceModal.jsx [Client Component SSR]
+    ./src/components/tools/research/ResearchContentWithReferences.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchContent.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchDataArea.jsx [Client Component SSR]
+    ./src/components/research/ui/ResearchItem.jsx [Client Component SSR]
+    ./src/app/verification-research/page.jsx [Client Component SSR]
+    ./src/app/verification-research/page.jsx [Server Component]
+
+
+ GET /verification-research 500 in 196ms (compile: 180ms, render: 15ms)
+ ✓ Compiled in 364ms
+ GET /verification-research 200 in 1518ms (compile: 368ms, render: 1150ms)
