@@ -1,9 +1,4 @@
-## 2025-05-22 - [DoS Prevention via Input Validation]
-**Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
-**Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
-**Prevention:** Use Pydantic `Field` constraints to enforce strict length and range limits on all user-controlled inputs at the API gateway/routing layer.
-
-## 2025-02-26 - [IDOR in Research Chat API]
-**Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
-**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
-**Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2024-05-18 - [Insecure Direct Object Reference (IDOR) via findByIdAndUpdate/findByIdAndDelete in User-Facing APIs]
+**Vulnerability:** Several API endpoints (like `delete_chat`, `update_name` in research API and similar ones) were using `Model.findByIdAndDelete(id)` and `Model.findByIdAndUpdate(id)` without validating if the document belongs to the authenticated user requesting the action. This leads to an IDOR vulnerability, where any authenticated user can delete or update any chat by just guessing or knowing its `id`.
+**Learning:** `findByIdAndDelete` and `findByIdAndUpdate` inherently lack authorization checks by simply taking the document ID. In a multi-tenant or user-specific application context, these methods should be avoided in favor of `findOneAndDelete` or `findOneAndUpdate` combined with an authorization filter like `{ _id: id, userId: user._id || user.id }`.
+**Prevention:** Always authenticate using `getAuthenticatedUser()` and include the user's ID in the query filter when performing database operations on user-owned documents, avoiding `findByIdAndX` methods unless the context strictly handles authorization beforehand.
