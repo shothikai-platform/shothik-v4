@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -32,29 +32,31 @@ const ResearchContentWithReferences = ({
   };
 
   // Function to process content and make references clickable
-  const processContentWithReferences = (text) => {
+  // Memoized to avoid recreation, though it's light.
+  const processContentWithReferences = useCallback((text, currentSources) => {
     // Ensure text is a string and clean it
-    if (!text || typeof text !== "string") {
-      if (typeof text === "object" && text !== null) {
-        text = text.text || text.content || text.result || text.answer || "";
+    let cleanText = text;
+    if (!cleanText || typeof cleanText !== "string") {
+      if (typeof cleanText === "object" && cleanText !== null) {
+        cleanText = cleanText.text || cleanText.content || cleanText.result || cleanText.answer || "";
       } else {
-        text = String(text || "");
+        cleanText = String(cleanText || "");
       }
     }
 
     // Remove any [object Object] strings that might be in the text
-    text = text.replace(/\[object Object\]/g, "");
+    cleanText = cleanText.replace(/\[object Object\]/g, "");
 
     // Regular expression to find reference patterns like [1], [2, 9], [12, 13], etc.
     const referenceRegex = /\[(\d+(?:,\s*\d+)*)\]/g;
 
-    return text.replace(referenceRegex, (match, numbers) => {
+    return cleanText.replace(referenceRegex, (match, numbers) => {
       const refNumbers = numbers.split(",").map((n) => parseInt(n.trim()));
 
       // Create clickable spans for each reference
       return refNumbers
         .map((refNum) => {
-          const sourceExists = sources.some(
+          const sourceExists = currentSources?.some(
             (source) => source.reference === refNum,
           );
           if (sourceExists) {
@@ -64,13 +66,9 @@ const ResearchContentWithReferences = ({
         })
         .join("");
     });
-  };
+  }, []);
 
-  const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
+  const handleReferenceHover = useCallback((reference, event) => {
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -80,9 +78,9 @@ const ResearchContentWithReferences = ({
     setSelectedReference(reference);
     setAnchorEl(event.currentTarget);
     setModalOpen(true);
-  };
+  }, [hoverTimeout]);
 
-  const handleReferenceLeave = () => {
+  const handleReferenceLeave = useCallback(() => {
     // Add a small delay to prevent flickering
     const timeout = setTimeout(() => {
       setModalOpen(false);
@@ -90,37 +88,43 @@ const ResearchContentWithReferences = ({
       setAnchorEl(null);
     }, 100);
     setHoverTimeout(timeout);
-  };
+  }, []);
 
-  // Handle content - it might be an object with text property or a string
-  let contentStr = "";
-  if (typeof content === "string") {
-    contentStr = content;
-  } else if (typeof content === "object" && content !== null) {
-    // If content is an object, try to extract the text content
-    contentStr =
-      content.text || content.content || content.result || content.answer || "";
-  } else {
-    contentStr = String(content || "");
-  }
+  // Memoize expensive content processing
+  const { processedContent, processedHtml } = useMemo(() => {
+    // Handle content - it might be an object with text property or a string
+    let contentStr = "";
+    if (typeof content === "string") {
+      contentStr = content;
+    } else if (typeof content === "object" && content !== null) {
+      // If content is an object, try to extract the text content
+      contentStr =
+        content.text || content.content || content.result || content.answer || "";
+    } else {
+      contentStr = String(content || "");
+    }
 
-  // Clean any [object Object] strings from the content
-  contentStr = contentStr.replace(/\[object Object\]/g, "");
+    // Clean any [object Object] strings from the content
+    contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
+    const processed = processContentWithReferences(contentStr, sources);
 
-  const processedContent = processContentWithReferences(contentStr);
+    // Configure marked options
+    // Note: marked is a singleton, so this affects global state.
+    // Ideally this should be done once in app initialization, but kept here for compatibility.
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+    });
 
-  // Configure marked options
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
+    return {
+      processedContent: processed, // Markdown with replaced references (HTML spans)
+      processedHtml: marked(processed) // Final HTML
+    };
+  }, [content, sources, processContentWithReferences]);
 
   // Add hover event listeners after rendering
-  const handleContentMouseOver = (event) => {
+  const handleContentMouseOver = useCallback((event) => {
     const target = event.target;
     if (target.classList.contains("reference-link")) {
       const reference = parseInt(target.getAttribute("data-reference"));
@@ -141,14 +145,14 @@ const ResearchContentWithReferences = ({
 
       handleReferenceHover(reference, { currentTarget: anchorElement });
     }
-  };
+  }, [handleReferenceHover]);
 
-  const handleContentMouseLeave = (event) => {
+  const handleContentMouseLeave = useCallback((event) => {
     const target = event.target;
     if (target.classList.contains("reference-link")) {
       handleReferenceLeave();
     }
-  };
+  }, [handleReferenceLeave]);
 
   return (
     <>
@@ -188,7 +192,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: processedHtml,
             }}
           />
 
@@ -216,4 +220,4 @@ const ResearchContentWithReferences = ({
   );
 };
 
-export default ResearchContentWithReferences;
+export default memo(ResearchContentWithReferences);
