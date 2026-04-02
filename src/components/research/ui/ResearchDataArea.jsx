@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import ImagesContent from "./ImagesContent";
 import ResearchContent from "./ResearchContent";
 import SourcesContent from "./SourcesContent";
