@@ -18,23 +18,20 @@ export default function UploadAvatar({
 
   return (
     <>
-      <div
+      <label
         className={cn(
           "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed",
-          loading ? "cursor-not-allowed" : "cursor-pointer",
+          loading ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:opacity-80 transition-opacity",
           error
             ? "border-destructive bg-destructive/10"
             : "border-border bg-muted",
+          "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2"
         )}
-        onClick={() =>
-          !loading && document.getElementById("avatarInput").click()
-        }
       >
         <input
-          id="avatarInput"
           type="file"
           accept="image/*"
-          className="hidden"
+          className="sr-only"
           onChange={handleFileChange}
           disabled={loading}
         />
@@ -53,7 +50,7 @@ export default function UploadAvatar({
             <span className="text-muted-foreground text-xs">Upload Photo</span>
           </div>
         )}
-      </div>
+      </label>
 
       {helperText && (
         <p className="text-destructive mt-2 text-center text-xs">
