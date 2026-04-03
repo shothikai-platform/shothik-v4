@@ -1,3 +1,8 @@
+## 2025-05-22 - [IDOR in Sheet Chat API]
+**Vulnerability:** `get_my_chats` endpoint for the Sheet interface fetched all `SheetSession` documents without applying any `userId` filtering, exposing chats of all users to any client.
+**Learning:** List endpoints must also enforce data scoping. Returning `find({})` in an application with multiple users is an immediate critical data exposure.
+**Prevention:** Apply `userId` scoping on all queries that return user-specific lists (e.g., `find({ userId: user._id })`), and ensure endpoints handling sensitive data require authentication before returning results.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
