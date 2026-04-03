@@ -5,3 +5,7 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+
+## 2025-02-18 - Accessible Custom File Uploads
+**Learning:** Custom styled file uploads implemented as divs with hidden inputs and onClick handlers break keyboard accessibility and native focus feedback.
+**Action:** Use a `<label>` as the outer wrapper instead of `<div onClick={...}>`. Render the internal input with `sr-only` instead of `hidden` and pair it with `has-[:focus-visible]:ring-2` on the label wrapper to ensure keyboard focus visibility.
