@@ -1,8 +1,9 @@
 "use client";
 
+import { sanitizeHtml } from "@/lib/security";
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -20,6 +21,7 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [sanitizedContent, setSanitizedContent] = useState("");
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -67,10 +69,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -92,32 +90,43 @@ const ResearchContentWithReferences = ({
     setHoverTimeout(timeout);
   };
 
-  // Handle content - it might be an object with text property or a string
-  let contentStr = "";
-  if (typeof content === "string") {
-    contentStr = content;
-  } else if (typeof content === "object" && content !== null) {
-    // If content is an object, try to extract the text content
-    contentStr =
-      content.text || content.content || content.result || content.answer || "";
-  } else {
-    contentStr = String(content || "");
-  }
+  useEffect(() => {
+    // Handle content - it might be an object with text property or a string
+    let contentStr = "";
+    if (typeof content === "string") {
+      contentStr = content;
+    } else if (typeof content === "object" && content !== null) {
+      // If content is an object, try to extract the text content
+      contentStr =
+        content.text ||
+        content.content ||
+        content.result ||
+        content.answer ||
+        "";
+    } else {
+      contentStr = String(content || "");
+    }
 
-  // Clean any [object Object] strings from the content
-  contentStr = contentStr.replace(/\[object Object\]/g, "");
+    // Clean any [object Object] strings from the content
+    contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
+    const processedContent = processContentWithReferences(contentStr);
 
-  const processedContent = processContentWithReferences(contentStr);
+    // Configure marked options
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+    });
 
-  // Configure marked options
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
+    const rawHtml = marked(processedContent);
+    if (typeof rawHtml === "string") {
+      setSanitizedContent(sanitizeHtml(rawHtml));
+    } else {
+      Promise.resolve(rawHtml).then((html) =>
+        setSanitizedContent(sanitizeHtml(html)),
+      );
+    }
+  }, [content, sources]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add hover event listeners after rendering
   const handleContentMouseOver = (event) => {
@@ -188,7 +197,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: sanitizedContent,
             }}
           />
 
@@ -196,7 +205,7 @@ const ResearchContentWithReferences = ({
 
           {/* Combined Sharing and Feedback Actions */}
           <CombinedActions
-            content={processedContent}
+            content={sanitizedContent} // Pass sanitized content instead of processedContent (string vs html, hopefully Component handles it or uses it for copy/share)
             sources={sources}
             title={title}
             onFeedback={handleFeedback}
