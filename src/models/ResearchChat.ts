@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const ResearchChatSchema = new mongoose.Schema(
     {
         userId: { type: String, required: true, index: true },
-        name: { type: String, default: 'New Research' },
+        // Security: name length limit at schema level for defense-in-depth
+        name: { type: String, default: 'New Research', maxlength: 100 },
         messages: [
             {
                 role: { type: String, enum: ['user', 'assistant', 'system'] },
