@@ -2,13 +2,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { researchChatState } from "@/redux/slices/researchChatSlice";
-import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
+import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
+const MessageBubble = memo(({ message, isLastData, isDataGenerating }) => (
   <div className="flex w-full items-start">
     <div
       className={cn(
@@ -76,21 +75,21 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       </span>
     </div>
   </div>
-);
+));
 
-export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
+function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =
     currentResearch?.result || currentResearch?.answer || "";
 
-  const researchCore = useSelector(researchCoreState);
-  const researchChat = useSelector(researchChatState);
+  const isStreaming = useSelector((state) => state.researchCore.isStreaming);
+  const isPolling = useSelector((state) => state.researchCore.isPolling);
+  const currentChatId = useSelector(
+    (state) => state.researchChat.currentChatId,
+  );
 
   // Check if we have sources to use the new component with references
   const hasSources =
     currentResearch?.sources && currentResearch.sources.length > 0;
-
-  // Get the current agent ID for sharing functionality
-  const agentId = researchChat?.currentChatId;
 
   return (
     <div className="w-full max-w-full overflow-hidden">
@@ -99,21 +98,19 @@ export default function ResearchContent({ currentResearch, isLastData, onSwitchT
           content={researchResult}
           sources={currentResearch.sources}
           isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
-          agentId={agentId}
+          isDataGenerating={isStreaming || isPolling}
+          agentId={currentChatId}
           onSwitchToSourcesTab={() => onSwitchTab?.(2)}
         />
       ) : (
         <MessageBubble
           message={researchResult}
           isLastData={isLastData}
-          isDataGenerating={
-            researchCore?.isStreaming || researchCore?.isPolling
-          }
+          isDataGenerating={isStreaming || isPolling}
         />
       )}
     </div>
   );
 }
+
+export default memo(ResearchContent);
