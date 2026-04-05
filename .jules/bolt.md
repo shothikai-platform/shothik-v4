@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2024-05-XX - Mongoose .lean() with mapped ids
+**Learning:** Using `.lean()` strips Mongoose virtuals like `id`, changing the payload and breaking frontends expecting `id`.
+**Action:** When adding `.lean()` to read endpoints, map the results to add `id: doc._id.toString()` back.
