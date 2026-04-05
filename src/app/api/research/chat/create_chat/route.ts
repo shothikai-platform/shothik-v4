@@ -13,6 +13,11 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { name } = body;
 
+        // Security: Input validation to prevent potential DoS from extremely long names
+        if (name && typeof name === 'string' && name.length > 100) {
+            return NextResponse.json({ error: 'Chat name too long (max 100 characters)' }, { status: 400 });
+        }
+
         await dbConnect();
 
         const newChat = await ResearchChat.create({
