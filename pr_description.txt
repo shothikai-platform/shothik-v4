@@ -1,0 +1,13 @@
+**💡 What:**
+Refactored the `UploadAvatar` component to use a semantic `<label>` wrapper instead of a generic `<div>` with an `onClick` JavaScript handler. The hidden file input was updated to be visually hidden (`sr-only`) but natively focusable, with the parent `<label>` managing visible focus state via Tailwind's `has-[:focus-visible]` selector. Finally, removed the hardcoded `id="avatarInput"` which would cause state collisions if multiple uploaders were rendered on the same page.
+
+**🎯 Why:**
+The previous implementation was completely inaccessible to keyboard-only users because the `<div>` lacked focus states, and the `<input type="file" className="hidden">` was removed from the accessibility tree. By making it semantic, keyboard users can now tab to the input and press Enter or Space to open the file dialog.
+
+**📸 Before/After:**
+*(See Playwright videos/screenshots attached in PR comments to visualize the new `focus-visible` ring.)*
+
+**♿ Accessibility:**
+- Keyboard navigability restored by removing `display: none` (`hidden`) and using `sr-only`.
+- Natively compliant form association by wrapping the input in a `<label>`.
+- Visible focus indication added via `has-[:focus-visible]:ring-ring`.
