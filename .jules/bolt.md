@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2026-01-22 - Virtual Property Mapping with .lean()
+**Learning:** Using `.lean()` in Mongoose queries strips virtual properties like `id`. If the API response relies on them, this breaks the frontend contract.
+**Action:** Always map over `.lean()` results to manually append necessary virtuals (e.g., `id: obj._id.toString()`) to safely preserve expected API schemas while optimizing performance.
