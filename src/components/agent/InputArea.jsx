@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/ui/useMobile";
@@ -83,6 +84,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
+            aria-label="Go back"
           >
             <ArrowLeft className="size-4" />
           </Button>
@@ -132,15 +134,17 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             isMobile && !showTitle && "w-auto",
           )}
         >
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={handleFileInputClick}
-                className="group relative"
-              >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  type="button"
+                  onClick={handleFileInputClick}
+                  className="group relative"
+                  aria-label="Attach files"
+                >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
                     {Array.from(files).length}
@@ -155,10 +159,11 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                   ? `${filesRef.current.files.length} Files selected`
                   : "Attach files"}
               </p>
-            </TooltipContent>
-          </Tooltip>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Button disabled={loading} type="submit" size="icon">
+          <Button disabled={loading} type="submit" size="icon" aria-label="Send message">
             {loading ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
