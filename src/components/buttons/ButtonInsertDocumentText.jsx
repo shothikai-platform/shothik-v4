@@ -103,7 +103,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
         <label
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
-            "relative shrink-0 cursor-pointer",
+            "relative shrink-0 cursor-pointer has-[:focus-visible]:border-ring has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 outline-none",
             isProcessing && "pointer-events-none opacity-50",
             className,
           )}
