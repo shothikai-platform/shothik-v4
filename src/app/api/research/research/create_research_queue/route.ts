@@ -1,14 +1,32 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { chat: chatId, query, config } = await request.json();
+
+        // 0. Input Validation
+        if (!chatId || typeof chatId !== 'string') {
+            return NextResponse.json({ error: 'Invalid chat ID' }, { status: 400 });
+        }
+        if (!query || typeof query !== 'string' || query.trim().length === 0) {
+            return NextResponse.json({ error: 'Query is required' }, { status: 400 });
+        }
+        if (query.length > 2000) {
+            return NextResponse.json({ error: 'Query too long (max 2000 characters)' }, { status: 400 });
+        }
+
         await dbConnect();
 
-        // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        // 1. Validate chat exists and user owns it
+        const chat = await ResearchChat.findOne({ _id: chatId, userId: user._id || user.id });
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
@@ -71,7 +89,7 @@ export async function POST(request: Request) {
                     // In a real app, a background job does this.
                     // For now, we'll just try to update.
 
-                    await ResearchChat.findByIdAndUpdate(chatId, {
+                    await ResearchChat.findOneAndUpdate({ _id: chatId, userId: user._id || user.id }, {
                         $push: {
                             messages: {
                                 role: 'assistant',
