@@ -288,6 +288,7 @@ export default function MultipleFileUpload({
               accept=".pdf,.docx,.txt"
               hidden
               onChange={(e) => handleFilesSelected(e.target.files)}
+              aria-label="Upload Multiple Documents"
             />
           </div>
           <div className="max-h-[300px] min-w-0 space-y-2 overflow-y-auto">
