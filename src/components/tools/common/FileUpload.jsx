@@ -118,6 +118,7 @@ function FileUpload({ isMobile, setInput }) {
                 clip: "rect(0 0 0 0)",
                 clipPath: "inset(50%)",
               }}
+              aria-label="Upload Document"
             />
           </Button>
         </div>

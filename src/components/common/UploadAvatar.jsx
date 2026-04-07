@@ -37,6 +37,7 @@ export default function UploadAvatar({
           className="hidden"
           onChange={handleFileChange}
           disabled={loading}
+          aria-label="Upload Avatar"
         />
 
         {file ? (

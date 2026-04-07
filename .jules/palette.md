@@ -5,3 +5,4 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2025-02-18 - ARIA labels on visually hidden file inputs\n**Learning:** Visually hidden file inputs (e.g., `<input type="file" className="opacity-0" />`) used in custom file upload components must include a descriptive `aria-label` attribute to ensure proper screen reader announcement.\n**Action:** Always add `aria-label` to visually hidden file inputs.
