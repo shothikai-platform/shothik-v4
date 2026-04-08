@@ -1,0 +1,3 @@
+## 2024-05-18 - Avoid visual hidden inputs with div click handlers for custom file uploads
+**Learning:** Hardcoding `id` and using `document.getElementById('input').click()` inside a `div` wrapper for a custom file upload causes conflicts when multiple instances of the same component are rendered, and the visually hidden input (`className="hidden"`) completely prevents keyboard focus and screen reader discovery.
+**Action:** Always nest the file `<input>` directly inside a `<label>` wrapper to establish a valid implicit association, replacing explicit `id`/`htmlFor` ties. Use `className="sr-only"` instead of `hidden` to preserve focusability, add an `aria-label`, and use Tailwind's `has-[:focus-visible]:ring-2` on the `<label>` to surface the input's focus state clearly.
