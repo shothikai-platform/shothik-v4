@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
@@ -41,12 +47,22 @@ export default function TaskProgress({ taskProgress }) {
               ))}
             </div>
 
-            <button
-              className="hover:bg-accent absolute right-2 bottom-2 inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
-              onClick={toggleExpanded}
-            >
-              {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    aria-label={expanded ? "Collapse task progress" : "Expand task progress"}
+                    className="hover:bg-accent absolute right-2 bottom-2 inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
+                    onClick={toggleExpanded}
+                  >
+                    {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{expanded ? "Collapse task progress" : "Expand task progress"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </>
         ) : (
           <div className="flex items-center justify-between">
@@ -57,12 +73,22 @@ export default function TaskProgress({ taskProgress }) {
               <span className="text-muted-foreground text-xs">
                 {taskDone.length}/{taskProgress.length}
               </span>
-              <button
-                className="hover:bg-accent inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
-                onClick={toggleExpanded}
-              >
-                {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      aria-label={expanded ? "Collapse task progress" : "Expand task progress"}
+                      className="hover:bg-accent inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
+                      onClick={toggleExpanded}
+                    >
+                      {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{expanded ? "Collapse task progress" : "Expand task progress"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         )}
