@@ -1,0 +1,6 @@
+⚡ Bolt: Optimize get_my_chats with lean()
+
+💡 What: Added `.lean()` to the `SheetSession.find()` query in the `get_my_chats` endpoint and explicitly mapped the `id` field back to the response.
+🎯 Why: Returning full Mongoose Document instances for read-only lists consumes unnecessary memory and CPU. `.lean()` returns plain JS objects, bypassing Mongoose's heavy internal tracking.
+📊 Impact: Reduces memory overhead and CPU time for the `get_my_chats` query, making the endpoint faster and more scalable as the number of sessions grows.
+🔬 Measurement: Verify by running the full test suite (`pnpm exec vitest run`) and checking `src/app/api/sheet/chat/get_my_chats/route.test.ts`.
