@@ -1,0 +1,4 @@
+💡 What: Added Tooltip wrappers and ARIA labels to the icon-only buttons (ArrowLeft, Mic, Send) in the AgentPage component. Used a span with conditional tabIndex for the disabled Send button.
+🎯 Why: Icon-only buttons are confusing for users without text descriptions and completely invisible to screen readers without ARIA labels. This enhances accessibility and overall usability.
+📸 Before/After: Visual tooltips now display on hover for ArrowLeft ("Back to agents"), Mic ("Use microphone"), and Send ("Send message").
+♿ Accessibility: Added `aria-label`s to all three buttons. For the conditionally disabled 'Send' button, implemented a focusable span wrapper when disabled so that screen reader users and keyboard navigators still receive tooltip context explaining the disabled state.
