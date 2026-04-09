@@ -1,10 +1,11 @@
 "use client";
 
+import { memo } from "react";
 import ImagesContent from "./ImagesContent";
 import ResearchContent from "./ResearchContent";
 import SourcesContent from "./SourcesContent";
 
-export default function ResearchDataArea({
+const ResearchDataArea = memo(function ResearchDataArea({
   selectedTab,
   research,
   isLastData,
@@ -31,4 +32,6 @@ export default function ResearchDataArea({
   };
 
   return <div>{renderContent()}</div>;
-}
+});
+
+export default ResearchDataArea;
