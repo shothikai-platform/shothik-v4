@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        const userId = user._id || user.id;
+
         const { chat: chatId, query, config } = await request.json();
         await dbConnect();
 
         // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        const chat = await ResearchChat.findOne({ _id: chatId, userId });
         if (!chat) {
-            return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Chat not found or unauthorized' }, { status: 404 });
         }
 
         // 2. Add User Message

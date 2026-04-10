@@ -1,0 +1,5 @@
+🚨 **Severity**: CRITICAL
+💡 **Vulnerability**: Unauthenticated access and Insecure Direct Object References (IDOR) across critical API endpoints in the Sheet and Research domains.
+🎯 **Impact**: Unauthorized users could create, read, and manipulate data belonging to other users due to a hardcoded bypass (`temp-user`) and lack of ownership validation checks.
+🔧 **Fix**: Implemented `getAuthenticatedUser()` across the endpoints. Replaced hardcoded user assignments with the authenticated user's ID. Applied scoped queries (using `userId`) during `findOne` operations to establish strict object ownership checks and enforce authorization.
+✅ **Verification**: Verified using the `vitest` test suite. Functionality involving user authentication properly restricts access to authenticated owners.
