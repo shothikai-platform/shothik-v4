@@ -1,0 +1,12 @@
+💡 What:
+Wrapped the icon-only `CopyButton` component in the blog details page with a Tooltip and added an `aria-label`. The tooltip and aria-label text update dynamically between "Copy URL" and "Copied URL" based on the component's state.
+
+🎯 Why:
+Icon-only buttons are confusing to users who aren't familiar with the icons. Adding a tooltip clarifies the button's action. The state-based text also reinforces the user's action and provides feedback.
+
+📸 Before/After:
+Before: An isolated icon-only copy button without contextual clues on hover or focus.
+After: The button now reveals a "Copy URL" tooltip on hover, and updates to "Copied URL" temporarily after being clicked.
+
+♿ Accessibility:
+Added `aria-label` synchronized with the tooltip state. This makes the button completely accessible to screen readers, allowing users to understand the button's function and whether the URL was successfully copied.
