@@ -58,6 +58,7 @@ const PlagiarismCheckerContentSection = () => {
   
   // Debug logging - track report changes
   useEffect(() => {
+    console.log({
       hasReport: hasReport,
       reportExists: !!report,
       reportType: report ? typeof report : 'null',
