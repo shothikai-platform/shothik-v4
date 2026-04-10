@@ -1,0 +1,15 @@
+🚨 **Severity**: CRITICAL
+
+💡 **Vulnerability**: Insecure Direct Object Reference (IDOR) and Missing Authentication. The `delete_chat` and `update_name` endpoints for research chats did not verify if the user making the request was authenticated or owned the chat resource being modified. They directly modified resources based on the provided `id`.
+
+🎯 **Impact**: Any user (even unauthenticated) could delete or rename any research chat in the database if they could guess or otherwise obtain the chat's `id`.
+
+🔧 **Fix**:
+1. Added authentication check using `getAuthenticatedUser()` and returning 401 if unauthorized.
+2. Changed `findByIdAndDelete` to `findOneAndDelete` and scoped the query to `{ _id: id, userId: user._id || user.id }`.
+3. Changed `findByIdAndUpdate` to `findOneAndUpdate` and scoped the query to `{ _id: id, userId: user._id || user.id }`.
+
+✅ **Verification**:
+- `pnpm test` passes and ensures core functionality remains intact.
+- Both endpoints now correctly return 401 if accessed without a valid session.
+- Users can no longer modify or delete resources that do not belong to them.
