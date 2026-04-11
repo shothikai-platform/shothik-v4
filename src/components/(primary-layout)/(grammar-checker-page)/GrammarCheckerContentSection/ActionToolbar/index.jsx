@@ -1,6 +1,12 @@
 "use client";
 
-import { Copy, Trash2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Check, Copy, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 // Utility to count words and sentences
 const countWordsAndSentences = (text = "") => {
@@ -14,6 +20,13 @@ const countWordsAndSentences = (text = "") => {
 
 const ActionToolbar = ({ text, handleCopy, handleClear }) => {
   const { words, sentences } = countWordsAndSentences(text);
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = (e) => {
+    handleCopy(e);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <>
@@ -21,21 +34,33 @@ const ActionToolbar = ({ text, handleCopy, handleClear }) => {
         <span className="hidden xl:inline">{sentences} /</span> {words} Words
       </div>
 
-      <button
-        onClick={handleClear}
-        className="hover:bg-muted flex size-8 items-center justify-center rounded"
-        title="Delete"
-      >
-        <Trash2 className="size-4" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleClear}
+            className="hover:bg-muted flex size-8 items-center justify-center rounded"
+            aria-label="Delete text"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Delete</TooltipContent>
+      </Tooltip>
 
-      <button
-        onClick={handleCopy}
-        className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
-        title="Copy"
-      >
-        <Copy className="size-4" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onCopy}
+            className="hover:bg-muted hidden size-8 items-center justify-center rounded lg:flex"
+            aria-label={copied ? "Copied!" : "Copy text"}
+          >
+            {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          {copied ? "Copied!" : "Copy"}
+        </TooltipContent>
+      </Tooltip>
     </>
   );
 };
