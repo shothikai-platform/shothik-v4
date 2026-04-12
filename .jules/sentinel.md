@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2026-04-12 - [IDOR in Research Queue API]
+**Vulnerability:** `create_research_queue` allowed unauthenticated users to trigger research streams on any chat by ID, and lacked ownership verification.
+**Learning:** Even streaming/queueing endpoints that don't return immediate data can be vectors for unauthorized state changes (adding messages to chats) or resource consumption.
+**Prevention:** Verify both authentication and resource ownership using `findOne` with `userId` before initiating background tasks or streams.
