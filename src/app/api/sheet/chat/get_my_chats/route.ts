@@ -6,8 +6,19 @@ export async function GET(request: Request) {
     try {
         await dbConnect();
         // Fetch all sessions sorted by newest updated
-        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 });
-        return NextResponse.json(sessions);
+        // ⚡ Bolt Optimization: Added .lean() to bypass Mongoose document instantiation.
+        // This significantly reduces memory usage and CPU overhead when returning lists.
+        const sessions = await SheetSession.find({})
+            .sort({ updatedAt: -1 })
+            .lean();
+
+        // Map results to preserve the 'id' virtual field which is stripped by .lean()
+        const formattedSessions = sessions.map((session: any) => ({
+            ...session,
+            id: session._id.toString()
+        }));
+
+        return NextResponse.json(formattedSessions);
     } catch (error) {
         console.error('Error fetching sheet sessions:', error);
         return NextResponse.json(
