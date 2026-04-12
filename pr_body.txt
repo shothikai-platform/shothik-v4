@@ -1,0 +1,10 @@
+🚨 Severity: CRITICAL
+💡 Vulnerability: Insecure Direct Object Reference (IDOR) and Missing Authentication on Research Chat API endpoints (`update_name` and `delete_chat`). Previously, any user could modify or delete any chat simply by providing its ID, as there were no checks to verify that the requester actually owned the chat or was authenticated.
+🎯 Impact: An attacker could enumerate chat IDs and maliciously delete or overwrite the titles of other users' research chats, leading to data loss and unauthorized modifications.
+🔧 Fix:
+1. Imported `getAuthenticatedUser()` and added an initial authentication check to ensure the requester is logged in.
+2. Replaced `findByIdAndUpdate` and `findByIdAndDelete` with `findOneAndUpdate` and `findOneAndDelete`, respectively.
+3. Included `userId: user._id || user.id` in the query filters to strictly enforce ownership, ensuring that users can only affect chats they own.
+✅ Verification:
+- Ran `pnpm lint` and `pnpm test` successfully.
+- Verified that the modified code strictly enforces user ownership at the database query level.
