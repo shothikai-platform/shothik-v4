@@ -1,0 +1,5 @@
+🚨 Severity: CRITICAL
+💡 Vulnerability: Insecure Direct Object Reference (IDOR) allows unauthorized access/modification to other user's resources.
+🎯 Impact: Attackers could delete or modify chat names belonging to any other user.
+🔧 Fix: Added proper authorization validation by verifying the authenticated user owns the resource before processing update or delete actions.
+✅ Verification: Tested via unit tests and manually confirmed the endpoints now enforce user ownership.
