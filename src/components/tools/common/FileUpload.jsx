@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -96,31 +96,26 @@ function FileUpload({ isMobile, setInput }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="relative">
-          <Button
-            variant="ghost"
-            className={cn(
-              "border-primary text-primary border-2 bg-transparent hover:opacity-80",
-              "flex items-center gap-1 rounded-lg px-3 py-2.5 text-sm font-bold transition-opacity md:gap-1.5 lg:gap-2",
-            )}
+        <label
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "border-primary text-primary relative flex cursor-pointer items-center gap-1 rounded-lg border-2 bg-transparent px-3 py-2.5 text-sm font-bold transition-opacity hover:opacity-80 md:gap-1.5 lg:gap-2",
+            "has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2",
+            isProcessing && "pointer-events-none opacity-50",
+          )}
+        >
+          <CloudUpload className="h-5 w-5 lg:h-5 lg:w-5" />
+          {`Upload ${isMobile ? "Doc" : "Document"}`}
+          <input
+            ref={inputRef}
+            onChange={handleFileChange}
+            type="file"
+            accept="application/pdf, .docx"
+            className="sr-only"
+            aria-label="Upload document"
             disabled={isProcessing}
-            onClick={() => inputRef.current?.click()}
-          >
-            <CloudUpload className="h-5 w-5 lg:h-5 lg:w-5" />
-            {`Upload ${isMobile ? "Doc" : "Document"}`}
-            <input
-              ref={inputRef}
-              onChange={handleFileChange}
-              type="file"
-              accept="application/pdf, .docx"
-              className="absolute inset-0 h-full w-full opacity-0"
-              style={{
-                clip: "rect(0 0 0 0)",
-                clipPath: "inset(50%)",
-              }}
-            />
-          </Button>
-        </div>
+          />
+        </label>
       </TooltipTrigger>
       <TooltipContent side="top">Browse documents (DOCX, PDF).</TooltipContent>
     </Tooltip>
