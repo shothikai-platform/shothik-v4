@@ -634,8 +634,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
     setExportMenuOpen(false);
   };
 
-  const handleRewrite = () => {
-  };
+  const handleRewrite = () => {};
 
   const handleFeedback = async (type) => {
     if (isSubmitting) return;
@@ -668,6 +667,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
+                    aria-label="Share"
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
@@ -721,6 +721,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
+                    aria-label="Export"
                   >
                     <Download className="h-4 w-4" />
                   </Button>
@@ -743,6 +744,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
                 size="icon"
                 onClick={handleRewrite}
                 className="text-muted-foreground hover:bg-accent h-8 w-8"
+                aria-label="Rewrite"
               >
                 <RotateCw className="h-4 w-4" />
               </Button>
@@ -760,40 +762,52 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleFeedback("helpful")}
-                disabled={isSubmitting}
-                className={cn(
-                  "h-8 w-8",
-                  feedback === "helpful"
-                    ? "text-green-600 hover:text-green-600"
-                    : "text-muted-foreground hover:bg-accent hover:text-green-600",
-                )}
+              <span
+                tabIndex={isSubmitting ? 0 : -1}
+                className="inline-block rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleFeedback("helpful")}
+                  disabled={isSubmitting}
+                  className={cn(
+                    "h-8 w-8",
+                    feedback === "helpful"
+                      ? "text-green-600 hover:text-green-600"
+                      : "text-muted-foreground hover:bg-accent hover:text-green-600",
+                  )}
+                  aria-label="Yes, helpful"
+                >
+                  <ThumbsUp className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Yes, helpful</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleFeedback("not-helpful")}
-                disabled={isSubmitting}
-                className={cn(
-                  "h-8 w-8",
-                  feedback === "not-helpful"
-                    ? "text-red-600 hover:text-red-600"
-                    : "text-muted-foreground hover:bg-accent hover:text-red-600",
-                )}
+              <span
+                tabIndex={isSubmitting ? 0 : -1}
+                className="inline-block rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <ThumbsDown className="h-4 w-4" />
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleFeedback("not-helpful")}
+                  disabled={isSubmitting}
+                  className={cn(
+                    "h-8 w-8",
+                    feedback === "not-helpful"
+                      ? "text-red-600 hover:text-red-600"
+                      : "text-muted-foreground hover:bg-accent hover:text-red-600",
+                  )}
+                  aria-label="No, not helpful"
+                >
+                  <ThumbsDown className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>No, not helpful</TooltipContent>
           </Tooltip>
