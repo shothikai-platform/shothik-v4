@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 const pdfToText = async (file) => {
   const { pdfjs } = await import("react-pdf");
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs?.version}/build/pdf.worker.min.mjs`;
-  
+
   const blobUrl = URL.createObjectURL(file);
   const loadingTask = pdfjs.getDocument(blobUrl);
   let extractedText = "";
@@ -104,6 +104,7 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
           className={cn(
             buttonVariants({ variant: "outline", size: "sm" }),
             "relative shrink-0 cursor-pointer",
+            "has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2",
             isProcessing && "pointer-events-none opacity-50",
             className,
           )}
@@ -124,7 +125,8 @@ const ButtonInsertDocumentText = ({ className, onApply, onChange }) => {
             }}
             type="file"
             accept="application/pdf, .docx"
-            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            className="sr-only"
+            aria-label="Upload Document"
             disabled={isProcessing}
           />
         </label>
