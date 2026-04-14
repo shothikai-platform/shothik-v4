@@ -97,14 +97,13 @@ function FileUpload({ isMobile, setInput }) {
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="relative">
-          <Button
-            variant="ghost"
+          <label
             className={cn(
               "border-primary text-primary border-2 bg-transparent hover:opacity-80",
-              "flex items-center gap-1 rounded-lg px-3 py-2.5 text-sm font-bold transition-opacity md:gap-1.5 lg:gap-2",
+              "flex items-center justify-center gap-1 rounded-lg px-3 py-2.5 text-sm font-bold transition-opacity md:gap-1.5 lg:gap-2 cursor-pointer",
+              "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2",
+              isProcessing && "pointer-events-none opacity-50"
             )}
-            disabled={isProcessing}
-            onClick={() => inputRef.current?.click()}
           >
             <CloudUpload className="h-5 w-5 lg:h-5 lg:w-5" />
             {`Upload ${isMobile ? "Doc" : "Document"}`}
@@ -113,13 +112,11 @@ function FileUpload({ isMobile, setInput }) {
               onChange={handleFileChange}
               type="file"
               accept="application/pdf, .docx"
-              className="absolute inset-0 h-full w-full opacity-0"
-              style={{
-                clip: "rect(0 0 0 0)",
-                clipPath: "inset(50%)",
-              }}
+              className="sr-only"
+              aria-label={`Upload ${isMobile ? "Doc" : "Document"}`}
+              disabled={isProcessing}
             />
-          </Button>
+          </label>
         </div>
       </TooltipTrigger>
       <TooltipContent side="top">Browse documents (DOCX, PDF).</TooltipContent>
