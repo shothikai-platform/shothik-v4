@@ -3,6 +3,11 @@
 import MascotIcon from "@/components/icons/MascotIcon";
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -184,9 +189,18 @@ export default function MindMapView() {
         <div className="flex h-full items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href={`/marketing-automation/insights/${analysisId}`}>
-              <Button variant="ghost" size="icon" title="Back to Campaign">
-                <ArrowLeft className="size-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Back to Campaign"
+                  >
+                    <ArrowLeft className="size-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Back to Campaign</TooltipContent>
+              </Tooltip>
             </Link>
             <div>
               <h1 className="text-xl font-bold">Campaign Mind Map</h1>
