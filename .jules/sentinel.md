@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Missing Auth & Global Exposure in Sheet API]
+**Vulnerability:** The Sheet API endpoints globally returned all sessions and hardcoded user creation as temp-user.
+**Learning:** API route development without enforced global authentication middleware often leads to missing auth checks on new endpoints.
+**Prevention:** Always explicitly call getAuthenticatedUser() at the top of every protected API route and scope all DB queries to the user._id.
