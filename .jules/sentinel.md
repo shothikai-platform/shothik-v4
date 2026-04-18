@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Unauthenticated "Temp User" Pattern]
+**Vulnerability:** Sheet API routes used a hardcoded 'temp-user' and lacked authentication, allowing any user to create and list spreadsheet sessions.
+**Learning:** Endpoints created for quick prototyping often use "temp-user" placeholders that are never replaced, bypassing intended security controls.
+**Prevention:** Ensure all API routes verify identity via `getAuthenticatedUser()` and never use hardcoded user identifiers in production code.
