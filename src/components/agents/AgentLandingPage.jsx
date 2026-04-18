@@ -485,6 +485,7 @@ export default function AgentLandingPage() {
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Close Onboarding"
               onClick={handleCloseOnboarding}
               className="h-6 w-6 shrink-0"
             >
@@ -622,6 +623,7 @@ export default function AgentLandingPage() {
                             isInitiatingResearch
                           }
                           size="icon"
+                          aria-label="Start Agent"
                           className="bg-primary hover:bg-primary/90 h-10 w-10 rounded-full disabled:cursor-not-allowed disabled:opacity-50"
                           data-rybbit-event="Agent Start"
                         >
