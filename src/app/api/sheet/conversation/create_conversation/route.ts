@@ -2,23 +2,47 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
-        const { prompt, chat: chatId } = await request.json();
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const body = await request.json();
+        const { prompt, chat: chatId } = body;
+
+        // Input Validation
+        if (!prompt || typeof prompt !== 'string') {
+            return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
+        }
+
+        // Limit prompt length to prevent DoS (standard AI prompt limit)
+        if (prompt.length > 5000) {
+            return NextResponse.json({ error: 'Prompt is too long' }, { status: 400 });
+        }
+
         await dbConnect();
+
+        const userId = user._id || user.id;
 
         // 1. Identify or Create Session
         let session;
         if (chatId) {
             try {
                 session = await SheetSession.findById(chatId);
+                // Ownership check
+                if (session && session.userId !== userId.toString()) {
+                    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+                }
             } catch (e) { }
         }
 
         if (!session) {
             session = await SheetSession.create({
-                userId: 'temp-user',
+                userId: userId,
                 title: prompt.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
@@ -43,14 +67,7 @@ export async function POST(request: Request) {
                     controller.enqueue(encoder.encode(JSON.stringify(data) + '\n'));
                 };
 
-                // Send session info immediately if it was new (or always, for consistency)
-                // Frontend might expect events.
-
                 try {
-                    // Send initial session ID if the client might need it? 
-                    // Usually client waits for the full response or updates URL based on something.
-                    // But strict SSE usually sends events.
-
                     sendJSON({ data: { message: "Analyzing your request...", step: "context_analysis", chatId: session._id } });
                     await new Promise(r => setTimeout(r, 600));
 
