@@ -7,3 +7,13 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-26 - [IDOR in Research API Delete and Queue Endpoints]
+**Vulnerability:** `delete_chat` and `create_research_queue` endpoints allowed actions on research chats without verifying user ownership.
+**Learning:** Every endpoint that modifies or interacts with a user-owned resource must verify ownership, even if it's a sub-action like adding to a queue.
+**Prevention:** Scoped ownership checks (e.g., `findOneAndDelete({ _id: id, userId: user._id })`) should be applied consistently across all CRUD and action-based endpoints.
+
+## 2025-02-26 - [Missing Auth and IDOR in Sheet Conversation API]
+**Vulnerability:** The `create_conversation` endpoint for sheets was completely unauthenticated and used a hardcoded 'temp-user' ID, allowing anyone to create or modify sessions.
+**Learning:** Even if an endpoint is intended for "temporary" or "guest" use, it should be properly secured with authentication if it interacts with a database and user-specific resources.
+**Prevention:** Always implement `getAuthenticatedUser()` checks at the beginning of API routes and avoid hardcoded user IDs.
