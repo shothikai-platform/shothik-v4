@@ -80,7 +80,9 @@ export async function POST(request: Request) {
                     // In a real app, a background job does this.
                     // For now, we'll just try to update.
 
-                    await ResearchChat.findByIdAndUpdate(chatId, {
+                    await ResearchChat.findOneAndUpdate(
+                        { _id: chatId, userId: user._id || user.id },
+                        {
                         $push: {
                             messages: {
                                 role: 'assistant',
