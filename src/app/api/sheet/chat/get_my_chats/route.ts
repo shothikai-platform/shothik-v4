@@ -6,8 +6,11 @@ export async function GET(request: Request) {
     try {
         await dbConnect();
         // Fetch all sessions sorted by newest updated
-        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 });
-        return NextResponse.json(sessions);
+        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 }).lean();
+
+        // Optimization: Use .lean() to return plain JS objects and reduce memory usage, then map to preserve the 'id' field
+        const optimizedSessions = sessions.map((s: any) => ({ ...s, id: s._id.toString() }));
+        return NextResponse.json(optimizedSessions);
     } catch (error) {
         console.error('Error fetching sheet sessions:', error);
         return NextResponse.json(
