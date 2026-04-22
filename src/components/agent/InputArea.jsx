@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -78,14 +79,22 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             isMobile ? "w-full" : "w-[80%]",
           )}
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSelectedAgent(null)}
-            className="h-9 w-9"
-          >
-            <ArrowLeft className="size-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSelectedAgent(null)}
+                className="h-9 w-9"
+                aria-label="Back to agents list"
+              >
+                <ArrowLeft className="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Back to agents list</p>
+            </TooltipContent>
+          </Tooltip>
           <span className="text-sm font-medium">{selectedAgent.title}</span>
         </div>
       )}
@@ -140,6 +149,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
+                aria-label={filesRef?.current?.files?.length ? `${filesRef.current.files.length} Files selected` : "Attach files"}
               >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
@@ -158,13 +168,22 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span tabIndex={loading ? 0 : -1} className="inline-block">
+                <Button disabled={loading} type="submit" size="icon" aria-label="Send message">
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Send message</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>
