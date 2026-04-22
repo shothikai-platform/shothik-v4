@@ -8,7 +8,7 @@
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
 
-## 2025-05-23 - [IDOR in Research Chat Deletion API]
-**Vulnerability:** `delete_chat` endpoint deleted chats by ID without verifying user ownership or checking authentication, allowing an unauthenticated or unauthorized user to delete other users' chats.
-**Learning:** Similar to fetching data, mutating or deleting data requires both authentication and explicit authorization scoping.
-**Prevention:** Always require `getAuthenticatedUser()` in API routes and use `findOneAndDelete({ _id: id, userId: currentUser._id || currentUser.id })` to securely scope modifications to the authorized user.
+## 2025-02-26 - [IDOR in Research Chat Deletion]
+**Vulnerability:** `delete_chat` endpoint deleted chats by ID using `findByIdAndDelete(id)` without verifying user ownership, allowing any user to delete any other user's chats.
+**Learning:** Destructive operations (like DELETE) are critical targets for IDOR and must always include ownership checks. Relying solely on UI obscuration (not showing the delete button to others) is not a security control.
+**Prevention:** Always use `findOneAndDelete({ _id: id, userId: currentUser._id })` instead of `findByIdAndDelete(id)` for user-owned resources to enforce authorization at the database level.
