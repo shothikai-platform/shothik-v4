@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [Unauthenticated Webhook Relay]
+**Vulnerability:** Public API endpoint `/api/zoho-webhook` acting as an unauthenticated relay to an external Zoho service.
+**Learning:** Internal API routes that proxy requests to external services must be authenticated to prevent abuse and SSRF-like risks, even if the payload is expected to be specific.
+**Prevention:** Always implement authentication via `getAuthenticatedUser()` in all `/api` routes and validate the request payload structure before relaying to external endpoints.
