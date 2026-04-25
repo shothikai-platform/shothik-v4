@@ -17,6 +17,12 @@ import { useEffect, useRef, useState } from "react";
 // New imports for 7-agent system
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -305,14 +311,22 @@ export default function AgentPage({ specificAgent, presentationId }) {
       <div className="bg-background fixed top-0 right-0 left-0 z-[1001] flex h-20 items-center border-b shadow-sm">
         <div className="mx-auto flex h-full w-full max-w-6xl items-center px-4">
           <div className="flex w-full items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push("/agents")}
-              className="text-muted-foreground hover:text-primary"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Back to agents"
+                    onClick={() => router.push("/agents")}
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Back to agents</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <h1 className="from-primary to-primary/60 flex-1 bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent">
               Shothik{" "}
               {currentAgentType === "presentation" ? "Presentation" : "Super"}{" "}
@@ -638,13 +652,21 @@ const presentationState = {
                 }}
                 rows={4}
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-primary"
-              >
-                <Mic className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Voice input"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      <Mic className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Voice input</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div className="flex items-center justify-between">
@@ -655,14 +677,24 @@ const presentationState = {
                 <User className="mr-2 h-4 w-4" />
                 Personalize
               </Button>
-              <Button
-                onClick={() => handleSend()}
-                disabled={!inputValue.trim() || isLoading}
-                size="icon"
-                className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span tabIndex={0} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      <Button
+                        onClick={() => handleSend()}
+                        disabled={!inputValue.trim() || isLoading}
+                        size="icon"
+                        aria-label="Send message"
+                        className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
+                      >
+                        <Send className="h-5 w-5" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Send message</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>
