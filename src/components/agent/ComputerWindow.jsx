@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import Editor from "@monaco-editor/react";
 import { Bot, Brain, Globe, Minimize2 } from "lucide-react";
@@ -54,14 +59,22 @@ const ComputerWindow = ({ computerLogs, closeWindow, taskProgress }) => {
             </Button>
             <h3 className="text-lg font-bold">Shothik AI Computer</h3>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={closeWindow}
-            className="text-muted-foreground"
-          >
-            <Minimize2 className="size-4 rotate-45" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Minimize window"
+                onClick={closeWindow}
+                className="text-muted-foreground"
+              >
+                <Minimize2 className="size-4 rotate-45" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Minimize window</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <div
