@@ -5,3 +5,6 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2025-02-18 - Unused TooltipProvider in Shadcn
+**Learning:** In this codebase's Shadcn implementation (`src/components/ui/tooltip.tsx`), the `<Tooltip>` component internally wraps itself with `<TooltipProvider>`.
+**Action:** When adding tooltips, only import `Tooltip`, `TooltipContent`, and `TooltipTrigger`. Do not import or instantiate `<TooltipProvider>` manually, as it causes unused variable linting errors.
