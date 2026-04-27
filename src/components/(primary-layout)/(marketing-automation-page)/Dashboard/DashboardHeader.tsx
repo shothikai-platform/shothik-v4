@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DashboardHeaderProps {
   isLoadingInsights: boolean;
@@ -17,9 +18,16 @@ export default function DashboardHeader({
     <div className="flex h-full items-center justify-between">
       <div className="flex items-center gap-4">
         <Link href="/marketing-automation">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="size-5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Back to Campaign">
+                <ArrowLeft className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Back to Campaign</p>
+            </TooltipContent>
+          </Tooltip>
         </Link>
         <div>
           <h1 className="text-xl font-bold">Campaign Dashboard</h1>
