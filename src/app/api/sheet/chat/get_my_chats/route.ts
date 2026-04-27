@@ -6,8 +6,10 @@ export async function GET(request: Request) {
     try {
         await dbConnect();
         // Fetch all sessions sorted by newest updated
-        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 });
-        return NextResponse.json(sessions);
+        // Optimization: Use .lean() to return plain JS objects instead of heavy Mongoose documents
+        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 }).lean();
+        const formattedSessions = sessions.map((s: any) => ({ ...s, id: s._id.toString() }));
+        return NextResponse.json(formattedSessions);
     } catch (error) {
         console.error('Error fetching sheet sessions:', error);
         return NextResponse.json(
