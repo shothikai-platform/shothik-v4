@@ -9,6 +9,6 @@
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
 
 ## 2026-04-28 - [IDOR in Sheet Session API]
-**Vulnerability:** `get_my_chats` endpoint for sheets returned all sessions in the database without authentication or ownership checks.
-**Learning:** Forgetting to implement authentication on new modules is a common source of data leaks.
-**Prevention:** Use a standard authentication wrapper or middleware and always include `userId` in the query filter for user-specific data.
+**Vulnerability:** `get_my_chats` and `create_conversation` endpoints for sheets lacked proper authentication and ownership checks (using 'temp-user' and missing `userId` filters).
+**Learning:** Forgetting to implement authentication on new modules or using hardcoded placeholder user IDs is a common source of data leaks and IDOR.
+**Prevention:** Always use `getAuthenticatedUser()`, avoid hardcoded 'temp-user' strings, and scope all resource lookups with `userId`.
