@@ -162,16 +162,18 @@ const Contend = ({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                aria-label="delete"
-                variant="ghost"
-                size={isMobile ? "icon-sm" : "icon"}
-                disabled={isLoading}
-                onClick={handleClearInput}
-                className="cursor-pointer bg-transparent p-0 hover:bg-transparent dark:hover:bg-transparent"
-              >
-                <Trash2 className="size-[18px]" />
-              </Button>
+              <span tabIndex={0} className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <Button
+                  aria-label="delete"
+                  variant="ghost"
+                  size={isMobile ? "icon-sm" : "icon"}
+                  disabled={isLoading}
+                  onClick={handleClearInput}
+                  className="cursor-pointer bg-transparent p-0 hover:bg-transparent dark:hover:bg-transparent"
+                >
+                  <Trash2 className="size-[18px]" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent side="top">
               <p>Clear text</p>
