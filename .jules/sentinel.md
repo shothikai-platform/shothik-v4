@@ -7,8 +7,3 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
-
-## 2025-05-23 - [Hardcoded User ID in Sheet API]
-**Vulnerability:** `create_conversation` used a hardcoded `'temp-user'` string and lacked ownership checks on existing sessions, enabling unauthorized session manipulation.
-**Learning:** Prototyping shortcuts like hardcoded user IDs often persist into production, creating significant IDOR and data leakage risks.
-**Prevention:** Never use hardcoded user placeholders; always integrate `getAuthenticatedUser()` and enforce ownership checks (`findOne({ _id, userId })`) from the start of development.
