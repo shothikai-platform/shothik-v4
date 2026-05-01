@@ -286,30 +286,34 @@ export const EditingToolbar = memo(function EditingToolbar({
         <div className="flex items-center gap-1 border-r pr-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={undoChange}
-                disabled={!canUndo}
-                aria-label="Undo"
-              >
-                <Undo2 className="h-4 w-4" />
-              </Button>
+              <span tabIndex={!canUndo ? 0 : -1} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={undoChange}
+                  disabled={!canUndo}
+                  aria-label="Undo"
+                >
+                  <Undo2 className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Undo (Ctrl+Z)</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={redoChange}
-                disabled={!canRedo}
-                aria-label="Redo"
-              >
-                <Redo2 className="h-4 w-4" />
-              </Button>
+              <span tabIndex={!canRedo ? 0 : -1} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={redoChange}
+                  disabled={!canRedo}
+                  aria-label="Redo"
+                >
+                  <Redo2 className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Redo (Ctrl+Shift+Z)</TooltipContent>
           </Tooltip>
@@ -445,30 +449,34 @@ export const EditingToolbar = memo(function EditingToolbar({
         <div className="flex items-center gap-1 border-r pr-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={handleDuplicate}
-                aria-label="Duplicate element"
-                disabled={elementDuplication.isDuplicating}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              <span tabIndex={elementDuplication.isDuplicating ? 0 : -1} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={handleDuplicate}
+                  aria-label="Duplicate element"
+                  disabled={elementDuplication.isDuplicating}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Duplicate Element</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={handleDelete}
-                aria-label="Delete element"
-                disabled={elementDeletion.isDeleting}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <span tabIndex={elementDeletion.isDeleting ? 0 : -1} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={handleDelete}
+                  aria-label="Delete element"
+                  disabled={elementDeletion.isDeleting}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Delete Element</TooltipContent>
           </Tooltip>
