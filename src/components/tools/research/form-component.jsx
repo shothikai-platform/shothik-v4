@@ -227,9 +227,7 @@ const FormComponent = ({
         ]);
       } catch (error) {
         console.error("Error uploading files!", error);
-        toast.error(
-          "Failed to upload one or more files. Please try again.",
-        );
+        toast.error("Failed to upload one or more files. Please try again.");
       } finally {
         setUploadQueue([]);
         event.target.value = "";
@@ -309,9 +307,7 @@ const FormComponent = ({
         ]);
       } catch (error) {
         console.error("Error uploading files!", error);
-        toast.error(
-          "Failed to upload one or more files. Please try again.",
-        );
+        toast.error("Failed to upload one or more files. Please try again.");
       } finally {
         setUploadQueue([]);
       }
@@ -456,28 +452,50 @@ const FormComponent = ({
         </div>
 
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-primary/5 hover:bg-primary/10 h-9 w-9"
-            onClick={(event) => {
-              event.preventDefault();
-              triggerFileInput();
-            }}
-            disabled={isLoading}
-          >
-            <Paperclip className="h-4 w-4 rotate-45" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                tabIndex={isLoading ? 0 : -1}
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+              >
+                <Button
+                  aria-label="Attach file"
+                  variant="ghost"
+                  size="icon"
+                  className="bg-primary/5 hover:bg-primary/10 h-9 w-9"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    triggerFileInput();
+                  }}
+                  disabled={isLoading}
+                >
+                  <Paperclip className="h-4 w-4 rotate-45" />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Attach file</TooltipContent>
+          </Tooltip>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-primary/5 hover:bg-primary/10 h-9 w-9"
-            onClick={onSubmit}
-            disabled={!input || isLoading}
-          >
-            <ArrowUp className="h-4 w-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                tabIndex={!input || isLoading ? 0 : -1}
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+              >
+                <Button
+                  aria-label="Submit"
+                  variant="ghost"
+                  size="icon"
+                  className="bg-primary/5 hover:bg-primary/10 h-9 w-9"
+                  onClick={onSubmit}
+                  disabled={!input || isLoading}
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Submit</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </div>
