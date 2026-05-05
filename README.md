@@ -55,3 +55,4 @@ To run the NLP service securely, you must configure the following environment va
         ```
 
 **Note**: If this variable is not set, the API will not accept requests from any origin, effectively disabling it.
+
