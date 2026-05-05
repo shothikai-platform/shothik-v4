@@ -15,6 +15,11 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useShare } from "@/hooks/useShare";
 import {
   Calendar,
@@ -224,12 +229,18 @@ const ShareModal = ({
                   className="flex items-center gap-1 pr-1"
                 >
                   {tag}
-                  <button
-                    onClick={() => handleRemoveTag(tag)}
-                    className="hover:bg-accent hover:text-accent-foreground ml-1 rounded-full transition-colors"
-                  >
-                    <X className="size-3" />
-                  </button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => handleRemoveTag(tag)}
+                        className="hover:bg-accent hover:text-accent-foreground ml-1 rounded-full transition-colors"
+                        aria-label={`Remove tag ${tag}`}
+                      >
+                        <X className="size-3" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Remove tag {tag}</TooltipContent>
+                  </Tooltip>
                 </Badge>
               ))}
             </div>
