@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 // New imports for 7-agent system
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -638,13 +639,19 @@ const presentationState = {
                 }}
                 rows={4}
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-primary"
-              >
-                <Mic className="h-5 w-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-primary"
+                    aria-label="Voice Input (Coming soon)"
+                  >
+                    <Mic className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Voice Input (Coming soon)</TooltipContent>
+              </Tooltip>
             </div>
 
             <div className="flex items-center justify-between">
@@ -655,14 +662,22 @@ const presentationState = {
                 <User className="mr-2 h-4 w-4" />
                 Personalize
               </Button>
-              <Button
-                onClick={() => handleSend()}
-                disabled={!inputValue.trim() || isLoading}
-                size="icon"
-                className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={!inputValue.trim() || isLoading ? 0 : -1} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md inline-block">
+                    <Button
+                      onClick={() => handleSend()}
+                      disabled={!inputValue.trim() || isLoading}
+                      size="icon"
+                      className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
+                      aria-label="Send message"
+                    >
+                      <Send className="h-5 w-5" />
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>Send message</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
