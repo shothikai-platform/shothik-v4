@@ -2,6 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -122,15 +127,23 @@ const ShareButton = ({
   };
 
   const renderIconButton = () => (
-    <Button
-      onClick={handleClick}
-      disabled={disabled || isLoading || quickShareLoading}
-      variant="ghost"
-      size={size === "small" ? "icon-sm" : "icon"}
-      className="text-muted-foreground hover:text-primary"
-    >
-      <Share className={cn(size === "small" ? "h-4 w-4" : "h-5 w-5")} />
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span tabIndex={disabled || isLoading || quickShareLoading ? 0 : -1} className="focus-visible:outline-none">
+          <Button
+            onClick={handleClick}
+            disabled={disabled || isLoading || quickShareLoading}
+            variant="ghost"
+            size={size === "small" ? "icon-sm" : "icon"}
+            className="text-muted-foreground hover:text-primary"
+            aria-label={title}
+          >
+            <Share className={cn(size === "small" ? "h-4 w-4" : "h-5 w-5")} />
+          </Button>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>{title}</TooltipContent>
+    </Tooltip>
   );
 
   const renderButton = () => (
