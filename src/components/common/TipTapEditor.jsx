@@ -1,4 +1,9 @@
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -36,6 +41,7 @@ const TipTapEditor = ({ content, onChange }) => {
       Underline,
     ],
     content,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   });
 
@@ -51,125 +57,191 @@ const TipTapEditor = ({ content, onChange }) => {
     <div>
       <div className="border-border flex gap-2 rounded-t-md border-2 border-b-0 py-2">
         {/* Bold */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleBold()}
-          className="h-8 w-8"
-        >
-          <BoldIcon className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Bold"
+              onClick={() => editor.commands.toggleBold()}
+              className="h-8 w-8"
+            >
+              <BoldIcon className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Bold</TooltipContent>
+        </Tooltip>
 
         {/* Italic */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleItalic()}
-          className="h-8 w-8"
-        >
-          <ItalicIcon className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Italic"
+              onClick={() => editor.commands.toggleItalic()}
+              className="h-8 w-8"
+            >
+              <ItalicIcon className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Italic</TooltipContent>
+        </Tooltip>
 
         {/* Underline */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleUnderline()}
-          className="h-8 w-8"
-        >
-          <UnderlineIcon className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Underline"
+              onClick={() => editor.commands.toggleUnderline()}
+              className="h-8 w-8"
+            >
+              <UnderlineIcon className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Underline</TooltipContent>
+        </Tooltip>
 
         {/* Paragraph */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.setParagraph({ level: 1 })}
-          className="h-8 w-8 text-xs font-semibold"
-        >
-          P
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Paragraph"
+              onClick={() => editor.commands.setParagraph({ level: 1 })}
+              className="h-8 w-8 text-xs font-semibold"
+            >
+              P
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Paragraph</TooltipContent>
+        </Tooltip>
 
         {/* H2 */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.setHeading({ level: 2 })}
-          className="h-8 w-8 text-xs font-semibold"
-        >
-          H2
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Heading 2"
+              onClick={() => editor.commands.setHeading({ level: 2 })}
+              className="h-8 w-8 text-xs font-semibold"
+            >
+              H2
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Heading 2</TooltipContent>
+        </Tooltip>
 
         {/* H3 */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.setHeading({ level: 3 })}
-          className="h-8 w-8 text-xs font-semibold"
-        >
-          H3
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Heading 3"
+              onClick={() => editor.commands.setHeading({ level: 3 })}
+              className="h-8 w-8 text-xs font-semibold"
+            >
+              H3
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Heading 3</TooltipContent>
+        </Tooltip>
 
         {/* H4 */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.setHeading({ level: 4 })}
-          className="h-8 w-8 text-xs font-semibold"
-        >
-          H4
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Heading 4"
+              onClick={() => editor.commands.setHeading({ level: 4 })}
+              className="h-8 w-8 text-xs font-semibold"
+            >
+              H4
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Heading 4</TooltipContent>
+        </Tooltip>
 
         {/* Ordered List */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleOrderedList()}
-          className="h-8 w-8"
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Ordered List"
+              onClick={() => editor.commands.toggleOrderedList()}
+              className="h-8 w-8"
+            >
+              <ListOrdered className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Ordered List</TooltipContent>
+        </Tooltip>
 
         {/* Unordered List */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleBulletList()}
-          className="h-8 w-8"
-        >
-          <List className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Unordered List"
+              onClick={() => editor.commands.toggleBulletList()}
+              className="h-8 w-8"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Unordered List</TooltipContent>
+        </Tooltip>
 
         {/* Blockquote */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.toggleBlockquote()}
-          className="h-8 w-8"
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Blockquote"
+              onClick={() => editor.commands.toggleBlockquote()}
+              className="h-8 w-8"
+            >
+              <Quote className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Blockquote</TooltipContent>
+        </Tooltip>
 
         {/* Horizontal Rule */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => editor.commands.setHorizontalRule()}
-          className="h-8 w-8"
-        >
-          <Minus className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Horizontal Rule"
+              onClick={() => editor.commands.setHorizontalRule()}
+              className="h-8 w-8"
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Horizontal Rule</TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Editor Content */}
