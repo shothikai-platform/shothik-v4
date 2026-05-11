@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { toggleTheme } from "@/redux/slices/settings-slice";
 import { Monitor, Moon, Sun } from "lucide-react";
@@ -31,15 +32,22 @@ export default function ThemeToggle({ className }) {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={() => dispatch(toggleTheme())}
-      className={cn("p-2", className)}
-      aria-label="Toggle Theme"
-      data-testid="theme-toggle"
-    >
-      {renderIcon()}
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => dispatch(toggleTheme())}
+          className={cn("p-2", className)}
+          aria-label="Toggle Theme"
+          data-testid="theme-toggle"
+        >
+          {renderIcon()}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Toggle theme</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
