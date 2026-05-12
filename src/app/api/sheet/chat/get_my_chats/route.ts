@@ -6,7 +6,9 @@ export async function GET(request: Request) {
     try {
         await dbConnect();
         // Fetch all sessions sorted by newest updated
-        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 });
+        // Optimization: .lean() bypasses Mongoose document hydration, returning plain JS objects.
+        // Expected Impact: Reduces query execution time and memory overhead for list fetching.
+        const sessions = await SheetSession.find({}).sort({ updatedAt: -1 }).lean();
         return NextResponse.json(sessions);
     } catch (error) {
         console.error('Error fetching sheet sessions:', error);
