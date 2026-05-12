@@ -1,14 +1,21 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { chat: chatId, query, config } = await request.json();
         await dbConnect();
 
         // 1. Validate chat exists
-        const chat = await ResearchChat.findById(chatId);
+        // Fix IDOR vulnerability by scoping query to authenticated user
+        const chat = await ResearchChat.findOne({ _id: chatId, userId: user._id || user.id });
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
@@ -71,7 +78,8 @@ export async function POST(request: Request) {
                     // In a real app, a background job does this.
                     // For now, we'll just try to update.
 
-                    await ResearchChat.findByIdAndUpdate(chatId, {
+                    // Fix IDOR vulnerability by scoping query to authenticated user
+                    await ResearchChat.findOneAndUpdate({ _id: chatId, userId: user._id || user.id }, {
                         $push: {
                             messages: {
                                 role: 'assistant',
