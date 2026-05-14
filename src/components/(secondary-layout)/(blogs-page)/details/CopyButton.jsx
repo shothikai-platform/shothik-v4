@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import useSnackbar from "@/hooks/useSnackbar";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
@@ -18,10 +19,19 @@ const CopyButton = ({ text }) => {
     }, 2000);
   }
 
+  const labelText = showCopy ? "Copy URL" : "Copied!";
+
   return (
-    <Button variant="ghost" size="icon" onClick={handleCopy}>
-      {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant="ghost" size="icon" onClick={handleCopy} aria-label={labelText}>
+          {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{labelText}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
