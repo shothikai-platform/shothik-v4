@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const GrammarIssueCard = ({
   issue,
@@ -44,24 +45,36 @@ const GrammarIssueCard = ({
               hidden: isCollapsed,
             })}
           >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAccept(issue);
-              }}
-              className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10"
-            >
-              <Check className="size-4" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleIgnore(issue);
-              }}
-              className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors"
-            >
-              <Trash2 className="size-4" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  aria-label="Accept suggestion"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAccept(issue);
+                  }}
+                  className="flex size-6 items-center justify-center gap-1 rounded-md text-sm text-green-600 transition-colors hover:bg-green-600/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Check className="size-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Accept</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  aria-label="Ignore suggestion"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIgnore(issue);
+                  }}
+                  className="hover:bg-muted text-muted-foreground flex size-6 items-center justify-center gap-1 rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Ignore</TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
