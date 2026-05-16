@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-23 - [IDOR in Sheet API]
+**Vulnerability:** Sheet API endpoints (`get_my_chats` and `create_conversation`) allowed unauthenticated access and lacked ownership verification, leading to IDOR.
+**Learning:** Hardcoded user IDs (like 'temp-user') and missing authentication in new features often create security gaps. IDOR is a recurring pattern in this codebase for user-specific resources.
+**Prevention:** Enforce authentication using `getAuthenticatedUser()` and always include `userId` in Mongoose queries for user-owned resources.
