@@ -26,6 +26,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // ----------------------------------------------------------------------
 
@@ -192,19 +197,27 @@ export default function AuthRegisterForm({ country, loading }) {
                     placeholder="Enter your password"
                     {...field}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
-                  >
-                    {showPassword ? (
-                      <Eye className="h-4 w-4" />
-                    ) : (
-                      <EyeOff className="h-4 w-4" />
-                    )}
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? (
+                          <Eye className="h-4 w-4" />
+                        ) : (
+                          <EyeOff className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{showPassword ? "Hide password" : "Show password"}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </FormControl>
               <FormMessage />
