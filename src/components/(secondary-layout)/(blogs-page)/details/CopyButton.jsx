@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import useSnackbar from "@/hooks/useSnackbar";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const CopyButton = ({ text }) => {
   const enqueueSnackbar = useSnackbar();
@@ -19,9 +24,21 @@ const CopyButton = ({ text }) => {
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={handleCopy}>
-      {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCopy}
+          aria-label={showCopy ? "Copy URL" : "Copied!"}
+        >
+          {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{showCopy ? "Copy URL" : "Copied!"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
