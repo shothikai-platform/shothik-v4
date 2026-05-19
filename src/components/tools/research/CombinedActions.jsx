@@ -665,6 +665,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button
+                    aria-label="Share"
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
@@ -718,6 +719,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <TooltipTrigger asChild>
                 <DropdownMenuTrigger asChild>
                   <Button
+                    aria-label="Export"
                     variant="ghost"
                     size="icon"
                     className="text-muted-foreground hover:bg-accent h-8 w-8"
@@ -739,6 +741,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="Rewrite"
                 variant="ghost"
                 size="icon"
                 onClick={handleRewrite}
@@ -760,40 +763,52 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleFeedback("helpful")}
-                disabled={isSubmitting}
-                className={cn(
-                  "h-8 w-8",
-                  feedback === "helpful"
-                    ? "text-green-600 hover:text-green-600"
-                    : "text-muted-foreground hover:bg-accent hover:text-green-600",
-                )}
+              <span
+                tabIndex={isSubmitting ? 0 : -1}
+                className="focus-visible:ring-ring rounded-md focus-visible:outline-none focus-visible:ring-2"
               >
-                <ThumbsUp className="h-4 w-4" />
-              </Button>
+                <Button
+                  aria-label="Helpful"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleFeedback("helpful")}
+                  disabled={isSubmitting}
+                  className={cn(
+                    "h-8 w-8",
+                    feedback === "helpful"
+                      ? "text-green-600 hover:text-green-600"
+                      : "text-muted-foreground hover:bg-accent hover:text-green-600",
+                  )}
+                >
+                  <ThumbsUp className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Yes, helpful</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleFeedback("not-helpful")}
-                disabled={isSubmitting}
-                className={cn(
-                  "h-8 w-8",
-                  feedback === "not-helpful"
-                    ? "text-red-600 hover:text-red-600"
-                    : "text-muted-foreground hover:bg-accent hover:text-red-600",
-                )}
+              <span
+                tabIndex={isSubmitting ? 0 : -1}
+                className="focus-visible:ring-ring rounded-md focus-visible:outline-none focus-visible:ring-2"
               >
-                <ThumbsDown className="h-4 w-4" />
-              </Button>
+                <Button
+                  aria-label="Not helpful"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleFeedback("not-helpful")}
+                  disabled={isSubmitting}
+                  className={cn(
+                    "h-8 w-8",
+                    feedback === "not-helpful"
+                      ? "text-red-600 hover:text-red-600"
+                      : "text-muted-foreground hover:bg-accent hover:text-red-600",
+                  )}
+                >
+                  <ThumbsDown className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>No, not helpful</TooltipContent>
           </Tooltip>
