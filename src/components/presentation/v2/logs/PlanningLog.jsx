@@ -123,6 +123,7 @@ function MetadataSection({ metadata }) {
     <section className="border-border bg-muted/20 rounded-md border">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <div className="flex items-center gap-2">
@@ -206,6 +207,7 @@ function ThemeSection({ theme }) {
     <section className="border-border bg-muted/20 rounded-md border">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <div className="flex items-center gap-2">
@@ -318,6 +320,7 @@ function ContentStrategySection({ contentStrategy }) {
     <section className="border-border bg-muted/20 rounded-md border">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <div className="flex items-center gap-2">
@@ -380,6 +383,7 @@ function SlideOutlineSection({ slideOutline }) {
     <section className="border-border bg-muted/20 rounded-md border">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
         className="flex w-full items-center justify-between px-4 py-3 text-left"
       >
         <div className="flex items-center gap-2">
@@ -464,6 +468,7 @@ function SlideOutlineCard({ slide }) {
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
+              aria-expanded={isExpanded}
               className="h-6 w-6 shrink-0 p-0"
             >
               {isExpanded ? (
