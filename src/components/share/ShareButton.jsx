@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -121,17 +127,37 @@ const ShareButton = ({
     setShareModalOpen(false);
   };
 
-  const renderIconButton = () => (
-    <Button
-      onClick={handleClick}
-      disabled={disabled || isLoading || quickShareLoading}
-      variant="ghost"
-      size={size === "small" ? "icon-sm" : "icon"}
-      className="text-muted-foreground hover:text-primary"
-    >
-      <Share className={cn(size === "small" ? "h-4 w-4" : "h-5 w-5")} />
-    </Button>
-  );
+  const renderIconButton = () => {
+    const isDisabled = disabled || isLoading || quickShareLoading;
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              tabIndex={isDisabled ? 0 : -1}
+              className={cn("inline-block", isDisabled && "cursor-not-allowed")}
+            >
+              <Button
+                onClick={handleClick}
+                disabled={isDisabled}
+                variant="ghost"
+                size={size === "small" ? "icon-sm" : "icon"}
+                className="text-muted-foreground hover:text-primary"
+                aria-label={title}
+              >
+                <Share
+                  className={cn(size === "small" ? "h-4 w-4" : "h-5 w-5")}
+                />
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{title}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
 
   const renderButton = () => (
     <div
@@ -160,6 +186,7 @@ const ShareButton = ({
           variant="ghost"
           size={size === "small" ? "icon-sm" : "icon"}
           className="text-muted-foreground hover:text-primary"
+          aria-label={title}
         >
           <Share className={cn(size === "small" ? "h-4 w-4" : "h-5 w-5")} />
         </Button>
