@@ -8,12 +8,7 @@
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
 
-## 2025-05-15 - [IDOR in Research Chat Delete API]
-**Vulnerability:** `delete_chat` endpoint used `findByIdAndDelete` without authentication or ownership checks.
-**Learning:** Recurrence of IDOR pattern. Deletion endpoints are high-risk as they cause permanent data loss.
-**Prevention:** Enforce `getAuthenticatedUser()` and use `findOneAndDelete({ _id: id, userId: user._id })` for all resource-specific deletion routes.
-
-## 2025-05-15 - [IDOR in Research Chat Update Name API]
-**Vulnerability:** `update_name` endpoint lacked authentication and ownership checks, and used incorrect field name 'title'.
-**Learning:** Even simple update endpoints can be vulnerable to IDOR. Consistent field naming across model and API is crucial.
-**Prevention:** Always verify authentication and ownership in update routes. Use `findOneAndUpdate` with `userId` filter.
+## 2025-05-15 - [IDOR in Research Chat APIs (Delete, Update, Queue)]
+**Vulnerability:** Several Research Chat endpoints (`delete_chat`, `update_name`, `create_research_queue`) were vulnerable to IDOR by using `findById` without ownership checks.
+**Learning:** Repetitive IDOR patterns indicate a need for a "secure-by-default" approach when accessing user-owned resources. Deletion and long-running research tasks are high-impact operations.
+**Prevention:** For every resource-specific API route, enforce authentication via `getAuthenticatedUser()` and authorize via `findOne({ _id: id, userId: user._id })` or similar scoped queries.

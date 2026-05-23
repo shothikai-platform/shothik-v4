@@ -10,9 +10,8 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindByIdAndDelete, mockFindOneAndDelete } = vi.hoisted(() => {
+const { mockFindOneAndDelete } = vi.hoisted(() => {
   return {
-    mockFindByIdAndDelete: vi.fn(),
     mockFindOneAndDelete: vi.fn(),
   };
 });
@@ -21,7 +20,6 @@ const { mockFindByIdAndDelete, mockFindOneAndDelete } = vi.hoisted(() => {
 vi.mock('@/models/ResearchChat', () => {
   return {
     default: {
-      findByIdAndDelete: mockFindByIdAndDelete,
       findOneAndDelete: mockFindOneAndDelete,
     },
   };
@@ -44,32 +42,24 @@ describe('DELETE /api/research/chat/delete_chat/[id]', () => {
 
   it('should return 401 if user is not authenticated', async () => {
     (getAuthenticatedUser as any).mockResolvedValue(null);
-    mockFindByIdAndDelete.mockResolvedValue({ _id: 'chat1', userId: 'user1' });
 
     const response = await DELETE(
         new Request('http://localhost/api/research/chat/delete_chat/chat1', { method: 'DELETE' }),
         { params: Promise.resolve({ id: 'chat1' }) }
     );
 
-    // This is expected to fail on current vulnerable code as it doesn't check auth
-    // Vulnerable code would return 200 if the chat exists.
     expect(response.status).toBe(401);
   });
 
   it('should return 404 if chat belongs to another user', async () => {
     (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user2' });
-
-    // Mock findOneAndDelete to return null (simulating no match for user2 + chat1)
     mockFindOneAndDelete.mockResolvedValue(null);
-    // Mock findByIdAndDelete just in case (vulnerable version uses it)
-    mockFindByIdAndDelete.mockResolvedValue({ _id: 'chat1', userId: 'user1' });
 
     const response = await DELETE(
         new Request('http://localhost/api/research/chat/delete_chat/chat1', { method: 'DELETE' }),
         { params: Promise.resolve({ id: 'chat1' }) }
     );
 
-    // This is expected to fail on current vulnerable code as it doesn't check ownership
     expect(response.status).toBe(404);
   });
 });

@@ -10,9 +10,8 @@ vi.mock('@/lib/server-auth', () => ({
   getAuthenticatedUser: vi.fn(),
 }));
 
-const { mockFindByIdAndUpdate, mockFindOneAndUpdate } = vi.hoisted(() => {
+const { mockFindOneAndUpdate } = vi.hoisted(() => {
   return {
-    mockFindByIdAndUpdate: vi.fn(),
     mockFindOneAndUpdate: vi.fn(),
   };
 });
@@ -21,7 +20,6 @@ const { mockFindByIdAndUpdate, mockFindOneAndUpdate } = vi.hoisted(() => {
 vi.mock('@/models/ResearchChat', () => {
   return {
     default: {
-      findByIdAndUpdate: mockFindByIdAndUpdate,
       findOneAndUpdate: mockFindOneAndUpdate,
     },
   };
