@@ -12,3 +12,8 @@
 **Vulnerability:** `delete_chat` endpoint used `findByIdAndDelete` without authentication or ownership checks.
 **Learning:** Recurrence of IDOR pattern. Deletion endpoints are high-risk as they cause permanent data loss.
 **Prevention:** Enforce `getAuthenticatedUser()` and use `findOneAndDelete({ _id: id, userId: user._id })` for all resource-specific deletion routes.
+
+## 2025-05-15 - [IDOR in Research Chat Update Name API]
+**Vulnerability:** `update_name` endpoint lacked authentication and ownership checks, and used incorrect field name 'title'.
+**Learning:** Even simple update endpoints can be vulnerable to IDOR. Consistent field naming across model and API is crucial.
+**Prevention:** Always verify authentication and ownership in update routes. Use `findOneAndUpdate` with `userId` filter.
