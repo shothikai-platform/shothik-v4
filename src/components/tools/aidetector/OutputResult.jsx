@@ -49,7 +49,6 @@ const widths = [130, 80, 60, 60, 80, 130];
 export const getColorByPerplexity = (highlight_sentence_for_ai, perplexity) => {
   const p = parseInt(perplexity);
 
-
   if (highlight_sentence_for_ai) {
     // AI text thresholds (higher perplexity = more AI-like)
     if (p >= colorValue.aiHigh) return colorName.aiHigh;
@@ -164,7 +163,8 @@ const OutputResult = ({ handleOpen, outputContend }) => {
                 highly confident
               </span>
               <span className="text-muted-foreground md:whitespace-nowrap">
-                {" "}this text is
+                {" "}
+                this text is
               </span>
             </div>
             <div className="flex w-full justify-center lg:justify-start">
@@ -185,7 +185,9 @@ const OutputResult = ({ handleOpen, outputContend }) => {
           </div>
         </div>
         <div className="mt-4">
-          <h3 className="text-lg font-semibold break-words">Enhanced Sentence Detection</h3>
+          <h3 className="text-lg font-semibold break-words">
+            Enhanced Sentence Detection
+          </h3>
           <p className="text-muted-foreground break-words">
             Sentences that have the biggest influence on the probability score.
           </p>
@@ -276,6 +278,10 @@ const Accortion = ({ colorList, data, title, children }) => {
               variant="ghost"
               size="icon-sm"
               className="h-auto w-auto p-0"
+              aria-expanded={isExpanded === index}
+              aria-label={
+                isExpanded === index ? "Collapse sentence" : "Expand sentence"
+              }
             >
               {isExpanded === index ? (
                 <ChevronUp className="h-5 w-5" />
