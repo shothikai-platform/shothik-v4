@@ -6,6 +6,11 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useGetResearchMetaDataQuery } from "@/redux/api/tools/toolsApi";
 import { Check, Copy } from "lucide-react";
@@ -140,19 +145,26 @@ const MarkdownRenderer = ({ content }) => {
             <span className="border-border rounded-md border px-2 py-0.5 text-xs font-medium">
               {language || "text"}
             </span>
-            <Button
-              onClick={handleCopy}
-              variant="ghost"
-              size="sm"
-              className="bg-primary/5 h-8 w-8 p-0"
-              aria-label={isCopied ? "Copied!" : "Copy code"}
-            >
-              {isCopied ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleCopy}
+                  variant="ghost"
+                  size="sm"
+                  className="bg-primary/5 h-8 w-8 p-0"
+                  aria-label={isCopied ? "Copied!" : "Copy code"}
+                >
+                  {isCopied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isCopied ? "Copied!" : "Copy code"}
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           <div className="[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-track]:bg-muted overflow-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-sm">
