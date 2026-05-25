@@ -88,6 +88,7 @@ const SampleTextForLarge = ({
         <button
           className="hover:bg-accent absolute top-2 right-2 z-50 rounded-xs transition-colors"
           onClick={() => setOpen(false)}
+          aria-label="Close"
         >
           <X className="size-4" />
         </button>
