@@ -23,7 +23,6 @@ vi.mock('@/models/ResearchChat', () => {
   return {
     default: {
       findOneAndUpdate: mockFindOneAndUpdate,
-      // For initially failing tests if it uses findByIdAndUpdate
       findByIdAndUpdate: vi.fn(),
     },
   };
