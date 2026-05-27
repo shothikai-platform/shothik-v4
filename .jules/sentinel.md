@@ -1,3 +1,8 @@
+## 2025-05-23 - [Authentication Bypass & IDOR in Sheet API]
+**Vulnerability:** Sheet API endpoints (`get_my_chats` and `create_conversation`) were unauthenticated and lacked ownership checks, allowing any user to view or modify spreadsheet sessions.
+**Learning:** Development placeholders like `userId: 'temp-user'` and missing middleware/auth checks can easily leak into production if not caught by security reviews.
+**Prevention:** Use a standard `getAuthenticatedUser()` utility in all API routes and always include `userId` in database queries for user-owned resources.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
