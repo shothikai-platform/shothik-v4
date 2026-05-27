@@ -9,6 +9,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Controller, useForm } from "react-hook-form";
 
@@ -153,9 +158,23 @@ const SuperAgentForm = ({ onSubmit, defaultValues = {} }) => {
       </div>
 
       <div className="mt-2 flex gap-2">
-        <Button type="submit" variant="default" disabled={!isValid}>
-          Save
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              tabIndex={!isValid ? 0 : -1}
+              className="inline-block rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Button type="submit" variant="default" disabled={!isValid}>
+                Save
+              </Button>
+            </span>
+          </TooltipTrigger>
+          {!isValid && (
+            <TooltipContent>
+              <p>Please fill out all required fields</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
         <Button type="button" variant="outline" onClick={() => reset()}>
           Reset
         </Button>
