@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-06-12 - [IDOR in Async/Streaming Endpoints]
+**Vulnerability:** The `create_research_queue` endpoint allowed unauthenticated access and lacked ownership checks, permitting unauthorized users to trigger research tasks and append messages to any chat.
+**Learning:** "Action" endpoints (e.g., triggering a background job or stream) are just as vulnerable to IDOR as "Data" endpoints. Securing the initial request is insufficient if subsequent async updates (like inside a `ReadableStream`) also use insecure identifiers.
+**Prevention:** Verify resource ownership at the start of the request AND ensure any async/background updates use the same verified ownership constraints.
