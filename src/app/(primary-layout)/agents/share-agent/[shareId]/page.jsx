@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import DOMPurify from "isomorphic-dompurify";
 import {
   useCreateAgentReplicaMutation,
   useLazyVerifySharedAgentQuery,
@@ -330,7 +331,7 @@ const SharedAgentPage = () => {
                   "prose-th:p-2 prose-th:text-left prose-td:p-2",
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: processMarkdownContent(sharedData.agent.content),
+                  __html: DOMPurify.sanitize(processMarkdownContent(sharedData.agent.content)),
                 }}
               />
 
