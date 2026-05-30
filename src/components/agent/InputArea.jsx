@@ -78,14 +78,20 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             isMobile ? "w-full" : "w-[80%]",
           )}
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSelectedAgent(null)}
-            className="h-9 w-9"
-          >
-            <ArrowLeft className="size-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Back to agent selection"
+                onClick={() => setSelectedAgent(null)}
+                className="h-9 w-9"
+              >
+                <ArrowLeft className="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Back to agent selection</TooltipContent>
+          </Tooltip>
           <span className="text-sm font-medium">{selectedAgent.title}</span>
         </div>
       )}
@@ -137,6 +143,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Attach files"
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
@@ -158,13 +165,31 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                tabIndex={loading ? 0 : -1}
+                className={cn(
+                  loading &&
+                    "focus-visible:ring-ring rounded-md focus-visible:ring-2 focus-visible:outline-none",
+                )}
+              >
+                <Button
+                  disabled={loading}
+                  type="submit"
+                  size="icon"
+                  aria-label="Send message"
+                >
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Send message</TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>
