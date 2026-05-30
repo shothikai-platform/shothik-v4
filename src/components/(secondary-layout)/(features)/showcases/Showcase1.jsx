@@ -385,6 +385,7 @@ const CursorAgentUI = () => {
                         </div>
                       </div>
                       <button
+                        aria-label="Delete task"
                         onClick={(e) => deleteTask(task.id, e)}
                         className="opacity-0 transition-opacity group-hover:opacity-100"
                       >
@@ -463,6 +464,7 @@ const CursorAgentUI = () => {
                         </div>
                       </div>
                       <button
+                        aria-label="Delete task"
                         onClick={(e) => deleteTask(task.id, e)}
                         className="ml-2 opacity-0 transition-opacity group-hover:opacity-100"
                       >
@@ -487,6 +489,7 @@ const CursorAgentUI = () => {
               {selectedTask?.title || "Select a task"}
             </h2>
             <button
+              aria-label="Close task view"
               onClick={() => setShowModal(false)}
               className="no-drag rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             >
@@ -538,7 +541,7 @@ const CursorAgentUI = () => {
                                   ? "Dashboard.tsx"
                                   : "SupportChat.tsx"}
                             </span>
-                            <button className="text-gray-400 hover:text-gray-600">
+                            <button aria-label="Close tab" className="text-gray-400 hover:text-gray-600">
                               <X />
                             </button>
                           </div>
