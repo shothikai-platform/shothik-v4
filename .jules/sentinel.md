@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-06-12 - [Information Leakage in Error Responses]
+**Vulnerability:** API routes (e.g., `geolocation`) were returning raw `error.message` in 500 responses, potentially leaking sensitive system information or stack traces.
+**Learning:** Exposing detailed error messages to the client is a security risk as it provides attackers with insights into the application's internal workings.
+**Prevention:** Catch all errors in API handlers and return generic messages like "Internal Server Error" while logging the detailed error server-side.

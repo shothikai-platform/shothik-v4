@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server";
+import { getAuthenticatedUser } from "@/lib/server-auth";
 
 export async function POST() {
-  const apiKey = process.env.GOOGLE_GEOLOCATION_KEY; // Server-side env var
-
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "Google Geolocation API key is not configured" },
-      { status: 500 },
-    );
-  }
-
   try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const apiKey = process.env.GOOGLE_GEOLOCATION_KEY; // Server-side env var
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Google Geolocation API key is not configured" },
+        { status: 500 },
+      );
+    }
+
     const geolocationResponse = await fetch(
       `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
       {
@@ -60,6 +66,7 @@ export async function POST() {
     return NextResponse.json({ location: country });
   } catch (error) {
     console.error("Geolocation error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // Secure error message to avoid leaking internal details
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
