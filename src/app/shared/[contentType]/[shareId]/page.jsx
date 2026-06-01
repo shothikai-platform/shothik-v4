@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Download } from "lucide-react";
 import { useParams } from "next/navigation";
+import DOMPurify from "isomorphic-dompurify";
 import { useEffect, useState } from "react";
 
 const SharedContentPage = () => {
@@ -36,8 +37,7 @@ const SharedContentPage = () => {
             setShareData(parsedData);
             setLoading(false);
             return;
-          } catch (parseError) {
-          }
+          } catch (parseError) {}
         }
 
         // Try to fetch from backend
@@ -57,7 +57,6 @@ const SharedContentPage = () => {
               throw new Error("Failed to fetch share data");
             }
           } catch (backendError) {
-
             // Fallback to demo data if backend fails
             const demoData = {
               shareId: shareId,
@@ -213,7 +212,9 @@ The future of healthcare lies in the successful integration of AI technologies, 
         {/* Main Research Content - This is where the red arrow points */}
         <div
           className="[&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_p]:text-foreground [&_blockquote]:border-primary [&_blockquote]:bg-muted [&_code]:bg-muted [&_pre]:bg-muted max-w-none [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:py-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-8 [&_h3]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h4]:mt-6 [&_h4]:mb-3 [&_h4]:text-lg [&_h4]:font-semibold [&_li]:mb-2 [&_li]:leading-relaxed [&_ol]:mb-4 [&_ol]:pl-6 [&_p]:mb-4 [&_p]:text-base [&_p]:leading-relaxed [&_pre]:overflow-auto [&_pre]:rounded [&_pre]:p-4 [&_pre]:font-mono [&_ul]:mb-4 [&_ul]:pl-6"
-          dangerouslySetInnerHTML={{ __html: content.content }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(content.content),
+          }}
         />
 
         {/* Sources Section */}
@@ -278,7 +279,9 @@ The future of healthcare lies in the successful integration of AI technologies, 
 
         <div
           className="[&_h1]:mt-6 [&_h1]:mb-2 [&_h1]:font-bold [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-bold [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:font-bold [&_h5]:mt-6 [&_h5]:mb-2 [&_h5]:font-bold [&_h6]:mt-6 [&_h6]:mb-2 [&_h6]:font-bold [&_p]:mb-4 [&_p]:leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: content.content }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(content.content),
+          }}
         />
       </div>
     );
