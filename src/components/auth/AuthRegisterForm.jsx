@@ -197,6 +197,9 @@ export default function AuthRegisterForm({ country, loading }) {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
                   >
                     {showPassword ? (
