@@ -1,25 +1,38 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { id } = await params;
         const body = await request.json();
         const { name } = body;
 
+        if (!name) {
+            return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+        }
+
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndUpdate(
-            id,
-            { title: name }, // Assuming 'name' maps to 'title' or 'name' in your schema
+        // Security fix: Added userId to the query to prevent IDOR
+        // Also corrected 'title' to 'name' to match ResearchChat schema
+        const chat = await ResearchChat.findOneAndUpdate(
+            { _id: id, userId: user._id || user.id },
+            { name: name },
             { new: true }
         );
 
         if (!chat) {
+            // Either the chat doesn't exist or it doesn't belong to the user
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
         }
 
@@ -27,6 +40,6 @@ export async function PUT(
 
     } catch (error) {
         console.error('Error updating chat name:', error);
-        return NextResponse.json({ error: 'Failed' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
