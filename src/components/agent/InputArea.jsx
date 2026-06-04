@@ -81,6 +81,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Go back"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
           >
@@ -138,6 +139,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 variant="ghost"
                 size="icon"
                 type="button"
+                aria-label="Attach files"
                 onClick={handleFileInputClick}
                 className="group relative"
               >
@@ -158,13 +160,30 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                tabIndex={loading ? 0 : -1}
+                className="focus-visible:ring-ring inline-block rounded-md focus-visible:outline-none focus-visible:ring-1"
+              >
+                <Button
+                  disabled={loading}
+                  type="submit"
+                  size="icon"
+                  aria-label="Send message"
+                >
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Send message</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>
