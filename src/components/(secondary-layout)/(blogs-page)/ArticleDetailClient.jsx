@@ -1,5 +1,6 @@
 "use client";
 
+import DOMPurify from "isomorphic-dompurify";
 import gradientBluePurple from "@/app/(secondary-layout)/blogs/assets/blog.png";
 import gradientTeal from "@/app/(secondary-layout)/blogs/assets/blog1.png";
 import gradientGreen from "@/app/(secondary-layout)/blogs/assets/blog2.png";
@@ -254,7 +255,9 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(processedPost.content),
+            }}
           />
         </article>
 
