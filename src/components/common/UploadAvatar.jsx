@@ -20,15 +20,25 @@ export default function UploadAvatar({
     <>
       <div
         className={cn(
-          "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed",
+          "relative mx-auto flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border border-dashed transition-shadow",
           loading ? "cursor-not-allowed" : "cursor-pointer",
           error
             ? "border-destructive bg-destructive/10"
             : "border-border bg-muted",
+          "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         )}
+        role="button"
+        tabIndex={loading ? -1 : 0}
+        aria-label="Upload photo"
         onClick={() =>
           !loading && document.getElementById("avatarInput").click()
         }
+        onKeyDown={(e) => {
+          if (!loading && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            document.getElementById("avatarInput").click();
+          }
+        }}
       >
         <input
           id="avatarInput"
