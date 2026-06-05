@@ -2,6 +2,7 @@
 import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import DOMPurify from "isomorphic-dompurify";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -180,7 +181,9 @@ const ArticleDetail = () => {
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(article.content),
+            }}
           />
         </article>
 
