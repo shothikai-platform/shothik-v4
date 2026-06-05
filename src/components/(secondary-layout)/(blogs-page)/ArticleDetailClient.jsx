@@ -10,6 +10,7 @@ import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { blogApi, formatDate } from "@/lib/api/blog";
+import DOMPurify from "isomorphic-dompurify";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -254,7 +255,9 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(processedPost.content),
+            }}
           />
         </article>
 
