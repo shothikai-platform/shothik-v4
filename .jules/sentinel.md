@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-06-12 - [Broken Access Control in Sheet API]
+**Vulnerability:** Spreadsheet API endpoints (`get_my_chats`, `create_conversation`) were fully public and lacked both authentication and ownership verification (IDOR).
+**Learning:** New modules or feature sets may inadvertently bypass global security patterns if not explicitly reviewed for authentication middleware or local checks.
+**Prevention:** Audit all new API route directories for `getAuthenticatedUser()` calls and ensure all resource lookups/creations are tied to the authenticated user's ID.
