@@ -27,6 +27,7 @@ export default function AlertDialog() {
             <button
               onClick={() => dispatch(setShowAlert(false))}
               className="cursor-pointer"
+              aria-label="Close alert"
             >
               <X className="h-4 w-4" />
             </button>
