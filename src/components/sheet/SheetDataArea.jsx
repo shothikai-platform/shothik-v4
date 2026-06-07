@@ -122,6 +122,7 @@ const EditableCell = ({
         size="icon"
         className="ml-2 h-6 w-6 opacity-0 transition-opacity hover:opacity-100"
         onClick={enterEditMode}
+        aria-label="Edit cell"
       >
         <Edit className="h-3.5 w-3.5" />
       </Button>
@@ -373,7 +374,6 @@ export default function SheetDataArea() {
   );
   const currentSavePoint = useSelector(selectActiveSavePoint);
 
-
   const dispatch = useDispatch();
 
   // API mutation for saving edited sheet data
@@ -452,7 +452,6 @@ export default function SheetDataArea() {
               },
               timestamp: new Date().toISOString(),
             }).unwrap();
-
           }
         }
       } catch (error) {
@@ -929,7 +928,6 @@ export default function SheetDataArea() {
 
       // Focus the new window
       newWindow.focus();
-
     } else {
       // Fallback if popup is blocked
       alert(
@@ -940,13 +938,11 @@ export default function SheetDataArea() {
 
   // Handle refresh - could trigger a re-generation
   const handleRefresh = () => {
-
     if (!currentSavePoint) return;
 
     const activeGen = currentSavePoint.generations.find(
       (g) => g.id === currentSavePoint.activeGenerationId,
     );
-
 
     if (sheetStatus === "error") {
       if (activeGen) {
@@ -992,8 +988,7 @@ export default function SheetDataArea() {
       },
       rowKeyGetter: (row) => row.id,
       defaultSortColumns: [],
-      onSortColumnsChange: (sortColumns) => {
-      },
+      onSortColumnsChange: (sortColumns) => {},
       // Removed reorder functionality
       enableColumnReordering: false,
       enableRowReordering: false,
