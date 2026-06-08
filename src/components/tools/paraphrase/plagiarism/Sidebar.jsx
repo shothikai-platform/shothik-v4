@@ -4,6 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { ChevronDown, History, Scale, X } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const sampleResults = [
   { percent: 50, source: "ms.z-library.sk" },
@@ -31,9 +36,21 @@ const PlagiarismSidebar = ({
           <Scale className="text-muted-foreground h-4 w-4" />
           <History className="text-muted-foreground h-4 w-4" />
         </div>
-        <Button onClick={onClose} variant="ghost" size="icon-sm">
-          <X className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              aria-label="Close plagiarism sidebar"
+              onClick={onClose}
+              variant="ghost"
+              size="icon-sm"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Close sidebar</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Title */}
@@ -56,9 +73,20 @@ const PlagiarismSidebar = ({
           >
             <span className="w-[20%] text-sm">{r.percent}%</span>
             <span className="ml-2 flex-1 text-center text-sm">{r.source}</span>
-            <Button variant="ghost" size="icon-sm">
-              <ChevronDown className="h-4 w-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  aria-label={`View details for ${r.source}`}
+                  variant="ghost"
+                  size="icon-sm"
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View Details</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         ))}
       </div>
