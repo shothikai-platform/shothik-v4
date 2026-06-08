@@ -1,65 +1,46 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { getAuthenticatedUser } from "@/lib/server-auth";
 
-export async function POST() {
-  const apiKey = process.env.GOOGLE_GEOLOCATION_KEY; // Server-side env var
-
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "Google Geolocation API key is not configured" },
-      { status: 500 },
-    );
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    const geolocationResponse = await fetch(
-      `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    if (!geolocationResponse.ok) {
-      throw new Error("Invalid response from geolocation API");
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const geolocationData = await geolocationResponse.json();
+    // Get user IP from headers
+    const forwarded = request.headers.get("x-forwarded-for");
+    const ip = forwarded ? forwarded.split(/, /)[0] : request.ip;
 
-    if (!geolocationData.location) {
-      throw new Error("Invalid response from geolocation API");
+    if (!ip || ip === '127.0.0.1' || ip === '::1') {
+       // For local development or if IP is missing, we might not be able to get location from IP
+       // In production, x-forwarded-for should be present.
+       // We can return a generic error or try to use a default.
+       console.warn("Could not determine user IP for geolocation");
     }
 
-    const { lat, lng } = geolocationData.location;
+    // Use a server-side IP geolocation service
+    // ipapi.co or similar can be used here.
+    // If we have a Google Key, we could use that, but IP-based is simpler for server-side
+    const geolocationUrl = ip
+      ? `https://ipapi.co/${ip}/json/`
+      : `https://ipapi.co/json/`;
 
-    const geocodingResponse = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`,
-    );
-
-    if (!geocodingResponse.ok) {
-      throw new Error("Invalid response from geocoding API");
+    const res = await fetch(geolocationUrl);
+    if (!res.ok) {
+        throw new Error("Failed to fetch location from IP service");
     }
 
-    const geocodingData = await geocodingResponse.json();
+    const data = await res.json();
+    const country = data.country_name;
 
-    if (!geocodingData.results) {
-      throw new Error("Invalid response from geocoding API");
+    if (!country) {
+        throw new Error("Country not found in IP service response");
     }
 
-    const countryResult = geocodingData.results.find((result) =>
-      result.types.includes("country"),
-    );
-
-    if (!countryResult?.formatted_address) {
-      throw new Error("Country not found in geocoding response");
-    }
-
-    const country = countryResult.formatted_address.toLowerCase();
-
-    return NextResponse.json({ location: country });
+    return NextResponse.json({ location: country.toLowerCase() });
   } catch (error) {
     console.error("Geolocation error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
