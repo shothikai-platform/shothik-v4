@@ -7,6 +7,7 @@ import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
+import DOMPurify from "isomorphic-dompurify";
 
 const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
   <div className="flex w-full items-start">
@@ -39,7 +40,7 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(message)) }}
         />
       </div>
 
