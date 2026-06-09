@@ -6,6 +6,7 @@ import { toggleTheme } from "@/redux/slices/settings-slice";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function ThemeToggle({ className }) {
   const dispatch = useDispatch();
@@ -31,15 +32,22 @@ export default function ThemeToggle({ className }) {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={() => dispatch(toggleTheme())}
-      className={cn("p-2", className)}
-      aria-label="Toggle Theme"
-      data-testid="theme-toggle"
-    >
-      {renderIcon()}
-    </Button>
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => dispatch(toggleTheme())}
+          className={cn("p-2", className)}
+          aria-label="Toggle Theme"
+          data-testid="theme-toggle"
+        >
+          {renderIcon()}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Toggle Theme</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
