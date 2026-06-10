@@ -1,8 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -20,6 +21,7 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [sanitizedHtml, setSanitizedHtml] = useState("");
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -119,6 +121,15 @@ const ResearchContentWithReferences = ({
     gfm: true,
   });
 
+  useEffect(() => {
+    const html = processedContent ? marked(processedContent) : "";
+    const sanitized = DOMPurify.sanitize(html, {
+      ADD_TAGS: ["span"],
+      ADD_ATTR: ["data-reference", "class"],
+    });
+    setSanitizedHtml(sanitized);
+  }, [processedContent]);
+
   // Add hover event listeners after rendering
   const handleContentMouseOver = (event) => {
     const target = event.target;
@@ -188,7 +199,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: sanitizedHtml,
             }}
           />
 
