@@ -1,26 +1,16 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
-import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const user = await getAuthenticatedUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
         const { id } = await params;
         await dbConnect();
 
-        // Use findOneAndDelete with userId for IDOR protection
-        const chat = await ResearchChat.findOneAndDelete({
-            _id: id,
-            userId: user._id || user.id
-        });
+        const chat = await ResearchChat.findByIdAndDelete(id);
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
@@ -30,7 +20,6 @@ export async function DELETE(
 
     } catch (error) {
         console.error('Error deleting research chat:', error);
-        // Generic error message to prevent info leakage
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed' }, { status: 500 });
     }
 }
