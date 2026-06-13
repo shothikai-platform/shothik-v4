@@ -77,7 +77,7 @@ export default function AuthResetPasswordForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-4">
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField type="email" name="email" label="Email address" />
         {errorMessage && (
           <p className="text-destructive min-h-[1.5em] text-sm">
             {errorMessage}
