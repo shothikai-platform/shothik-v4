@@ -123,11 +123,13 @@ export default function AuthForgotPasswordForm() {
               size="icon"
               onClick={() => setShowPassword(!showPassword)}
               className="h-8 w-8"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
             >
               {showPassword ? (
-                <Eye className="h-4 w-4" />
+                <Eye className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <EyeOff className="h-4 w-4" />
+                <EyeOff className="h-4 w-4" aria-hidden="true" />
               )}
             </Button>
           }
