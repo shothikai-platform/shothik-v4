@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import DOMPurify from "isomorphic-dompurify";
 import { Check, Trash2 } from "lucide-react";
 
 const GrammarIssueCard = ({
@@ -19,11 +20,13 @@ const GrammarIssueCard = ({
     const escapedWord = error.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escapedWord, "gi");
 
-    return sentence.replace(
+    const rawHighlightedText = sentence.replace(
       regex,
       (match) =>
         `<span class="text-red-500 line-through">${match}</span> <span class="text-primary">${correct}</span>`,
     );
+
+    return DOMPurify.sanitize(rawHighlightedText);
   };
 
   const highlightedText = getHighlightedText();
