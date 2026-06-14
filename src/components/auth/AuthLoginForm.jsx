@@ -145,11 +145,13 @@ export default function AuthLoginForm({ loading, setLoading }) {
                     size="icon"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4" aria-hidden="true" />
                     ) : (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
                     )}
                   </Button>
                 </div>
