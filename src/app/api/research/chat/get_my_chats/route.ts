@@ -14,7 +14,7 @@ export async function GET(request: Request) {
         const chats = await ResearchChat.find({ userId: user._id || user.id })
             .select('-messages') // Optimization: Exclude messages to reduce payload size
             .sort({ updatedAt: -1 })
-            .lean(); // Optimization: Return plain JS objects instead of Mongoose documents
+            .lean({ virtuals: true }); // Optimization: Return plain JS objects instead of Mongoose documents
         return NextResponse.json(chats);
     } catch (error) {
         console.error('Error fetching research chats:', error);
