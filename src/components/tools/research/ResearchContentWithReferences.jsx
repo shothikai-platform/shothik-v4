@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -20,6 +20,7 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [sanitizedHtml, setSanitizedHtml] = useState("");
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -113,6 +114,23 @@ const ResearchContentWithReferences = ({
 
   const processedContent = processContentWithReferences(contentStr);
 
+  // Handle HTML sanitization
+  useEffect(() => {
+    const sanitize = async () => {
+      try {
+        const dompurify = await import("dompurify");
+        const DOMPurify = dompurify.default || dompurify;
+        const html = marked(processedContent);
+        setSanitizedHtml(DOMPurify.sanitize(html));
+      } catch (err) {
+        console.error("Sanitization error:", err);
+        // On error, return an empty string to fail securely
+        setSanitizedHtml("");
+      }
+    };
+    sanitize();
+  }, [processedContent]);
+
   // Configure marked options
   marked.setOptions({
     breaks: true,
@@ -188,7 +206,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: sanitizedHtml,
             }}
           />
 

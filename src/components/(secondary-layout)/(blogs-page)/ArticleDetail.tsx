@@ -1,10 +1,12 @@
-// "use client"
+"use client";
+
 import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import gradientBluePurple from "../assets/blog.png";
 import gradientTeal from "../assets/blog1.png";
 import gradientGreen from "../assets/blog2.png";
@@ -108,6 +110,24 @@ const articles = [
 const ArticleDetail = () => {
   const { id } = useParams();
   const article = articles.find((a) => a.id === Number(id));
+  const [sanitizedContent, setSanitizedContent] = useState("");
+
+  // Handle HTML sanitization
+  useEffect(() => {
+    if (article?.content) {
+      const sanitize = async () => {
+        try {
+          const dompurify = await import("dompurify");
+          const DOMPurify = dompurify.default || dompurify;
+          setSanitizedContent(DOMPurify.sanitize(article.content));
+        } catch (err) {
+          console.error("Sanitization error:", err);
+          setSanitizedContent(article.content);
+        }
+      };
+      sanitize();
+    }
+  }, [article]);
 
   if (!article) {
     return (
@@ -180,7 +200,7 @@ const ArticleDetail = () => {
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
           />
         </article>
 
