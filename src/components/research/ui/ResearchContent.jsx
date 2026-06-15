@@ -5,10 +5,30 @@ import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
+const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
+  const [sanitizedHtml, setSanitizedHtml] = useState("");
+
+  useEffect(() => {
+    const sanitize = async () => {
+      try {
+        const dompurify = await import("dompurify");
+        const DOMPurify = dompurify.default || dompurify;
+        const html = marked(message);
+        setSanitizedHtml(DOMPurify.sanitize(html));
+      } catch (err) {
+        console.error("Sanitization error:", err);
+        // On error, return an empty string to fail securely
+        setSanitizedHtml("");
+      }
+    };
+    sanitize();
+  }, [message]);
+
+  return (
   <div className="flex w-full items-start">
     <div
       className={cn(
@@ -39,7 +59,7 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       </div>
 
@@ -76,7 +96,8 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       </span>
     </div>
   </div>
-);
+  );
+};
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =

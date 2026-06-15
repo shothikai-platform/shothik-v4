@@ -29,6 +29,24 @@ export default function ArticleDetailClient({ slug }) {
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sanitizedContent, setSanitizedContent] = useState("");
+
+  // Handle HTML sanitization
+  useEffect(() => {
+    if (post?.content) {
+      const sanitize = async () => {
+        try {
+          const dompurify = await import("dompurify");
+          const DOMPurify = dompurify.default || dompurify;
+          setSanitizedContent(DOMPurify.sanitize(post.content));
+        } catch (err) {
+          console.error("Sanitization error:", err);
+          setSanitizedContent(post.content);
+        }
+      };
+      sanitize();
+    }
+  }, [post]);
 
   // Fetch post data on component mount
   useEffect(() => {
@@ -254,7 +272,7 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
           />
         </article>
 
