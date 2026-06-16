@@ -13,6 +13,7 @@ import { blogApi, formatDate } from "@/lib/api/blog";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 
 // Fallback images
 const fallbackImages = [
@@ -252,9 +253,10 @@ export default function ArticleDetailClient({ slug }) {
               background-color: #1f2937 !important;
             }
           `}</style>
+          {/* SECURITY: Sanitize blog content to prevent XSS */}
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedPost.content) }}
           />
         </article>
 
