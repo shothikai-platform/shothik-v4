@@ -6,6 +6,7 @@ import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
 import { useSelector } from "react-redux";
+import DOMPurify from "isomorphic-dompurify";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
 const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
@@ -39,7 +40,8 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          // Security: Sanitize markdown output to prevent XSS vulnerabilities
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(message)) }}
         />
       </div>
 
