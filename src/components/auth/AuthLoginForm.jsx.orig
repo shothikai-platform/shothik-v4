@@ -28,7 +28,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // ----------------------------------------------------------------------
 
@@ -140,27 +139,19 @@ export default function AuthLoginForm({ loading, setLoading }) {
                     placeholder="Enter your password"
                     {...field}
                   />
-                  <TooltipProvider>
-                    <Tooltip delayDuration={200}>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setShowPassword(!showPassword)}
-                          aria-label={showPassword ? "Hide password" : "Show password"}
-                          className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
-                        >
-                          {showPassword ? (
-                            <Eye className="h-4 w-4" />
-                          ) : (
-                            <EyeOff className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{showPassword ? "Hide password" : "Show password"}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-1/2 right-1 h-8 w-8 -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <Eye className="h-4 w-4" />
+                    ) : (
+                      <EyeOff className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
               </FormControl>
               <FormMessage />
