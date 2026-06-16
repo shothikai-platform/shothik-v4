@@ -2,9 +2,15 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
 
@@ -12,18 +18,19 @@ export async function POST(request: Request) {
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                // Ensure the session belongs to the user
+                session = await SheetSession.findOne({ _id: chatId, userId: user._id || user.id });
             } catch (e) { }
         }
 
         if (!session) {
             session = await SheetSession.create({
-                userId: 'temp-user',
-                title: prompt.substring(0, 30) || 'New Spreadsheet',
+                userId: user._id || user.id,
+                title: prompt?.substring(0, 30) || 'New Spreadsheet',
             });
         } else {
             // Update updated_at of session
-            session.title = prompt.substring(0, 30); // Optionally update title logic
+            session.title = prompt?.substring(0, 30) || session.title; // Optionally update title logic
             await session.save();
         }
 
@@ -43,14 +50,7 @@ export async function POST(request: Request) {
                     controller.enqueue(encoder.encode(JSON.stringify(data) + '\n'));
                 };
 
-                // Send session info immediately if it was new (or always, for consistency)
-                // Frontend might expect events.
-
                 try {
-                    // Send initial session ID if the client might need it? 
-                    // Usually client waits for the full response or updates URL based on something.
-                    // But strict SSE usually sends events.
-
                     sendJSON({ data: { message: "Analyzing your request...", step: "context_analysis", chatId: session._id } });
                     await new Promise(r => setTimeout(r, 600));
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
                 } catch (e) {
                     console.error("Streaming error", e);
-                    sendJSON({ data: { error: { message: "Simulation failed" } } });
+                    sendJSON({ data: { error: { message: "Internal Server Error" } } });
                     conversation.status = 'failed';
                     await conversation.save();
                 }
@@ -104,6 +104,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'Failed' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
