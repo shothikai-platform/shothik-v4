@@ -29,7 +29,7 @@ const ActionMenu = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8" title="More">
+        <Button variant="ghost" size="icon" className="h-8 w-8" title="More" aria-label="Action menu">
           <MoreVertical className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
