@@ -13,6 +13,7 @@ import { blogApi, formatDate } from "@/lib/api/blog";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 
 // Fallback images
 const fallbackImages = [
@@ -254,7 +255,7 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedPost.content) }}
           />
         </article>
 
