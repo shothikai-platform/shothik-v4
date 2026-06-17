@@ -226,6 +226,7 @@ const ShareModal = ({
                   {tag}
                   <button
                     onClick={() => handleRemoveTag(tag)}
+                    aria-label={`Remove tag ${tag}`}
                     className="hover:bg-accent hover:text-accent-foreground ml-1 rounded-full transition-colors"
                   >
                     <X className="size-3" />
