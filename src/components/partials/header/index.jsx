@@ -286,6 +286,7 @@ export default function Header({ className, layout }) {
               className="text-foreground hidden"
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
+              aria-label="Open mobile menu"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -411,6 +412,7 @@ export default function Header({ className, layout }) {
               className="text-foreground hidden"
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
+              aria-label="Open mobile menu"
             >
               <AlignRight className="size-8" />
             </Button>
