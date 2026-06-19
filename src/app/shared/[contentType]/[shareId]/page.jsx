@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Download } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SharedContentPage = () => {
   const params = useParams();
@@ -22,9 +22,33 @@ const SharedContentPage = () => {
   const [shareData, setShareData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sanitizedContent, setSanitizedContent] = useState("");
 
   useEffect(() => {
-    const loadShareData = () => {
+    const sanitizeData = async () => {
+      if (shareData?.content?.content) {
+        try {
+          const DOMPurifyMod = await import("dompurify");
+          const DOMPurify = DOMPurifyMod.default || DOMPurifyMod;
+
+          // Only sanitize on the client side
+          if (typeof window !== "undefined") {
+            const clean = DOMPurify.sanitize(shareData.content.content);
+            setSanitizedContent(clean);
+          }
+        } catch (err) {
+          console.error("Failed to sanitize content:", err);
+          // Fallback to empty or plain text if sanitization fails
+          setSanitizedContent("");
+        }
+      }
+    };
+
+    sanitizeData();
+  }, [shareData]);
+
+  useEffect(() => {
+    const loadShareData = async () => {
       try {
         setLoading(true);
 
@@ -36,37 +60,34 @@ const SharedContentPage = () => {
             setShareData(parsedData);
             setLoading(false);
             return;
-          } catch (parseError) {
-          }
+          } catch (parseError) {}
         }
 
         // Try to fetch from backend
-        const fetchFromBackend = async () => {
-          try {
-            const response = await fetch(`/api/share/${shareId}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
+        try {
+          const response = await fetch(`/api/share/${shareId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
-            if (response.ok) {
-              const result = await response.json();
-              setShareData(result.data);
-            } else {
-              throw new Error("Failed to fetch share data");
-            }
-          } catch (backendError) {
-
-            // Fallback to demo data if backend fails
-            const demoData = {
-              shareId: shareId,
-              contentType: contentType || "research",
-              content: {
-                title: "Sample Research: The Future of AI in Healthcare",
-                query:
-                  "What are the latest developments in AI healthcare applications?",
-                content: `
+          if (response.ok) {
+            const result = await response.json();
+            setShareData(result.data);
+          } else {
+            throw new Error("Failed to fetch share data");
+          }
+        } catch (backendError) {
+          // Fallback to demo data if backend fails
+          const demoData = {
+            shareId: shareId,
+            contentType: contentType || "research",
+            content: {
+              title: "Sample Research: The Future of AI in Healthcare",
+              query:
+                "What are the latest developments in AI healthcare applications?",
+              content: `
 # The Future of AI in Healthcare
 
 ## Introduction
@@ -91,47 +112,44 @@ AI enables personalized treatment plans based on individual patient data, geneti
 
 ## Conclusion
 The future of healthcare lies in the successful integration of AI technologies, but it requires careful consideration of ethical, legal, and technical challenges.
-                `,
-                sources: [
-                  {
-                    title:
-                      "AI in Healthcare: Current Applications and Future Prospects",
-                    url: "https://example.com/ai-healthcare-2024",
-                    resolved_url: "https://example.com/ai-healthcare-2024",
-                  },
-                  {
-                    title: "Machine Learning in Medical Diagnosis",
-                    url: "https://example.com/ml-medical-diagnosis",
-                    resolved_url: "https://example.com/ml-medical-diagnosis",
-                  },
-                  {
-                    title: "The Ethics of AI in Healthcare",
-                    url: "https://example.com/ai-healthcare-ethics",
-                    resolved_url: "https://example.com/ai-healthcare-ethics",
-                  },
-                ],
-              },
-              metadata: {
-                title: "Sample Research: The Future of AI in Healthcare",
-                description:
-                  "A comprehensive research report on AI applications in healthcare",
-                tags: ["AI", "Healthcare", "Technology", "Research"],
-                createdAt: new Date().toISOString(),
-              },
-              permissions: {
-                isPublic: true,
-                allowDownload: true,
-                allowComments: false,
-              },
-              currentViews: 42,
+              `,
+              sources: [
+                {
+                  title:
+                    "AI in Healthcare: Current Applications and Future Prospects",
+                  url: "https://example.com/ai-healthcare-2024",
+                  resolved_url: "https://example.com/ai-healthcare-2024",
+                },
+                {
+                  title: "Machine Learning in Medical Diagnosis",
+                  url: "https://example.com/ml-medical-diagnosis",
+                  resolved_url: "https://example.com/ml-medical-diagnosis",
+                },
+                {
+                  title: "The Ethics of AI in Healthcare",
+                  url: "https://example.com/ai-healthcare-ethics",
+                  resolved_url: "https://example.com/ai-healthcare-ethics",
+                },
+              ],
+            },
+            metadata: {
+              title: "Sample Research: The Future of AI in Healthcare",
+              description:
+                "A comprehensive research report on AI applications in healthcare",
+              tags: ["AI", "Healthcare", "Technology", "Research"],
               createdAt: new Date().toISOString(),
-            };
+            },
+            permissions: {
+              isPublic: true,
+              allowDownload: true,
+              allowComments: false,
+            },
+            currentViews: 42,
+            createdAt: new Date().toISOString(),
+          };
 
-            setShareData(demoData);
-          }
-        };
-
-        fetchFromBackend();
+          setShareData(demoData);
+        }
       } catch (err) {
         console.error("Error loading share data:", err);
         setError("Failed to load shared content");
@@ -211,10 +229,12 @@ The future of healthcare lies in the successful integration of AI technologies, 
         <Separator className="my-6" />
 
         {/* Main Research Content - This is where the red arrow points */}
-        <div
-          className="[&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_p]:text-foreground [&_blockquote]:border-primary [&_blockquote]:bg-muted [&_code]:bg-muted [&_pre]:bg-muted max-w-none [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:py-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-8 [&_h3]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h4]:mt-6 [&_h4]:mb-3 [&_h4]:text-lg [&_h4]:font-semibold [&_li]:mb-2 [&_li]:leading-relaxed [&_ol]:mb-4 [&_ol]:pl-6 [&_p]:mb-4 [&_p]:text-base [&_p]:leading-relaxed [&_pre]:overflow-auto [&_pre]:rounded [&_pre]:p-4 [&_pre]:font-mono [&_ul]:mb-4 [&_ul]:pl-6"
-          dangerouslySetInnerHTML={{ __html: content.content }}
-        />
+        {sanitizedContent && (
+          <div
+            className="[&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_h4]:text-foreground [&_p]:text-foreground [&_blockquote]:border-primary [&_blockquote]:bg-muted [&_code]:bg-muted [&_pre]:bg-muted max-w-none [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:py-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-8 [&_h3]:mb-4 [&_h3]:text-xl [&_h3]:font-semibold [&_h4]:mt-6 [&_h4]:mb-3 [&_h4]:text-lg [&_h4]:font-semibold [&_li]:mb-2 [&_li]:leading-relaxed [&_ol]:mb-4 [&_ol]:pl-6 [&_p]:mb-4 [&_p]:text-base [&_p]:leading-relaxed [&_pre]:overflow-auto [&_pre]:rounded [&_pre]:p-4 [&_pre]:font-mono [&_ul]:mb-4 [&_ul]:pl-6"
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+          />
+        )}
 
         {/* Sources Section */}
         {content.sources && content.sources.length > 0 && (
@@ -276,10 +296,12 @@ The future of healthcare lies in the successful integration of AI technologies, 
 
         <Separator className="my-4" />
 
-        <div
-          className="[&_h1]:mt-6 [&_h1]:mb-2 [&_h1]:font-bold [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-bold [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:font-bold [&_h5]:mt-6 [&_h5]:mb-2 [&_h5]:font-bold [&_h6]:mt-6 [&_h6]:mb-2 [&_h6]:font-bold [&_p]:mb-4 [&_p]:leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: content.content }}
-        />
+        {sanitizedContent && (
+          <div
+            className="[&_h1]:mt-6 [&_h1]:mb-2 [&_h1]:font-bold [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-bold [&_h4]:mt-6 [&_h4]:mb-2 [&_h4]:font-bold [&_h5]:mt-6 [&_h5]:mb-2 [&_h5]:font-bold [&_h6]:mt-6 [&_h6]:mb-2 [&_h6]:font-bold [&_p]:mb-4 [&_p]:leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+          />
+        )}
       </div>
     );
   };
