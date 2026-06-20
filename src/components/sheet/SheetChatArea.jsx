@@ -14,7 +14,7 @@ import {
   setSheetStatus,
   setSheetTitle,
 } from "@/redux/slices/sheetSlice";
-import { Loader2, User } from "lucide-react";
+import { Loader2, User, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -1327,7 +1327,7 @@ export default function SheetChatArea({
                   className="text-muted-foreground hover:text-foreground absolute top-2 right-2"
                   aria-label="Close"
                 >
-                  ×
+                  <X className="h-4 w-4" />
                 </button>
               </AlertDescription>
             </Alert>
@@ -1444,7 +1444,7 @@ export default function SheetChatArea({
                 className="text-muted-foreground hover:text-foreground absolute top-2 right-2"
                 aria-label="Close"
               >
-                ×
+                <X className="h-4 w-4" />
               </button>
             </AlertDescription>
           </Alert>
