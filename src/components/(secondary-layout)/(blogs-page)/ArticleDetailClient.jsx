@@ -8,6 +8,7 @@ import gradientPink from "@/app/(secondary-layout)/blogs/assets/blog4.png";
 import gradientOrange from "@/app/(secondary-layout)/blogs/assets/blog5.png";
 import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard";
 import { Badge } from "@/components/ui/badge";
+import DOMPurify from "isomorphic-dompurify";
 import { Button } from "@/components/ui/button";
 import { blogApi, formatDate } from "@/lib/api/blog";
 import { ArrowLeft, Share2 } from "lucide-react";
@@ -254,7 +255,7 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedPost.content) }}
           />
         </article>
 
