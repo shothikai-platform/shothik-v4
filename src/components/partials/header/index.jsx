@@ -166,6 +166,7 @@ export default function Header({ className, layout }) {
         )}
       >
         <button
+          aria-label="Toggle sidebar"
           className="bg-card absolute z-10 hidden size-8 items-center justify-center rounded-full border border-dashed lg:-bottom-4 lg:-left-4 lg:flex"
           onClick={() => dispatch(toggleSidebar())}
         >
@@ -281,6 +282,7 @@ export default function Header({ className, layout }) {
             </div>
 
             <Button
+              aria-label="Open mobile menu"
               variant="ghost"
               size="icon"
               className="text-foreground hidden"
@@ -406,6 +408,7 @@ export default function Header({ className, layout }) {
             </div>
 
             <Button
+              aria-label="Open mobile menu"
               variant="ghost"
               size="icon"
               className="text-foreground hidden"
