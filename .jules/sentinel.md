@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [XSS via dangerouslySetInnerHTML in React component]
+**Vulnerability:** The GrammarIssueCard component constructed an HTML string to highlight text and rendered it using \`dangerouslySetInnerHTML\`. This allowed arbitrary JavaScript execution if malicious payload was passed in \`sentence\` or \`correct\` props.
+**Learning:** Manual HTML string manipulation combined with \`dangerouslySetInnerHTML\` is extremely risky and unnecessary in React. The correct approach is to parse/split strings and return arrays of React elements, which React automatically escapes.
+**Prevention:** Avoid \`dangerouslySetInnerHTML\` when formatting text. Split text based on search terms and map matched parts to styled React components instead of manually concatenating HTML tags.
