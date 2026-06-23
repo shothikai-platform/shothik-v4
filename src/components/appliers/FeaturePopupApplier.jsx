@@ -15,6 +15,7 @@ import { fetchPublicFeaturesWithPopups } from "@/services/feature.service";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import { useDispatch, useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
 
@@ -315,7 +316,7 @@ const FeaturePopupApplier = () => {
 
           {popup.content && (
             <div
-              dangerouslySetInnerHTML={{ __html: popup.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(popup.content) }}
               className="prose prose-sm max-w-none dark:prose-invert"
             />
           )}
