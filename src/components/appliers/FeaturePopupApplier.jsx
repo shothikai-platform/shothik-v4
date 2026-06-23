@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import DOMPurify from "isomorphic-dompurify";
 import {
   Dialog,
   DialogContent,
@@ -315,7 +316,7 @@ const FeaturePopupApplier = () => {
 
           {popup.content && (
             <div
-              dangerouslySetInnerHTML={{ __html: popup.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(popup.content) }}
               className="prose prose-sm max-w-none dark:prose-invert"
             />
           )}
