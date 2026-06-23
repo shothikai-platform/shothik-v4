@@ -68,7 +68,7 @@ export default function GPTsettingSidebar({
           })}
         </Box> */}
 
-        <Button variant="ghost" size="icon" id="GPT_sidebar_x_button" onClick={onClose} className="h-7 w-7">
+        <Button variant="ghost" size="icon" id="GPT_sidebar_x_button" onClick={onClose} className="h-7 w-7" aria-label="Close settings sidebar">
           <X className="h-4 w-4" />
         </Button>
       </div>
