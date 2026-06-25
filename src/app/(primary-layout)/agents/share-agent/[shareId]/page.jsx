@@ -1,5 +1,6 @@
 "use client";
 
+import DOMPurify from "isomorphic-dompurify";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -183,7 +184,7 @@ const SharedAgentPage = () => {
     );
 
     // Use marked to process the markdown
-    return marked(processedContent);
+    return DOMPurify.sanitize(marked(processedContent));
   };
 
   if (isLoading) {
