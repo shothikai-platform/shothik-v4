@@ -86,7 +86,12 @@ const LanguageMenus = ({
           >
             <div className="flex items-center justify-between px-4 pt-4">
               <h3 className="text-base font-semibold">Select language</h3>
-              <button onClick={handleClose} className="text-muted-foreground">
+              <button
+                onClick={handleClose}
+                className="text-muted-foreground rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label="Close language menu"
+                title="Close"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>

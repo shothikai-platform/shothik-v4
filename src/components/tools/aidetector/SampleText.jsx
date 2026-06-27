@@ -86,8 +86,10 @@ const SampleTextForLarge = ({
     >
       {isDrawer && (
         <button
-          className="hover:bg-accent absolute top-2 right-2 z-50 rounded-xs transition-colors"
+          className="hover:bg-accent absolute top-2 right-2 z-50 rounded-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           onClick={() => setOpen(false)}
+          aria-label="Close sample text"
+          title="Close"
         >
           <X className="size-4" />
         </button>
