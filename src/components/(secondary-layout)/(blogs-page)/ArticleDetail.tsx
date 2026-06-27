@@ -1,4 +1,5 @@
 // "use client"
+import DOMPurify from "isomorphic-dompurify";
 import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -180,7 +181,7 @@ const ArticleDetail = () => {
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
           />
         </article>
 
