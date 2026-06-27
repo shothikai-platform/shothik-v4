@@ -49,8 +49,10 @@ const MobileFreezeModal = ({
           </DrawerTitle>
 
           <button
+            type="button"
             onClick={handleClose}
             className="hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex items-center justify-center rounded-md p-2 transition-colors outline-none focus-visible:ring-2"
+            aria-label="Close freeze words menu"
           >
             <X className="size-5" />
           </button>
@@ -98,8 +100,10 @@ const MobileFreezeModal = ({
               <Badge key={index} variant="outline" className="group gap-2">
                 <span>{item}</span>
                 <button
+                  type="button"
                   onClick={(e) => handleDelete(item)}
                   className="focus-visible:ring-ring hover:bg-accent inline-flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2"
+                  aria-label={`Remove frozen word: ${item}`}
                 >
                   <X className="size-3" />
                 </button>
