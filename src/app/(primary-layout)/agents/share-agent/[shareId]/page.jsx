@@ -1,4 +1,5 @@
 "use client";
+import DOMPurify from "isomorphic-dompurify";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -330,7 +331,7 @@ const SharedAgentPage = () => {
                   "prose-th:p-2 prose-th:text-left prose-td:p-2",
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: processMarkdownContent(sharedData.agent.content),
+                  __html: DOMPurify.sanitize(processMarkdownContent(sharedData.agent.content)),
                 }}
               />
 

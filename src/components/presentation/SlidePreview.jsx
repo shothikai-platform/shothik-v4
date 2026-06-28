@@ -1,3 +1,4 @@
+import DOMPurify from "isomorphic-dompurify";
 // components/SlidePreview.jsx
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -684,7 +685,7 @@ const EnhancedThinkingTab = ({ slide, dimensions }) => {
         )}
       >
         {processedContent ? (
-          <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedContent) }} />
         ) : (
           <p className="text-muted-foreground text-[0.9em] leading-[1.6] whitespace-pre-wrap">
             {slide?.thought}
