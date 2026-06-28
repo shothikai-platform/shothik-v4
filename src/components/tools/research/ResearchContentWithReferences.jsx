@@ -1,4 +1,5 @@
 "use client";
+import DOMPurify from "isomorphic-dompurify";
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
@@ -188,7 +189,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: DOMPurify.sanitize(marked(processedContent)),
             }}
           />
 

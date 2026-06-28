@@ -1,4 +1,6 @@
 "use client";
+import DOMPurify from "isomorphic-dompurify";
+
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -351,7 +353,7 @@ const PackageContent: React.FC<PackageContentProps> = ({ content }) => {
   return (
     <div
       className="prose prose-sm dark:prose-invert max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />
   );
 };
