@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2024-05-15 - Missing Authorization Filtering in API Endpoints
+**Vulnerability:** The `/api/sheet/chat/get_my_chats` endpoint lacked both authentication checks and database query filtering, exposing all users' sessions globally.
+**Learning:** In Next.js App Router API routes, even endpoints with user-specific naming ("get_my_chats") do not inherently secure queries. Mongoose queries like `.find({})` must explicitly filter by the authenticated user's ID.
+**Prevention:** Always extract `getAuthenticatedUser()` at the start of protected API routes and mandate `{ userId: user._id || user.id }` in Mongoose read/write queries.
