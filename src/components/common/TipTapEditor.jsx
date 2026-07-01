@@ -55,6 +55,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Bold"
           onClick={() => editor.commands.toggleBold()}
           className="h-8 w-8"
         >
@@ -66,6 +67,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Italic"
           onClick={() => editor.commands.toggleItalic()}
           className="h-8 w-8"
         >
@@ -77,6 +79,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Underline"
           onClick={() => editor.commands.toggleUnderline()}
           className="h-8 w-8"
         >
@@ -88,6 +91,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Paragraph"
           onClick={() => editor.commands.setParagraph({ level: 1 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -99,6 +103,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 2"
           onClick={() => editor.commands.setHeading({ level: 2 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -110,6 +115,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 3"
           onClick={() => editor.commands.setHeading({ level: 3 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -121,6 +127,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 4"
           onClick={() => editor.commands.setHeading({ level: 4 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -132,6 +139,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Ordered List"
           onClick={() => editor.commands.toggleOrderedList()}
           className="h-8 w-8"
         >
@@ -143,6 +151,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Unordered List"
           onClick={() => editor.commands.toggleBulletList()}
           className="h-8 w-8"
         >
@@ -154,6 +163,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Blockquote"
           onClick={() => editor.commands.toggleBlockquote()}
           className="h-8 w-8"
         >
@@ -165,6 +175,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Horizontal Rule"
           onClick={() => editor.commands.setHorizontalRule()}
           className="h-8 w-8"
         >
