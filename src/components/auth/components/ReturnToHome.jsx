@@ -16,9 +16,10 @@ const ReturnToHome = () => {
   return (
     <button
       onClick={handleNavigation}
-      className="mx-auto mt-6 inline-flex items-center text-sm font-medium"
+      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring mx-auto mt-6 inline-flex items-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1"
+      aria-label="Return to home page"
     >
-      <ChevronLeft className="h-4 w-4" />
+      <ChevronLeft className="mr-1 h-4 w-4" />
       Return to home
     </button>
   );
