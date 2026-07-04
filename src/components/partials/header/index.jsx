@@ -168,6 +168,7 @@ export default function Header({ className, layout }) {
         <button
           className="bg-card absolute z-10 hidden size-8 items-center justify-center rounded-full border border-dashed lg:-bottom-4 lg:-left-4 lg:flex"
           onClick={() => dispatch(toggleSidebar())}
+          aria-label="Toggle sidebar"
         >
           <ChevronRight className="size-4" />
         </button>
@@ -286,6 +287,7 @@ export default function Header({ className, layout }) {
               className="text-foreground hidden"
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
+              aria-label="Open mobile menu"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -411,6 +413,7 @@ export default function Header({ className, layout }) {
               className="text-foreground hidden"
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
+              aria-label="Open mobile menu"
             >
               <AlignRight className="size-8" />
             </Button>
