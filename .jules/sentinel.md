@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-05-24 - [XSS Protection in SSR Environment]
+**Vulnerability:** XSS via `dangerouslySetInnerHTML` rendering unsanitized AI-generated Markdown or external content.
+**Learning:** In Next.js, `DOMPurify` requires a `window` object and must be executed client-side to avoid SSR crashes.
+**Prevention:** Perform sanitization inside a `useEffect` hook and store the clean HTML in a state variable before rendering.
