@@ -1,8 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -17,6 +18,7 @@ const ResearchContentWithReferences = ({
   onSwitchToSourcesTab,
 }) => {
   const [selectedReference, setSelectedReference] = useState(null);
+  const [sanitizedHtml, setSanitizedHtml] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
@@ -119,6 +121,13 @@ const ResearchContentWithReferences = ({
     gfm: true,
   });
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && processedContent) {
+      const rawHtml = marked(processedContent);
+      setSanitizedHtml(DOMPurify.sanitize(rawHtml));
+    }
+  }, [processedContent]);
+
   // Add hover event listeners after rendering
   const handleContentMouseOver = (event) => {
     const target = event.target;
@@ -188,7 +197,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: sanitizedHtml,
             }}
           />
 
