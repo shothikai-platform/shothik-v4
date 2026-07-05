@@ -53,10 +53,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Bold */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("bold") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleBold()}
           className="h-8 w-8"
+          aria-label="Bold"
+          title="Bold"
+          aria-pressed={editor.isActive("bold")}
         >
           <BoldIcon className="h-4 w-4" />
         </Button>
@@ -64,10 +67,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Italic */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("italic") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleItalic()}
           className="h-8 w-8"
+          aria-label="Italic"
+          title="Italic"
+          aria-pressed={editor.isActive("italic")}
         >
           <ItalicIcon className="h-4 w-4" />
         </Button>
@@ -75,10 +81,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Underline */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("underline") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleUnderline()}
           className="h-8 w-8"
+          aria-label="Underline"
+          title="Underline"
+          aria-pressed={editor.isActive("underline")}
         >
           <UnderlineIcon className="h-4 w-4" />
         </Button>
@@ -86,10 +95,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Paragraph */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("paragraph") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.setParagraph({ level: 1 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Paragraph"
+          title="Paragraph"
+          aria-pressed={editor.isActive("paragraph")}
         >
           P
         </Button>
@@ -97,10 +109,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* H2 */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("heading", { level: 2 }) ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 2 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Heading 2"
+          title="Heading 2"
+          aria-pressed={editor.isActive("heading", { level: 2 })}
         >
           H2
         </Button>
@@ -108,10 +123,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* H3 */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("heading", { level: 3 }) ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 3 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Heading 3"
+          title="Heading 3"
+          aria-pressed={editor.isActive("heading", { level: 3 })}
         >
           H3
         </Button>
@@ -119,10 +137,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* H4 */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("heading", { level: 4 }) ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 4 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Heading 4"
+          title="Heading 4"
+          aria-pressed={editor.isActive("heading", { level: 4 })}
         >
           H4
         </Button>
@@ -130,10 +151,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Ordered List */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("orderedList") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleOrderedList()}
           className="h-8 w-8"
+          aria-label="Ordered List"
+          title="Ordered List"
+          aria-pressed={editor.isActive("orderedList")}
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
@@ -141,10 +165,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Unordered List */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("bulletList") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleBulletList()}
           className="h-8 w-8"
+          aria-label="Bullet List"
+          title="Bullet List"
+          aria-pressed={editor.isActive("bulletList")}
         >
           <List className="h-4 w-4" />
         </Button>
@@ -152,10 +179,13 @@ const TipTapEditor = ({ content, onChange }) => {
         {/* Blockquote */}
         <Button
           type="button"
-          variant="ghost"
+          variant={editor.isActive("blockquote") ? "secondary" : "ghost"}
           size="icon"
           onClick={() => editor.commands.toggleBlockquote()}
           className="h-8 w-8"
+          aria-label="Blockquote"
+          title="Blockquote"
+          aria-pressed={editor.isActive("blockquote")}
         >
           <Quote className="h-4 w-4" />
         </Button>
@@ -167,6 +197,8 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHorizontalRule()}
           className="h-8 w-8"
+          aria-label="Horizontal Rule"
+          title="Horizontal Rule"
         >
           <Minus className="h-4 w-4" />
         </Button>
