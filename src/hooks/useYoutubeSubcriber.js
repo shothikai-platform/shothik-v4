@@ -12,24 +12,14 @@ const useYoutubeSubscriber = () => {
   const getSubscriberCount = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        },
-      );
+      const response = await fetch("/api/youtube");
 
       if (!response.ok) {
-        throw { message: "Failed to fetch subscriber count" };
+        throw new Error("Failed to fetch subscriber count");
       }
 
       const data = await response.json();
-      if (data.items && data.items[0]) {
-        const count = parseInt(data.items[0].statistics.subscriberCount, 10);
-        setSubscriberCount(count || 0);
-      }
+      setSubscriberCount(data.count || 0);
     } catch (error) {
       console.error("Error fetching subscriber count:", error);
       setSubscriberCount(0);
