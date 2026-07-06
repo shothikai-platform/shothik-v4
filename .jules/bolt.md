@@ -5,3 +5,6 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+## 2026-01-22 - API Response Optimization for Sheet Sessions
+**Learning:** Same as `ResearchChat`, retrieving multiple `SheetSession` records dynamically should leverage `.lean()` to avoid instantiating heavy Mongoose Document arrays.
+**Action:** Always chain `.lean()` when calling `find()` to retrieve collections of documents that are not mutated prior to response serialization.
