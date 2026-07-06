@@ -5,3 +5,6 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+## 2025-07-06 - Optimize mongoose queries
+**Learning:** In Next.js serverless functions, Mongoose `.find()` and `.findOne()` return large object representations of documents. Returning plain objects with `.lean()` in read-only routes reduces memory usage and serialization time significantly.
+**Action:** Whenever fetching Mongoose documents for read-only purposes (like returning in an API), chain `.lean()` to the query.
