@@ -17,8 +17,8 @@ export async function PUT(
         const body = await request.json();
         const { name } = body;
 
-        if (!name || typeof name !== 'string') {
-            return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+        if (!name || typeof name !== 'string' || name.length > 100) {
+            return NextResponse.json({ error: 'Invalid name' }, { status: 400 });
         }
 
         await dbConnect();

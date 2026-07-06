@@ -52,6 +52,8 @@ describe('DELETE /api/research/chat/delete_chat/[id]', () => {
         { params: Promise.resolve({ id: 'chat1' }) }
     );
 
+    // This is currently failing because the implementation doesn't check for auth
+    // and returns 200 instead of 401.
     expect(response.status).toBe(401);
   });
 
