@@ -58,17 +58,6 @@ const PlagiarismCheckerContentSection = () => {
   
   // Debug logging - track report changes
   useEffect(() => {
-      hasReport: hasReport,
-      reportExists: !!report,
-      reportType: report ? typeof report : 'null',
-      analysisId: report?.analysisId,
-      sectionsCount: report?.sections?.length,
-      exactMatchesCount: report?.exactMatches?.length,
-      hasSummary: !!report?.summary,
-      loading,
-      fromCache,
-      error: error || null,
-    });
   }, [report, loading, hasReport, fromCache, error]);
   
   // Force re-render when report changes from null to object (catches state updates)
@@ -82,12 +71,6 @@ const PlagiarismCheckerContentSection = () => {
     }
     
     // Log the full report structure for debugging
-      report,
-      sections: report.sections,
-      exactMatches: report.exactMatches,
-      inputTextLength: inputText.length,
-      inputTextPreview: inputText.substring(0, 100),
-    });
     
     const ranges = [];
     const usedPositions = new Set(); // Track used positions to avoid duplicates

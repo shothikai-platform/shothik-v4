@@ -74,10 +74,6 @@ export default function InputArea({
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
-      "Selected files:",
-      files.map((f) => ({ name: f.name, type: f.type, size: f.size })),
-    );
-
     // Check file type and size
     const allowedTypes = [
       "application/pdf",

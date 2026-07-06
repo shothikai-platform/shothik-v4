@@ -294,11 +294,6 @@ export default function FacebookAccountSelectionScreen() {
           if (response.warning) {
             setPixelsWarning(response.warning);
           }
-
-            `✅ Loaded ${
-              response.data?.length || 0
-            } pixels for business account`,
-          );
         } else {
           console.error("Failed to fetch pixels:", response.error);
           setPixels([]);

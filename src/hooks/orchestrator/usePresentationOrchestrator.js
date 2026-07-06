@@ -185,12 +185,6 @@ export default function usePresentationOrchestrator(presentationId) {
           throw new Error("Failed to parse history data");
         }
 
-          logsCount: parsedData.logs.length,
-          slidesCount: parsedData.slides.length,
-          status: parsedData.status,
-          allData: parsedData,
-        });
-
         return parsedData;
       } catch (error) {
         console.error("[Orchestrator] Error fetching/parsing history:", error);

@@ -488,11 +488,6 @@ const SummarizeContentSection = () => {
 
               if (response.ok) {
                 const result = await response.json();
-                  "✅ Keyword API response from",
-                  endpoint,
-                  ":",
-                  result,
-                );
 
                 // Handle different response structures
                 let keywordsData = [];

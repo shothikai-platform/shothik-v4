@@ -223,9 +223,6 @@ async function renderNodeToPptx(
     let nativeChartRendered = false;
 
     if (chartConfig) {
-        "Native Chart Export: Found chart config, attempting to render.",
-        chartConfig,
-      );
       try {
         const chartData = chartConfig.data.datasets.map((ds: any) => ({
           name: ds.label,
@@ -320,8 +317,6 @@ export const handleNativePptxExport = async (
         const slideRootStyle = window.getComputedStyle(slideRoot);
 
         if (slideRootStyle.backgroundImage.includes("gradient")) {
-            `Slide ${slideData.slide_index}: Complex background detected, capturing as image.`,
-          );
           const bgImageData = await captureElementAsImage(slideRoot);
           pptxSlide.addImage({
             data: bgImageData,
