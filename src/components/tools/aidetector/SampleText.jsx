@@ -86,6 +86,7 @@ const SampleTextForLarge = ({
     >
       {isDrawer && (
         <button
+          aria-label="Close drawer"
           className="hover:bg-accent absolute top-2 right-2 z-50 rounded-xs transition-colors"
           onClick={() => setOpen(false)}
         >

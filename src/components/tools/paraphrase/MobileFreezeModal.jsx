@@ -49,6 +49,7 @@ const MobileFreezeModal = ({
           </DrawerTitle>
 
           <button
+            aria-label="Close"
             onClick={handleClose}
             className="hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex items-center justify-center rounded-md p-2 transition-colors outline-none focus-visible:ring-2"
           >
@@ -98,6 +99,7 @@ const MobileFreezeModal = ({
               <Badge key={index} variant="outline" className="group gap-2">
                 <span>{item}</span>
                 <button
+                  aria-label="Remove word"
                   onClick={(e) => handleDelete(item)}
                   className="focus-visible:ring-ring hover:bg-accent inline-flex items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2"
                 >

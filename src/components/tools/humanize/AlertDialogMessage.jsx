@@ -11,6 +11,7 @@ const AlertDialogMessage = ({ onClose }) => {
     <div className="absolute left-1/2 top-1/2 z-50 flex h-full w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="relative w-[90%] max-w-sm rounded-lg bg-card p-5 text-center text-card-foreground shadow">
         <button
+          aria-label="Close dialog"
           onClick={onClose}
           className="absolute right-3 top-3 cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100"
         >
