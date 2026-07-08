@@ -6,6 +6,7 @@ export async function GET(request: Request) {
     try {
         await dbConnect();
         // Fetch all sessions sorted by newest updated
+        // Optimization: Added .lean() to return plain JS objects instead of Mongoose documents, reducing memory footprint and execution time
         const sessions = await SheetSession.find({}).sort({ updatedAt: -1 }).lean();
         return NextResponse.json(sessions);
     } catch (error) {
