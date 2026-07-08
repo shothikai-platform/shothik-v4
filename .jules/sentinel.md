@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-07-08 - [XSS in Shared Content Rendering]
+**Vulnerability:** User-controlled content rendered via `dangerouslySetInnerHTML` without sanitization in `SharedContentPage`, allowing Cross-Site Scripting (XSS).
+**Learning:** The application uses `dangerouslySetInnerHTML` in multiple places for Markdown rendering, but lacks a centralized or consistent sanitization strategy. Sanitization must be handled carefully in Next.js to avoid SSR hydration mismatches.
+**Prevention:** Always use `DOMPurify` (or a similar library) to sanitize HTML before using `dangerouslySetInnerHTML`. In Next.js, perform sanitization within `useEffect` or use an isomorphic library to ensure consistency between server and client rendering.
