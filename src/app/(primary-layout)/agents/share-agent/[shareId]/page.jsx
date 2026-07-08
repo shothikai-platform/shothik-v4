@@ -22,6 +22,7 @@ import {
 } from "@/redux/api/shareAgent/shareAgentApi";
 import { setShowLoginModal } from "@/redux/slices/auth";
 import { ArrowLeft, Eye, Save, User } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -330,7 +331,7 @@ const SharedAgentPage = () => {
                   "prose-th:p-2 prose-th:text-left prose-td:p-2",
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: processMarkdownContent(sharedData.agent.content),
+                  __html: DOMPurify.sanitize(processMarkdownContent(sharedData.agent.content)),
                 }}
               />
 
