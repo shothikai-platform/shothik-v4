@@ -5,3 +5,7 @@
 ## 2026-01-22 - IDOR Vulnerability Discovery
 **Learning:** Found `get_one_chat` endpoint does not verify if the chat belongs to the authenticated user.
 **Action:** Audit all `get_one` or specific resource endpoints for `userId` ownership checks.
+
+## 2024-05-18 - API Response Optimization for Sheet Sessions
+**Learning:** Found that `/api/sheet/chat/get_my_chats` endpoint was returning full Mongoose documents for lists, which is a performance bottleneck.
+**Action:** Always use `.lean()` on Mongoose read-only list endpoints to return plain JS objects, significantly reducing memory and CPU overhead.
