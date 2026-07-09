@@ -5,43 +5,54 @@ import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
-  <div className="flex w-full items-start">
-    <div
-      className={cn(
-        "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
-        isLastData && isDataGenerating
-          ? "mb-2 sm:mb-9 md:mb-2"
-          : "mb-[4.75rem] sm:mb-9 md:mb-2",
-      )}
-    >
+const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return (
+    <div className="flex w-full items-start">
       <div
         className={cn(
-          "w-full max-w-full",
-          "prose max-w-none dark:prose-invert",
-          "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
-          "prose-headings:font-bold prose-headings:break-words",
-          "prose-h1:text-2xl prose-h1:mb-4",
-          "prose-h2:text-xl prose-h2:mb-4",
-          "prose-h3:text-lg prose-h3:mb-4",
-          "prose-h4:text-base prose-h4:mb-4",
-          "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
-          "prose-a:text-primary prose-a:break-all",
-          "prose-code:bg-muted-foreground/10 prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:text-sm prose-code:break-all prose-code:before:content-none prose-code:after:content-none",
-          "prose-pre:bg-muted-foreground/10 prose-pre:p-3 prose-pre:rounded-lg",
-          "prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground",
-          "prose-img:rounded-lg prose-img:max-w-full",
-          "prose-th:p-2 prose-th:text-left prose-td:p-2",
+          "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
+          isLastData && isDataGenerating
+            ? "mb-2 sm:mb-9 md:mb-2"
+            : "mb-[4.75rem] sm:mb-9 md:mb-2",
         )}
       >
         <div
-          className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
-        />
-      </div>
+          className={cn(
+            "w-full max-w-full",
+            "prose max-w-none dark:prose-invert",
+            "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
+            "prose-headings:font-bold prose-headings:break-words",
+            "prose-h1:text-2xl prose-h1:mb-4",
+            "prose-h2:text-xl prose-h2:mb-4",
+            "prose-h3:text-lg prose-h3:mb-4",
+            "prose-h4:text-base prose-h4:mb-4",
+            "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
+            "prose-a:text-primary prose-a:break-all",
+            "prose-code:bg-muted-foreground/10 prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:text-sm prose-code:break-all prose-code:before:content-none prose-code:after:content-none",
+            "prose-pre:bg-muted-foreground/10 prose-pre:p-3 prose-pre:rounded-lg",
+            "prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground",
+            "prose-img:rounded-lg prose-img:max-w-full",
+            "prose-th:p-2 prose-th:text-left prose-td:p-2",
+          )}
+        >
+          <div
+            className="w-full max-w-full overflow-hidden"
+            dangerouslySetInnerHTML={{
+              __html: isMounted ? DOMPurify.sanitize(marked(message)) : "",
+            }}
+          />
+        </div>
 
       {message.sources && message.sources.length > 0 && (
         <div className="mt-2 w-full max-w-full">
@@ -71,12 +82,13 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
         </div>
       )}
 
-      <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
-        {/* {new Date(message.timestamp).toLocaleTimeString()} */}
-      </span>
+        <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
+          {/* {new Date(message.timestamp).toLocaleTimeString()} */}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =

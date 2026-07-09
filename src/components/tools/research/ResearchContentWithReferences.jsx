@@ -2,7 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
+import DOMPurify from "dompurify";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -20,6 +21,11 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -188,7 +194,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: isMounted ? DOMPurify.sanitize(marked(processedContent)) : "",
             }}
           />
 
