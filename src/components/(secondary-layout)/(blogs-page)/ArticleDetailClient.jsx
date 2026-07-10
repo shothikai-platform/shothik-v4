@@ -10,6 +10,7 @@ import { NewsCard } from "@/components/(secondary-layout)/(blogs-page)/NewsCard"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { blogApi, formatDate } from "@/lib/api/blog";
+import DOMPurify from "dompurify";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -29,9 +30,11 @@ export default function ArticleDetailClient({ slug }) {
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Fetch post data on component mount
   useEffect(() => {
+    setIsMounted(true);
     if (!slug) {
       console.error("No post slug provided!");
       setError("No post slug provided");
@@ -254,7 +257,9 @@ export default function ArticleDetailClient({ slug }) {
           `}</style>
           <div
             className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: processedPost.content }}
+            dangerouslySetInnerHTML={{
+              __html: isMounted ? DOMPurify.sanitize(processedPost.content) : "",
+            }}
           />
         </article>
 
