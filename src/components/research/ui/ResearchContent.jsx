@@ -27,9 +27,9 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
             : "mb-[4.75rem] sm:mb-9 md:mb-2",
         )}
       >
-      <div
-        className={cn(
-          "w-full max-w-full",
+        <div
+          className={cn(
+            "w-full max-w-full",
           "prose max-w-none dark:prose-invert",
           "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
           "prose-headings:font-bold prose-headings:break-words",
@@ -48,13 +48,13 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{
-            __html: isMounted ? DOMPurify.sanitize(marked(message)) : "",
-          }}
-        />
-      </div>
+            dangerouslySetInnerHTML={{
+              __html: isMounted ? DOMPurify.sanitize(marked(message)) : "",
+            }}
+          />
+        </div>
 
-      {message.sources && message.sources.length > 0 && (
+        {message.sources && message.sources.length > 0 && (
         <div className="mt-2 w-full max-w-full">
           <span className="text-muted-foreground mb-1 block text-xs">
             Sources:
