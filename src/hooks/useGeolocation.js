@@ -14,46 +14,32 @@ const useGeolocation = () => {
       try {
         let country = null;
 
-        // 1. Try Google API if key is available
-        const googleKey = process.env.NEXT_PUBLIC_GOOGLE_GEOLOCATION_KEY;
-        if (googleKey) {
-          try {
-            const geolocationResponse = await fetch(
-              `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleKey}`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ considerIp: true }),
-              }
-            );
+        // 1. Try our server API which securely uses the Google API
+        try {
+          const apiResponse = await fetch("/api/geolocation", {
+            method: "POST",
+          });
 
-            if (geolocationResponse.ok) {
-              const geolocationData = await geolocationResponse.json();
-              if (geolocationData.location) {
-                const { lat, lng } = geolocationData.location;
-                const geocodingResponse = await fetch(
-                  `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${googleKey}`
-                );
-                if (geocodingResponse.ok) {
-                  const geocodingData = await geocodingResponse.json();
-                  if (geocodingData.results?.[0]) {
-                    const countryComp = geocodingData.results[0].address_components.find(c => c.types.includes("country"));
-                    if (countryComp) country = countryComp.long_name;
-                  }
-                }
-              }
+          if (apiResponse.ok) {
+            const apiData = await apiResponse.json();
+            if (apiData.location) {
+              country = apiData.location;
             }
-          } catch (googleErr) {
-            console.warn("Google Geolocation failed, trying fallback...", googleErr);
           }
+        } catch (apiErr) {
+          console.warn("Server API Geolocation failed, trying fallback...", apiErr);
         }
 
-        // 2. Fallback to free IP geolocation if Google failed or no key
+        // 2. Fallback to free IP geolocation if server API failed
         if (!country) {
-          const res = await fetch('https://ipapi.co/json/');
-          if (res.ok) {
-            const data = await res.json();
-            country = data.country_name;
+          try {
+            const res = await fetch("https://ipapi.co/json/");
+            if (res.ok) {
+              const data = await res.json();
+              country = data.country_name;
+            }
+          } catch (fallbackErr) {
+            console.warn("Fallback geolocation failed...", fallbackErr);
           }
         }
 
