@@ -7,6 +7,7 @@ import type { TPackage } from "@/types/package.type";
 import { Check, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
+import DOMPurify from "isomorphic-dompurify";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import SuccessCheckIcon from "../icons/SuccessCheckIcon";
@@ -351,7 +352,7 @@ const PackageContent: React.FC<PackageContentProps> = ({ content }) => {
   return (
     <div
       className="prose prose-sm dark:prose-invert max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />
   );
 };
