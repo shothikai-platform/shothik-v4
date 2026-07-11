@@ -4,20 +4,29 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
-  <div className="flex w-full items-start">
-    <div
-      className={cn(
-        "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
-        isLastData && isDataGenerating
-          ? "mb-2 sm:mb-9 md:mb-2"
-          : "mb-[4.75rem] sm:mb-9 md:mb-2",
-      )}
-    >
+const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return (
+    <div className="flex w-full items-start">
+      <div
+        className={cn(
+          "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
+          isLastData && isDataGenerating
+            ? "mb-2 sm:mb-9 md:mb-2"
+            : "mb-[4.75rem] sm:mb-9 md:mb-2",
+        )}
+      >
       <div
         className={cn(
           "w-full max-w-full",
@@ -39,7 +48,9 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{
+            __html: isMounted ? DOMPurify.sanitize(marked(message)) : "",
+          }}
         />
       </div>
 
@@ -71,12 +82,13 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
         </div>
       )}
 
-      <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
-        {/* {new Date(message.timestamp).toLocaleTimeString()} */}
-      </span>
+        <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
+          {/* {new Date(message.timestamp).toLocaleTimeString()} */}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =

@@ -1,8 +1,10 @@
 "use client";
 
+import React from "react";
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -18,6 +20,11 @@ const ResearchContentWithReferences = ({
 }) => {
   const [selectedReference, setSelectedReference] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
 
@@ -67,10 +74,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -106,10 +109,6 @@ const ResearchContentWithReferences = ({
 
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
-
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
 
   const processedContent = processContentWithReferences(contentStr);
 
@@ -188,7 +187,11 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: isMounted
+                ? DOMPurify.sanitize(marked(processedContent), {
+                    ADD_ATTR: ["data-reference"],
+                  })
+                : "",
             }}
           />
 
