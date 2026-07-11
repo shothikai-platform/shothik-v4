@@ -4,32 +4,23 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
-import DOMPurify from "dompurify";
 import { marked } from "marked";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  return (
-    <div className="flex w-full items-start">
+const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
+  <div className="flex w-full items-start">
+    <div
+      className={cn(
+        "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
+        isLastData && isDataGenerating
+          ? "mb-2 sm:mb-9 md:mb-2"
+          : "mb-[4.75rem] sm:mb-9 md:mb-2",
+      )}
+    >
       <div
         className={cn(
-          "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
-          isLastData && isDataGenerating
-            ? "mb-2 sm:mb-9 md:mb-2"
-            : "mb-[4.75rem] sm:mb-9 md:mb-2",
-        )}
-      >
-        <div
-          className={cn(
-            "w-full max-w-full",
+          "w-full max-w-full",
           "prose max-w-none dark:prose-invert",
           "prose-p:mb-4 prose-p:break-words prose-p:hyphens-auto",
           "prose-headings:font-bold prose-headings:break-words",
@@ -48,13 +39,11 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
       >
         <div
           className="w-full max-w-full overflow-hidden"
-            dangerouslySetInnerHTML={{
-              __html: isMounted ? DOMPurify.sanitize(marked(message)) : "",
-            }}
-          />
-        </div>
+          dangerouslySetInnerHTML={{ __html: marked(message) }}
+        />
+      </div>
 
-        {message.sources && message.sources.length > 0 && (
+      {message.sources && message.sources.length > 0 && (
         <div className="mt-2 w-full max-w-full">
           <span className="text-muted-foreground mb-1 block text-xs">
             Sources:
@@ -82,13 +71,12 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
         </div>
       )}
 
-        <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
-          {/* {new Date(message.timestamp).toLocaleTimeString()} */}
-        </span>
-      </div>
+      <span className="text-muted-foreground mt-1 block text-right text-[0.6rem] sm:text-xs">
+        {/* {new Date(message.timestamp).toLocaleTimeString()} */}
+      </span>
     </div>
-  );
-};
+  </div>
+);
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =
