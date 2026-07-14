@@ -2,33 +2,29 @@ import { useEffect, useState } from "react";
 
 const useYoutubeSubscriber = () => {
   const [subscriberCount, setSubscriberCount] = useState(0);
+  const [channelId, setChannelId] = useState("");
   const [loading, setLoading] = useState(true);
 
   const handleSubscribe = () => {
-    const channelUrl = `https://www.youtube.com/channel/${process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID}`;
-    window.open(channelUrl, "_blank", "noopener,noreferrer");
+    if (channelId) {
+      const channelUrl = `https://www.youtube.com/channel/${channelId}`;
+      window.open(channelUrl, "_blank", "noopener,noreferrer");
+    }
   };
 
   const getSubscriberCount = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        },
-      );
+      const response = await fetch("/api/youtube/subscriber");
 
       if (!response.ok) {
         throw { message: "Failed to fetch subscriber count" };
       }
 
       const data = await response.json();
-      if (data.items && data.items[0]) {
-        const count = parseInt(data.items[0].statistics.subscriberCount, 10);
-        setSubscriberCount(count || 0);
+      if (data.subscriberCount !== undefined) {
+        setSubscriberCount(data.subscriberCount);
+        setChannelId(data.channelId || "");
       }
     } catch (error) {
       console.error("Error fetching subscriber count:", error);
