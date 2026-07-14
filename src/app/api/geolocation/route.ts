@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  const apiKey = process.env.GOOGLE_GEOLOCATION_KEY; // Server-side env var
+  const apiKey = process.env.GOOGLE_GEOLOCATION_KEY || process.env.NEXT_PUBLIC_GOOGLE_GEOLOCATION_KEY; // Server-side env var
 
   if (!apiKey) {
     return NextResponse.json(
