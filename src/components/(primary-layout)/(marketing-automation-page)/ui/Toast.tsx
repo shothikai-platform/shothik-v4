@@ -27,6 +27,8 @@ export default function Toast({
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       className={`fixed top-4 right-4 z-[9999] transition-all duration-300 ${
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
       }`}
@@ -39,9 +41,9 @@ export default function Toast({
         }`}
       >
         {type === "success" ? (
-          <CheckCircle className="h-5 w-5 shrink-0" />
+          <CheckCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
         ) : (
-          <XCircle className="h-5 w-5 shrink-0" />
+          <XCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
         )}
         <p className="text-sm font-medium">{message}</p>
         <button
@@ -49,9 +51,10 @@ export default function Toast({
             setIsVisible(false);
             setTimeout(onClose, 300);
           }}
-          className="ml-2 transition-opacity hover:opacity-70"
+          className="ml-2 rounded transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+          aria-label="Close notification"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </div>
