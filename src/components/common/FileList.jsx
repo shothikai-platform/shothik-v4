@@ -219,6 +219,7 @@ export default function FileList({
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Remove file"
                   onClick={() => onRemove(actualIndex, file.filename)}
                   disabled={isUploading}
                   className={cn(
