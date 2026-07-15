@@ -259,6 +259,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
                   id="file_history_view_button"
                   variant="ghost"
                   size="icon"
+                  aria-label="View saved files"
                   onClick={handleBookClick}
                   className="-mb-0.5 h-5 w-5 cursor-pointer hover:bg-transparent md:-mb-0 md:h-8 md:w-8 dark:hover:bg-transparent"
                 >
@@ -289,6 +290,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Add new document"
                   onClick={handleAddClick}
                   className="-mb-0.5 h-5 w-5 cursor-pointer hover:bg-transparent md:mt-0 md:-mb-0 md:h-8 md:w-8 dark:hover:bg-transparent"
                 >
@@ -316,6 +318,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
       {/* Hidden button for onboarding to close sidebar */}
       <Button
         id="file_history_close_button"
+        aria-label="Close sidebar"
         onClick={handleCloseSidebar}
         className="pointer-events-none absolute -z-50 h-0 w-0 opacity-0"
       />
@@ -331,7 +334,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
             id="file_history_view"
             className="bg-background relative flex h-full flex-col overflow-hidden p-4"
           >
-            <button onClick={handleCloseSidebar} className="sr-only" />
+            <button onClick={handleCloseSidebar} aria-label="Close sidebar" className="sr-only" />
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold">Documents</h3>
             </div>
@@ -350,6 +353,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
                   type="button"
                   variant="ghost"
                   size="icon"
+                  aria-label="Clear search"
                   onClick={clearSearch}
                   className="absolute top-0 right-0 h-9 w-9"
                 >
@@ -398,7 +402,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
                             }
                           >
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
+                              <Button variant="ghost" size="icon" aria-label="More options">
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
