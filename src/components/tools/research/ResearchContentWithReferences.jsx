@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
+import DOMPurify from "isomorphic-dompurify";
 import { useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
@@ -188,7 +189,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: DOMPurify.sanitize(marked(processedContent)),
             }}
           />
 
