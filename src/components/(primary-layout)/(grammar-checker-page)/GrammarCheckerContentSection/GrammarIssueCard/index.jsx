@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
 
 const GrammarIssueCard = ({
   issue,
@@ -84,7 +85,7 @@ const GrammarIssueCard = ({
         <div className="my-2 px-4">
           <div
             className="text-muted-foreground text-xs"
-            dangerouslySetInnerHTML={{ __html: highlightedText }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightedText) }}
           />
         </div>
         <div className="mt-2 flex items-center justify-start gap-2 px-4">
