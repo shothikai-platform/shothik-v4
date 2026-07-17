@@ -1,21 +1,36 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { id } = await params;
         const body = await request.json();
         const { name } = body;
 
+        // Input validation
+        if (typeof name !== 'string') {
+            return NextResponse.json({ error: 'Name must be a string' }, { status: 400 });
+        }
+        if (name.length > 255) {
+            return NextResponse.json({ error: 'Name is too long (maximum 255 characters)' }, { status: 400 });
+        }
+
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndUpdate(
-            id,
-            { title: name }, // Assuming 'name' maps to 'title' or 'name' in your schema
+        // Scope update to user's chat (IDOR prevention)
+        const chat = await ResearchChat.findOneAndUpdate(
+            { _id: id, userId: user._id || user.id },
+            { name }, // Schema correctly uses 'name'
             { new: true }
         );
 
@@ -27,6 +42,6 @@ export async function PUT(
 
     } catch (error) {
         console.error('Error updating chat name:', error);
-        return NextResponse.json({ error: 'Failed' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to update chat name' }, { status: 500 });
     }
 }
