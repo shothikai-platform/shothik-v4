@@ -216,21 +216,34 @@ export default function FileList({
 
               {/* Remove Button */}
               {onRemove && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onRemove(actualIndex, file.filename)}
-                  disabled={isUploading}
-                  className={cn(
-                    "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
-                    "group-hover:opacity-100",
-                    "hover:bg-destructive/10 hover:text-destructive",
-                    "text-muted-foreground",
-                    isUploading && "cursor-not-allowed opacity-50",
-                  )}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span tabIndex={isUploading ? 0 : -1}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onRemove(actualIndex, file.filename)}
+                          disabled={isUploading}
+                          aria-label={`Remove file ${file.filename}`}
+                          className={cn(
+                            "h-7 w-7 shrink-0 opacity-0 transition-all duration-200",
+                            "group-hover:opacity-100",
+                            "hover:bg-destructive/10 hover:text-destructive",
+                            "text-muted-foreground",
+                            "focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                            isUploading && "cursor-not-allowed opacity-50",
+                          )}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <p>Remove {file.filename}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
 
               {/* Uploading Indicator Overlay */}
