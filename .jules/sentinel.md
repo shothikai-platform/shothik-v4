@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-02-27 - [Broken Authentication and IDOR on Renaming and Deletion Endpoints]
+**Vulnerability:** Renaming (`update_name`) and deleting (`delete_chat`) research chat endpoints completely lacked user authentication and ownership validation, allowing anyone to modify or delete arbitrary chats.
+**Learning:** State-mutating routes (PUT, DELETE) are often overlooked when securing endpoints, and incorrect schema field mappings (such as updating `title` instead of `name`) can lead to silent failures.
+**Prevention:** Enforce strict session checks (`getAuthenticatedUser()`), apply IDOR checks via `findOneAndUpdate` and `findOneAndDelete` scoped by the authenticated user's ID, and add input length limit validations.
