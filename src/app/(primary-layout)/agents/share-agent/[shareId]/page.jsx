@@ -26,6 +26,7 @@ import { marked } from "marked";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DOMPurify from "isomorphic-dompurify";
 
 const SharedAgentPage = () => {
   const params = useParams();
@@ -330,7 +331,7 @@ const SharedAgentPage = () => {
                   "prose-th:p-2 prose-th:text-left prose-td:p-2",
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: processMarkdownContent(sharedData.agent.content),
+                  __html: DOMPurify.sanitize(processMarkdownContent(sharedData.agent.content)),
                 }}
               />
 

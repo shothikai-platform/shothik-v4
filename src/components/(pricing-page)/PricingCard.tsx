@@ -9,6 +9,7 @@ import Link from "next/link";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import DOMPurify from "isomorphic-dompurify";
 import SuccessCheckIcon from "../icons/SuccessCheckIcon";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -351,7 +352,7 @@ const PackageContent: React.FC<PackageContentProps> = ({ content }) => {
   return (
     <div
       className="prose prose-sm dark:prose-invert max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />
   );
 };
