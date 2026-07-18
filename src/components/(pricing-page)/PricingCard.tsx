@@ -12,6 +12,7 @@ import type { RootState } from "@/redux/store";
 import SuccessCheckIcon from "../icons/SuccessCheckIcon";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import DOMPurify from "isomorphic-dompurify";
 
 type PricingCardProps = {
   package: TPackage;
@@ -351,7 +352,7 @@ const PackageContent: React.FC<PackageContentProps> = ({ content }) => {
   return (
     <div
       className="prose prose-sm dark:prose-invert max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />
   );
 };

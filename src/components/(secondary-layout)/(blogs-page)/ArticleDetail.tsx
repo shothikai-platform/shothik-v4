@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import DOMPurify from "isomorphic-dompurify";
 import gradientBluePurple from "../assets/blog.png";
 import gradientTeal from "../assets/blog1.png";
 import gradientGreen from "../assets/blog2.png";
@@ -180,7 +181,7 @@ const ArticleDetail = () => {
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
           />
         </article>
 

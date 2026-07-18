@@ -17,6 +17,7 @@ import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef, useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import { AlignmentGuidesSkeleton } from "./editing/AlignmentGuidesSkeleton";
 import { EditingErrorBoundary } from "./editing/EditingErrorBoundary";
 import { EditingToolbarSkeleton } from "./editing/EditingToolbarSkeleton";
@@ -684,7 +685,7 @@ const EnhancedThinkingTab = ({ slide, dimensions }) => {
         )}
       >
         {processedContent ? (
-          <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(processedContent) }} />
         ) : (
           <p className="text-muted-foreground text-[0.9em] leading-[1.6] whitespace-pre-wrap">
             {slide?.thought}
