@@ -1418,6 +1418,7 @@ const GrammarCheckerContentSection = () => {
                     <button
                       onClick={() => dispatch(setIsSectionbarOpen(true))}
                       className="cursor-pointer"
+                      aria-label="View History"
                     >
                       <Image
                         src="/icons/history.svg"
@@ -1439,6 +1440,7 @@ const GrammarCheckerContentSection = () => {
                     <button
                       onClick={handleNewSection}
                       className="cursor-pointer"
+                      aria-label="Start a new chat"
                     >
                       <Image
                         src="/icons/new-chat.svg"

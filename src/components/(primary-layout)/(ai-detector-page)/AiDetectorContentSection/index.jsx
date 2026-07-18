@@ -395,6 +395,7 @@ const AiDetectorContentSection = () => {
                   <TooltipTrigger asChild>
                     <button
                       className="cursor-pointer"
+                      aria-label="View History"
                       onClick={() => dispatch(setIsSectionbarOpen(true))}
                     >
                       <Image
@@ -416,6 +417,7 @@ const AiDetectorContentSection = () => {
                   <TooltipTrigger asChild>
                     <button
                       className="cursor-pointer"
+                      aria-label="Start a new chat"
                       onClick={() => handleNewSection()}
                     >
                       <Image
@@ -455,6 +457,7 @@ const AiDetectorContentSection = () => {
                         <TooltipTrigger asChild>
                           <button
                             className="cursor-pointer"
+                            aria-label="View History"
                             onClick={() => dispatch(setIsSectionbarOpen(true))}
                           >
                             <Image
@@ -476,6 +479,7 @@ const AiDetectorContentSection = () => {
                         <TooltipTrigger asChild>
                           <button
                             className="cursor-pointer"
+                            aria-label="Start a new chat"
                             onClick={() => handleNewSection()}
                           >
                             <Image
