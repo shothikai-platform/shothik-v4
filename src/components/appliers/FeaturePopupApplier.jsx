@@ -17,6 +17,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
+import DOMPurify from "isomorphic-dompurify";
 
 const FeaturePopupApplier = () => {
   const pathname = usePathname();
@@ -315,7 +316,7 @@ const FeaturePopupApplier = () => {
 
           {popup.content && (
             <div
-              dangerouslySetInnerHTML={{ __html: popup.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(popup.content) }}
               className="prose prose-sm max-w-none dark:prose-invert"
             />
           )}
