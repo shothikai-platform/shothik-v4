@@ -352,6 +352,7 @@ export default function FileHistorySidebar({ fetchFileHistories }) {
                   size="icon"
                   onClick={clearSearch}
                   className="absolute top-0 right-0 h-9 w-9"
+                  aria-label="Clear search"
                 >
                   <XCircle className="h-4 w-4" />
                 </Button>
