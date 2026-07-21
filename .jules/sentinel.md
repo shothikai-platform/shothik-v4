@@ -1,3 +1,8 @@
+## 2025-11-20 - [XSS on Public Shared Content Page]
+**Vulnerability:** Persistent Cross-Site Scripting (XSS) via `dangerouslySetInnerHTML` on the public shared content page where arbitrary user-supplied Markdown/HTML was rendered without sanitization.
+**Learning:** Shared content links are accessible to any user without authentication. If a malicious user injects scripts into their content, anyone opening the shared link will execute that script in their browser session.
+**Prevention:** Always sanitize dynamic HTML inputs using `DOMPurify` before rendering via `dangerouslySetInnerHTML`. Use the `isMounted` state pattern in SSR frameworks like Next.js to ensure sanitization runs reliably on the client side without causing hydration mismatches.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
