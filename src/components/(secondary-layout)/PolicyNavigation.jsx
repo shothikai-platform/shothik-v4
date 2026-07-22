@@ -104,7 +104,7 @@ export default function PolicyNavigation({ items = [] }) {
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
                 className={cn(
-                  "text-foreground hover:text-primary flex w-full items-center justify-between rounded-md px-3 py-3 text-left text-sm transition-colors sm:py-2.5 sm:text-sm",
+                  "text-foreground hover:text-primary flex w-full items-center justify-between rounded-md px-3 py-3 text-left text-sm transition-colors sm:py-2.5 sm:text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                   "min-h-[44px] touch-manipulation", // Touch-friendly sizing
                   activeSection === item.id
                     ? "bg-primary/10 text-primary font-semibold shadow-sm"

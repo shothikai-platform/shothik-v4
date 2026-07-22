@@ -188,7 +188,7 @@ export default function PreferenceCollectionPanel({
                       <span>{color}</span>
                       <button
                         onClick={() => removeCustomColor(color)}
-                        className="transition-opacity hover:opacity-70"
+                        className="transition-opacity hover:opacity-70 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-sm"
                         type="button"
                         aria-label={`Remove color ${color}`}
                       >

@@ -34,7 +34,7 @@ export const CategoryTabs = ({
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
               activeCategory === category
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground"
