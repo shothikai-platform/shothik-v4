@@ -1,9 +1,4 @@
-## 2025-05-22 - [DoS Prevention via Input Validation]
-**Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
-**Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
-**Prevention:** Use Pydantic `Field` constraints to enforce strict length and range limits on all user-controlled inputs at the API gateway/routing layer.
-
-## 2025-02-26 - [IDOR in Research Chat API]
-**Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
-**Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
-**Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+## 2025-02-23 - [Refactor dangerouslySetInnerHTML]
+**Vulnerability:** XSS vulnerability through usage of `dangerouslySetInnerHTML` for simple text highlighting logic based on regular expressions.
+**Learning:** `String.prototype.split(regex)` with a capturing group in the regex (`(escapedWord)`) can split the text while preserving the matching parts. The resulting array can then be mapped directly to React JSX elements to apply formatting. React automatically escapes strings, effectively mitigating XSS risks without requiring external sanitization libraries or complex HTML string processing.
+**Prevention:** Avoid `dangerouslySetInnerHTML` when formatting text. Prefer mapping text segments to native React elements.
