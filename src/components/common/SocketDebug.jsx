@@ -112,8 +112,10 @@ const SocketDebug = () => {
                     position: 'fixed', bottom: '20px', left: '20px', zIndex: 9999,
                     background: '#222', color: '#0f0', border: '1px solid #0f0',
                     padding: '8px 12px', borderRadius: '5px', cursor: 'pointer',
-                    fontWeight: 'bold', boxShadow: '0 0 10px rgba(0,255,0,0.2)'
+                    fontWeight: 'bold', boxShadow: '0 0 10px rgba(0,255,0,0.2)',
+                    outline: 'none'
                 }}
+                className="focus-visible:ring-2 focus-visible:ring-[#0f0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#222]"
             >
                 🐞 Debug ({status})
             </button>
@@ -153,7 +155,7 @@ const SocketDebug = () => {
                         {status}
                     </span>
                 </div>
-                <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '16px' }}>×</button>
+                <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '16px', outline: 'none' }} className="focus-visible:ring-2 focus-visible:ring-[#888] rounded-sm">×</button>
             </div>
 
             {/* Tabs */}
@@ -170,8 +172,10 @@ const SocketDebug = () => {
                             border: 'none',
                             borderBottom: activeTab === tab ? '2px solid #0f0' : 'none',
                             cursor: 'pointer',
-                            textTransform: 'capitalize'
+                            textTransform: 'capitalize',
+                            outline: 'none'
                         }}
+                        className="focus-visible:ring-2 focus-visible:ring-[#0f0] focus-visible:ring-inset"
                     >
                         {tab}
                     </button>
@@ -198,10 +202,10 @@ const SocketDebug = () => {
 
             {/* Footer / Actions */}
             <div style={{ padding: '8px', borderTop: '1px solid #333', background: '#111', display: 'flex', gap: '10px' }}>
-                <button onClick={copyToClipboard} style={{ flex: 1, padding: '5px', background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '4px', cursor: 'pointer' }}>
+                <button onClick={copyToClipboard} style={{ flex: 1, padding: '5px', background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '4px', cursor: 'pointer', outline: 'none' }} className="focus-visible:ring-2 focus-visible:ring-[#fff]">
                     📋 Copy Logs
                 </button>
-                <button onClick={clearLogs} style={{ flex: 1, padding: '5px', background: '#300', color: '#f88', border: '1px solid #500', borderRadius: '4px', cursor: 'pointer' }}>
+                <button onClick={clearLogs} style={{ flex: 1, padding: '5px', background: '#300', color: '#f88', border: '1px solid #500', borderRadius: '4px', cursor: 'pointer', outline: 'none' }} className="focus-visible:ring-2 focus-visible:ring-[#f88]">
                     🗑️ Clear
                 </button>
             </div>
