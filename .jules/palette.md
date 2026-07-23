@@ -5,3 +5,6 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2025-02-18 - Tooltip ARIA Focus Management
+**Learning:** Adding Tooltips and `aria-label` to icon-only buttons is crucial for accessibility. However, wrapping disabled buttons in a `span` with a static `tabIndex={0}` to enable tooltips on disabled states creates a "double tab stop" accessibility regression when the button is *active*.
+**Action:** When wrapping a button in a focusable span to preserve tooltip access during disabled states, the `tabIndex` must be dynamically applied (e.g., `tabIndex={isDisabled ? 0 : -1}`) so it is only focusable when the button itself cannot receive focus.
