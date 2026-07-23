@@ -49,7 +49,8 @@ export default function Toast({
             setIsVisible(false);
             setTimeout(onClose, 300);
           }}
-          className="ml-2 transition-opacity hover:opacity-70"
+          className="ml-2 transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          aria-label="Close notification"
         >
           <X className="h-4 w-4" />
         </button>
