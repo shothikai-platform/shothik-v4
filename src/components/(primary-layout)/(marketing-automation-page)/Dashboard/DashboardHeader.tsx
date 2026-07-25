@@ -1,6 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
@@ -17,9 +23,18 @@ export default function DashboardHeader({
     <div className="flex h-full items-center justify-between">
       <div className="flex items-center gap-4">
         <Link href="/marketing-automation">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="size-5" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Back to Campaign">
+                  <ArrowLeft className="size-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Back to Campaign</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Link>
         <div>
           <h1 className="text-xl font-bold">Campaign Dashboard</h1>
