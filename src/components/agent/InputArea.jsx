@@ -158,13 +158,37 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {loading ? (
+                <span
+                  tabIndex={0}
+                  className="focus-visible:ring-ring focus-visible:ring-2 inline-block rounded-md"
+                >
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    size="icon"
+                    aria-label="Send message"
+                  >
+                    <Loader2 className="size-4 animate-spin" />
+                  </Button>
+                </span>
+              ) : (
+                <Button
+                  disabled={loading}
+                  type="submit"
+                  size="icon"
+                  aria-label="Send message"
+                >
+                  <Send className="size-4" />
+                </Button>
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Send message</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>

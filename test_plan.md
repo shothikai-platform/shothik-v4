@@ -1,0 +1,8 @@
+1. **Identify accessibility and UX improvement opportunity**
+   - The `<Button disabled={loading} type="submit" size="icon">` in `src/components/agent/InputArea.jsx` is an icon-only button and is missing both an `aria-label` and a `<Tooltip>` wrapper for accessibility. Also, the `disabled` state prevents tooltips from showing correctly.
+   - We will wrap this button in a `<Tooltip>`, add `aria-label="Send message"`, and if `loading` is true, we should also ensure the tooltip displays by applying the `span` wrapper approach from the palette journal for disabled tooltips.
+
+2. **Modify `src/components/agent/InputArea.jsx`**
+   - Wrap the `<Button disabled={loading} type="submit" size="icon">` in `<TooltipProvider>` (if not already there) and `<Tooltip>`. Wait, `TooltipProvider` isn't imported, but maybe we can just use `Tooltip` if `TooltipProvider` is at the root. Looking at the code, there is no `TooltipProvider` in `InputArea.jsx`, but other `Tooltip`s exist so maybe it's provided globally. Wait, `<TooltipProvider>` is typically imported from `lucide-react`? No, `@/components/ui/tooltip`. Let's import `TooltipProvider` and add it, or maybe just check if it's needed. Wait, in `CombinedActions.jsx` `TooltipProvider` is imported. But in `InputArea.jsx` it's not. I will import `TooltipProvider` from `@/components/ui/tooltip` if I need to wrap it. Actually, `InputArea.jsx` has `<Tooltip>` without `TooltipProvider`, so it might be provided upstream. Let's just wrap it in `<Tooltip>`.
+   - Add `aria-label="Send message"`.
+   - Add the `span` wrapper trick from `.jules/palette.md`: `tabIndex={0}` and `className="focus-visible:ring-2 focus-visible:ring-ring"` if disabled. Or we can just wrap it conditionally or unconditionally if disabled.
