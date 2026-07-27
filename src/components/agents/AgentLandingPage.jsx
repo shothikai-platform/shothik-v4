@@ -204,14 +204,14 @@ export default function AgentLandingPage() {
     useUploadResearchFilesMutation();
   // const [initiatePresentation, { isLoading: isInitiatingPresentation }] =
   //   useCreatePresentationMutation();
-  // 
+  //
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [isInitiatingPresentation, setIsInitiatingPresentation] =
     useState(false);
   const [isInitiatingSheet, setIsInitiatingSheet] = useState(false);
   const [isInitiatingResearch, setIsInitiatingResearch] = useState(false);
 
-  // 
+  //
 
   // Add this state to your component
   // const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -243,8 +243,7 @@ export default function AgentLandingPage() {
           throw new Error(`Invalid agent type: ${selectedNavItem}`);
       }
     },
-    isUploading:
-      isUploadingSlides || isUploadingSheets || isUploadingResearch,
+    isUploading: isUploadingSlides || isUploadingSheets || isUploadingResearch,
     addFiles,
     prepareUploadData: (files, userId) => ({
       files,
@@ -279,7 +278,7 @@ export default function AgentLandingPage() {
   const [researchModel, setResearchModel] = useState("gemini-2.0-flash");
   const [topLevel, setTopLevel] = useState(3); // used for cofig -> 1.number_of_initial_queries, 2.max_research_loops
 
-  // 
+  //
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -389,9 +388,9 @@ export default function AgentLandingPage() {
             router,
           );
         case "browse":
-          return 
+          return;
         default:
-          return 
+          return;
       }
     } catch (error) {
       // console.error("[AgentLandingPage] Error initiating presentation:", error);
@@ -444,7 +443,7 @@ export default function AgentLandingPage() {
     removeFile(index);
   };
 
-  // 
+  //
 
   return (
     <div className="bg-background text-foreground relative flex min-h-[calc(100vh-100px)] flex-col">
@@ -460,14 +459,17 @@ export default function AgentLandingPage() {
                 Welcome to Shothik AI!
               </h3>
               <p className="text-muted-foreground text-sm">
-                Create AI-powered presentations, spreadsheets, and research in seconds. Try typing a prompt above to get started!
+                Create AI-powered presentations, spreadsheets, and research in
+                seconds. Try typing a prompt above to get started!
               </p>
               <div className="mt-2 flex gap-2">
                 <Button
                   size="sm"
                   variant="default"
                   onClick={() => {
-                    setInputValue("Create a presentation about Digital Marketing Trends 2025");
+                    setInputValue(
+                      "Create a presentation about Digital Marketing Trends 2025",
+                    );
                     handleCloseOnboarding();
                   }}
                 >
@@ -611,7 +613,10 @@ export default function AgentLandingPage() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div>
+                      <span
+                        tabIndex={0}
+                        className="focus-visible:ring-ring inline-block rounded-full focus-visible:ring-2 focus-visible:outline-none"
+                      >
                         <Button
                           onClick={handleSubmit}
                           disabled={
@@ -622,6 +627,7 @@ export default function AgentLandingPage() {
                             isInitiatingResearch
                           }
                           size="icon"
+                          aria-label="Start Agent"
                           className="bg-primary hover:bg-primary/90 h-10 w-10 rounded-full disabled:cursor-not-allowed disabled:opacity-50"
                           data-rybbit-event="Agent Start"
                         >
@@ -634,7 +640,7 @@ export default function AgentLandingPage() {
                             <Send className="h-5 w-5" />
                           )}
                         </Button>
-                      </div>
+                      </span>
                     </TooltipTrigger>
                     {isUploading && (
                       <TooltipContent>
@@ -767,26 +773,35 @@ export default function AgentLandingPage() {
             <div className="mb-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
               <div className="text-center">
                 <div className="text-primary text-3xl font-bold">10K+</div>
-                <div className="text-muted-foreground text-sm">Presentations Created</div>
+                <div className="text-muted-foreground text-sm">
+                  Presentations Created
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-primary text-3xl font-bold">150+</div>
-                <div className="text-muted-foreground text-sm">Countries Served</div>
+                <div className="text-muted-foreground text-sm">
+                  Countries Served
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-primary text-3xl font-bold">95%</div>
-                <div className="text-muted-foreground text-sm">Satisfaction Rate</div>
+                <div className="text-muted-foreground text-sm">
+                  Satisfaction Rate
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-primary text-3xl font-bold">5M+</div>
-                <div className="text-muted-foreground text-sm">Words Processed</div>
+                <div className="text-muted-foreground text-sm">
+                  Words Processed
+                </div>
               </div>
             </div>
-            
+
             <div className="grid gap-6 sm:grid-cols-3">
               <Card className="border p-4 text-left">
                 <p className="text-muted-foreground mb-3 text-sm italic">
-                  "Shothik AI transformed how I create presentations. What used to take hours now takes minutes!"
+                  "Shothik AI transformed how I create presentations. What used
+                  to take hours now takes minutes!"
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
@@ -794,13 +809,16 @@ export default function AgentLandingPage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">Sarah M.</div>
-                    <div className="text-muted-foreground text-xs">Marketing Manager</div>
+                    <div className="text-muted-foreground text-xs">
+                      Marketing Manager
+                    </div>
                   </div>
                 </div>
               </Card>
               <Card className="border p-4 text-left">
                 <p className="text-muted-foreground mb-3 text-sm italic">
-                  "The AI research feature is incredibly powerful. It saves me hours of manual research work."
+                  "The AI research feature is incredibly powerful. It saves me
+                  hours of manual research work."
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
@@ -808,13 +826,16 @@ export default function AgentLandingPage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">James L.</div>
-                    <div className="text-muted-foreground text-xs">Content Strategist</div>
+                    <div className="text-muted-foreground text-xs">
+                      Content Strategist
+                    </div>
                   </div>
                 </div>
               </Card>
               <Card className="border p-4 text-left">
                 <p className="text-muted-foreground mb-3 text-sm italic">
-                  "Best investment for my business. The quality of AI-generated content is outstanding."
+                  "Best investment for my business. The quality of AI-generated
+                  content is outstanding."
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
@@ -822,7 +843,9 @@ export default function AgentLandingPage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">Anika R.</div>
-                    <div className="text-muted-foreground text-xs">Entrepreneur</div>
+                    <div className="text-muted-foreground text-xs">
+                      Entrepreneur
+                    </div>
                   </div>
                 </div>
               </Card>
