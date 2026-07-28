@@ -13,20 +13,27 @@ const GrammarIssueCard = ({
   const { error, correct, sentence, type } = issue || {};
 
   // Fix: Properly highlight the error in the sentence
-  const getHighlightedText = () => {
-    if (!sentence || !error) return sentence;
+  const getHighlightedTextElements = () => {
+    if (!sentence || !error) return <span>{sentence}</span>;
 
     const escapedWord = error.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(escapedWord, "gi");
+    const regex = new RegExp(`(${escapedWord})`, "gi");
 
-    return sentence.replace(
-      regex,
-      (match) =>
-        `<span class="text-red-500 line-through">${match}</span> <span class="text-primary">${correct}</span>`,
-    );
+    // Security Fix: Refactored to avoid dangerouslySetInnerHTML by splitting the string and mapping to React elements
+    const parts = sentence.split(regex);
+    return parts.map((part, index) => {
+      if (part.toLowerCase() === error.toLowerCase()) {
+        return (
+          <span key={index}>
+            <span className="text-red-500 line-through">{part}</span> <span className="text-primary">{correct}</span>
+          </span>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
-  const highlightedText = getHighlightedText();
+  const highlightedTextElements = getHighlightedTextElements();
 
   return (
     <div
@@ -82,10 +89,9 @@ const GrammarIssueCard = ({
         )}
       >
         <div className="my-2 px-4">
-          <div
-            className="text-muted-foreground text-xs"
-            dangerouslySetInnerHTML={{ __html: highlightedText }}
-          />
+          <div className="text-muted-foreground text-xs">
+            {highlightedTextElements}
+          </div>
         </div>
         <div className="mt-2 flex items-center justify-start gap-2 px-4">
           <button
