@@ -7,3 +7,8 @@
 **Vulnerability:** `get_one_chat` endpoint fetched chats by ID without verifying user ownership, allowing unauthorized access to other users' chats.
 **Learning:** Checking authentication is not enough; authorization (ownership check) is mandatory for accessing user-specific resources.
 **Prevention:** Always scope database queries with `userId` (e.g., `findOne({ _id: id, userId: currentUser._id })`) instead of just `findById(id)`.
+
+## 2025-03-01 - [Missing Authentication and IDOR in Delete Chat Endpoint]
+**Vulnerability:** The delete research chat endpoint (`/api/research/chat/delete_chat/[id]`) had no authentication check or user ownership validation, allowing anyone to delete any chat via its database ID.
+**Learning:** Legacy or boilerplate endpoints might omit auth helper execution entirely. High-impact operations like DELETE require explicit authentication and scoped query filters.
+**Prevention:** Secure high-impact endpoints by always wrapping operations with `getAuthenticatedUser()` checks and querying using `findOneAndDelete` scoped with the user's ID.
