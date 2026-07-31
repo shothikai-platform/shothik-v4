@@ -135,32 +135,42 @@ const OutputBotomNavigation = ({
           <div className="flex flex-row items-center gap-1">
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setHighlightSentence((prev) => prev - 1)}
-                  disabled={highlightSentence === 0}
-                  aria-label="previous-sentence"
-                  className="bg-primary/5 text-primary rounded-[5px]"
+                <span
+                  tabIndex={0}
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <ChevronUp className="h-4 w-4" />
-                </ShadButton>
+                  <ShadButton
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setHighlightSentence((prev) => prev - 1)}
+                    disabled={highlightSentence === 0}
+                    aria-label="previous-sentence"
+                    className="bg-primary/5 text-primary rounded-[5px]"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </ShadButton>
+                </span>
               </TooltipTrigger>
               <TooltipContent>Previous sentence</TooltipContent>
             </ShadTooltip>
 
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setHighlightSentence((prev) => prev + 1)}
-                  disabled={highlightSentence === sentenceCount - 1}
-                  aria-label="next-sentence"
-                  className="bg-primary/5 text-primary rounded-[5px]"
+                <span
+                  tabIndex={0}
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <ChevronDown className="h-4 w-4" />
-                </ShadButton>
+                  <ShadButton
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setHighlightSentence((prev) => prev + 1)}
+                    disabled={highlightSentence === sentenceCount - 1}
+                    aria-label="next-sentence"
+                    className="bg-primary/5 text-primary rounded-[5px]"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </ShadButton>
+                </span>
               </TooltipTrigger>
               <TooltipContent>Next sentence</TooltipContent>
             </ShadTooltip>
@@ -194,22 +204,24 @@ const OutputBotomNavigation = ({
             <div className="flex flex-row items-center gap-1">
               <ShadTooltip>
                 <TooltipTrigger asChild>
-                  <ShadButton
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      setActiveHistoryByIndex(activeHistoryIndex + 1)
-                    }
-                    disabled={
-                      !histories.length ||
-                      activeHistoryIndex === histories.length - 1
-                    }
-                    aria-label="previous-history"
-                    className="bg-primary/5 text-primary rounded-[5px]"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </ShadButton>
-                </TooltipTrigger>
+  <span tabIndex={0} className="focus-visible:ring-2 focus-visible:ring-ring">
+    <ShadButton
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setActiveHistoryByIndex(activeHistoryIndex + 1)
+                        }
+                        disabled={
+                          !histories.length ||
+                          activeHistoryIndex === histories.length - 1
+                        }
+                        aria-label="previous-history"
+                        className="bg-primary/5 text-primary rounded-[5px]"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </ShadButton>
+  </span>
+</TooltipTrigger>
                 <TooltipContent>Previous history</TooltipContent>
               </ShadTooltip>
 
@@ -229,19 +241,21 @@ const OutputBotomNavigation = ({
 
               <ShadTooltip>
                 <TooltipTrigger asChild>
-                  <ShadButton
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      setActiveHistoryByIndex(activeHistoryIndex - 1)
-                    }
-                    disabled={!histories.length || activeHistoryIndex < 1}
-                    aria-label="next-history"
-                    className="bg-primary/5 text-primary mr-0.5 rounded-[5px]"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </ShadButton>
-                </TooltipTrigger>
+  <span tabIndex={0} className="focus-visible:ring-2 focus-visible:ring-ring">
+    <ShadButton
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setActiveHistoryByIndex(activeHistoryIndex - 1)
+                        }
+                        disabled={!histories.length || activeHistoryIndex < 1}
+                        aria-label="next-history"
+                        className="bg-primary/5 text-primary mr-0.5 rounded-[5px]"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </ShadButton>
+  </span>
+</TooltipTrigger>
                 <TooltipContent>Next history</TooltipContent>
               </ShadTooltip>
             </div>
@@ -300,22 +314,24 @@ const OutputBotomNavigation = ({
           <div className="flex flex-row items-center gap-1">
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() =>
-                    setActiveHistoryByIndex(activeHistoryIndex + 1)
-                  }
-                  disabled={
-                    !histories.length ||
-                    activeHistoryIndex === histories.length - 1
-                  }
-                  aria-label="previous-history"
-                  className="bg-primary/5 text-primary rounded-[5px]"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </ShadButton>
-              </TooltipTrigger>
+  <span tabIndex={0} className="focus-visible:ring-2 focus-visible:ring-ring">
+    <ShadButton
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        setActiveHistoryByIndex(activeHistoryIndex + 1)
+                      }
+                      disabled={
+                        !histories.length ||
+                        activeHistoryIndex === histories.length - 1
+                      }
+                      aria-label="previous-history"
+                      className="bg-primary/5 text-primary rounded-[5px]"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </ShadButton>
+  </span>
+</TooltipTrigger>
               <TooltipContent>Previous history</TooltipContent>
             </ShadTooltip>
 
@@ -335,19 +351,21 @@ const OutputBotomNavigation = ({
 
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() =>
-                    setActiveHistoryByIndex(activeHistoryIndex - 1)
-                  }
-                  disabled={!histories.length || activeHistoryIndex < 1}
-                  aria-label="next-history"
-                  className="bg-primary/5 text-primary mr-0.5 rounded-[5px]"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </ShadButton>
-              </TooltipTrigger>
+  <span tabIndex={0} className="focus-visible:ring-2 focus-visible:ring-ring">
+    <ShadButton
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        setActiveHistoryByIndex(activeHistoryIndex - 1)
+                      }
+                      disabled={!histories.length || activeHistoryIndex < 1}
+                      aria-label="next-history"
+                      className="bg-primary/5 text-primary mr-0.5 rounded-[5px]"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </ShadButton>
+  </span>
+</TooltipTrigger>
               <TooltipContent>Next history</TooltipContent>
             </ShadTooltip>
           </div>
