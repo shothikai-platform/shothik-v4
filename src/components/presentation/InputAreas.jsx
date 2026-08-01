@@ -205,6 +205,7 @@ export default function InputArea({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label="Remove file"
                       onClick={() => handleRemoveFile(index, file.filename)}
                       className="bg-muted/50 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground absolute top-2 right-2 h-6 w-6"
                     >
@@ -290,6 +291,7 @@ export default function InputArea({
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label="More options"
                     className="text-muted-foreground hover:text-primary h-10 w-10"
                   >
                     <MoreVertical className="h-5 w-5" />
@@ -302,16 +304,36 @@ export default function InputArea({
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button
-                onClick={() => onSend()}
-                disabled={
-                  !inputValue.trim() || isLoading || isUploading || disabled
-                }
-                size="icon"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span tabIndex={0} className="focus-visible:ring-2 focus-visible:ring-ring rounded-md overflow-hidden outline-none">
+                      <Button
+                        onClick={() => onSend()}
+                        aria-label="Send message"
+                        disabled={
+                          !inputValue.trim() || isLoading || isUploading || disabled
+                        }
+                        size="icon"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
+                      >
+                        <Send className="h-5 w-5" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {(!inputValue.trim() || isLoading || isUploading || disabled) && (
+                    <TooltipContent>
+                      <p>
+                        {isLoading || isUploading
+                          ? "Processing..."
+                          : disabled
+                            ? "Currently disabled"
+                            : "Enter a message to send"}
+                      </p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>
@@ -325,6 +347,7 @@ export default function InputArea({
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Close modal"
               onClick={handleNewChatCancel}
               className="text-muted-foreground hover:text-foreground absolute top-2 right-2 h-8 w-8"
             >
@@ -368,7 +391,7 @@ export default function InputArea({
           >
             <button
               onClick={() => setToast((prev) => ({ ...prev, open: false }))}
-              className="text-muted-foreground hover:text-foreground absolute top-2 right-2"
+              className="text-muted-foreground hover:text-foreground absolute top-2 right-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
