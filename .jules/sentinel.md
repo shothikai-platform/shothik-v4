@@ -1,3 +1,8 @@
+## 2025-06-03 - [Unauthenticated & Unscoped Sheets API Endpoints]
+**Vulnerability:** The spreadsheet endpoints (`/api/sheet/chat/get_my_chats` and `/api/sheet/conversation/create_conversation`) were unauthenticated and completely lacked ownership checks, allowing any user to read/modify any other user's sheets session.
+**Learning:** Legacy or copy-pasted endpoints often retain mock/temporary behavior (like `'temp-user'`) and bypass security policies if not explicitly reviewed during feature integration.
+**Prevention:** Every API gateway route must require token-based authentication via `getAuthenticatedUser()` and enforce strict ownership of data model records by querying via the authenticated user ID.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
