@@ -373,7 +373,6 @@ export default function SheetDataArea() {
   );
   const currentSavePoint = useSelector(selectActiveSavePoint);
 
-
   const dispatch = useDispatch();
 
   // API mutation for saving edited sheet data
@@ -452,7 +451,6 @@ export default function SheetDataArea() {
               },
               timestamp: new Date().toISOString(),
             }).unwrap();
-
           }
         }
       } catch (error) {
@@ -929,7 +927,6 @@ export default function SheetDataArea() {
 
       // Focus the new window
       newWindow.focus();
-
     } else {
       // Fallback if popup is blocked
       alert(
@@ -940,13 +937,11 @@ export default function SheetDataArea() {
 
   // Handle refresh - could trigger a re-generation
   const handleRefresh = () => {
-
     if (!currentSavePoint) return;
 
     const activeGen = currentSavePoint.generations.find(
       (g) => g.id === currentSavePoint.activeGenerationId,
     );
-
 
     if (sheetStatus === "error") {
       if (activeGen) {
@@ -992,8 +987,7 @@ export default function SheetDataArea() {
       },
       rowKeyGetter: (row) => row.id,
       defaultSortColumns: [],
-      onSortColumnsChange: (sortColumns) => {
-      },
+      onSortColumnsChange: (sortColumns) => {},
       // Removed reorder functionality
       enableColumnReordering: false,
       enableRowReordering: false,
@@ -1110,42 +1104,49 @@ export default function SheetDataArea() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!hasData}
-                      className="rounded-lg border-2 px-2 transition-all hover:-translate-y-0.5 hover:shadow-md sm:px-4"
-                    >
-                      <Download className="h-4 w-4 sm:mr-2" />
-                      <span className="hidden sm:inline">Export</span>
-                      <ChevronDown className="ml-1 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => handleExportOption("csv")}>
-                      <FileText className="mr-2 h-4 w-4" />
-                      <div>
-                        <div className="font-medium">Export as CSV</div>
-                        <div className="text-muted-foreground text-xs">
-                          Normal CSV format
+                <span
+                  tabIndex={0}
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!hasData}
+                        className="rounded-lg border-2 px-2 transition-all hover:-translate-y-0.5 hover:shadow-md sm:px-4"
+                      >
+                        <Download className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Export</span>
+                        <ChevronDown className="ml-1 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleExportOption("csv")}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        <div>
+                          <div className="font-medium">Export as CSV</div>
+                          <div className="text-muted-foreground text-xs">
+                            Normal CSV format
+                          </div>
                         </div>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleExportOption("xlsx")}
-                    >
-                      <Table className="mr-2 h-4 w-4" />
-                      <div>
-                        <div className="font-medium">Export as Excel</div>
-                        <div className="text-muted-foreground text-xs">
-                          Microsoft Excel format
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleExportOption("xlsx")}
+                      >
+                        <Table className="mr-2 h-4 w-4" />
+                        <div>
+                          <div className="font-medium">Export as Excel</div>
+                          <div className="text-muted-foreground text-xs">
+                            Microsoft Excel format
+                          </div>
                         </div>
-                      </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Export data</p>
@@ -1157,16 +1158,21 @@ export default function SheetDataArea() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShareModalOpen(true)}
-                  disabled={!hasData}
-                  className="ml-2 rounded-lg border-2 px-2 transition-all hover:-translate-y-0.5 hover:shadow-md sm:px-4"
+                <span
+                  tabIndex={0}
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <Share className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Share</span>
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShareModalOpen(true)}
+                    disabled={!hasData}
+                    className="ml-2 rounded-lg border-2 px-2 transition-all hover:-translate-y-0.5 hover:shadow-md sm:px-4"
+                  >
+                    <Share className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Share</span>
+                  </Button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Share sheet data</p>
