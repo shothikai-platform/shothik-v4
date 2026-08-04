@@ -1,3 +1,8 @@
+## 2025-10-24 - [IDOR and Missing Input Validation in Chat Name Update API]
+**Vulnerability:** Broken Object Level Authorization (IDOR) and missing input validation on the chat name update API endpoint (`src/app/api/research/chat/update_name/[id]/route.ts`), which allowed unauthorized users to modify other users' chat names, and could cause DoS or data corruption via unvalidated input.
+**Learning:** Checking for the existence of parameters isn't enough; endpoints must enforce authentication, authorize user ownership of the resources being modified (e.g. scoping via the user's ID), and sanitize/limit incoming payload lengths and types.
+**Prevention:** Use `findOneAndUpdate` scoped with `{ _id: id, userId: user._id || user.id }` instead of `findByIdAndUpdate` and validate all user-supplied input strings for correct type and length limits.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
