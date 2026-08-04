@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import ResearchChat from '@/models/ResearchChat';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function DELETE(
     request: Request,
@@ -10,7 +11,16 @@ export async function DELETE(
         const { id } = await params;
         await dbConnect();
 
-        const chat = await ResearchChat.findByIdAndDelete(id);
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        // Security Fix: Prevent IDOR by enforcing ownership via userId
+        const chat = await ResearchChat.findOneAndDelete({
+            _id: id,
+            userId: user._id || user.id
+        });
 
         if (!chat) {
             return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
