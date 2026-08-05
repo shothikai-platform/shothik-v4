@@ -76,6 +76,7 @@ export default function AgentHistoryButton() {
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Open agent history"
               onClick={toggleDrawer(true)}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
