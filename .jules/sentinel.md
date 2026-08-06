@@ -1,3 +1,8 @@
+## 2025-06-05 - [BOLA/IDOR in Research Chat Deletion]
+**Vulnerability:** Broken Object Level Authorization (BOLA/IDOR) on the Research Chat deletion API route due to using `findByIdAndDelete` without checking user ownership.
+**Learning:** Authentication checks alone are insufficient for mutative operations; we must explicitly scope database operations using the authenticated user's ID to prevent cross-user data manipulation.
+**Prevention:** Always use `findOneAndDelete` or `findOneAndUpdate` scoped with the owner's `userId` instead of un-scoped `findByIdAndDelete` or `findByIdAndUpdate`.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
