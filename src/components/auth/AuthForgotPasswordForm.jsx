@@ -121,6 +121,7 @@ export default function AuthForgotPasswordForm() {
               type="button"
               variant="ghost"
               size="icon"
+              aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword(!showPassword)}
               className="h-8 w-8"
             >
