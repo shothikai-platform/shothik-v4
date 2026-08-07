@@ -44,6 +44,7 @@ export default function TaskProgress({ taskProgress }) {
             <button
               className="hover:bg-accent absolute right-2 bottom-2 inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
               onClick={toggleExpanded}
+              aria-label={expanded ? "Collapse progress" : "Expand progress"}
             >
               {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
@@ -60,6 +61,7 @@ export default function TaskProgress({ taskProgress }) {
               <button
                 className="hover:bg-accent inline-flex items-center justify-center rounded-md p-1 transition-colors outline-none"
                 onClick={toggleExpanded}
+                aria-label={expanded ? "Collapse progress" : "Expand progress"}
               >
                 {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </button>
