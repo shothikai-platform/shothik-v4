@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Loader2, RefreshCw } from "lucide-react";
 
@@ -27,15 +33,27 @@ const PlagiarismResult = ({
                 variant="outlined"
               />
             )} */}
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={manualRefresh}
-            disabled={loading || !inputText?.trim()}
-            title="Refresh check"
-          >
-            <RefreshCw className="size-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  tabIndex={loading || !inputText?.trim() ? 0 : undefined}
+                  className="focus-visible:ring-ring focus-visible:ring-2"
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={manualRefresh}
+                    disabled={loading || !inputText?.trim()}
+                    aria-label="Refresh check"
+                  >
+                    <RefreshCw className="size-4" />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Refresh check</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
@@ -93,9 +111,20 @@ const PlagiarismResult = ({
           >
             <span className="w-[20%] text-sm">{r.percent}%</span>
             <span className="ml-2 flex-1 text-center text-sm">{r.source}</span>
-            <Button variant="ghost" size="icon-sm">
-              <ChevronDown className="size-4" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label="Show details"
+                  >
+                    <ChevronDown className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Show details</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         ))}
 
