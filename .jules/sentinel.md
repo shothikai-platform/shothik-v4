@@ -1,3 +1,8 @@
+## 2025-05-24 - [BOLA and Missing Authentication in Sheet API]
+**Vulnerability:** Sheet API endpoints `/api/sheet/chat/get_my_chats` and `/api/sheet/conversation/create_conversation` lacked user authentication check and object-level authorization check, allowing any unauthenticated user to access and modify other users' spreadsheet sessions.
+**Learning:** Forgetting to implement authentication on new sub-modules/endpoints is a recurring source of critical data exposure.
+**Prevention:** Every API route must invoke `getAuthenticatedUser()` before processing, and database queries must be scoped to the authenticated user's ID via `findOne` or `find({ userId })` rather than accessing by `_id` only.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
