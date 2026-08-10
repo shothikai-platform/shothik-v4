@@ -1,3 +1,8 @@
+## 2025-03-04 - [IDOR and Authentication Bypass in delete_chat Endpoint]
+**Vulnerability:** Unauthenticated users could perform arbitrary deletion of other users' research chat histories via the `DELETE /api/research/chat/delete_chat/[id]` endpoint.
+**Learning:** Overlooking authentication checks (`getAuthenticatedUser()`) on state-changing API endpoints is a critical risk. Even if database find operations check permissions, direct actions like `findByIdAndDelete(id)` execute changes regardless of session.
+**Prevention:** Enforce strict session checks on every single state-changing endpoint and scope DB mutations utilizing compound queries or `findOneAndDelete({ _id: id, userId })`.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
