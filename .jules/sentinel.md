@@ -1,3 +1,8 @@
+## 2025-10-24 - [IDOR and Missing Auth in Chat Update API]
+**Vulnerability:** `update_name` chat endpoint allowed unauthenticated, unauthorized users to modify chat names due to lack of `getAuthenticatedUser` check and use of `findByIdAndUpdate`. It also had a bug where the `name` field was mapped incorrectly to a non-existent `title` field in the database.
+**Learning:** Endpoints that modify resources (e.g., PUT or PATCH) are high-priority targets for attackers and must check both session authentication and owner authorization.
+**Prevention:** Always verify authentication, query using IDOR-safe filters (e.g. `findOneAndUpdate({ _id: id, userId: user._id })`), validate input payload types/lengths, and ensure schema alignment.
+
 ## 2025-05-22 - [DoS Prevention via Input Validation]
 **Vulnerability:** Resource exhaustion (Denial of Service) via unrestricted input text size and variant count in the NLP inference service.
 **Learning:** ML inference services are particularly susceptible to DoS because processing large inputs or many variants consumes significant CPU and memory.
