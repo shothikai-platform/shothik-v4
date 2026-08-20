@@ -25,8 +25,10 @@ export default function AlertDialog() {
         <div className="-mb-7 flex items-center justify-end">
           <div className="pt-5 pr-5">
             <button
+              type="button"
+              aria-label="Close alert"
               onClick={() => dispatch(setShowAlert(false))}
-              className="cursor-pointer"
+              className="hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring cursor-pointer rounded-sm p-1 transition-colors outline-none focus-visible:ring-2"
             >
               <X className="h-4 w-4" />
             </button>
