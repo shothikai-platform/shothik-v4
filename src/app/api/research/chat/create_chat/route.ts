@@ -13,11 +13,19 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { name } = body;
 
+        // Input validation: ensure name is a string and does not exceed 100 characters
+        if (name !== undefined && (typeof name !== 'string' || name.trim().length > 100)) {
+            return NextResponse.json(
+                { error: 'Name must be a string up to 100 characters long' },
+                { status: 400 }
+            );
+        }
+
         await dbConnect();
 
         const newChat = await ResearchChat.create({
             userId: user._id || user.id,
-            name: name || 'New Research',
+            name: (name && name.trim()) || 'New Research',
             messages: []
         });
 
