@@ -34,12 +34,14 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value) return;
+    if (!value && (!files || files.length === 0)) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
     setFiles(null);
   };
+
+  const isSendDisabled = loading || (!value && (!files || files.length === 0));
 
   const handleFileInputClick = () => {
     if (!filesRef.current) return;
@@ -158,13 +160,25 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className="focus-visible:ring-2 focus-visible:ring-ring"
+                tabIndex={isSendDisabled ? 0 : undefined}
+              >
+                <Button disabled={isSendDisabled} type="submit" size="icon" aria-label="Send message">
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Send message</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </form>
     </div>
