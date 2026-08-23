@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import gradientBluePurple from "../assets/blog.png";
-import gradientTeal from "../assets/blog1.png";
-import gradientGreen from "../assets/blog2.png";
-import gradientDark from "../assets/blog3.png";
-import gradientPink from "../assets/blog4.png";
-import gradientOrange from "../assets/blog5.png";
+import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import gradientBluePurple from "@/app/(secondary-layout)/blogs/assets/blog.png";
+import gradientTeal from "@/app/(secondary-layout)/blogs/assets/blog1.png";
+import gradientGreen from "@/app/(secondary-layout)/blogs/assets/blog2.png";
+import gradientDark from "@/app/(secondary-layout)/blogs/assets/blog3.png";
+import gradientPink from "@/app/(secondary-layout)/blogs/assets/blog4.png";
+import gradientOrange from "@/app/(secondary-layout)/blogs/assets/blog5.png";
 
 const articles = [
   {
@@ -108,6 +110,11 @@ const articles = [
 const ArticleDetail = () => {
   const { id } = useParams();
   const article = articles.find((a) => a.id === Number(id));
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   if (!article) {
     return (
@@ -180,7 +187,11 @@ const ArticleDetail = () => {
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{
+              __html: isMounted
+                ? DOMPurify.sanitize(article.content)
+                : article.content,
+            }}
           />
         </article>
 
