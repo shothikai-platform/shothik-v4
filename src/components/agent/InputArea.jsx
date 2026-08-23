@@ -34,7 +34,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value) return;
+    if (!value && (!files || files.length === 0)) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
@@ -50,6 +50,8 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
     const files = e.target.files;
     setFiles(files);
   };
+
+  const isSubmitDisabled = loading || (!value && (!files || files.length === 0));
 
   return (
     <div className="flex w-full items-center justify-center">
@@ -83,6 +85,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
+            aria-label="Back"
           >
             <ArrowLeft className="size-4" />
           </Button>
@@ -140,6 +143,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
+                aria-label="Attach files"
               >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
@@ -158,13 +162,32 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className="focus-visible:ring-2 focus-visible:ring-ring"
+                tabIndex={isSubmitDisabled ? 0 : undefined}
+              >
+                <Button
+                  disabled={isSubmitDisabled}
+                  type="submit"
+                  size="icon"
+                  aria-label="Send message"
+                >
+                  {loading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Send className="size-4" />
+                  )}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            {!value && (!files || files.length === 0) && !loading && (
+              <TooltipContent>
+                <p>Type a message or attach a file</p>
+              </TooltipContent>
             )}
-          </Button>
+          </Tooltip>
         </div>
       </form>
     </div>
