@@ -34,7 +34,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value) return;
+    if (!value && (!files || files.length === 0)) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
