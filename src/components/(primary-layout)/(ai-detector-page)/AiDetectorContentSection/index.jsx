@@ -394,12 +394,13 @@ const AiDetectorContentSection = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
-                      className="cursor-pointer"
+                      className="cursor-pointer rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       onClick={() => dispatch(setIsSectionbarOpen(true))}
+                      aria-label="View History"
                     >
                       <Image
                         src="/icons/history.svg"
-                        alt="History"
+                        alt=""
                         width={20}
                         height={20}
                         className="size-5"
@@ -415,12 +416,13 @@ const AiDetectorContentSection = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
-                      className="cursor-pointer"
+                      className="cursor-pointer rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       onClick={() => handleNewSection()}
+                      aria-label="Start a new chat"
                     >
                       <Image
                         src="/icons/new-chat.svg"
-                        alt="New Chat"
+                        alt=""
                         width={24}
                         height={24}
                         className="size-6"
@@ -454,12 +456,13 @@ const AiDetectorContentSection = () => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className="cursor-pointer"
+                            className="cursor-pointer rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                             onClick={() => dispatch(setIsSectionbarOpen(true))}
+                            aria-label="View History"
                           >
                             <Image
                               src="/icons/history.svg"
-                              alt="History"
+                              alt=""
                               width={20}
                               height={20}
                               className="size-5"
@@ -475,12 +478,13 @@ const AiDetectorContentSection = () => {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            className="cursor-pointer"
+                            className="cursor-pointer rounded-md p-1 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                             onClick={() => handleNewSection()}
+                            aria-label="Start a new chat"
                           >
                             <Image
                               src="/icons/new-chat.svg"
-                              alt="New Chat"
+                              alt=""
                               width={24}
                               height={24}
                               className="size-6"
