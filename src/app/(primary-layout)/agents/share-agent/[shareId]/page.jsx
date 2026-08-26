@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,10 +22,10 @@ import {
   useLazyVerifySharedAgentQuery,
 } from "@/redux/api/shareAgent/shareAgentApi";
 import { setShowLoginModal } from "@/redux/slices/auth";
+import DOMPurify from "dompurify";
 import { ArrowLeft, Eye, Save, User } from "lucide-react";
 import { marked } from "marked";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const SharedAgentPage = () => {
@@ -37,6 +38,11 @@ const SharedAgentPage = () => {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [error, setError] = useState(null);
   const [sharedData, setSharedData] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const { accessToken, user } = useSelector((state) => state.auth);
   const isAuthenticated = !!accessToken;
@@ -48,18 +54,10 @@ const SharedAgentPage = () => {
     useCreateAgentReplicaMutation();
 
   useEffect(() => {
-      accessToken,
-      isAuthenticated,
-      user,
-    });
     if (shareId) {
       loadSharedAgent();
     }
   }, [shareId]);
-
-  // Debug auth state changes
-  useEffect(() => {
-  }, [accessToken, isAuthenticated, user]);
 
   useEffect(() => {
     if (verifyError) {
@@ -102,21 +100,11 @@ const SharedAgentPage = () => {
   };
 
   const handleSaveAsCopy = async () => {
-      accessToken,
-      isAuthenticated,
-      user,
-      shareId,
-      authState: { accessToken, isAuthenticated, user },
-    });
-
     if (!isAuthenticated || !user) {
       // Open the login modal instead of redirecting
       dispatch(setShowLoginModal(true));
       return;
     }
-
-      "User authenticated, creating replica and redirecting to research page",
-    );
 
     try {
       // Create replica first
@@ -182,8 +170,11 @@ const SharedAgentPage = () => {
       },
     );
 
-    // Use marked to process the markdown
-    return marked(processedContent);
+    // Use marked to process the markdown and sanitize with DOMPurify to prevent XSS
+    const rawHtml = marked(processedContent);
+    return isMounted && typeof window !== "undefined"
+      ? DOMPurify.sanitize(rawHtml)
+      : "";
   };
 
   if (isLoading) {
