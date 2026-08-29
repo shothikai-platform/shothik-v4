@@ -83,6 +83,7 @@ export const CategoryTabs = ({
         <Button
           variant="ghost"
           size="icon"
+          aria-label={viewMode === "grid" ? "Switch to list view" : "Switch to grid view"}
           onClick={() =>
             onViewModeChange(viewMode === "grid" ? "list" : "grid")
           }
