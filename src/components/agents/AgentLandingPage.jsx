@@ -487,6 +487,7 @@ export default function AgentLandingPage() {
               size="icon"
               onClick={handleCloseOnboarding}
               className="h-6 w-6 shrink-0"
+              aria-label="Dismiss onboarding"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -624,6 +625,7 @@ export default function AgentLandingPage() {
                           size="icon"
                           className="bg-primary hover:bg-primary/90 h-10 w-10 rounded-full disabled:cursor-not-allowed disabled:opacity-50"
                           data-rybbit-event="Agent Start"
+                          aria-label="Start agent"
                         >
                           {isInitiatingPresentation ||
                           isInitiatingSheet ||
