@@ -2,29 +2,36 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { prompt, chat: chatId } = await request.json();
         await dbConnect();
+
+        const userId = user._id || user.id;
 
         // 1. Identify or Create Session
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                session = await SheetSession.findOne({ _id: chatId, userId });
             } catch (e) { }
-        }
-
-        if (!session) {
-            session = await SheetSession.create({
-                userId: 'temp-user',
-                title: prompt.substring(0, 30) || 'New Spreadsheet',
-            });
-        } else {
-            // Update updated_at of session
-            session.title = prompt.substring(0, 30); // Optionally update title logic
+            if (!session) {
+                return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+            }
+            session.title = prompt?.substring(0, 30) || session.title;
             await session.save();
+        } else {
+            session = await SheetSession.create({
+                userId,
+                title: prompt?.substring(0, 30) || 'New Spreadsheet',
+            });
         }
 
         // 2. Create Conversation Turn
