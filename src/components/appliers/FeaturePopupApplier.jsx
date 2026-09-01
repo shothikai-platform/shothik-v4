@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,9 +17,15 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DOMPurify from "dompurify";
 import { cn } from "@/lib/utils";
 
 const FeaturePopupApplier = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -315,7 +322,9 @@ const FeaturePopupApplier = () => {
 
           {popup.content && (
             <div
-              dangerouslySetInnerHTML={{ __html: popup.content }}
+              dangerouslySetInnerHTML={{
+                __html: isMounted ? DOMPurify.sanitize(popup.content) : "",
+              }}
               className="prose prose-sm max-w-none dark:prose-invert"
             />
           )}
