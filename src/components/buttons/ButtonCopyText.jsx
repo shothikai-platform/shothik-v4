@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
+const ButtonCopyText = ({ className, text, onClick, children, disabled, ...props }) => {
   const [showCopy, setShowCopy] = useState(true);
 
   const handleCopy = async (e) => {
@@ -30,15 +30,18 @@ const ButtonCopyText = ({ className, text, onClick, children, ...props }) => {
       <TooltipTrigger asChild>
         <button
           type="button"
+          disabled={disabled}
           onClick={(e) => {
             handleCopy(e);
             onClick?.(e);
           }}
           className={cn(
-            "flex size-8 cursor-pointer items-center justify-center rounded",
+            "flex size-8 cursor-pointer items-center justify-center rounded focus-visible:ring-2 focus-visible:ring-ring",
+            disabled && "cursor-not-allowed opacity-50",
             className,
           )}
           aria-label={showCopy ? "Copy text" : "Copied"}
+          aria-disabled={disabled}
           {...props}
         >
           {children ||
