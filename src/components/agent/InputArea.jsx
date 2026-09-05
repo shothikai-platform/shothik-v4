@@ -34,7 +34,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value && (!files || files.length === 0)) return;
+    if (!value) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
@@ -83,7 +83,6 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
-            aria-label="Go back"
           >
             <ArrowLeft className="size-4" />
           </Button>
@@ -141,7 +140,6 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
-                aria-label="Attach files"
               >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
@@ -160,7 +158,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading || (!value && (!files || files.length === 0))} type="submit" size="icon" aria-label="Send message">
+          <Button disabled={loading} type="submit" size="icon">
             {loading ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
