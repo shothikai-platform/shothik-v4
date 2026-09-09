@@ -341,17 +341,28 @@ const PlansList: React.FC<PlansListProps> = ({
   );
 };
 
+import DOMPurify from "dompurify";
+
 type PackageContentProps = {
   content?: string;
 };
 
 const PackageContent: React.FC<PackageContentProps> = ({ content }) => {
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   if (!content) return null;
+
+  // Render empty string before mounting to prevent XSS in SSR HTML
+  const sanitizedContent = isMounted ? DOMPurify.sanitize(content) : "";
 
   return (
     <div
       className="prose prose-sm dark:prose-invert max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
     />
   );
 };
