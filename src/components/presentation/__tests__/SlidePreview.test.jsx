@@ -61,7 +61,7 @@ vi.mock('@/components/ui/tabs', () => ({
   Tabs: ({ children, value }) => <div>{children}</div>,
   TabsList: ({ children }) => <div>{children}</div>,
   TabsTrigger: ({ children }) => <button>{children}</button>,
-  TabsContent: ({ children, value }) => value === 'preview' ? <div>{children}</div> : null,
+  TabsContent: ({ children, value }) => <div>{children}</div>,
 }));
 
 vi.mock('@/components/ui/card', () => ({
@@ -103,6 +103,31 @@ describe('SlidePreview', () => {
     vi.clearAllMocks();
   });
 
+  it('sanitizes malicious XSS script tags in thinking tab content', () => {
+    const slide = {
+      id: 'slide-1',
+      html_content: '<div>Slide Content</div>',
+      slideNumber: 1,
+      thinking: 'Safe content <script>alert("xss")</script><img src="x" onerror="alert(1)">'
+    };
+
+    render(
+      <SlidePreview
+        slide={slide}
+        index={0}
+        activeTab="thinking"
+        onTabChange={() => {}}
+        totalSlides={1}
+        presentationId="pres-1"
+      />
+    );
+
+    expect(screen.queryByText(/alert\("xss"\)/i)).toBeNull();
+    const container = screen.getByText(/Safe content/i);
+    expect(container.innerHTML).not.toContain('<script>');
+    expect(container.innerHTML).not.toContain('onerror');
+  });
+
   it('calls autoSave.saveSlide when onSave is triggered in EditingToolbar', () => {
     const slide = {
       id: 'slide-1',
@@ -123,11 +148,11 @@ describe('SlidePreview', () => {
 
     // Verify save button (from mocked dynamic component) is present
     // This confirms that EditingToolbar is being rendered with onSave prop
-    const saveBtn = screen.getByTestId('save-btn');
-    expect(saveBtn).toBeDefined();
+    const saveBtns = screen.getAllByTestId('save-btn');
+    expect(saveBtns.length).toBeGreaterThan(0);
 
     // Trigger save
-    fireEvent.click(saveBtn);
+    fireEvent.click(saveBtns[0]);
 
     // Expect saveSlide to be called
     expect(mockSaveSlide).toHaveBeenCalled();
