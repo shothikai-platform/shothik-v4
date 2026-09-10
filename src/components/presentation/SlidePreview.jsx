@@ -13,6 +13,7 @@ import { useAutoSave } from "@/hooks/presentation/useAutoSave";
 import { useSlideEditor } from "@/hooks/presentation/useSlideEditor";
 import { createEnhancedIframeContentFromHTML } from "@/lib/presentationEditScripts";
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 import html2canvas from "html2canvas";
 import { Check, Copy } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -645,13 +646,17 @@ const parseSimpleMarkdown = (text) => {
 
 const EnhancedThinkingTab = ({ slide, dimensions }) => {
   const [processedContent, setProcessedContent] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
 
-  // 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (slide?.thinking) {
       const parsed = parseSimpleMarkdown(slide.thinking);
-      setProcessedContent(parsed);
+      const clean = DOMPurify.sanitize(parsed);
+      setProcessedContent(clean);
     }
   }, [slide.thinking]);
 
@@ -683,7 +688,7 @@ const EnhancedThinkingTab = ({ slide, dimensions }) => {
           "text-xs sm:text-sm lg:text-base",
         )}
       >
-        {processedContent ? (
+        {isMounted && processedContent ? (
           <div dangerouslySetInnerHTML={{ __html: processedContent }} />
         ) : (
           <p className="text-muted-foreground text-[0.9em] leading-[1.6] whitespace-pre-wrap">
