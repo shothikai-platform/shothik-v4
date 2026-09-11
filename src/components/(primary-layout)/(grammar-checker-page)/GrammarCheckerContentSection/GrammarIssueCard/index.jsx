@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import { cn } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
 
@@ -10,11 +12,16 @@ const GrammarIssueCard = ({
   isCollapsed,
   handleIsCollapsed,
 }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const { error, correct, sentence, type } = issue || {};
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Fix: Properly highlight the error in the sentence
   const getHighlightedText = () => {
-    if (!sentence || !error) return sentence;
+    if (!sentence || !error) return sentence || "";
 
     const escapedWord = error.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(escapedWord, "gi");
@@ -26,7 +33,10 @@ const GrammarIssueCard = ({
     );
   };
 
-  const highlightedText = getHighlightedText();
+  const rawHighlightedText = getHighlightedText();
+  const highlightedText = isMounted
+    ? DOMPurify.sanitize(rawHighlightedText, { ADD_ATTR: ["class"] })
+    : "";
 
   return (
     <div
