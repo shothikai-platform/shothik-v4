@@ -34,7 +34,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value) return;
+    if (!value && (!files || files.length === 0)) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
@@ -105,9 +105,10 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             isMobile && !showTitle && "w-auto",
           )}
         >
-          <Bot className="text-primary mr-3 size-5" />
+          <Bot className="text-primary mr-3 size-5" aria-hidden="true" />
           <Input
             placeholder="Give a task to Shothik AI Agent"
+            aria-label="Message Shothik AI Agent"
             className={cn(
               "w-full border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0",
               isMobile ? "min-w-[200px]" : "min-w-[300px]",
@@ -123,6 +124,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             accept=".pdf,.jpg,.jpeg,.png"
             multiple
             onChange={handleInputChange}
+            aria-label="Upload files"
           />
         </div>
 
@@ -140,13 +142,14 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                 type="button"
                 onClick={handleFileInputClick}
                 className="group relative"
+                aria-label="Attach files"
               >
                 {files && (
                   <span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs font-semibold group-hover:hidden">
                     {Array.from(files).length}
                   </span>
                 )}
-                <Paperclip className="size-4" />
+                <Paperclip className="size-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -158,11 +161,11 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
+          <Button disabled={loading || (!value && (!files || files.length === 0))} type="submit" size="icon" aria-label="Send message">
             {loading ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
             ) : (
-              <Send className="size-4" />
+              <Send className="size-4" aria-hidden="true" />
             )}
           </Button>
         </div>
