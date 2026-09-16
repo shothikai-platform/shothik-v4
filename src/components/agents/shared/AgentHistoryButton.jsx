@@ -102,6 +102,7 @@ export default function AgentHistoryButton() {
                 style={{ fill: 'none' }}
                 fill="none"
                 stroke="currentColor"
+                aria-hidden="true"
               />
             </Button>
           </div>
@@ -120,7 +121,7 @@ export default function AgentHistoryButton() {
             )}
           >
             <div className="flex items-center gap-2.5">
-              <History className="h-4 w-4 text-foreground" />
+              <History className="h-4 w-4 text-foreground" aria-hidden="true" />
               <p className="font-semibold text-sm tracking-wide text-foreground">
                 View History
               </p>
