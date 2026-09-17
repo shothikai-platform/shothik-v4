@@ -206,9 +206,10 @@ export default function InputArea({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveFile(index, file.filename)}
+                      aria-label={`Remove ${file.filename}`}
                       className="bg-muted/50 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground absolute top-2 right-2 h-6 w-6"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3 w-3" aria-hidden="true" />
                     </Button>
 
                     {/* File icon and info */}
@@ -290,9 +291,10 @@ export default function InputArea({
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label="More options"
                     className="text-muted-foreground hover:text-primary h-10 w-10"
                   >
-                    <MoreVertical className="h-5 w-5" />
+                    <MoreVertical className="h-5 w-5" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -308,9 +310,10 @@ export default function InputArea({
                   !inputValue.trim() || isLoading || isUploading || disabled
                 }
                 size="icon"
+                aria-label="Send message"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -326,9 +329,10 @@ export default function InputArea({
               variant="ghost"
               size="icon"
               onClick={handleNewChatCancel}
+              aria-label="Cancel new chat"
               className="text-muted-foreground hover:text-foreground absolute top-2 right-2 h-8 w-8"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </Button>
 
             <h2 className="mb-2 text-xl font-semibold">Start New Chat</h2>
@@ -369,9 +373,9 @@ export default function InputArea({
             <button
               onClick={() => setToast((prev) => ({ ...prev, open: false }))}
               className="text-muted-foreground hover:text-foreground absolute top-2 right-2"
-              aria-label="Close"
+              aria-label="Close message"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
             <p className="pr-6 text-sm">{toast.message}</p>
           </div>
