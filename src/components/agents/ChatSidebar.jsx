@@ -151,7 +151,7 @@ export default function ChatSidebar({
                         key={chat._id || chat.id}
                         onClick={() => {
                           toggleDrawer(false)();
-                          router.push(`/agents/sheets?id=${chat._id}`);
+                          router.push(`/agents/sheets?id=${chat._id || chat.id}`);
                         }}
                         className={cn(
                           "cursor-pointer border transition-all duration-100",
