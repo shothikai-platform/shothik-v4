@@ -7,12 +7,6 @@ import { useEffect, useRef } from "react";
 const ReferenceModal = ({ open, onClose, reference, sources, anchorEl }) => {
   const modalRef = useRef(null);
 
-    open,
-    reference,
-    sources: sources?.length,
-    anchorEl,
-  });
-
   // Handle click outside to close modal
   useEffect(() => {
     const handleClickOutside = (event) => {
