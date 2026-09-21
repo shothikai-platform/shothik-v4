@@ -1,15 +1,22 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
 import { researchCoreState } from "@/redux/slices/researchCoreSlice";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
-  <div className="flex w-full items-start">
+const MessageBubble = ({ message, isLastData, isDataGenerating, isMounted }) => {
+  const rawHtml = marked(typeof message === "string" ? message : "");
+  // Sanitize Markdown HTML output to prevent XSS vulnerabilities
+  const sanitizedHtml = isMounted ? DOMPurify.sanitize(rawHtml) : "";
+
+  return (
+    <div className="flex w-full items-start">
     <div
       className={cn(
         "bg-background box-border w-full max-w-full flex-1 border-none px-3 py-2 shadow-none",
@@ -39,7 +46,7 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       </div>
 
@@ -76,9 +83,16 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       </span>
     </div>
   </div>
-);
+  );
+};
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const researchResult =
     currentResearch?.result || currentResearch?.answer || "";
 
@@ -112,6 +126,7 @@ export default function ResearchContent({ currentResearch, isLastData, onSwitchT
           isDataGenerating={
             researchCore?.isStreaming || researchCore?.isPolling
           }
+          isMounted={isMounted}
         />
       )}
     </div>
