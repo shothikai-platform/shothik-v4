@@ -60,6 +60,9 @@ export async function POST() {
     return NextResponse.json({ location: country });
   } catch (error) {
     console.error("Geolocation error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to determine location" },
+      { status: 500 },
+    );
   }
 }
