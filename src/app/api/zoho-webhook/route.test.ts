@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 import { POST } from './route';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 // Mock axios
 vi.mock('axios');
+
+// Mock server-auth
+vi.mock('@/lib/server-auth', () => ({
+  getAuthenticatedUser: vi.fn(),
+}));
 
 describe('Zoho Webhook API', () => {
   const originalEnv = process.env;
@@ -12,10 +18,38 @@ describe('Zoho Webhook API', () => {
     vi.resetModules();
     process.env = { ...originalEnv };
     vi.clearAllMocks();
+    // Default to authenticated mock user
+    vi.mocked(getAuthenticatedUser).mockResolvedValue({ id: 'user_123', email: 'user@example.com' } as any);
   });
 
   afterEach(() => {
     process.env = originalEnv;
+  });
+
+  it('should return 401 if user is not authenticated', async () => {
+    vi.mocked(getAuthenticatedUser).mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/zoho-webhook', {
+      method: 'POST',
+      body: JSON.stringify({ event: { some: 'data' } }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body).toEqual({ error: 'Unauthorized' });
+  });
+
+  it('should return 400 if event payload is missing or invalid', async () => {
+    const request = new Request('http://localhost/api/zoho-webhook', {
+      method: 'POST',
+      body: JSON.stringify({ invalid: 'payload' }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body).toEqual({ error: 'Invalid payload: event object required' });
   });
 
   it('should return 500 if ZOHO_WEBHOOK_URL is not defined', async () => {
@@ -26,14 +60,7 @@ describe('Zoho Webhook API', () => {
       body: JSON.stringify({ event: { some: 'data' } }),
     });
 
-    // We expect the implementation to fail if the env var is missing.
-    // Currently it hardcodes it, so this test serves as a requirement for the fix.
     const response = await POST(request);
-
-    // In the future implementation, this should return 500.
-    // If the current implementation runs, it will likely succeed (200) because of hardcoded URL,
-    // OR fail if I mock axios to fail for the hardcoded URL.
-    // Since I want to verify the FIX, I will assert 500.
     expect(response.status).toBe(500);
   });
 
@@ -50,10 +77,9 @@ describe('Zoho Webhook API', () => {
 
     const response = await POST(request);
 
-    // This assertion ensures we are NOT using the hardcoded URL anymore
     expect(axios.post).toHaveBeenCalledWith(
-        mockUrl,
-        expect.objectContaining({ event: { some: 'data' } })
+      mockUrl,
+      expect.objectContaining({ event: { some: 'data' } })
     );
     expect(response.status).toBe(200);
   });
