@@ -2,8 +2,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 import { POST } from './route';
 
+import { getAuthenticatedUser } from '@/lib/server-auth';
+
 // Mock axios
 vi.mock('axios');
+vi.mock('@/lib/server-auth', () => ({
+  getAuthenticatedUser: vi.fn(),
+}));
 
 describe('Zoho Webhook API', () => {
   const originalEnv = process.env;
@@ -20,6 +25,7 @@ describe('Zoho Webhook API', () => {
 
   it('should return 500 if ZOHO_WEBHOOK_URL is not defined', async () => {
     delete process.env.ZOHO_WEBHOOK_URL;
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user1' });
 
     const request = new Request('http://localhost/api/zoho-webhook', {
       method: 'POST',
@@ -37,9 +43,22 @@ describe('Zoho Webhook API', () => {
     expect(response.status).toBe(500);
   });
 
+  it('should return 401 if not authenticated', async () => {
+    (getAuthenticatedUser as any).mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/zoho-webhook', {
+      method: 'POST',
+      body: JSON.stringify({ event: { some: 'data' } }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(401);
+  });
+
   it('should post to ZOHO_WEBHOOK_URL and return 200 on success', async () => {
     const mockUrl = 'https://mock-zoho.com/webhook';
     process.env.ZOHO_WEBHOOK_URL = mockUrl;
+    (getAuthenticatedUser as any).mockResolvedValue({ _id: 'user1' });
 
     (axios.post as any).mockResolvedValue({ data: { success: true } });
 
