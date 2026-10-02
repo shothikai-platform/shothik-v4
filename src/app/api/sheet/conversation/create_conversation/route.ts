@@ -2,28 +2,42 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import SheetSession from '@/models/SheetSession';
 import SheetConversation from '@/models/SheetConversation';
+import { getAuthenticatedUser } from '@/lib/server-auth';
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const userId = user._id || user.id;
         const { prompt, chat: chatId } = await request.json();
+
+        if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
+            return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
+        }
+
         await dbConnect();
 
-        // 1. Identify or Create Session
+        // 1. Identify or Create Session with user authorization check
         let session;
         if (chatId) {
             try {
-                session = await SheetSession.findById(chatId);
+                session = await SheetSession.findOne({ _id: chatId, userId });
             } catch (e) { }
+            if (!session) {
+                return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+            }
         }
 
         if (!session) {
             session = await SheetSession.create({
-                userId: 'temp-user',
-                title: prompt.substring(0, 30) || 'New Spreadsheet',
+                userId,
+                title: prompt.trim().substring(0, 30) || 'New Spreadsheet',
             });
         } else {
-            // Update updated_at of session
-            session.title = prompt.substring(0, 30); // Optionally update title logic
+            session.title = prompt.trim().substring(0, 30);
             await session.save();
         }
 
@@ -43,19 +57,12 @@ export async function POST(request: Request) {
                     controller.enqueue(encoder.encode(JSON.stringify(data) + '\n'));
                 };
 
-                // Send session info immediately if it was new (or always, for consistency)
-                // Frontend might expect events.
-
                 try {
-                    // Send initial session ID if the client might need it? 
-                    // Usually client waits for the full response or updates URL based on something.
-                    // But strict SSE usually sends events.
-
                     sendJSON({ data: { message: "Analyzing your request...", step: "context_analysis", chatId: session._id } });
-                    await new Promise(r => setTimeout(r, 600));
+                    await new Promise(r => setTimeout(r, 100));
 
                     sendJSON({ data: { message: "Generating spreadsheet structure...", step: "llm_processing" } });
-                    await new Promise(r => setTimeout(r, 1000));
+                    await new Promise(r => setTimeout(r, 100));
 
                     // Mock Data
                     const mockRows = {
@@ -79,7 +86,7 @@ export async function POST(request: Request) {
                             columns: mockColumns,
                             metadata: { title: session.title },
                             conversationId: conversation._id,
-                            chatId: session._id // Ensure frontend gets the session ID
+                            chatId: session._id
                         }
                     });
 
