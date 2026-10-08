@@ -1,7 +1,15 @@
 import axios from "axios";
+import { getAuthenticatedUser } from "@/lib/server-auth";
 
 export async function POST(request) {
   try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
     const { event } = await request.json();
     const zohoWebhookUrl = process.env.ZOHO_WEBHOOK_URL;
 
@@ -12,10 +20,7 @@ export async function POST(request) {
       });
     }
 
-    await axios.post(
-      zohoWebhookUrl,
-      { event },
-    );
+    await axios.post(zohoWebhookUrl, { event });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
