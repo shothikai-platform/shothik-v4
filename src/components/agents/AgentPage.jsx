@@ -308,10 +308,11 @@ export default function AgentPage({ specificAgent, presentationId }) {
             <Button
               variant="ghost"
               size="icon"
+              aria-label="Go back to agents"
               onClick={() => router.push("/agents")}
               className="text-muted-foreground hover:text-primary"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-5 w-5" aria-hidden="true" />
             </Button>
             <h1 className="from-primary to-primary/60 flex-1 bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent">
               Shothik{" "}
@@ -641,9 +642,10 @@ const presentationState = {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Use microphone"
                 className="text-muted-foreground hover:text-primary"
               >
-                <Mic className="h-5 w-5" />
+                <Mic className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
 
@@ -659,9 +661,10 @@ const presentationState = {
                 onClick={() => handleSend()}
                 disabled={!inputValue.trim() || isLoading}
                 size="icon"
+                aria-label="Send message"
                 className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
           </div>
