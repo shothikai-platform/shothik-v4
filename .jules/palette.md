@@ -1,7 +1,3 @@
-## 2025-02-18 - Tooltip & ARIA on Icon-Only Buttons
-**Learning:** Icon-only buttons (like Copy/Download) are inaccessible without `aria-label` and confusing without Tooltips. Adding them is a high-impact, low-risk win.
-**Action:** Always wrap icon-only buttons in `Tooltip` and sync `aria-label` with the tooltip text (including state changes like "Copied!").
-
-## 2025-02-18 - Tooltips on Disabled Buttons
-**Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
-**Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2023-10-26 - Add ARIA labels and fix disabled state in agent InputArea
+**Learning:** In the Radix/Shadcn UI component setup used in this application, disabled buttons do not trigger mouse events, which breaks tooltips for keyboard/screen reader users. Furthermore, when adding a disabled state that considers both text input and file attachments, it is critical to synchronize the `disabled` prop logic on the button (`!value && (!files || files.length === 0)`) with the early return logic in the form submission handler (e.g., `handleAdd`). Failing to update the handler causes the visually enabled button to silently fail when clicked.
+**Action:** When adding or updating disabled states for buttons that handle complex inputs (like text + files), always locate and update the corresponding submission handler logic. To ensure accessibility for disabled icon-only buttons with tooltips, wrap the button in a `<span className="focus-visible:ring-2 focus-visible:ring-ring">` and apply `tabIndex={isDisabled ? 0 : undefined}` conditionally, so keyboard users can navigate to the element and understand its state without breaking the tab order when it becomes active.

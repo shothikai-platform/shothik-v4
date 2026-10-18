@@ -34,7 +34,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!value) return;
+    if (!value && (!files || files.length === 0)) return;
 
     addChatHistory({ message: value, files }, "user");
     setValue("");
@@ -83,8 +83,9 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
+            aria-label="Back to agent selection"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-4" aria-hidden="true" />
           </Button>
           <span className="text-sm font-medium">{selectedAgent.title}</span>
         </div>
@@ -146,7 +147,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                     {Array.from(files).length}
                   </span>
                 )}
-                <Paperclip className="size-4" />
+                <Paperclip className="size-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -158,13 +159,27 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
-            {loading ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
-          </Button>
+          <span
+            className="focus-visible:ring-ring focus-visible:ring-2"
+            tabIndex={
+              loading || (!value && (!files || files.length === 0))
+                ? 0
+                : undefined
+            }
+          >
+            <Button
+              disabled={loading || (!value && (!files || files.length === 0))}
+              type="submit"
+              size="icon"
+              aria-label="Send message"
+            >
+              {loading ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <Send className="size-4" aria-hidden="true" />
+              )}
+            </Button>
+          </span>
         </div>
       </form>
     </div>
