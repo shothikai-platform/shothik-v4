@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,6 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 const ShareAgentModal = ({
   open,
