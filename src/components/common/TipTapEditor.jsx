@@ -55,10 +55,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Bold"
           onClick={() => editor.commands.toggleBold()}
           className="h-8 w-8"
         >
-          <BoldIcon className="h-4 w-4" />
+          <BoldIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Italic */}
@@ -66,10 +67,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Italic"
           onClick={() => editor.commands.toggleItalic()}
           className="h-8 w-8"
         >
-          <ItalicIcon className="h-4 w-4" />
+          <ItalicIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Underline */}
@@ -77,10 +79,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Underline"
           onClick={() => editor.commands.toggleUnderline()}
           className="h-8 w-8"
         >
-          <UnderlineIcon className="h-4 w-4" />
+          <UnderlineIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Paragraph */}
@@ -88,6 +91,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Paragraph"
           onClick={() => editor.commands.setParagraph({ level: 1 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -99,6 +103,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 2"
           onClick={() => editor.commands.setHeading({ level: 2 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -110,6 +115,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 3"
           onClick={() => editor.commands.setHeading({ level: 3 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -121,6 +127,7 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Heading 4"
           onClick={() => editor.commands.setHeading({ level: 4 })}
           className="h-8 w-8 text-xs font-semibold"
         >
@@ -132,10 +139,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Ordered List"
           onClick={() => editor.commands.toggleOrderedList()}
           className="h-8 w-8"
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListOrdered className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Unordered List */}
@@ -143,10 +151,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Bullet List"
           onClick={() => editor.commands.toggleBulletList()}
           className="h-8 w-8"
         >
-          <List className="h-4 w-4" />
+          <List className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Blockquote */}
@@ -154,10 +163,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Blockquote"
           onClick={() => editor.commands.toggleBlockquote()}
           className="h-8 w-8"
         >
-          <Quote className="h-4 w-4" />
+          <Quote className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Horizontal Rule */}
@@ -165,10 +175,11 @@ const TipTapEditor = ({ content, onChange }) => {
           type="button"
           variant="ghost"
           size="icon"
+          aria-label="Horizontal Rule"
           onClick={() => editor.commands.setHorizontalRule()}
           className="h-8 w-8"
         >
-          <Minus className="h-4 w-4" />
+          <Minus className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
 
