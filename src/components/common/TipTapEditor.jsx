@@ -57,8 +57,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBold()}
           className="h-8 w-8"
+          aria-label="Bold text"
         >
-          <BoldIcon className="h-4 w-4" />
+          <BoldIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Italic */}
@@ -68,8 +69,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleItalic()}
           className="h-8 w-8"
+          aria-label="Italic text"
         >
-          <ItalicIcon className="h-4 w-4" />
+          <ItalicIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Underline */}
@@ -79,8 +81,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleUnderline()}
           className="h-8 w-8"
+          aria-label="Underline text"
         >
-          <UnderlineIcon className="h-4 w-4" />
+          <UnderlineIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Paragraph */}
@@ -90,6 +93,7 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setParagraph({ level: 1 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Format as paragraph"
         >
           P
         </Button>
@@ -101,6 +105,7 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 2 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Format as heading 2"
         >
           H2
         </Button>
@@ -112,6 +117,7 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 3 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Format as heading 3"
         >
           H3
         </Button>
@@ -123,6 +129,7 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHeading({ level: 4 })}
           className="h-8 w-8 text-xs font-semibold"
+          aria-label="Format as heading 4"
         >
           H4
         </Button>
@@ -134,8 +141,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleOrderedList()}
           className="h-8 w-8"
+          aria-label="Toggle ordered list"
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListOrdered className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Unordered List */}
@@ -145,8 +153,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBulletList()}
           className="h-8 w-8"
+          aria-label="Toggle bullet list"
         >
-          <List className="h-4 w-4" />
+          <List className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Blockquote */}
@@ -156,8 +165,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.toggleBlockquote()}
           className="h-8 w-8"
+          aria-label="Toggle blockquote"
         >
-          <Quote className="h-4 w-4" />
+          <Quote className="h-4 w-4" aria-hidden="true" />
         </Button>
 
         {/* Horizontal Rule */}
@@ -167,8 +177,9 @@ const TipTapEditor = ({ content, onChange }) => {
           size="icon"
           onClick={() => editor.commands.setHorizontalRule()}
           className="h-8 w-8"
+          aria-label="Insert horizontal rule"
         >
-          <Minus className="h-4 w-4" />
+          <Minus className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
 
