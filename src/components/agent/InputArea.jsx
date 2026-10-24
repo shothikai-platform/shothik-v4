@@ -79,12 +79,13 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           )}
         >
           <Button
+            aria-label="Go back to agent list"
             variant="ghost"
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft aria-hidden="true" className="size-4" />
           </Button>
           <span className="text-sm font-medium">{selectedAgent.title}</span>
         </div>
@@ -135,6 +136,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="Attach files"
                 variant="ghost"
                 size="icon"
                 type="button"
@@ -146,7 +148,7 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
                     {Array.from(files).length}
                   </span>
                 )}
-                <Paperclip className="size-4" />
+                <Paperclip aria-hidden="true" className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -158,11 +160,16 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
+          <Button
+            aria-label="Send message"
+            disabled={loading}
+            type="submit"
+            size="icon"
+          >
             {loading ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 aria-hidden="true" className="size-4 animate-spin" />
             ) : (
-              <Send className="size-4" />
+              <Send aria-hidden="true" className="size-4" />
             )}
           </Button>
         </div>
