@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { researchChatState } from "@/redux/slices/researchChatSlice";
@@ -8,7 +10,21 @@ import { marked } from "marked";
 import { useSelector } from "react-redux";
 import ResearchContentWithReferences from "../../tools/research/ResearchContentWithReferences";
 
-const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
+const MessageBubble = ({ message, isLastData, isDataGenerating }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const getSanitizedContent = () => {
+    if (!isMounted) return "";
+    const rawText = typeof message === "string" ? message : message?.content || message?.text || "";
+    const rawHtml = marked(rawText);
+    return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ["data-reference"] });
+  };
+
+  return (
   <div className="flex w-full items-start">
     <div
       className={cn(
@@ -39,7 +55,7 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       >
         <div
           className="w-full max-w-full overflow-hidden"
-          dangerouslySetInnerHTML={{ __html: marked(message) }}
+          dangerouslySetInnerHTML={{ __html: getSanitizedContent() }}
         />
       </div>
 
@@ -76,7 +92,8 @@ const MessageBubble = ({ message, isLastData, isDataGenerating }) => (
       </span>
     </div>
   </div>
-);
+  );
+};
 
 export default function ResearchContent({ currentResearch, isLastData, onSwitchTab }) {
   const researchResult =
