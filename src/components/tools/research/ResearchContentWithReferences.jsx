@@ -1,8 +1,9 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
-import { useState } from "react";
 import CombinedActions from "./CombinedActions";
 import ReferenceModal from "./ReferenceModal";
 import SourcesGrid from "./SourcesGrid";
@@ -20,6 +21,11 @@ const ResearchContentWithReferences = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Handle feedback submission
   const handleFeedback = async (feedbackType) => {
@@ -67,10 +73,6 @@ const ResearchContentWithReferences = ({
   };
 
   const handleReferenceHover = (reference, event) => {
-      reference,
-      sources: sources?.length,
-    });
-
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -107,11 +109,13 @@ const ResearchContentWithReferences = ({
   // Clean any [object Object] strings from the content
   contentStr = contentStr.replace(/\[object Object\]/g, "");
 
-    contentStr: contentStr.substring(0, 200),
-    sources: sources?.length,
-  });
-
   const processedContent = processContentWithReferences(contentStr);
+
+  const getSanitizedContent = () => {
+    if (!isMounted) return "";
+    const rawHtml = marked(processedContent);
+    return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ["data-reference"] });
+  };
 
   // Configure marked options
   marked.setOptions({
@@ -188,7 +192,7 @@ const ResearchContentWithReferences = ({
             onMouseOver={handleContentMouseOver}
             onMouseLeave={handleContentMouseLeave}
             dangerouslySetInnerHTML={{
-              __html: marked(processedContent),
+              __html: getSanitizedContent(),
             }}
           />
 
