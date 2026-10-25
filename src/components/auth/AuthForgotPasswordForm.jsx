@@ -42,12 +42,13 @@ export default function AuthForgotPasswordForm() {
   const dispatch = useDispatch();
 
   const ResetSchema = z.object({
-    password: z.string()
+    password: z
+      .string()
       .min(8, "Password must be at least 8 characters long")
       .max(20, "Password must not exceed 20 characters")
       .refine(
         (val) => !commonPasswords.includes(val),
-        "This password is too common. Please choose a stronger one."
+        "This password is too common. Please choose a stronger one.",
       ),
   });
 
@@ -123,11 +124,12 @@ export default function AuthForgotPasswordForm() {
               size="icon"
               onClick={() => setShowPassword(!showPassword)}
               className="h-8 w-8"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
-                <Eye className="h-4 w-4" />
+                <Eye className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <EyeOff className="h-4 w-4" />
+                <EyeOff className="h-4 w-4" aria-hidden="true" />
               )}
             </Button>
           }
