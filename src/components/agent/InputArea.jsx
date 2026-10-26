@@ -83,8 +83,9 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             size="icon"
             onClick={() => setSelectedAgent(null)}
             className="h-9 w-9"
+            aria-label="Go back"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft aria-hidden="true" className="size-4" />
           </Button>
           <span className="text-sm font-medium">{selectedAgent.title}</span>
         </div>
@@ -158,11 +159,16 @@ export default function InputArea({ addChatHistory, loading, showTitle }) {
             </TooltipContent>
           </Tooltip>
 
-          <Button disabled={loading} type="submit" size="icon">
+          <Button
+            disabled={loading}
+            type="submit"
+            size="icon"
+            aria-label="Submit task"
+          >
             {loading ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 aria-hidden="true" className="size-4 animate-spin" />
             ) : (
-              <Send className="size-4" />
+              <Send aria-hidden="true" className="size-4" />
             )}
           </Button>
         </div>
