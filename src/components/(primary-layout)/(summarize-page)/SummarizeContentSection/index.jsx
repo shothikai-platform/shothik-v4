@@ -254,13 +254,12 @@ const SummarizeContentSection = () => {
   const debouncedSelectedMode = useDebounce(selectedMode, 500);
   const debouncedCurrentLength = useDebounce(currentLength, 500);
 
-  // Extract text content from HTML safely without script execution
+  // Extract text content from HTML
   const extractTextFromHTML = useCallback((html) => {
     if (!html) return "";
-    if (typeof window === "undefined") return "";
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    return doc.body.textContent || "";
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
   }, []);
 
   // Debounced plain text for keyword extraction
