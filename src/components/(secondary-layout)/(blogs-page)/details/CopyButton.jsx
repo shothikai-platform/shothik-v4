@@ -19,8 +19,17 @@ const CopyButton = ({ text }) => {
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={handleCopy}>
-      {showCopy ? <Copy className="size-5" /> : <Check className="size-5" />}
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleCopy}
+      aria-label="Copy URL"
+    >
+      {showCopy ? (
+        <Copy className="size-5" aria-hidden="true" />
+      ) : (
+        <Check className="size-5" aria-hidden="true" />
+      )}
     </Button>
   );
 };
