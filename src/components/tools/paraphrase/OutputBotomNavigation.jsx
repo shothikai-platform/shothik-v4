@@ -135,32 +135,44 @@ const OutputBotomNavigation = ({
           <div className="flex flex-row items-center gap-1">
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setHighlightSentence((prev) => prev - 1)}
-                  disabled={highlightSentence === 0}
-                  aria-label="previous-sentence"
-                  className="bg-primary/5 text-primary rounded-[5px]"
+                <span
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
+                  tabIndex={highlightSentence === 0 ? 0 : undefined}
                 >
-                  <ChevronUp className="h-4 w-4" />
-                </ShadButton>
+                  <ShadButton
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setHighlightSentence((prev) => prev - 1)}
+                    disabled={highlightSentence === 0}
+                    aria-label="previous-sentence"
+                    className="bg-primary/5 text-primary rounded-[5px]"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </ShadButton>
+                </span>
               </TooltipTrigger>
               <TooltipContent>Previous sentence</TooltipContent>
             </ShadTooltip>
 
             <ShadTooltip>
               <TooltipTrigger asChild>
-                <ShadButton
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setHighlightSentence((prev) => prev + 1)}
-                  disabled={highlightSentence === sentenceCount - 1}
-                  aria-label="next-sentence"
-                  className="bg-primary/5 text-primary rounded-[5px]"
+                <span
+                  className="focus-visible:ring-2 focus-visible:ring-ring"
+                  tabIndex={
+                    highlightSentence === sentenceCount - 1 ? 0 : undefined
+                  }
                 >
-                  <ChevronDown className="h-4 w-4" />
-                </ShadButton>
+                  <ShadButton
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setHighlightSentence((prev) => prev + 1)}
+                    disabled={highlightSentence === sentenceCount - 1}
+                    aria-label="next-sentence"
+                    className="bg-primary/5 text-primary rounded-[5px]"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </ShadButton>
+                </span>
               </TooltipTrigger>
               <TooltipContent>Next sentence</TooltipContent>
             </ShadTooltip>
