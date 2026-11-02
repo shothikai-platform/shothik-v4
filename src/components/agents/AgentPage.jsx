@@ -661,7 +661,11 @@ const presentationState = {
                 size="icon"
                 className="bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground h-10 w-10"
               >
-                <Send className="h-5 w-5" />
+                {isLoading ? (
+                  <Spinner className="h-5 w-5" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
