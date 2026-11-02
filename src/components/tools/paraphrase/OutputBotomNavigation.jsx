@@ -138,6 +138,7 @@ const OutputBotomNavigation = ({
                 <ShadButton
                   variant="ghost"
                   size="icon"
+                  aria-disabled={highlightSentence === 0 ? "true" : undefined}
                   onClick={() => setHighlightSentence((prev) => prev - 1)}
                   disabled={highlightSentence === 0}
                   aria-label="previous-sentence"
@@ -154,6 +155,7 @@ const OutputBotomNavigation = ({
                 <ShadButton
                   variant="ghost"
                   size="icon"
+                  aria-disabled={highlightSentence === sentenceCount - 1 ? "true" : undefined}
                   onClick={() => setHighlightSentence((prev) => prev + 1)}
                   disabled={highlightSentence === sentenceCount - 1}
                   aria-label="next-sentence"

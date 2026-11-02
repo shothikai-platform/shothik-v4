@@ -763,6 +763,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-disabled={isSubmitting ? "true" : undefined}
                 onClick={() => handleFeedback("helpful")}
                 disabled={isSubmitting}
                 className={cn(
@@ -783,6 +784,7 @@ const CombinedActions = ({ content, sources, title, onFeedback, agentId }) => {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-disabled={isSubmitting ? "true" : undefined}
                 onClick={() => handleFeedback("not-helpful")}
                 disabled={isSubmitting}
                 className={cn(

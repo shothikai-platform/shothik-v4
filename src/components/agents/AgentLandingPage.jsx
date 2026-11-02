@@ -614,6 +614,7 @@ export default function AgentLandingPage() {
                       <div>
                         <Button
                           onClick={handleSubmit}
+                          aria-disabled={(!inputValue.trim() || isInitiatingPresentation || isInitiatingSheet || isUploading || isInitiatingResearch) ? "true" : undefined}
                           disabled={
                             !inputValue.trim() ||
                             isInitiatingPresentation ||
