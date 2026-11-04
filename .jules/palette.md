@@ -1,3 +1,7 @@
-## 2024-05-19 - Adding Accessible Tooltips for Icon-Only Buttons
-**Learning:** For Radix/Shadcn-based `Tooltip` implementations in this codebase, when adding tooltips to icon-only buttons that may have disabled states (like in `src/components/tools/research/form-component.jsx`), keyboard focus relies on a workaround. Because a disabled `<button>` doesn't receive focus, users navigating via keyboard cannot trigger the tooltip to learn what the disabled action is. The correct pattern is to wrap the disabled button in a `<span>` styled with `className={cn(isDisabled && "focus-visible:ring-2 focus-visible:ring-ring")}` and `tabIndex={isDisabled ? 0 : undefined}`. This ensures focus states apply to the wrapper only when disabled, avoiding double-focus rings when active, while maintaining full screen reader accessibility via `aria-label`s on the button itself.
-**Action:** When creating tooltips for icon-only buttons with disabled states, apply the conditionally focusable `<span>` wrapper to ensure the tooltip remains accessible via keyboard while avoiding double-focus when active.
+## 2025-02-18 - Tooltip & ARIA on Icon-Only Buttons
+**Learning:** Icon-only buttons (like Copy/Download) are inaccessible without `aria-label` and confusing without Tooltips. Adding them is a high-impact, low-risk win.
+**Action:** Always wrap icon-only buttons in `Tooltip` and sync `aria-label` with the tooltip text (including state changes like "Copied!").
+
+## 2025-02-18 - Tooltips on Disabled Buttons
+**Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
+**Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
