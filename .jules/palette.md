@@ -5,3 +5,6 @@
 ## 2025-02-18 - Tooltips on Disabled Buttons
 **Learning:** Disabled buttons in Radix/Shadcn don't trigger mouse events for tooltips.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `focus-visible` styles to ensure tooltips appear on hover and focus.
+## 2025-02-23 - Disabled Tooltips Accessibility
+**Learning:** Shadcn/Radix tooltips silently fail to show for keyboard users when attached directly to disabled buttons because disabled elements don't fire events or receive focus natively.
+**Action:** When adding tooltips to buttons with dynamic `disabled` states in this app, wrap them in a `span` with `tabIndex={isDisabled ? 0 : undefined}` and `focus-visible` styles to ensure the disabled explanation is keyboard accessible, and always ensure icon-only buttons have explicit `aria-label`s.
