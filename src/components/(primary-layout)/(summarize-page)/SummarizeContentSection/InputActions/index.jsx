@@ -74,16 +74,21 @@ const InputActions = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                disabled={isLoading}
-                onClick={onClear}
-                aria-label="delete"
+              <span
+                className="focus-visible:ring-2 focus-visible:ring-ring"
+                tabIndex={isLoading ? 0 : undefined}
               >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={isLoading}
+                  onClick={onClear}
+                  aria-label="delete"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent>
               <p>Clear text</p>
